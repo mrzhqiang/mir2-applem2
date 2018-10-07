@@ -18,7 +18,7 @@ type
 //{$REGION 'TBaseObject Class'}
   TBaseObject = class
     m_sMapName: string[16]; //0x04
-    m_sCharName: string[14]; //0x15
+    m_sCharName: string[24]; //0x15
     m_nCurrX: Integer; //0x24  人物所在座标X(4字节)
     m_nCurrY: Integer; //0x28  人物所在座标Y(4字节)
     m_btDirection: Byte; //    人物所在方向(1字节)

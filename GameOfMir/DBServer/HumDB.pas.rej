@@ -1,0 +1,10 @@
+diff a/GameOfMir/DBServer/HumDB.pas b/GameOfMir/DBServer/HumDB.pas	(rejected hunks)
+@@ -8,7 +8,7 @@
+   MAXPATHLEN = 255;
+   DIRPATHLEN = 80;
+   MapNameLen = 16;
+-  ActorNameLen = 14;
++  ActorNameLen = 32;
+ 
+   // ����������������������ݿ��ļ��汾�ģ�һ�㲻Ҫ���׸���
+   sDBHeaderDesc = 'Randall���ݿ��ļ� 2018/10/04';

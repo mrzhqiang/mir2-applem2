@@ -1,4 +1,4 @@
-unit Envir;
+ï»¿unit Envir;
 
 interface
 
@@ -22,30 +22,30 @@ type
     Reserved: array[0..23] of Char;
   end;
   TOldMapUnitInfo = packed record
-    wBkImg: Word; //32768 $8000 Îª½ûÖ¹ÒÆ¶¯ÇøÓò
+    wBkImg: Word; //32768 $8000 ä¸ºç¦æ­¢ç§»åŠ¨åŒºåŸŸ
     wMidImg: Word;
     wFrImg: Word;
-    btDoorIndex: Byte; //$80 (¹®Â¦), ¹®ÀÇ ½Äº° ÀÎµ¦½º
+    btDoorIndex: Byte; //$80 (å·©å¨„), å·©ç‹¼ ä¾¥å–Š ç‰¢éƒ¸èƒ¶
     btDoorOffset: Byte;
-      //´İÈù ¹®ÀÇ ±×¸²ÀÇ »ó´ë À§Ä¡, $80 (¿­¸²/´İÈû(±âº»))
-    btAniFrame: Byte; //$80(Draw Alpha) +  ÇÁ·¡ÀÓ ¼ö
+      //æ‘§è…® å·©ç‹¼ å¼Šè¦†ç‹¼ æƒ‘æª å›°æ‘¹, $80 (å‡¯è¦†/æ‘§å¡(æ‰å¤¯))
+    btAniFrame: Byte; //$80(Draw Alpha) +  æ©‡è´°çƒ™ è
     btAniTick: Byte;
-    btArea: Byte; //Áö¿ª Á¤º¸
-    btLight: Byte; //0..1..4 ±¤¿ø È¿°ú
+    btArea: Byte; //ç˜¤å¼€ æ²¥ç„Š
+    btLight: Byte; //0..1..4 å ¡ç›” ç“¤è‹
   end;
   pTOldMapUnitInfo = ^TOldMapUnitInfo;
 
   TMapUnitInfo = packed record
-    wBkImg: Word; //32768 $8000 Îª½ûÖ¹ÒÆ¶¯ÇøÓò
+    wBkImg: Word; //32768 $8000 ä¸ºç¦æ­¢ç§»åŠ¨åŒºåŸŸ
     wMidImg: Word;
     wFrImg: Word;
-    btDoorIndex: Byte; //$80 (¹®Â¦), ¹®ÀÇ ½Äº° ÀÎµ¦½º
+    btDoorIndex: Byte; //$80 (å·©å¨„), å·©ç‹¼ ä¾¥å–Š ç‰¢éƒ¸èƒ¶
     btDoorOffset: Byte;
-      //´İÈù ¹®ÀÇ ±×¸²ÀÇ »ó´ë À§Ä¡, $80 (¿­¸²/´İÈû(±âº»))
-    btAniFrame: Byte; //$80(Draw Alpha) +  ÇÁ·¡ÀÓ ¼ö
+      //æ‘§è…® å·©ç‹¼ å¼Šè¦†ç‹¼ æƒ‘æª å›°æ‘¹, $80 (å‡¯è¦†/æ‘§å¡(æ‰å¤¯))
+    btAniFrame: Byte; //$80(Draw Alpha) +  æ©‡è´°çƒ™ è
     btAniTick: Byte;
-    btArea: Byte; //Áö¿ª Á¤º¸
-    btLight: Byte; //0..1..4 ±¤¿ø È¿°ú
+    btArea: Byte; //ç˜¤å¼€ æ²¥ç„Š
+    btLight: Byte; //0..1..4 å ¡ç›” ç“¤è‹
     btBkIndex: Byte;
     btSmIndex: Byte;
   end;
@@ -101,7 +101,7 @@ type
     MapCellArray: array of TMapCellinfo; //0x0C
     nMinMap: Integer; //0x10
 //    nServerIndex: Integer; //0x14
-    nRequestLevel: Integer; //0x18 ½øÈë±¾µØÍ¼ËùĞèµÈ¼¶
+    nRequestLevel: Integer; //0x18 è¿›å…¥æœ¬åœ°å›¾æ‰€éœ€ç­‰çº§
     m_nWidth: Integer; //0x1C
     m_nHeight: Integer; //0x20
     m_boDARK: Boolean; //0x24
@@ -116,7 +116,7 @@ type
     bo2C: Boolean;
     m_boSAFE: Boolean; //0x2D
     m_boFightZone: Boolean; //0x2E
-    m_boFight3Zone: Boolean; //0x2F  //ĞĞ»áÕ½ÕùµØÍ¼
+    m_boFight3Zone: Boolean; //0x2F  //è¡Œä¼šæˆ˜äº‰åœ°å›¾
     m_boQUIZ: Boolean; //0x30
     m_boNORECONNECT: Boolean; //0x31
     m_boNEEDHOLE: Boolean; //0x32
@@ -136,60 +136,60 @@ type
     nNEEDSETONFlag: Integer; //0x40
     nNeedONOFF: Integer; //0x44
     //m_QuestList: TList; //0x48
-    m_boRUNHUMAN: Boolean; //¿ÉÒÔ´©ÈË
-    m_boRUNMON: Boolean; //¿ÉÒÔ´©¹Ö
-    m_boINCHP: Boolean; //×Ô¶¯¼ÓHPÖµ
-    m_boDECHP: Boolean; //×Ô¶¯¼õHPÖµ
-    m_boIncGameGold: Boolean; //×Ô¶¯¼õÓÎÏ·±Ò
-    m_boINCGAMEPOINT: Boolean; //×Ô¶¯¼Óµã
-    m_boDecGameGold: Boolean; //×Ô¶¯¼õÓÎÏ·±Ò
-    m_boDECGAMEPOINT: Boolean; //×Ô¶¯¼õµã
-    m_boMUSIC: Boolean; //ÒôÀÖ
-    m_boEXPRATE: Boolean; //É±¹Ö¾­Ñé±¶Êı
-    m_boPKWINLEVEL: Boolean; //PKµÃµÈ¼¶
-    m_boPKWINEXP: Boolean; //PKµÃ¾­Ñé
-    m_boPKLOSTLEVEL: Boolean; //PK¶ªµÈ¼¶
-    m_boPKLOSTEXP: Boolean; //PK¶ª¾­Ñé
-    m_nPKWINLEVEL: Integer; //PKµÃµÈ¼¶Êı
-    m_nPKLOSTLEVEL: Integer; //PK¶ªµÈ¼¶
-    m_nPKWINEXP: Integer; //PKµÃ¾­ÑéÊı
-    m_nPKLOSTEXP: Integer; //PK¶ª¾­Ñé
-    m_nDECHPTIME: Integer; //¼õHP¼ä¸ôÊ±¼ä
-    m_nDECHPPOINT: Integer; //Ò»´Î¼õµãÊı
-    m_nINCHPTIME: Integer; //¼ÓHP¼ä¸ôÊ±¼ä
-    m_nINCHPPOINT: Integer; //Ò»´Î¼ÓµãÊı
-    m_nDECGAMEGOLDTIME: Integer; //¼õÓÎÏ·±Ò¼ä¸ôÊ±¼ä
-    m_nDecGameGold: Integer; //Ò»´Î¼õÊıÁ¿
-    m_nDECGAMEPOINTTIME: Integer; //¼õÓÎÏ·µã¼ä¸ôÊ±¼ä
-    m_nDECGAMEPOINT: Integer; //Ò»´Î¼õÊıÁ¿
-    m_nINCGAMEGOLDTIME: Integer; //¼ÓÓÎÏ·±Ò¼ä¸ôÊ±¼ä
-    m_nIncGameGold: Integer; //Ò»´Î¼ÓÊıÁ¿
-    m_nINCGAMEPOINTTIME: Integer; //¼ÓÓÎÏ·±Ò¼ä¸ôÊ±¼ä
-    m_nINCGAMEPOINT: Integer; //Ò»´Î¼ÓÊıÁ¿
-    m_nMUSICID: Integer; //ÒôÀÖID
-    m_nEXPRATE: Integer; //¾­Ñé±¶ÂÊ
+    m_boRUNHUMAN: Boolean; //å¯ä»¥ç©¿äºº
+    m_boRUNMON: Boolean; //å¯ä»¥ç©¿æ€ª
+    m_boINCHP: Boolean; //è‡ªåŠ¨åŠ HPå€¼
+    m_boDECHP: Boolean; //è‡ªåŠ¨å‡HPå€¼
+    m_boIncGameGold: Boolean; //è‡ªåŠ¨å‡æ¸¸æˆå¸
+    m_boINCGAMEPOINT: Boolean; //è‡ªåŠ¨åŠ ç‚¹
+    m_boDecGameGold: Boolean; //è‡ªåŠ¨å‡æ¸¸æˆå¸
+    m_boDECGAMEPOINT: Boolean; //è‡ªåŠ¨å‡ç‚¹
+    m_boMUSIC: Boolean; //éŸ³ä¹
+    m_boEXPRATE: Boolean; //æ€æ€ªç»éªŒå€æ•°
+    m_boPKWINLEVEL: Boolean; //PKå¾—ç­‰çº§
+    m_boPKWINEXP: Boolean; //PKå¾—ç»éªŒ
+    m_boPKLOSTLEVEL: Boolean; //PKä¸¢ç­‰çº§
+    m_boPKLOSTEXP: Boolean; //PKä¸¢ç»éªŒ
+    m_nPKWINLEVEL: Integer; //PKå¾—ç­‰çº§æ•°
+    m_nPKLOSTLEVEL: Integer; //PKä¸¢ç­‰çº§
+    m_nPKWINEXP: Integer; //PKå¾—ç»éªŒæ•°
+    m_nPKLOSTEXP: Integer; //PKä¸¢ç»éªŒ
+    m_nDECHPTIME: Integer; //å‡HPé—´éš”æ—¶é—´
+    m_nDECHPPOINT: Integer; //ä¸€æ¬¡å‡ç‚¹æ•°
+    m_nINCHPTIME: Integer; //åŠ HPé—´éš”æ—¶é—´
+    m_nINCHPPOINT: Integer; //ä¸€æ¬¡åŠ ç‚¹æ•°
+    m_nDECGAMEGOLDTIME: Integer; //å‡æ¸¸æˆå¸é—´éš”æ—¶é—´
+    m_nDecGameGold: Integer; //ä¸€æ¬¡å‡æ•°é‡
+    m_nDECGAMEPOINTTIME: Integer; //å‡æ¸¸æˆç‚¹é—´éš”æ—¶é—´
+    m_nDECGAMEPOINT: Integer; //ä¸€æ¬¡å‡æ•°é‡
+    m_nINCGAMEGOLDTIME: Integer; //åŠ æ¸¸æˆå¸é—´éš”æ—¶é—´
+    m_nIncGameGold: Integer; //ä¸€æ¬¡åŠ æ•°é‡
+    m_nINCGAMEPOINTTIME: Integer; //åŠ æ¸¸æˆå¸é—´éš”æ—¶é—´
+    m_nINCGAMEPOINT: Integer; //ä¸€æ¬¡åŠ æ•°é‡
+    m_nMUSICID: Integer; //éŸ³ä¹ID
+    m_nEXPRATE: Integer; //ç»éªŒå€ç‡
     m_nMonCount: Integer;
     m_nHumCount: Integer;
-    m_boDropItemMapEvent: Boolean; //ÊÇ·ñÓĞµØÍ¼ÊÂ¼şĞÅÏ¢
-    m_boPickUpItemMapEvent: Boolean; //ÊÇ·ñÓĞµØÍ¼ÊÂ¼şĞÅÏ¢
-    m_boHeavyHitMapEvent: Boolean; //ÊÇ·ñÓĞµØÍ¼ÊÂ¼şĞÅÏ¢
+    m_boDropItemMapEvent: Boolean; //æ˜¯å¦æœ‰åœ°å›¾äº‹ä»¶ä¿¡æ¯
+    m_boPickUpItemMapEvent: Boolean; //æ˜¯å¦æœ‰åœ°å›¾äº‹ä»¶ä¿¡æ¯
+    m_boHeavyHitMapEvent: Boolean; //æ˜¯å¦æœ‰åœ°å›¾äº‹ä»¶ä¿¡æ¯
     m_boNotReAlive: Boolean;
     m_boNotStone: Boolean;
     m_boDieTime: Boolean;
     m_dwDieTime: LongWord;
 
-    m_boDropItemEvent: Boolean; //ÊÇ·ñÓĞµØÍ¼ÊÂ¼şĞÅÏ¢
-    m_boPickUpItemEvent: Boolean; //ÊÇ·ñÓĞµØÍ¼ÊÂ¼şĞÅÏ¢
-    m_boHeavyHitEvent: Boolean; //ÊÇ·ñÓĞµØÍ¼ÊÂ¼şĞÅÏ¢
+    m_boDropItemEvent: Boolean; //æ˜¯å¦æœ‰åœ°å›¾äº‹ä»¶ä¿¡æ¯
+    m_boPickUpItemEvent: Boolean; //æ˜¯å¦æœ‰åœ°å›¾äº‹ä»¶ä¿¡æ¯
+    m_boHeavyHitEvent: Boolean; //æ˜¯å¦æœ‰åœ°å›¾äº‹ä»¶ä¿¡æ¯
     m_DropItemEventList: TList;
     m_PickUpItemEventList: TList;
     m_HeavyHitEventList: TList;
 
-    m_boUnAllowStdItems: Boolean; //ÊÇ·ñ²»ÔÊĞíÊ¹ÓÃÎïÆ·
-    m_UnAllowStdItemsList: TGStringList; //²»ÔÊĞíÊ¹ÓÃÎïÆ·ÁĞ±í
-    m_boUnAllowMagic: Boolean; //ÊÇ·ñ²»ÔÊĞíÊ¹ÓÃÎïÆ·
-    m_UnAllowMagicList: TGStringList; //²»ÔÊĞíÊ¹ÓÃÎïÆ·ÁĞ±í
-    m_boUnAllowFireMagic: Boolean; //²»ÔÊĞíÊ¹ÓÃ»ğÇ½
+    m_boUnAllowStdItems: Boolean; //æ˜¯å¦ä¸å…è®¸ä½¿ç”¨ç‰©å“
+    m_UnAllowStdItemsList: TGStringList; //ä¸å…è®¸ä½¿ç”¨ç‰©å“åˆ—è¡¨
+    m_boUnAllowMagic: Boolean; //æ˜¯å¦ä¸å…è®¸ä½¿ç”¨ç‰©å“
+    m_UnAllowMagicList: TGStringList; //ä¸å…è®¸ä½¿ç”¨ç‰©å“åˆ—è¡¨
+    m_boUnAllowFireMagic: Boolean; //ä¸å…è®¸ä½¿ç”¨ç«å¢™
     m_StartPointList: TList;
     m_boFB: Boolean;
     m_boFBCreate: Boolean;
@@ -437,13 +437,13 @@ begin
     Envir := TEnvirnoment(Self.Items[nIndex]);
     Envir.m_nMapIndex := nIndex;
     if Envir.sMainMapName <> '' then begin
-      //CopyFile(PChar('E:\ÍøÂçÓÎÏ·\ÈÈÑª´«Ææ2\Map\' + Envir.sMainMapName + '.map'), PChar(g_Config.sMapDir + Envir.sMainMapName + '.map'), False);
+      //CopyFile(PChar('E:\ç½‘ç»œæ¸¸æˆ\çƒ­è¡€ä¼ å¥‡2\Map\' + Envir.sMainMapName + '.map'), PChar(g_Config.sMapDir + Envir.sMainMapName + '.map'), False);
       if Envir.LoadMapData(g_Config.sMapDir + Envir.sMainMapName + '.map') then begin
         Result := True;
       end;
     end
     else begin
-      //CopyFile(PChar('E:\ÍøÂçÓÎÏ·\ÈÈÑª´«Ææ2\Map\' + Envir.sMapName + '.map'), PChar(g_Config.sMapDir + Envir.sMapName + '.map'), False);
+      //CopyFile(PChar('E:\ç½‘ç»œæ¸¸æˆ\çƒ­è¡€ä¼ å¥‡2\Map\' + Envir.sMapName + '.map'), PChar(g_Config.sMapDir + Envir.sMapName + '.map'), False);
       if Envir.LoadMapData(g_Config.sMapDir + Envir.sMapName + '.map') then begin
         Result := True;
       end;
@@ -490,39 +490,39 @@ begin
   Result.m_boNoDeal := MapFlag.boNoDeal;
   Result.m_boNOTHROWITEM := MapFlag.boNOTHROWITEM;
 
-  Result.m_boRUNHUMAN := MapFlag.boRUNHUMAN; //¿ÉÒÔ´©ÈË
-  Result.m_boRUNMON := MapFlag.boRUNMON; //¿ÉÒÔ´©¹Ö
-  Result.m_boDECHP := MapFlag.boDECHP; //×Ô¶¯¼õHPÖµ
-  Result.m_boINCHP := MapFlag.boINCHP; //×Ô¶¯¼ÓHPÖµ
-  Result.m_boDecGameGold := MapFlag.boDECGAMEGOLD; //×Ô¶¯¼õÓÎÏ·±Ò
-  Result.m_boDECGAMEPOINT := MapFlag.boDECGAMEPOINT; //×Ô¶¯¼õÓÎÏ·±Ò
-  Result.m_boIncGameGold := MapFlag.boINCGAMEGOLD; //×Ô¶¯¼ÓÓÎÏ·±Ò
-  Result.m_boINCGAMEPOINT := MapFlag.boINCGAMEPOINT; //×Ô¶¯¼ÓÓÎÏ·µã
-  Result.m_boMUSIC := MapFlag.boMUSIC; //ÒôÀÖ
-  Result.m_boEXPRATE := MapFlag.boEXPRATE; //É±¹Ö¾­Ñé±¶Êı
-  Result.m_boPKWINLEVEL := MapFlag.boPKWINLEVEL; //PKµÃµÈ¼¶
-  Result.m_boPKWINEXP := MapFlag.boPKWINEXP; //PKµÃ¾­Ñé
+  Result.m_boRUNHUMAN := MapFlag.boRUNHUMAN; //å¯ä»¥ç©¿äºº
+  Result.m_boRUNMON := MapFlag.boRUNMON; //å¯ä»¥ç©¿æ€ª
+  Result.m_boDECHP := MapFlag.boDECHP; //è‡ªåŠ¨å‡HPå€¼
+  Result.m_boINCHP := MapFlag.boINCHP; //è‡ªåŠ¨åŠ HPå€¼
+  Result.m_boDecGameGold := MapFlag.boDECGAMEGOLD; //è‡ªåŠ¨å‡æ¸¸æˆå¸
+  Result.m_boDECGAMEPOINT := MapFlag.boDECGAMEPOINT; //è‡ªåŠ¨å‡æ¸¸æˆå¸
+  Result.m_boIncGameGold := MapFlag.boINCGAMEGOLD; //è‡ªåŠ¨åŠ æ¸¸æˆå¸
+  Result.m_boINCGAMEPOINT := MapFlag.boINCGAMEPOINT; //è‡ªåŠ¨åŠ æ¸¸æˆç‚¹
+  Result.m_boMUSIC := MapFlag.boMUSIC; //éŸ³ä¹
+  Result.m_boEXPRATE := MapFlag.boEXPRATE; //æ€æ€ªç»éªŒå€æ•°
+  Result.m_boPKWINLEVEL := MapFlag.boPKWINLEVEL; //PKå¾—ç­‰çº§
+  Result.m_boPKWINEXP := MapFlag.boPKWINEXP; //PKå¾—ç»éªŒ
   Result.m_boPKLOSTLEVEL := MapFlag.boPKLOSTLEVEL;
   Result.m_boPKLOSTEXP := MapFlag.boPKLOSTEXP;
-  Result.m_nPKWINLEVEL := MapFlag.nPKWINLEVEL; //PKµÃµÈ¼¶Êı
-  Result.m_nPKWINEXP := MapFlag.nPKWINEXP; //PKµÃ¾­ÑéÊı
+  Result.m_nPKWINLEVEL := MapFlag.nPKWINLEVEL; //PKå¾—ç­‰çº§æ•°
+  Result.m_nPKWINEXP := MapFlag.nPKWINEXP; //PKå¾—ç»éªŒæ•°
   Result.m_nPKLOSTLEVEL := MapFlag.nPKLOSTLEVEL;
   Result.m_nPKLOSTEXP := MapFlag.nPKLOSTEXP;
-  Result.m_nPKWINEXP := MapFlag.nPKWINEXP; //PKµÃ¾­ÑéÊı
-  Result.m_nDECHPTIME := MapFlag.nDECHPTIME; //¼õHP¼ä¸ôÊ±¼ä
-  Result.m_nDECHPPOINT := MapFlag.nDECHPPOINT; //Ò»´Î¼õµãÊı
-  Result.m_nINCHPTIME := MapFlag.nINCHPTIME; //¼ÓHP¼ä¸ôÊ±¼ä
-  Result.m_nINCHPPOINT := MapFlag.nINCHPPOINT; //Ò»´Î¼ÓµãÊı
-  Result.m_nDECGAMEGOLDTIME := MapFlag.nDECGAMEGOLDTIME; //¼õÓÎÏ·±Ò¼ä¸ôÊ±¼ä
-  Result.m_nDecGameGold := MapFlag.nDECGAMEGOLD; //Ò»´Î¼õÊıÁ¿
+  Result.m_nPKWINEXP := MapFlag.nPKWINEXP; //PKå¾—ç»éªŒæ•°
+  Result.m_nDECHPTIME := MapFlag.nDECHPTIME; //å‡HPé—´éš”æ—¶é—´
+  Result.m_nDECHPPOINT := MapFlag.nDECHPPOINT; //ä¸€æ¬¡å‡ç‚¹æ•°
+  Result.m_nINCHPTIME := MapFlag.nINCHPTIME; //åŠ HPé—´éš”æ—¶é—´
+  Result.m_nINCHPPOINT := MapFlag.nINCHPPOINT; //ä¸€æ¬¡åŠ ç‚¹æ•°
+  Result.m_nDECGAMEGOLDTIME := MapFlag.nDECGAMEGOLDTIME; //å‡æ¸¸æˆå¸é—´éš”æ—¶é—´
+  Result.m_nDecGameGold := MapFlag.nDECGAMEGOLD; //ä¸€æ¬¡å‡æ•°é‡
 
-  Result.m_nINCGAMEGOLDTIME := MapFlag.nINCGAMEGOLDTIME; //¼õÓÎÏ·±Ò¼ä¸ôÊ±¼ä
-  Result.m_nIncGameGold := MapFlag.nINCGAMEGOLD; //Ò»´Î¼õÊıÁ¿
+  Result.m_nINCGAMEGOLDTIME := MapFlag.nINCGAMEGOLDTIME; //å‡æ¸¸æˆå¸é—´éš”æ—¶é—´
+  Result.m_nIncGameGold := MapFlag.nINCGAMEGOLD; //ä¸€æ¬¡å‡æ•°é‡
   
-  Result.m_nINCGAMEPOINTTIME := MapFlag.nINCGAMEPOINTTIME;//¼õÓÎÏ·±Ò¼ä¸ôÊ±¼ä
-  Result.m_nINCGAMEPOINT := MapFlag.nINCGAMEPOINT; //Ò»´Î¼õÊıÁ¿
-  Result.m_nMUSICID := MapFlag.nMUSICID; //ÒôÀÖID
-  Result.m_nEXPRATE := MapFlag.nEXPRATE; //¾­Ñé±¶ÂÊ
+  Result.m_nINCGAMEPOINTTIME := MapFlag.nINCGAMEPOINTTIME;//å‡æ¸¸æˆå¸é—´éš”æ—¶é—´
+  Result.m_nINCGAMEPOINT := MapFlag.nINCGAMEPOINT; //ä¸€æ¬¡å‡æ•°é‡
+  Result.m_nMUSICID := MapFlag.nMUSICID; //éŸ³ä¹ID
+  Result.m_nEXPRATE := MapFlag.nEXPRATE; //ç»éªŒå€ç‡
 
   Result.m_boDieTime := MapFlag.boDieTime;
   Result.m_dwDieTime := MapFlag.dwDieTime;
@@ -537,7 +537,7 @@ begin
   Result.m_boShop := MapFlag.boShop;
   Result.m_boNotReAlive := MapFlag.boNotReAlive;
 
-  Result.m_boUnAllowFireMagic := MapFlag.boNOFIREMAGIC; //²»ÔÊĞíÊ¹ÓÃ»ğÇ½
+  Result.m_boUnAllowFireMagic := MapFlag.boNOFIREMAGIC; //ä¸å…è®¸ä½¿ç”¨ç«å¢™
 
   Result.m_sHitMonLabel := MapFlag.sHitMonLabel;
 
@@ -687,7 +687,7 @@ begin
   end;
 end;
 
-//ÊÇ·ñÔÊĞíÊ¹ÓÃÎïÆ·
+//æ˜¯å¦å…è®¸ä½¿ç”¨ç‰©å“
 function TEnvirnoment.AllowStdItems(sItemName: string): Boolean;
 begin
   Result := True;
@@ -696,7 +696,7 @@ begin
   Result := m_UnAllowStdItemsList.IndexOf(sItemName) = -1;
 end;
 
-//ÊÇ·ñÔÊĞíÊ¹ÓÃÎïÆ·
+//æ˜¯å¦å…è®¸ä½¿ç”¨ç‰©å“
 function TEnvirnoment.AllowMagic(sMagicName: string): Boolean;
 begin
   Result := False;
@@ -847,9 +847,9 @@ begin
   end;
 end;
 //======================================================================
-//¼ì²éµØÍ¼Ö¸¶¨×ù±êÊÇ·ñ¿ÉÒÔÒÆ¶¯
-//boFlag  Èç¹ûÎªTRUE ÔòºöÂÔ×ù±êÉÏÊÇ·ñÓĞ½ÇÉ«
-//·µ»ØÖµ True Îª¿ÉÒÔÒÆ¶¯£¬False Îª²»¿ÉÒÔÒÆ¶¯
+//æ£€æŸ¥åœ°å›¾æŒ‡å®šåº§æ ‡æ˜¯å¦å¯ä»¥ç§»åŠ¨
+//boFlag  å¦‚æœä¸ºTRUE åˆ™å¿½ç•¥åº§æ ‡ä¸Šæ˜¯å¦æœ‰è§’è‰²
+//è¿”å›å€¼ True ä¸ºå¯ä»¥ç§»åŠ¨ï¼ŒFalse ä¸ºä¸å¯ä»¥ç§»åŠ¨
 //======================================================================
 
 function TEnvirnoment.CanWalk(nX, nY: Integer; boFlag: Boolean): Boolean;
@@ -885,9 +885,9 @@ begin
 end;
 
 //======================================================================
-//¼ì²éµØÍ¼Ö¸¶¨×ù±êÊÇ·ñ¿ÉÒÔÒÆ¶¯
-//boFlag  Èç¹ûÎªTRUE ÔòºöÂÔ×ù±êÉÏÊÇ·ñÓĞ½ÇÉ«
-//·µ»ØÖµ True Îª¿ÉÒÔÒÆ¶¯£¬False Îª²»¿ÉÒÔÒÆ¶¯
+//æ£€æŸ¥åœ°å›¾æŒ‡å®šåº§æ ‡æ˜¯å¦å¯ä»¥ç§»åŠ¨
+//boFlag  å¦‚æœä¸ºTRUE åˆ™å¿½ç•¥åº§æ ‡ä¸Šæ˜¯å¦æœ‰è§’è‰²
+//è¿”å›å€¼ True ä¸ºå¯ä»¥ç§»åŠ¨ï¼ŒFalse ä¸ºä¸å¯ä»¥ç§»åŠ¨
 //======================================================================
 
 function TEnvirnoment.CanWalkOfItem(nX, nY: Integer; boFlag, boItem: Boolean):
@@ -947,11 +947,11 @@ begin
           if OSObject.btType = OS_MOVINGOBJECT then begin
             BaseObject := TBaseObject(OSObject.CellObj);
             if BaseObject <> nil then begin
-              {//01/25 ¶à³Ç±¤ ¿ØÖÆ
+              {//01/25 å¤šåŸå ¡ æ§åˆ¶
               if g_Config.boWarDisHumRun and UserCastle.m_boUnderWar and
                 UserCastle.InCastleWarArea(BaseObject.m_PEnvir,BaseObject.m_nCurrX,BaseObject.m_nCurrY) then begin
               }
-              //¹¥³ÇÇøÓò´¦Àí
+              //æ”»åŸåŒºåŸŸå¤„ç†
               Castle := nil;
               if (wf_War in Flag) then
                 Castle := g_CastleManager.InCastleWarArea(BaseObject);
@@ -969,7 +969,7 @@ begin
                     Continue;
                 end
                 else if (BaseObject.m_btRaceServer <> 55) and (BaseObject.m_btRaceServer <> RC_BOX) then begin
-                  //²»ÔÊĞí´©¹ıÁ·¹¦Ê¦ºÍ±¦Ïä
+                  //ä¸å…è®¸ç©¿è¿‡ç»ƒåŠŸå¸ˆå’Œå®ç®±
                   if wf_Mon in Flag then
                     Continue;
                 end;
@@ -1011,11 +1011,11 @@ begin
           if OSObject.btType = OS_MOVINGOBJECT then begin
             BaseObject := TBaseObject(OSObject.CellObj);
             if BaseObject <> nil then begin
-              {//01/25 ¶à³Ç±¤ ¿ØÖÆ
+              {//01/25 å¤šåŸå ¡ æ§åˆ¶
               if g_Config.boWarDisHumRun and UserCastle.m_boUnderWar and
                 UserCastle.InCastleWarArea(BaseObject.m_PEnvir,BaseObject.m_nCurrX,BaseObject.m_nCurrY) then begin
               }
-              //¹¥³ÇÇøÓò´¦Àí
+              //æ”»åŸåŒºåŸŸå¤„ç†
               Castle := nil;
               if g_Config.boWarDisHumRun then
                 Castle := g_CastleManager.InCastleWarArea(BaseObject);
@@ -1033,7 +1033,7 @@ begin
                     Continue;
                 end
                 else if (BaseObject.m_btRaceServer <> 55) and (BaseObject.m_btRaceServer <> RC_BOX) then begin
-                  //²»ÔÊĞí´©¹ıÁ·¹¦Ê¦ºÍ±¦Ïä
+                  //ä¸å…è®¸ç©¿è¿‡ç»ƒåŠŸå¸ˆå’Œå®ç®±
                   if (g_Config.boRUNMON and not m_boRUNMON) or (not g_Config.boRUNMON and m_boRUNMON) then
                     Continue;
                 end;
@@ -1151,7 +1151,7 @@ begin
                   DisPose(OSObject);
 
                   Result := 1;
-                  //¼õµØÍ¼ÈËÎï¹ÖÎï¼ÆÊı
+                  //å‡åœ°å›¾äººç‰©æ€ªç‰©è®¡æ•°
                   if (btType = OS_MOVINGOBJECT) and (not
                     TBaseObject(pRemoveObject).m_boDelFormMaped) then begin
                     TBaseObject(pRemoveObject).m_boDelFormMaped := True;
@@ -2016,9 +2016,9 @@ begin
   End;
 end;
 
-//boFlag ÊÇ·ñ°üÀ¨ËÀÍö¶ÔÏó
-//FALSE °üÀ¨ËÀÍö¶ÔÏó
-//TRUE  ²»°üÀ¨ËÀÍö¶ÔÏó
+//boFlag æ˜¯å¦åŒ…æ‹¬æ­»äº¡å¯¹è±¡
+//FALSE åŒ…æ‹¬æ­»äº¡å¯¹è±¡
+//TRUE  ä¸åŒ…æ‹¬æ­»äº¡å¯¹è±¡
 
 function TEnvirnoment.GeTBaseObjects(nX, nY: Integer; boFlag: Boolean; BaseObjectList: TList): Integer;
 var
@@ -2176,7 +2176,7 @@ var
   sMsg: string;
 begin
   sMsg :=
-    'µØÍ¼Ãû:%s(%s) DAY:%s DARK:%s SAFE:%s FIGHT:%s FIGHT3:%s QUIZ:%s NORECONNECT:%s(%s) MUSIC:%s(%d) EXPRATE:%s(%f) PKWINLEVEL:%s(%d) PKLOSTLEVEL:%s(%d) PKWINEXP:%s(%d) PKLOSTEXP:%s(%d) DECHP:%s(%d/%d) INCHP:%s(%d/%d)';
+    'åœ°å›¾å:%s(%s) DAY:%s DARK:%s SAFE:%s FIGHT:%s FIGHT3:%s QUIZ:%s NORECONNECT:%s(%s) MUSIC:%s(%d) EXPRATE:%s(%f) PKWINLEVEL:%s(%d) PKLOSTLEVEL:%s(%d) PKWINEXP:%s(%d) PKLOSTEXP:%s(%d) DECHP:%s(%d/%d) INCHP:%s(%d/%d)';
   sMsg := sMsg +
     ' DECGAMEGOLD:%s(%d/%d) INCGAMEGOLD:%s(%d/%d) INCGAMEPOINT:%s(%d/%d) RUNHUMAN:%s RUNMON:%s NEEDHOLE:%s NORECALL:%s NOGUILDRECALL:%s NODEARRECALL:%s NOMASTERRECALL:%s NODRUG:%s MINE:%s NOPOSITIONMOVE:%s';
   Result := format(sMsg, [sMapName,

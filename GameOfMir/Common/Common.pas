@@ -4,22 +4,35 @@ interface
 
 const
 
+  // 全局变量 代码头
   g_CodeHead = '#';
+  // 全局变量 代码尾
   g_CodeEnd = '!';
+  // 客户端检测？
   g_ClientCheck = '*';
 
+  // MG 代码头
   MG_CodeHead = '%';
+  // MG 代码尾
   MG_CodeEnd = '$';
 
+  // 此处猜测：MG 可能是 MirGame 的意思，代表引擎
+  // 开启用户？
   MG_OpenUser = 'N';
+  // 发送用户？
   MG_SendUser = 'D';
+  // 关闭用户？
   MG_CloseUser = 'C';
 
+  // 退出？
   GS_QUIT = 2000;
 
+  // 用户登录
   GS_USERLOGIN = 101;
+  // 用户幽灵？
   GS_USERGHOST = 102;
 
+  // 数据库保持活性？
   SQL_KEEPALIVE = 1000;
 
   SQL_CM_USERLOGIN = 10001;

@@ -6,17 +6,17 @@ uses
   Messages, Classes;
 
 const
-  //CLIENTNAME = '.\361Client.dat';
-  //SAVEFILENAME = '.\Resource\' + MAPNAME + '.xml';
-  //UPDATADIR = '.\Down\' + MAPNAME + '\';
-  //TITLENAME = '飞鸿传奇';
-  //MAPNAME = '1234567890123456'; //给客户时要修改
-  //LISTURL1 = 'http://www.xxxx.com/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-  //g_SaveFileName: string;
-  //g_UpDataDir: string;
-  //g_TitleName: string;
-  //g_MapName: string;
-  //g_ListName: string;
+  CLIENTNAME = '.\361Client.dat';
+  SAVEFILENAME = '.\Resource\' + MAPNAME + '.xml';
+  UPDATADIR = '.\Down\' + MAPNAME + '\';
+  TITLENAME = '飞鸿传奇';
+  MAPNAME = '1234567890123456'; //给客户时要修改
+  LISTURL1 = 'http://106.14.6.174/ServerInfo.txt';
+  g_SaveFileName: string;
+  g_UpDataDir: string;
+  g_TitleName: string;
+  g_MapName: string;
+  g_ListName: string;
 
   DOWNFILEEXT = '.down';
 

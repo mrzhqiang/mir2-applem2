@@ -24,7 +24,9 @@ uses
   MudUtil in '..\Common\MudUtil.pas',
   HUtil32 in '..\Common\HUtil32.pas',
   EDcode in '..\Common\EDcode.pas',
-  OldMirDB in 'OldMirDB.pas';
+  OldMirDB in 'OldMirDB.pas',
+  SQLiteTable3 in '..\Common\SQLiteTable3.pas',
+  SQLite3 in '..\Common\SQLite3.pas';
 
 {$R *.RES}
 

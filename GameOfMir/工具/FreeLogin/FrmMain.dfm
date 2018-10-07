@@ -6699,8 +6699,8 @@ object FormMain: TFormMain
     OnClick = BtnCloseClick
   end
   object TreeViewServer: TTreeView
-    Left = 73
-    Top = 70
+    Left = 70
+    Top = 62
     Width = 246
     Height = 340
     BevelInner = bvNone

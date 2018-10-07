@@ -211,7 +211,7 @@ begin
                   if nOnlineCountMin > nOnlineCountMax then
                     nOnlineCountMax := nOnlineCountMin;
                 end;
-                SendServerMsgA(SS_KEEPALIVE, IntToStr(nOnlineCountMin));
+                SendServerMsgA(SS_KEEPALIVE {1040}, IntToStr(nOnlineCountMin));
                 RefServerLimit(sServerName);
               end;
             UNKNOWMSG: SendServerMsgA(UNKNOWMSG, sMsg);
@@ -664,6 +664,7 @@ begin
       for I := 0 to m_ServersList.Count - 1 do begin
         MsgServer := m_ServersList.Items[I];
         if MsgServer.nServerIndex = 0 then
+          {nCount += nOnlineCount}
           Inc(nCount, MsgServer.nOnlineCount);
       end;
       Result := nCount;

@@ -5,15 +5,17 @@ uses
   Windows, Messages, Classes, SysUtils, JSocket, WinSock, SyncObjs, Common, Grobal2;
 
 const
-  g_sUpDateTime = '更新日期: 2012/05/01';
+  g_sUpDateTime = '更新日期: 2018/10/01';
   BlockIPListName = '.\BlockIPList.txt';
   TeledataBlockIPListName = '.\Config\LoginGate_BlockIPList.txt';
   ConfigFileName = '.\Config.ini';
   TeledataConfigFileName = '.\Config\Config.ini';
 
 type
+  // class 表示继承于某个类，必须在 type 中先声明，后扩展 
   TGList = class(TList)
   private
+    // 一个临界区对象声明，在多线程下，提供同步锁功能 
     GLock: TRTLCriticalSection;
   public
     constructor Create;
@@ -137,6 +139,7 @@ begin
   else sFileName := BlockIPListName;
   
   for i := 0 to BlockIPList.Count - 1 do begin
+    // 标记这个占用内存可以再次被拿去使用，也就是说，黑名单列表可以重新加载
     Dispose(pTSockaddr(BlockIPList[i]))
   end;
   BlockIPList.Clear;
@@ -145,6 +148,7 @@ begin
     Dispose(pTBlockaddr(IPList[i]))
   end;
   IPList.Clear;
+
   if FileExists(sFileName) then begin
     LoadList := TStringList.Create;
     LoadList.LoadFromFile(sFileName);

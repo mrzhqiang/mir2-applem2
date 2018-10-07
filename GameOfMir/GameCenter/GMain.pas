@@ -1,4 +1,4 @@
-unit GMain;
+ï»¿unit GMain;
 
 interface
 
@@ -14,7 +14,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
-    PageControl2: TPageControl;
     PageControl3: TPageControl;
     TabSheet4: TTabSheet;
     TabSheet5: TTabSheet;
@@ -290,6 +289,9 @@ type
     CheckBox11: TCheckBox;
     Button1: TButton;
     CheckBox12: TCheckBox;
+    CheckBoxPlugTop: TCheckBox;
+    SpinEditAllPortAdd: TSpinEdit;
+    ButtonAllPortAdd: TButton;
     procedure ButtonNext1Click(Sender: TObject);
     procedure ButtonPrv2Click(Sender: TObject);
     procedure ButtonNext2Click(Sender: TObject);
@@ -389,6 +391,10 @@ type
     procedure N1Click(Sender: TObject);
     procedure CheckBoxIP2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure GroupBox5Click(Sender: TObject);
+    procedure CheckBoxPlugTopClick(Sender: TObject);
+    procedure SpinEditAllPortAddChange(Sender: TObject);
+    procedure ButtonAllPortAddClick(Sender: TObject);
   private
     m_boOpen: Boolean;
     m_nStartStatus: Integer;
@@ -408,7 +414,8 @@ type
     procedure GenM2ServerConfig();
     procedure GenLoginGateConfig();
     procedure GenSelGateConfig();
-    procedure GenRunGateConfig;
+    procedure GenRunGateConfig();
+    procedure GenPlugTopConfig();
     procedure StartGame();
     procedure StopGame();
     procedure MainOutMessage(sMsg: string);
@@ -427,6 +434,7 @@ type
     //procedure ProcessSelGate1Msg(wIdent: Word; sData: string);
 
     procedure ProcessRunGateMsg(wIdent: Word; sData: string);
+    procedure ProcessPlugTopMsg(wIdent: Word; sData: string);
     function ProcessM2ServerMsg(wIdent: Word; sData: string): Integer;
     procedure GetMutRunGateConfing(nIndex: Integer);
 
@@ -462,7 +470,7 @@ implementation
 uses HUtil32, Grobal2, DataBackUp, EDcode, MD5Unit, TextForm;
 
 {$R *.dfm}
-//ÎÄ¼ş¼Ğä¯ÀÀº¯Êı    uses ShlObj, ActiveX
+//æ–‡ä»¶å¤¹æµè§ˆå‡½æ•°    uses ShlObj, ActiveX
 
 function SelectDirCB(Wnd: HWND; uMsg: UINT; lParam, lpData: lParam): Integer
   stdcall;
@@ -552,34 +560,34 @@ begin
   sExtIPAddr := Trim(EditGameExtIPaddr.Text);
   sExtIPAddr2 := Trim(EditGameExtIPaddr2.Text);
   if sGameName = '' then begin
-    Application.MessageBox('ÓÎÏ··şÎñÆ÷Ãû³ÆÊäÈë²»ÕıÈ·£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONEXCLAMATION);
+    Application.MessageBox('æ¸¸æˆæœåŠ¡å™¨åç§°è¾“å…¥ä¸æ­£ç¡®ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONEXCLAMATION);
     EditGameName.SetFocus;
     Exit;
   end;
   if (sExtIPAddr = '') or not IsIPaddr(sExtIPAddr) then begin
-    Application.MessageBox('ÓÎÏ··şÎñÆ÷Íâ²¿IPµØÖ·ÊäÈë²»ÕıÈ·£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONEXCLAMATION);
+    Application.MessageBox('æ¸¸æˆæœåŠ¡å™¨å¤–éƒ¨IPåœ°å€è¾“å…¥ä¸æ­£ç¡®ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONEXCLAMATION);
     EditGameExtIPaddr.SetFocus;
     Exit;
   end;
 
   if CheckBoxIP2.Checked and (sExtIPAddr2 = '') or not IsIPaddr(sExtIPAddr2) then begin
-    Application.MessageBox('ÓÎÏ··şÎñÆ÷Íâ²¿IPµØÖ·ÊäÈë²»ÕıÈ·£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONEXCLAMATION);
+    Application.MessageBox('æ¸¸æˆæœåŠ¡å™¨å¤–éƒ¨IPåœ°å€è¾“å…¥ä¸æ­£ç¡®ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONEXCLAMATION);
     EditGameExtIPaddr2.SetFocus;
     Exit;
   end;
 
   if (sGameDirectory = '') or not DirectoryExists(sGameDirectory) then begin
-    Application.MessageBox('ÓÎÏ·Ä¿Â¼ÊäÈë²»ÕıÈ·£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONEXCLAMATION);
+    Application.MessageBox('æ¸¸æˆç›®å½•è¾“å…¥ä¸æ­£ç¡®ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONEXCLAMATION);
     EditGameDir.SetFocus;
     Exit;
   end;
   if not (sGameDirectory[length(sGameDirectory)] = '\') then begin
-    Application.MessageBox('ÓÎÏ·Ä¿Â¼Ãû³Æ×îºóÒ»¸ö×Ö·û±ØĞëÎª"\"£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONEXCLAMATION);
+    Application.MessageBox('æ¸¸æˆç›®å½•åç§°æœ€åä¸€ä¸ªå­—ç¬¦å¿…é¡»ä¸º"\"ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONEXCLAMATION);
     EditGameDir.SetFocus;
     Exit;
   end;
   if sHeroDBName = '' then begin
-    Application.MessageBox('ÓÎÏ·Êı¾İ¿âÃû³ÆÊäÈë²»ÕıÈ·£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONEXCLAMATION);
+    Application.MessageBox('æ¸¸æˆæ•°æ®åº“åç§°è¾“å…¥ä¸æ­£ç¡®ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONEXCLAMATION);
     EditHeroDB.SetFocus;
     Exit;
   end;
@@ -605,7 +613,7 @@ var
 begin
   nPort := StrToIntDef(Trim(EditLoginGate_GatePort.Text), -1);
   if (nPort < 0) or (nPort > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditLoginGate_GatePort.SetFocus;
     Exit;
   end;
@@ -624,7 +632,7 @@ var
 begin
   nPort := StrToIntDef(Trim(EditSelGate_GatePort.Text), -1);
   if (nPort < 0) or (nPort > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditSelGate_GatePort.SetFocus;
     Exit;
   end;
@@ -632,7 +640,7 @@ begin
 
   nPort := StrToIntDef(Trim(EditSelGate_GatePort1.Text), -1);
   if (nPort < 0) or (nPort > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditSelGate_GatePort1.SetFocus;
     Exit;
   end;
@@ -654,42 +662,42 @@ begin
   nPort8 := StrToIntDef(Trim(EditRunGate_GatePort8.Text), -1);
 
   if (nPort1 < 0) or (nPort1 > 65535) then begin
-    Application.MessageBox('Íø¹ØÒ»¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ä¸€ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort1.SetFocus;
     Exit;
   end;
   if (nPort2 < 0) or (nPort2 > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶ş¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³äºŒç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort2.SetFocus;
     Exit;
   end;
   if (nPort3 < 0) or (nPort3 > 65535) then begin
-    Application.MessageBox('Íø¹ØÈı¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ä¸‰ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort3.SetFocus;
     Exit;
   end;
   if (nPort4 < 0) or (nPort4 > 65535) then begin
-    Application.MessageBox('Íø¹ØËÄ¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³å››ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort4.SetFocus;
     Exit;
   end;
   if (nPort5 < 0) or (nPort5 > 65535) then begin
-    Application.MessageBox('Íø¹ØÎå¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³äº”ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort5.SetFocus;
     Exit;
   end;
   if (nPort6 < 0) or (nPort6 > 65535) then begin
-    Application.MessageBox('Íø¹ØÁù¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³å…­ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort6.SetFocus;
     Exit;
   end;
   if (nPort7 < 0) or (nPort7 > 65535) then begin
-    Application.MessageBox('Íø¹ØÆß¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ä¸ƒç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort7.SetFocus;
     Exit;
   end;
   if (nPort8 < 0) or (nPort8 > 65535) then begin
-    Application.MessageBox('Íø¹Ø°Ë¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³å…«ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditRunGate_GatePort8.SetFocus;
     Exit;
   end;
@@ -712,17 +720,17 @@ begin
   nServerPort := StrToIntDef(Trim(EditLoginServerServerPort.Text), -1);
   nMonPort := StrToIntDef(Trim(EditLoginServerMonPort.Text), -1);
   if (nGatePort < 0) or (nGatePort > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditLoginServerGatePort.SetFocus;
     Exit;
   end;
   if (nServerPort < 0) or (nServerPort > 65535) then begin
-    Application.MessageBox('Í¨Ñ¶¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('é€šè®¯ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditLoginServerServerPort.SetFocus;
     Exit;
   end;
   if (nMonPort < 0) or (nMonPort > 65535) then begin
-    Application.MessageBox('¼à¿Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç›‘æ§ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditLoginServerServerPort.SetFocus;
     Exit;
   end;
@@ -740,12 +748,12 @@ begin
   nServerPort := StrToIntDef(Trim(EditDBServerServerPort.Text), -1);
 
   if (nGatePort < 0) or (nGatePort > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditDBServerGatePort.SetFocus;
     Exit;
   end;
   if (nServerPort < 0) or (nServerPort > 65535) then begin
-    Application.MessageBox('Í¨Ñ¶¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('é€šè®¯ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditDBServerServerPort.SetFocus;
     Exit;
   end;
@@ -760,7 +768,7 @@ var
 begin
   nPort := StrToIntDef(Trim(EditLogServerPort.Text), -1);
   if (nPort < 0) or (nPort > 65535) then begin
-    Application.MessageBox('¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditLogServerPort.SetFocus;
     Exit;
   end;
@@ -775,12 +783,12 @@ begin
   nGatePort := StrToIntDef(Trim(EditM2ServerGatePort.Text), -1);
   nMsgSrvPort := StrToIntDef(Trim(EditM2ServerMsgSrvPort.Text), -1);
   if (nGatePort < 0) or (nGatePort > 65535) then begin
-    Application.MessageBox('Íø¹Ø¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('ç½‘å…³ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditM2ServerGatePort.SetFocus;
     Exit;
   end;
   if (nMsgSrvPort < 0) or (nMsgSrvPort > 65535) then begin
-    Application.MessageBox('Í¨Ñ¶¶Ë¿ÚÉèÖÃ´íÎó£¡£¡£¡', '´íÎóĞÅÏ¢', MB_OK + MB_ICONERROR);
+    Application.MessageBox('é€šè®¯ç«¯å£è®¾ç½®é”™è¯¯ï¼ï¼ï¼', 'é”™è¯¯ä¿¡æ¯', MB_OK + MB_ICONERROR);
     EditM2ServerMsgSrvPort.SetFocus;
     Exit;
   end;
@@ -822,8 +830,8 @@ end;
 procedure TfrmMain.ButtonSaveClick(Sender: TObject);
 begin
   SaveConfig;
-  Application.MessageBox('ÅäÖÃÎÄ¼şÒÑ¾­±£´æÍê±Ï...', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
-  if Application.MessageBox('ÊÇ·ñÉú³ÉĞÂµÄÓÎÏ··şÎñÆ÷ÅäÖÃÎÄ¼ş...', 'ÌáÊ¾ĞÅÏ¢', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
+  Application.MessageBox('é…ç½®æ–‡ä»¶å·²ç»ä¿å­˜å®Œæ¯•...', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
+  if Application.MessageBox('æ˜¯å¦ç”Ÿæˆæ–°çš„æ¸¸æˆæœåŠ¡å™¨é…ç½®æ–‡ä»¶...', 'æç¤ºä¿¡æ¯', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
     ButtonGenGameConfigClick(ButtonGenGameConfig);
   end;
   PageControl3.ActivePageIndex := 0;
@@ -903,22 +911,22 @@ begin
       dlgSave.FileName := '.\' + ExtractFileName(Item.Caption);
       if dlgSave.Execute(Handle) then begin
         if FileExists(dlgSave.FileName) then begin
-          if Application.MessageBox('ÎÄ¼şÒÑ¾­´æÔÚ£¬ÊÇ·ñ¸²¸ÇÔ­ÎÄ¼ş£¿', 'ÌáÊ¾ĞÅÏ¢',
+          if Application.MessageBox('æ–‡ä»¶å·²ç»å­˜åœ¨ï¼Œæ˜¯å¦è¦†ç›–åŸæ–‡ä»¶ï¼Ÿ', 'æç¤ºä¿¡æ¯',
             MB_OKCANCEL + MB_ICONQUESTION + MB_DEFBUTTON2) = IDCANCEL then
           begin
             Exit;
           end;
           if not DeleteFile(dlgSave.FileName) then begin
-            Application.MessageBox('É¾³ıÔ­ÎÄ¼şÊ§°Ü£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONSTOP);
+            Application.MessageBox('åˆ é™¤åŸæ–‡ä»¶å¤±è´¥ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONSTOP);
             Exit;
           end;
         end;
         FileStream := TFileStream.Create(dlgSave.FileName, fmCreate);
         Try
           if not FileStream.Write(DataListInfo.Data^, DataListInfo.DataSize) = DataListInfo.DataSize then begin
-            Application.MessageBox('±£´æÎÄ¼şÊ§°Ü', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONSTOP);
+            Application.MessageBox('ä¿å­˜æ–‡ä»¶å¤±è´¥', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONSTOP);
           end else
-            Application.MessageBox('ÊäÈëÍê³É£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
+            Application.MessageBox('è¾“å…¥å®Œæˆï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
         Finally
           FileStream.Free;
         End;
@@ -951,7 +959,7 @@ begin
   for Item in ListViewDataList.Items do
     DisposeDataListInfo(pTDataListInfo(Item.SubItems.Objects[0]));
   ListViewDataList.Clear;
-  GroupBox21.Caption := 'Êı¾İÁĞ±í';
+  GroupBox21.Caption := 'æ•°æ®åˆ—è¡¨';
 end;
 
 procedure TfrmMain.ComboBoxRunStatusChange(Sender: TObject);
@@ -1000,18 +1008,18 @@ begin
         Item.Caption := sFileName;
         Item.SubItems.AddObject(DateTimeToStr(DataListInfo.DateTime), TObject(DataListInfo));
         Item.SubItems.Add('0');
-        Item.SubItems.Add('Î´¸üĞÂ');
+        Item.SubItems.Add('æœªæ›´æ–°');
         DataListInfo.Item := Item;
       end else begin
         if StrToDateTimeDef(Item.SubItems[0], 0) < StrToDateTimeDef(sFileTime, 0) then begin
-          Item.SubItems[2] := 'ÓĞĞÂ°æ±¾';
+          Item.SubItems[2] := 'æœ‰æ–°ç‰ˆæœ¬';
         end;
       end;
     end;
   end;
   g_GetDatList.Clear;
-  GroupBox21.Caption := Format('Êı¾İÁĞ±í(%d)', [ListViewDataList.Items.Count]);
-  MainOutDataListMessage('ÁĞ±í¸üĞÂÍê³É...');
+  GroupBox21.Caption := Format('æ•°æ®åˆ—è¡¨(%d)', [ListViewDataList.Items.Count]);
+  MainOutDataListMessage('åˆ—è¡¨æ›´æ–°å®Œæˆ...');
   g_boGetDataListOK := True;
   //Result := GetNextData();
 
@@ -1033,8 +1041,8 @@ begin
     if g_GetDatList.Objects[0] <> nil then begin
       DataListInfo := pTDataListInfo(g_GetDatList.Objects[0]);
       Item := DataListInfo.Item;
-      Item.SubItems.Strings[2] := 'ÕıÔÚ¸üĞÂ';
-      MainOutDataListMessage('ÕıÔÚ¸üĞÂ[' + DataListInfo.sFileName + ']...');
+      Item.SubItems.Strings[2] := 'æ­£åœ¨æ›´æ–°';
+      MainOutDataListMessage('æ­£åœ¨æ›´æ–°[' + DataListInfo.sFileName + ']...');
       sData := Trim(DataListInfo.sFileName);
       nMsgLen := Length(sData) + 1;
       DefMessage := MakeDefMessage(SEC_GETFILE, Integer(DataListInfo), DataListInfo.DateTime, nMsgLen);
@@ -1046,7 +1054,7 @@ begin
         while CSocket.Active and (CSocket.Socket.SendBuf(SendBuffer^, SizeOf(TDefMessage) + nMsgLen) = -1) do begin
           Inc(nSendCount);
           if nSendCount > 10 then begin
-            MainOutDataListMessage('·¢ËÍ»ñÈ¡[' + sData + ']µÄÊı¾İÊ§°Ü...');
+            MainOutDataListMessage('å‘é€è·å–[' + sData + ']çš„æ•°æ®å¤±è´¥...');
             exit;
           end;
           nWaitTick := GetTickCount + 1000;
@@ -1064,40 +1072,81 @@ begin
       Result := GetNextData;
     end;
   end else begin
-    MainOutDataListMessage('Êı¾İ¸üĞÂÍê³É...');
+    MainOutDataListMessage('æ•°æ®æ›´æ–°å®Œæˆ...');
   end;
 end;
 
+procedure TfrmMain.GroupBox5Click(Sender: TObject);
+begin
+
+end;
+
+// TfrmMain æ˜¯ä¸»çª—ä½“ï¼Œç»§æ‰¿è‡ª TFormï¼ˆçª—ä½“ç±»ï¼‰
+// å…¶ä¸­ FormCreate è¡¨ç¤ºå½“çª—ä½“åˆ›å»ºæ—¶ä¼šè‡ªåŠ¨è°ƒç”¨çš„æ–¹æ³•
+// ç±»ä¼¼ android ä¸­ activity çš„ onCreated æ–¹æ³•
+// æˆ–è€… java ä¸­çš„ main æ–¹æ³•
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  // å¸ƒå°”ç±»å‹ï¼Œè¡¨ç¤ºå½“çª—ä½“åˆ›å»ºå’Œåˆå§‹åŒ–æ—¶ï¼Œæ— æ³•è¿›è¡Œå…¶ä»–æ“ä½œï¼Œä¿è¯çª—ä½“æ­£å¸¸æ˜¾ç¤º
   m_boOpen := False;
+  // g_IniConf æ˜¯è¯»å–çš„ Config.ini æ–‡ä»¶
+  // ReadInteger æ˜¯è¯»å– int ç±»å‹ï¼ˆå¯¹åº” java åŸºæœ¬ç±»å‹ï¼‰
+  // å–å‡º [Setup] éƒ¨åˆ† FormID çš„å€¼
+  // è‹¥ä¸å­˜åœ¨åˆ™å¾—åˆ° g_nFormIdx çš„å€¼ï¼Œç”±äºå®ƒæ˜¯å…¨å±€å˜é‡ï¼Œåˆ™ä¸º 0
   g_nFormIdx := g_IniConf.ReadInteger('Setup', 'FormID', g_nFormIdx);
+  // è¿™é‡Œæ˜¯å°† ProcessMessage æ–¹æ³•èµ‹ç»™åº”ç”¨çš„ OnMessageï¼Œç”¨äºæ‰˜ç®¡æ‰€æœ‰æ¶ˆæ¯
+  // è€Œ ProcessMessage åˆ™å®ç°ä¸º é‡åˆ° WM_SENDPROCMSG ç±»å‹çš„æ¶ˆæ¯ï¼Œç›´æ¥æ‹¦æˆªå®ƒ
   Application.OnMessage := ProcessMessage;
+  // ä¸»é¡µé¢ åˆ‡æ¢åˆ°æœåŠ¡ç«¯æ§åˆ¶é¡µé¢
   PageControl1.ActivePageIndex := 0;
+  // é…ç½®å‘å¯¼é¡µé¢ åˆ‡æ¢åˆ°ç¬¬ä¸€æ­¥ï¼ˆåŸºæœ¬è®¾ç½®ï¼‰
   PageControl3.ActivePageIndex := 0;
+  // å¯åŠ¨çŠ¶æ€ï¼š
+  // 0 åˆå§‹çŠ¶æ€ï¼Œå¯ä»¥å¯åŠ¨æœåŠ¡å™¨ï¼›
+  // 1 å¯åŠ¨ä¸­ï¼Œå¯ä»¥ä¸­æ–­å¯åŠ¨ï¼›
+  // 2 å·²ç»ä¸­æ–­å¯åŠ¨ï¼Œå¯ä»¥åœæ­¢æœåŠ¡å™¨ï¼›
+  // 3 åœæ­¢ä¸­ï¼Œå¯ä»¥ä¸­æ–­åœæ­¢ï¼›ä¸€æ—¦åœæ­¢å®Œæ¯•ï¼Œåˆ™å›å½’åˆå§‹çŠ¶æ€ã€‚
   m_nStartStatus := 0;
+  // å¤‡ä»½åŠŸèƒ½çŠ¶æ€ï¼š
+  // 0 å¯åŠ¨ï¼›
+  // 1 åœæ­¢ã€‚
   m_nBackStartStatus := 0;
+  // å¤‡å¿˜å½•ç»„ä»¶å®ä¾‹ï¼Œæ¸…ç†ä¸€ä¸‹å†…å®¹
   MemoLog.Clear;
   //mmoDataListLog.Clear;
+  // åˆ›å»ºä¸€ä¸ªå­—ç¬¦ä¸²åˆ—è¡¨ï¼Œå¥½åƒæ˜¯å¼•æ“æ›´æ–°æ•°æ®ä¹‹ç±»çš„ä¸œè¥¿ï¼Œã€æ²¡æœ‰æ„ä¹‰ã€‘
   g_GetDatList := TStringList.Create;
+  // è·å¾—ç³»ç»Ÿè‡ªå¯åŠ¨ä»¥æ¥çš„æ¯«ç§’å€¼ï¼Œç”¨äºæ•°æ®æ›´æ–°æ£€æŸ¥ï¼Œã€æ²¡æœ‰æ„ä¹‰ã€‘
   m_dwRefTick := GetTickCount;
+  // ä»æ§åˆ¶å°é…ç½®æ–‡ä»¶ Config.ini ä¸­åŠ è½½å‚æ•°
   LoadConfig();
+  // ä»å¤‡ä»½é…ç½®æ–‡ä»¶ BackupList.ini ä¸­åŠ è½½å‚æ•°
   LoadBackList();
+  // ç›®æµ‹æ˜¯å°†å¤‡ä»½æ–‡ä»¶åˆ—å…¥è§†å›¾ç»„ä»¶ä¸­ï¼Œæ¯”å¦‚æœ‰å¤šå°‘å¤‡ä»½æ–‡ä»¶ï¼Œå°±æ˜¾ç¤ºå¤šå°‘
   RefBackListToView();
+  // æ¸…ç†æŸä¸ªåˆ—è¡¨ç»„ä»¶ï¼Œç›®å‰ä¸çŸ¥é“å…·ä½“æ˜¯ä»€ä¹ˆ
   ListViewDataList.Clear;
+  // å¦‚æœå¯åŠ¨æœåŠ¡å¤±è´¥ï¼Œé‚£å°±ç›´æ¥é€€å‡ºï¼Œä¸€èˆ¬ä¸å¯èƒ½å‡ºç°è¿™ç§æƒ…å†µ
+  // é€»è¾‘æ˜¯ï¼šæ˜¾ç¤ºæ­£åœ¨å¯åŠ¨ï¼Œè·å¾—ç³»ç»Ÿå¯åŠ¨æ—¶é•¿ï¼Œå¼€å¯è®¡æ—¶å™¨ï¼Œæ˜¾ç¤ºå¯åŠ¨å®Œæ¯•
   if not StartService() then
     Exit;
+  // æ ¹æ® Config.ini é…ç½®æ–‡ä»¶ä¸­çš„å‚æ•°ï¼Œåˆå§‹åŒ–æ¸¸æˆæ§åˆ¶å°çš„ç›¸å…³ç»„ä»¶çŠ¶æ€
   RefGameConsole();
+  // è°ƒè¯•æ ‡ç­¾ä¸å¯è§
   TabSheetDebug.TabVisible := False;
+  // æ•°æ®åˆ—è¡¨æ ‡ç­¾ä¸å¯è§
   tsDataList.TabVisible := False;
   {if g_boShowDebugTab then begin
     TabSheetDebug.TabVisible := True;
     TimerCheckDebug.Enabled := True;
   end;    }
+  // å¤é€‰æ¡†ï¼Œè‡ªåŠ¨è¿è¡Œå¤‡ä»½ï¼Œé»˜è®¤é€‰ä¸­çŠ¶æ€ï¼šFalse
   CheckBoxAutoRunBak.Checked := g_boAutoRunBak;
+  // å®Œæˆçª—ä½“åˆ›å»ºï¼Œè§£é” å‚æ•°è°ƒæ•´
   m_boOpen := True;
+  // å¦‚æœè‡ªåŠ¨è¿è¡Œå¤‡ä»½ç³»ç»Ÿå¯ç”¨ï¼Œé‚£ä¹ˆå°±æ ¹æ® å¤‡ä»½åŠŸèƒ½çŠ¶æ€ è¿›è¡Œå¯åŠ¨æˆ–åœæ­¢
   if g_boAutoRunBak then ButtonBackStartClick(ButtonBackStart);
-  //MainOutMessage('ÓÎÏ·¿ØÖÆÆ÷Æô¶¯³É¹¦...');
+  //MainOutMessage('æ¸¸æˆæ§åˆ¶å™¨å¯åŠ¨æˆåŠŸ...');
 //  SetWindowPos(Self.Handle,HWND_TOPMOST,Self.Left,Self.Top,Self.Width,Self.Height,$40);
 end;
 
@@ -1111,10 +1160,10 @@ procedure TfrmMain.ButtonGenGameConfigClick(Sender: TObject);
 begin
   GenGameConfig();
   RefGameConsole();
-  Application.MessageBox('ÒıÇæÅäÖÃÎÄ¼şÒÑ¾­Éú³ÉÍê±Ï...', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
+  Application.MessageBox('å¼•æ“é…ç½®æ–‡ä»¶å·²ç»ç”Ÿæˆå®Œæ¯•...', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
 end;
 
-procedure TfrmMain.GenGameConfig;
+procedure TfrmMain.GenGameConfig();
 begin
   GenDBServerConfig();
   GenLoginServerConfig();
@@ -1123,9 +1172,10 @@ begin
   GenRunGateConfig();
   GenSelGateConfig();
   GenLoginGateConfig();
+  GenPlugTopConfig();
 end;
 
-procedure TfrmMain.GenDBServerConfig;
+procedure TfrmMain.GenDBServerConfig();
 var
   IniGameConf: Tinifile;
   sIniFile, sDir: string;
@@ -1179,20 +1229,20 @@ begin
 
   {if not FileExists(g_sGameDirectory + 'DBServer\FSortName.txt') then begin
     SaveList := TStringList.Create;
-    SaveList.Add(';ÅÅĞĞ°ñ¹ıÂËÈËÎïÃû³Æ');
+    SaveList.Add(';æ’è¡Œæ¦œè¿‡æ»¤äººç‰©åç§°');
     SaveList.SaveToFile(g_sGameDirectory + 'DBServer\FSortName.txt');
     SaveList.Free;
   end;     }
 
   if not FileExists(g_sGameDirectory + 'DBServer\FUserName.txt') then begin
     SaveList := TStringList.Create;
-    SaveList.Add(';´´½¨ÈËÎï¹ıÂË×Ö·û£¬Ò»ĞĞÒ»¸ö¹ıÂË');
+    SaveList.Add(';åˆ›å»ºäººç‰©è¿‡æ»¤å­—ç¬¦ï¼Œä¸€è¡Œä¸€ä¸ªè¿‡æ»¤');
     SaveList.SaveToFile(g_sGameDirectory + 'DBServer\FUserName.txt');
     SaveList.Free;
   end;
 end;
 
-procedure TfrmMain.GenLoginServerConfig;
+procedure TfrmMain.GenLoginServerConfig();
 var
   IniGameConf: Tinifile;
   sIniFile: string;
@@ -1261,7 +1311,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.GenLogServerConfig;
+procedure TfrmMain.GenLogServerConfig();
 var
   IniGameConf: Tinifile;
   sIniFile: string;
@@ -1283,7 +1333,7 @@ begin
   IniGameConf.Free;
 end;
 
-procedure TfrmMain.GenM2ServerConfig;
+procedure TfrmMain.GenM2ServerConfig();
 var
   IniGameConf: Tinifile;
   sIniFile: string;
@@ -1369,7 +1419,7 @@ begin
   SaveList.Free;
 end;
 
-procedure TfrmMain.GenLoginGateConfig;
+procedure TfrmMain.GenLoginGateConfig();
 var
   IniGameConf: Tinifile;
   sIniFile: string;
@@ -1469,7 +1519,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.GenRunGateConfig;
+procedure TfrmMain.GenRunGateConfig();
 var
   IniGameConf: Tinifile;
   sIniFile: string;
@@ -1489,7 +1539,29 @@ begin
   IniGameConf.Free;
 end;
 
-procedure TfrmMain.RefGameConsole;
+procedure TfrmMain.GenPlugTopConfig();
+var
+  IniGameConf: Tinifile;
+  sIniFile: string;
+begin
+  sIniFile := g_sGameDirectory + 'Mir200\';
+  if not DirectoryExists(sIniFile) then begin
+    CreateDir(sIniFile);
+  end;
+  IniGameConf := Tinifile.Create(sIniFile + PLUGTOPCONFIGFILE);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'RunMode', 0);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'AutoRun', 1);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'MinLevel', 1);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'MaxLevel', 1000);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'Hour1', 6);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'Minute1', 0);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'Hour2', 0);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'Minute2', 10);
+  IniGameConf.WriteInteger(PlugTopSectionName2, 'MaxCount', 1000);
+  IniGameConf.Free;
+end;
+
+procedure TfrmMain.RefGameConsole();
 begin
   m_boOpen := False;
   CheckBoxM2Server.Checked := g_Config.M2Server.GetStart;
@@ -1507,6 +1579,7 @@ begin
   CheckBoxRunGate5.Checked := g_Config.RunGate.GetStart[5];
   CheckBoxRunGate6.Checked := g_Config.RunGate.GetStart[6];
   CheckBoxRunGate7.Checked := g_Config.RunGate.GetStart[7];
+  CheckBoxPlugTop.Checked := g_Config.PlugTop.GetStart;
   
   EditGameDir.Text := g_sGameDirectory;
   EditHeroDB.Text := g_sHeroDBName;
@@ -1609,17 +1682,17 @@ begin
     FreeMem(g_DataListReadBuffer);
   g_DataListReadBuffer := nil;
   g_nDataListReadLength := 0;
-  MainOutDataListMessage('Á¬½ÓÔ¶³Ì·şÎñÆ÷³É¹¦...');
-  MainOutDataListMessage('ÕıÔÚÑéÖ¤Á¬½ÓÃÜÂë...');
+  MainOutDataListMessage('è¿æ¥è¿œç¨‹æœåŠ¡å™¨æˆåŠŸ...');
+  MainOutDataListMessage('æ­£åœ¨éªŒè¯è¿æ¥å¯†ç ...');
   if not SendDataListData(SEC_CHECKPASS, g_sDataListPassWord) then begin
-    MainOutDataListMessage('·¢ËÍÑéÖ¤Á¬½ÓÃÜÂëÊ§°Ü...');
+    MainOutDataListMessage('å‘é€éªŒè¯è¿æ¥å¯†ç å¤±è´¥...');
     Socket.Close;
   end;
 end;
 
 procedure TfrmMain.CSocketConnecting(Sender: TObject; Socket: TCustomWinSocket);
 begin
-  MainOutDataListMessage('ÕıÔÚÁ¬½ÓÔ¶³Ì·şÎñÆ÷...');
+  MainOutDataListMessage('æ­£åœ¨è¿æ¥è¿œç¨‹æœåŠ¡å™¨...');
   btDataListAll.Enabled := False;
   btDataListSelect.Enabled := False;
   btDataListList.Enabled := False;
@@ -1634,14 +1707,14 @@ begin
     FreeMem(g_DataListReadBuffer);
   g_DataListReadBuffer := nil;
   g_nDataListReadLength := 0;
-  //MainOutDataListMessage('ÓëÔ¶³Ì·şÎñÆ÷¶Ï¿ªÁ¬½Ó...');
+  //MainOutDataListMessage('ä¸è¿œç¨‹æœåŠ¡å™¨æ–­å¼€è¿æ¥...');
 end;
 
 procedure TfrmMain.CSocketError(Sender: TObject; Socket: TCustomWinSocket; ErrorEvent: TErrorEvent; var ErrorCode: Integer);
 begin
   ErrorCode := 0;
   Socket.Close;
-  MainOutDataListMessage('Á¬½ÓÔ¶³Ì·şÎñÆ÷Ê§°Ü...');
+  MainOutDataListMessage('è¿æ¥è¿œç¨‹æœåŠ¡å™¨å¤±è´¥...');
 end;
 
 procedure TfrmMain.CSocketRead(Sender: TObject; Socket: TCustomWinSocket);
@@ -1687,9 +1760,9 @@ begin
         case DefMessage.Ident of
           SES_CHECKPASS_OK: begin
               if g_GetDatList.Count = 0 then begin
-                MainOutDataListMessage('ÕıÔÚ»ñÈ¡Êı¾İÁĞ±í...');
+                MainOutDataListMessage('æ­£åœ¨è·å–æ•°æ®åˆ—è¡¨...');
                 if not SendDataListData(SEC_GETFILELIST, 'TEST') then begin
-                  MainOutDataListMessage('·¢ËÍ»ñÈ¡Êı¾İÁĞ±íÊ§°Ü...');
+                  MainOutDataListMessage('å‘é€è·å–æ•°æ®åˆ—è¡¨å¤±è´¥...');
                   Socket.Close;
                   Exit;
                 end;
@@ -1703,7 +1776,7 @@ begin
               end;
             end;
           SES_CHECKPASS_FAIR: begin
-              MainOutDataListMessage('ÃÜÂëÑéÖ¤Ê§°Ü...');
+              MainOutDataListMessage('å¯†ç éªŒè¯å¤±è´¥...');
               Socket.Close;
               Exit;
             end;
@@ -1717,12 +1790,12 @@ begin
                     Exit;
                   end;
                 end else begin
-                  MainOutDataListMessage('Ã»ÓĞ¿É¸üĞÂµÄÊı¾İÁĞ±í...');
+                  MainOutDataListMessage('æ²¡æœ‰å¯æ›´æ–°çš„æ•°æ®åˆ—è¡¨...');
                   Socket.Close;
                   Exit;
                 end;
               end else begin
-                MainOutDataListMessage('Ã»ÓĞ¿É¸üĞÂµÄÊı¾İÁĞ±í...');
+                MainOutDataListMessage('æ²¡æœ‰å¯æ›´æ–°çš„æ•°æ®åˆ—è¡¨...');
                 Socket.Close;
                 Exit;
               end;
@@ -1746,16 +1819,16 @@ begin
                   DataListInfo.DataSize := DefMessage.DataSize;
                   Item.SubItems.Strings[0] := FormatDateTime('yyyy-mm-dd hh:mm:ss', DefMessage.DataTime);
                   Item.SubItems.Strings[1] := IntToStr(DefMessage.DataSize);
-                  Item.SubItems.Strings[2] := 'Íê³É';
+                  Item.SubItems.Strings[2] := 'å®Œæˆ';
                 end else begin
                   if (DefMessage.DataTime > 0) and (nLen >= DefMessage.DataSize) then begin
                     DataListInfo.DateTime := DefMessage.DataTime;
                     Item.SubItems.Strings[0] := FormatDateTime('yyyy-mm-dd hh:mm:ss', DefMessage.DataTime);
                     Item.SubItems.Strings[1] := IntToStr(DataListInfo.DataSize);
-                    Item.SubItems.Strings[2] := 'Íê³É';
+                    Item.SubItems.Strings[2] := 'å®Œæˆ';
                   end else begin
-                    MainOutDataListMessage('¸üĞÂÎÄ¼ş[' + g_GetDatList[0] + ']Ê§°Ü...');
-                    Item.SubItems.Strings[2] := 'Ê§°Ü';
+                    MainOutDataListMessage('æ›´æ–°æ–‡ä»¶[' + g_GetDatList[0] + ']å¤±è´¥...');
+                    Item.SubItems.Strings[2] := 'å¤±è´¥';
                   end;
                 end;
                 g_GetDatList.Delete(0);
@@ -1810,30 +1883,30 @@ begin
   SetWindowPos(Self.Handle, Self.Handle, Self.Left, Self.Top, Self.Width, Self.Height, $40);
   case m_nStartStatus of
     0: begin
-        if Application.MessageBox('ÊÇ·ñÈ·ÈÏÆô¶¯ÓÎÏ··şÎñÆ÷ ?',
-          'È·ÈÏĞÅÏ¢', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
+        if Application.MessageBox('ç¡®è®¤å¯åŠ¨æ¸¸æˆæœåŠ¡å™¨ ?',
+          'ç¡®è®¤ä¿¡æ¯', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
           //if g_boGetDataListOK then begin
             StartGame();
           //end;
         end;
       end;
     1: begin
-        if Application.MessageBox('ÊÇ·ñÈ·ÈÏÖĞÖ¹Æô¶¯ÓÎÏ··şÎñÆ÷ ?',
-          'È·ÈÏĞÅÏ¢', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
+        if Application.MessageBox('ç¡®è®¤ä¸­æ–­å¯åŠ¨æ¸¸æˆæœåŠ¡å™¨ ?',
+          'ç¡®è®¤ä¿¡æ¯', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
           TimerStartGame.Enabled := False;
           m_nStartStatus := 2;
           ButtonStartGame.Caption := g_sButtonStopGame;
         end;
       end;
     2: begin
-        if Application.MessageBox('ÊÇ·ñÈ·ÈÏÍ£Ö¹ÓÎÏ··şÎñÆ÷ ?',
-          'È·ÈÏĞÅÏ¢', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
+        if Application.MessageBox('ç¡®è®¤åœæ­¢æ¸¸æˆæœåŠ¡å™¨ ?',
+          'ç¡®è®¤ä¿¡æ¯', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
           StopGame();
         end;
       end;
     3: begin
-        if Application.MessageBox('ÊÇ·ñÈ·ÈÏÖĞÖ¹Æô¶¯ÓÎÏ··şÎñÆ÷ ?',
-          'È·ÈÏĞÅÏ¢', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
+        if Application.MessageBox('ç¡®è®¤ä¸­æ–­åœæ­¢æ¸¸æˆæœåŠ¡å™¨ ?',
+          'ç¡®è®¤ä¿¡æ¯', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
           TimerStopGame.Enabled := False;
           m_nStartStatus := 2;
           ButtonStartGame.Caption := g_sButtonStopGame;
@@ -1887,17 +1960,31 @@ begin
   end;
 end;
 
+procedure TfrmMain.SpinEditAllPortAddChange(Sender: TObject);
+begin
+if SpinEditAllPortAdd.Text = '' then begin
+    SpinEditAllPortAdd.Text := '0';
+  end;
+end;
+
 procedure TfrmMain.StartGame;
 var
   //  nRetCode: Integer;
   I: Integer;
 begin
+// GetTickCount è¡¨ç¤ºè‡ªç³»ç»Ÿå¯åŠ¨ä»¥æ¥ï¼Œç»å†çš„æ¯«ç§’æ•°ï¼Œlongç±»å‹
   m_dwRunTick := GetTickCount;
+  // ç”¨ #0 å¡«å…… DBServer çš„ SizeOf TProgram æ•°é‡
   FillChar(DBServer, SizeOf(TProgram), #0);
+  // æ˜¯å¦å¯åŠ¨ç¨‹åºï¼ˆæœ‰äº›æ˜¯å¯é€‰çš„ï¼Œç”¨æˆ·å¯ä»¥ä¸å¯åŠ¨å®ƒä»¬ï¼Œæ¯”å¦‚æ—¥å¿—æœåŠ¡å™¨ï¼‰
   DBServer.boGetStart := g_Config.DBServer.GetStart;
+  // ç¨‹åºå‘ç”Ÿå¼‚å¸¸æ—¶ï¼Œæ˜¯å¦è‡ªåŠ¨é‡å¯ï¼ˆå¾…ç¡®è®¤ï¼‰
   DBServer.boReStart := True;
+  // æœåŠ¡ç«¯ç›®å½•+æ•°æ®åº“æœåŠ¡å™¨ç›®å½•
   DBServer.sDirectory := g_sGameDirectory + 'DBServer\';
+  // è¦å¯åŠ¨çš„ç¨‹åºæ–‡ä»¶å
   DBServer.sProgramFile := g_Config.DBServer.ProgramFile;
+  // ç¨‹åºå¯åŠ¨åï¼Œæ‰€å¤„çš„å±å¹•åæ ‡
   DBServer.nMainFormX := g_Config.DBServer.MainFormX;
   DBServer.nMainFormY := g_Config.DBServer.MainFormY;
 
@@ -1974,8 +2061,16 @@ begin
   LoginGate2.nMainFormX := g_Config.LoginGate.MainFormX;
   LoginGate2.nMainFormY := g_Config.LoginGate.MainFormY;
 
+  FillChar(PlugTop, SizeOf(TProgram), #0);
+  PlugTop.boGetStart := g_Config.PlugTop.GetStart;
+  PlugTop.boReStart := True;
+  PlugTop.sDirectory := g_sGameDirectory + 'Mir200\';
+  PlugTop.sProgramFile := g_Config.PlugTop.ProgramFile;
+  PlugTop.nMainFormX := g_Config.PlugTop.MainFormX;
+  PlugTop.nMainFormY := g_Config.PlugTop.MainFormY;
 
 
+  // æ§åˆ¶å°é¦–é¡µçš„å¤é€‰æ¡†æŒ‰é’®çŠ¶æ€
   CheckDBServer.Checked := DBServer.boGetStart;
   CheckLoginSrv.Checked := LoginServer.boGetStart;
   CheckM2Server.Checked := M2Server.boGetStart;
@@ -1991,16 +2086,18 @@ begin
   CheckRunGate6.Checked := RunGate[5].boGetStart;
   CheckRunGate7.Checked := RunGate[6].boGetStart;
   CheckRunGate8.Checked := RunGate[7].boGetStart;
-
+  // æ§åˆ¶å°å¯åŠ¨æŒ‰é’®çš„æ–‡å­—æ ‡é¢˜
   ButtonStartGame.Caption := g_sButtonStopStartGame;
+  // å¯åŠ¨çŠ¶æ€ä¸ºå¯åŠ¨ä¸­
   m_nStartStatus := 1;
+  // å¯åŠ¨è®¡æ—¶å™¨å¼€å§‹è¿è¡Œ
   TimerStartGame.Enabled := True;
 end;
 
 procedure TfrmMain.StopGame;
 begin
   ButtonStartGame.Caption := g_sButtonStopStopGame;
-  MainOutMessage('ÕıÔÚ¿ªÊ¼Í£Ö¹·şÎñÆ÷...');
+  MainOutMessage('æ­£åœ¨å¼€å§‹åœæ­¢æœåŠ¡å™¨...');
   TimerCheckRun.Enabled := False;
   TimerStopGame.Enabled := True;
   m_boGateStop := False;
@@ -2008,11 +2105,13 @@ begin
 end;
 
 procedure TfrmMain.TimerStartGameTimer(Sender: TObject);
+// è·å–è¿è¡Œç½‘å…³å¯åŠ¨çŠ¶æ€çš„å‡½æ•°
   function GetStartRunGate: Boolean;
   var
     I: Integer;
   begin
     Result := False;
+    // å¦‚æœä»ä½åˆ°é«˜æ‰¾åˆ°å…è®¸å¯åŠ¨çš„è¿è¡Œç½‘å…³ä¸­ï¼Œå¤„äºæ­£åœ¨å¯åŠ¨çŠ¶æ€çš„æŸä¸€ä¸ªï¼Œåˆ™è¿”å›çœŸ
     for I := Low(RunGate) to High(RunGate) do begin
       if RunGate[I].boGetStart and (RunGate[I].btStartStatus = 1) then begin
         Result := True;
@@ -2039,7 +2138,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        DBServer.btStartStatus:=2;
           Exit;
         end;
@@ -2059,7 +2158,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        LoginServer.btStartStatus:=2;
           Exit;
         end;
@@ -2080,7 +2179,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        LogServer.btStartStatus:=2;
           Exit;
         end;
@@ -2101,7 +2200,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        M2Server.btStartStatus:=2;
           Exit;
         end;
@@ -2109,7 +2208,7 @@ begin
   end;
 
   if GetStartRunGate then
-    Exit; //ÓĞÍø¹ØÕıÔÚÆô¶¯µÈ´ı
+    Exit; //æœ‰ç½‘å…³æ­£åœ¨å¯åŠ¨ç­‰å¾…
     
   boStartRunGateOK := True;
   for I := Low(RunGate) to High(RunGate) do begin
@@ -2147,7 +2246,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        SelGate.btStartStatus:=2;
           Exit;
         end;
@@ -2169,7 +2268,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        SelGate1.btStartStatus:=2;
           Exit;
         end;
@@ -2199,7 +2298,7 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        LoginGate.btStartStatus:=2;
           Exit;
         end;
@@ -2220,8 +2319,27 @@ begin
           end;
           Exit;
         end;
-      1: begin //Èç¹û×´Ì¬Îª1 Ôò»¹Ã»Æô¶¯Íê³É
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
           //        LoginGate2.btStartStatus:=2;
+          Exit;
+        end;
+    end;
+  end;
+  if PlugTop.boGetStart then begin
+    case PlugTop.btStartStatus of
+      0: begin
+          nRetCode := RunProgram(PlugTop, IntToStr(Self.Handle), 0);
+          if nRetCode = 0 then begin
+            PlugTop.btStartStatus := 1;
+            PlugTop.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, PlugTop.ProcessInfo.dwProcessId);
+          end
+          else begin
+            //ShowMessage(IntToStr(nRetCode));
+          end;
+          Exit;
+        end;
+      1: begin //å¦‚æœçŠ¶æ€ä¸º1 åˆ™è¿˜æ²¡å¯åŠ¨å®Œæˆ
+          //        PlugTop.btStartStatus:=2;
           Exit;
         end;
     end;
@@ -2259,9 +2377,9 @@ begin
       if LoginGate.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(LoginGate, 0);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬µÇÂ¼Íø¹ØÒ»ÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œç™»å½•ç½‘å…³ä¸€å·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(LoginGate.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2271,7 +2389,7 @@ begin
     else begin
       CloseHandle(LoginGate.ProcessHandle);
       LoginGate.btStartStatus := 0;
-      MainOutMessage('µÇÂ¼Íø¹ØÒ»ÒÑÍ£Ö¹...');
+      MainOutMessage('ç™»å½•ç½‘å…³ä¸€å·²åœæ­¢...');
     end;
   end;
 
@@ -2281,9 +2399,9 @@ begin
       if LoginGate2.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(LoginGate2, 0);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬µÇÂ¼Íø¹Ø¶şÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œç™»å½•ç½‘å…³äºŒå·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(LoginGate2.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2293,7 +2411,7 @@ begin
     else begin
       CloseHandle(LoginGate2.ProcessHandle);
       LoginGate2.btStartStatus := 0;
-      MainOutMessage('µÇÂ¼Íø¹Ø¶şÒÑÍ£Ö¹...');
+      MainOutMessage('ç™»å½•ç½‘å…³äºŒå·²åœæ­¢...');
     end;
   end;
 
@@ -2303,9 +2421,9 @@ begin
       if SelGate.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(SelGate, 0);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬½ÇÉ«Íø¹ØÒ»ÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œè§’è‰²ç½‘å…³ä¸€å·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(SelGate.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2315,7 +2433,7 @@ begin
     else begin
       CloseHandle(SelGate.ProcessHandle);
       SelGate.btStartStatus := 0;
-      MainOutMessage('½ÇÉ«Íø¹ØÒ»ÒÑÍ£Ö¹...');
+      MainOutMessage('è§’è‰²ç½‘å…³ä¸€å·²åœæ­¢...');
     end;
   end;
 
@@ -2325,9 +2443,9 @@ begin
       if SelGate1.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(SelGate1, 0);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬½ÇÉ«Íø¹Ø¶şÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œè§’è‰²ç½‘å…³äºŒå·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(SelGate1.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2337,7 +2455,7 @@ begin
     else begin
       CloseHandle(SelGate1.ProcessHandle);
       SelGate1.btStartStatus := 0;
-      MainOutMessage('½ÇÉ«Íø¹Ø¶şÒÑÍ£Ö¹...');
+      MainOutMessage('è§’è‰²ç½‘å…³äºŒå·²åœæ­¢...');
     end;
   end;
 
@@ -2350,24 +2468,24 @@ begin
             StopProgram(RunGate[I], 0);
             case I of
               0:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹ØÒ»ÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³ä¸€å·²è¢«å¼ºè¡Œåœæ­¢...');
               1:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹Ø¶şÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³äºŒå·²è¢«å¼ºè¡Œåœæ­¢...');
               2:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹ØÈıÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³ä¸‰å·²è¢«å¼ºè¡Œåœæ­¢...');
               3:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹ØËÄÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³å››å·²è¢«å¼ºè¡Œåœæ­¢...');
               4:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹ØÎåÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³äº”å·²è¢«å¼ºè¡Œåœæ­¢...');
               5:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹ØÁùÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³å…­å·²è¢«å¼ºè¡Œåœæ­¢...');
               6:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹ØÆßÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³ä¸ƒå·²è¢«å¼ºè¡Œåœæ­¢...');
               7:
-                MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·Íø¹Ø°ËÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+                MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆç½‘å…³å…«å·²è¢«å¼ºè¡Œåœæ­¢...');
             end;
           end;
-          break; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+          break; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
         end;
         SendProgramMsg(RunGate[I].MainFormHandle, GS_QUIT, '');
         g_dwStopTick := GetTickCount();
@@ -2378,14 +2496,14 @@ begin
         CloseHandle(RunGate[I].ProcessHandle);
         RunGate[I].btStartStatus := 0;
         case I of
-          0: MainOutMessage('ÓÎÏ·Íø¹ØÒ»ÒÑÍ£Ö¹...');
-          1: MainOutMessage('ÓÎÏ·Íø¹Ø¶şÒÑÍ£Ö¹...');
-          2: MainOutMessage('ÓÎÏ·Íø¹ØÈıÒÑÍ£Ö¹...');
-          3: MainOutMessage('ÓÎÏ·Íø¹ØËÄÒÑÍ£Ö¹...');
-          4: MainOutMessage('ÓÎÏ·Íø¹ØÎåÒÑÍ£Ö¹...');
-          5: MainOutMessage('ÓÎÏ·Íø¹ØÁùÒÑÍ£Ö¹...');
-          6: MainOutMessage('ÓÎÏ·Íø¹ØÆßÒÑÍ£Ö¹...');
-          7: MainOutMessage('ÓÎÏ·Íø¹Ø°ËÒÑÍ£Ö¹...');
+          0: MainOutMessage('æ¸¸æˆç½‘å…³ä¸€å·²åœæ­¢...');
+          1: MainOutMessage('æ¸¸æˆç½‘å…³äºŒå·²åœæ­¢...');
+          2: MainOutMessage('æ¸¸æˆç½‘å…³ä¸‰å·²åœæ­¢...');
+          3: MainOutMessage('æ¸¸æˆç½‘å…³å››å·²åœæ­¢...');
+          4: MainOutMessage('æ¸¸æˆç½‘å…³äº”å·²åœæ­¢...');
+          5: MainOutMessage('æ¸¸æˆç½‘å…³å…­å·²åœæ­¢...');
+          6: MainOutMessage('æ¸¸æˆç½‘å…³ä¸ƒå·²åœæ­¢...');
+          7: MainOutMessage('æ¸¸æˆç½‘å…³å…«å·²åœæ­¢...');
         end;
         break;
       end;
@@ -2401,7 +2519,7 @@ begin
     if not m_boGateStop then begin
       m_boGateStop := True;
       m_boGateStopTick := GetTickCount + 5000;
-      MainOutMessage('Íø¹ØÒÑÈ«²¿¹Ø±Õ£¬ÑÓÊ±5Ãë¹Ø±ÕÓÎÏ·ÒıÇæ...');
+      MainOutMessage('ç½‘å…³å·²å…¨éƒ¨å…³é—­ï¼Œå»¶æ—¶5ç§’å…³é—­æ¸¸æˆå¼•æ“...');
       Exit;
     end;
     if GetTickCount < m_boGateStopTick then exit;
@@ -2411,9 +2529,9 @@ begin
       if M2Server.btStartStatus = 3 then begin
         {if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(M2Server, 1000);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·ÒıÇæÖ÷³ÌĞòÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆå¼•æ“ä¸»ç¨‹åºå·²è¢«å¼ºè¡Œåœæ­¢...');
         end;    }
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(M2Server.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2423,7 +2541,7 @@ begin
     else begin
       CloseHandle(M2Server.ProcessHandle);
       M2Server.btStartStatus := 0;
-      MainOutMessage('ÓÎÏ·ÒıÇæÖ÷³ÌĞòÒÑÍ£Ö¹...');
+      MainOutMessage('æ¸¸æˆå¼•æ“ä¸»ç¨‹åºå·²åœæ­¢...');
     end;
   end;
 
@@ -2433,9 +2551,9 @@ begin
       if LoginServer.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(LoginServer, 1000);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·ÒıÇæÖ÷³ÌĞòÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œç™»å½•æœåŠ¡å™¨å·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(LoginServer.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2445,7 +2563,7 @@ begin
     else begin
       CloseHandle(LoginServer.ProcessHandle);
       LoginServer.btStartStatus := 0;
-      MainOutMessage('µÇÂ¼·şÎñÆ÷ÒÑÍ£Ö¹...');
+      MainOutMessage('ç™»å½•æœåŠ¡å™¨å·²åœæ­¢...');
     end;
   end;
 
@@ -2455,9 +2573,9 @@ begin
       if LogServer.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(LogServer, 0);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·ÒıÇæÖ÷³ÌĞòÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆæ—¥å¿—æœåŠ¡å™¨å·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(LogServer.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2467,7 +2585,7 @@ begin
     else begin
       CloseHandle(LogServer.ProcessHandle);
       LogServer.btStartStatus := 0;
-      MainOutMessage('ÓÎÏ·ÈÕÖ¾·şÎñÆ÷ÒÑÍ£Ö¹...');
+      MainOutMessage('æ¸¸æˆæ—¥å¿—æœåŠ¡å™¨å·²åœæ­¢...');
     end;
   end;
 
@@ -2477,9 +2595,9 @@ begin
       if DBServer.btStartStatus = 3 then begin
         if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
           StopProgram(DBServer, 0);
-          MainOutMessage('Õı³£¹Ø±Õ³¬Ê±£¬ÓÎÏ·ÒıÇæÖ÷³ÌĞòÒÑ±»Ç¿ĞĞÍ£Ö¹...');
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ¸¸æˆæ•°æ®åº“æœåŠ¡å™¨å·²è¢«å¼ºè¡Œåœæ­¢...');
         end;
-        Exit; //Èç¹ûÕıÔÚ¹Ø±ÕÔòµÈ´ı£¬²»´¦ÀíÏÂÃæ
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
       end;
       SendProgramMsg(DBServer.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2489,9 +2607,32 @@ begin
     else begin
       CloseHandle(DBServer.ProcessHandle);
       DBServer.btStartStatus := 0;
-      MainOutMessage('ÓÎÏ·Êı¾İ¿â·şÎñÆ÷ÒÑÍ£Ö¹...');
+      MainOutMessage('æ¸¸æˆæ•°æ®åº“æœåŠ¡å™¨å·²åœæ­¢...');
     end;
   end;
+
+  if PlugTop.boGetStart and (PlugTop.btStartStatus in [2, 3]) then begin
+    GetExitCodeProcess(PlugTop.ProcessHandle, dwExitCode);
+    if dwExitCode = STILL_ACTIVE then begin
+      if PlugTop.btStartStatus = 3 then begin
+        if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
+          StopProgram(PlugTop, 0);
+          MainOutMessage('æ­£å¸¸å…³é—­è¶…æ—¶ï¼Œæ’è¡Œæ¦œæ’ä»¶å·²è¢«å¼ºè¡Œåœæ­¢...');
+        end;
+        Exit; //å¦‚æœæ­£åœ¨å…³é—­åˆ™ç­‰å¾…ï¼Œä¸å¤„ç†ä¸‹é¢
+      end;
+      SendProgramMsg(PlugTop.MainFormHandle, GS_QUIT, '');
+      g_dwStopTick := GetTickCount();
+      PlugTop.btStartStatus := 3;
+      Exit;
+    end
+    else begin
+      CloseHandle(PlugTop.ProcessHandle);
+      PlugTop.btStartStatus := 0;
+      MainOutMessage('æ’è¡Œæ¦œæ’ä»¶å·²åœæ­¢...');
+    end;
+  end;
+
   TimerStopGame.Enabled := False;
   ButtonStartGame.Caption := g_sButtonStartGame;
   m_nStartStatus := 0;
@@ -2512,7 +2653,7 @@ begin
         CloseHandle(DBServer.ProcessHandle);
         DBServer.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, DBServer.ProcessInfo.dwProcessId);
         if DBServer.MainFormHandle <> 0 then
-          MainOutMessage('Êı¾İ¿âÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('æ•°æ®åº“å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         DBServer.MainFormHandle := 0;
       end;
     end;
@@ -2526,7 +2667,7 @@ begin
         CloseHandle(LoginServer.ProcessHandle);
         LoginServer.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginServer.ProcessInfo.dwProcessId);
         if LoginServer.MainFormHandle <> 0 then
-          MainOutMessage('µÇÂ¼·şÎñÆ÷Òì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('ç™»å½•æœåŠ¡å™¨å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         LoginServer.MainFormHandle := 0;
       end;
     end;
@@ -2540,7 +2681,7 @@ begin
         CloseHandle(LogServer.ProcessHandle);
         LogServer.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LogServer.ProcessInfo.dwProcessId);
         if LogServer.MainFormHandle <> 0 then
-          MainOutMessage('ÈÕÖ¾·şÎñÆ÷Òì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('æ—¥å¿—æœåŠ¡å™¨å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         LogServer.MainFormHandle := 0;
       end;
     end;
@@ -2554,7 +2695,7 @@ begin
         CloseHandle(M2Server.ProcessHandle);
         M2Server.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, M2Server.ProcessInfo.dwProcessId);
         if M2Server.MainFormHandle <> 0 then
-          MainOutMessage('ÓÎÏ·ÒıÇæ·şÎñÆ÷Òì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('æ¸¸æˆå¼•æ“æœåŠ¡å™¨å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         M2Server.MainFormHandle := 0;
       end;
     end;
@@ -2572,21 +2713,21 @@ begin
           if RunGate[I].MainFormHandle <> 0 then begin
             case I of
               0:
-                MainOutMessage('ÓÎÏ·Íø¹ØÒ»Òì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³ä¸€å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               1:
-                MainOutMessage('ÓÎÏ·Íø¹Ø¶şÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³äºŒå¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               2:
-                MainOutMessage('ÓÎÏ·Íø¹ØÈıÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³ä¸‰å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               3:
-                MainOutMessage('ÓÎÏ·Íø¹ØËÄÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³å››å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               4:
-                MainOutMessage('ÓÎÏ·Íø¹ØÎåÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³äº”å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               5:
-                MainOutMessage('ÓÎÏ·Íø¹ØÁùÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³å…­å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               6:
-                MainOutMessage('ÓÎÏ·Íø¹ØÆßÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³ä¸ƒå¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
               7:
-                MainOutMessage('ÓÎÏ·Íø¹Ø°ËÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+                MainOutMessage('æ¸¸æˆç½‘å…³å…«å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
             end;
           end;
           RunGate[I].MainFormHandle := 0;
@@ -2605,7 +2746,7 @@ begin
         CloseHandle(SelGate.ProcessHandle);
         SelGate.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, SelGate.ProcessInfo.dwProcessId);
         if SelGate.MainFormHandle <> 0 then
-          MainOutMessage('½ÇÉ«Íø¹ØÒ»Òì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('è§’è‰²ç½‘å…³ä¸€å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         SelGate.MainFormHandle := 0;
       end;
     end;
@@ -2620,7 +2761,7 @@ begin
         CloseHandle(SelGate1.ProcessHandle);
         SelGate1.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, SelGate1.ProcessInfo.dwProcessId);
         if SelGate1.MainFormHandle <> 0 then
-          MainOutMessage('½ÇÉ«Íø¹Ø¶şÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('è§’è‰²ç½‘å…³äºŒå¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         SelGate1.MainFormHandle := 0;
       end;
     end;
@@ -2634,7 +2775,7 @@ begin
       if nRetCode = 0 then begin
         CloseHandle(LoginGate.ProcessHandle);
         if LoginGate.MainFormHandle <> 0 then
-          MainOutMessage('µÇÂ¼Íø¹ØÒ»Òì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('ç™»å½•ç½‘å…³ä¸€å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         LoginGate.MainFormHandle := 0;
         LoginGate.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginGate.ProcessInfo.dwProcessId);
       end;
@@ -2649,10 +2790,25 @@ begin
       if nRetCode = 0 then begin
         CloseHandle(LoginGate2.ProcessHandle);
         if LoginGate2.MainFormHandle <> 0 then
-          MainOutMessage('µÇÂ¼Íø¹Ø¶şÒì³£¹Ø±Õ£¬ÒÑ±»ÖØĞÂÆô¶¯...');
+          MainOutMessage('ç™»å½•ç½‘å…³äºŒå¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
         LoginGate2.MainFormHandle := 0;
         LoginGate2.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginGate2.ProcessInfo.dwProcessId);
 
+      end;
+    end;
+  end;
+
+  if PlugTop.boGetStart then begin
+    GetExitCodeProcess(PlugTop.ProcessHandle, dwExitCode);
+    if (dwExitCode <> STILL_ACTIVE) or (PlugTop.ProcessHandle = 0) then begin
+      nRetCode := RunProgram(PlugTop, IntToStr(Self.Handle), 0);
+
+      if nRetCode = 0 then begin
+        CloseHandle(PlugTop.ProcessHandle);
+        PlugTop.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, PlugTop.ProcessInfo.dwProcessId);
+        if PlugTop.MainFormHandle <> 0 then
+          MainOutMessage('æ’è¡Œæ¦œæ’ä»¶å¼‚å¸¸å…³é—­ï¼Œå·²è¢«é‡æ–°å¯åŠ¨...');
+        PlugTop.MainFormHandle := 0;
       end;
     end;
   end;
@@ -2684,6 +2840,7 @@ begin
     tLoginGate: ProcessLoginGateMsg(wIdent, sData);
     tSelGate: ProcessSelGateMsg(wIdent, sData);
     tRunGate: ProcessRunGateMsg(wIdent, sData);
+    tPlugTop: ProcessPlugTopMsg(wIdent, sData);
   end;
 
 end;
@@ -2738,22 +2895,22 @@ begin
         end;
       SG_STARTNOW: begin
           if LoginGate.MainFormHandle = Handle then begin
-            MainOutMessage('ÕıÔÚÆô¶¯µÇÂ¼Íø¹ØÒ»...');
+            MainOutMessage('æ­£åœ¨å¯åŠ¨ç™»å½•ç½‘å…³ä¸€...');
           end else
           if LoginGate2.MainFormHandle = Handle then begin
-            MainOutMessage('ÕıÔÚÆô¶¯µÇÂ¼Íø¹Ø¶ş...');
+            MainOutMessage('æ­£åœ¨å¯åŠ¨ç™»å½•ç½‘å…³äºŒ...');
           end;
           //MainOutMessage(sData);
         end;
       SG_STARTOK: begin
           if LoginGate.MainFormHandle = Handle then begin
             LoginGate.btStartStatus := 2;
-            MainOutMessage('µÇÂ¼Íø¹ØÒ»Æô¶¯Íê³É...');
+            MainOutMessage('ç™»å½•ç½‘å…³ä¸€å¯åŠ¨å®Œæˆ...');
 
           end else
           if LoginGate2.MainFormHandle = Handle then begin
             LoginGate2.btStartStatus := 2;
-            MainOutMessage('µÇÂ¼Íø¹Ø¶şÆô¶¯Íê³É...');
+            MainOutMessage('ç™»å½•ç½‘å…³äºŒå¯åŠ¨å®Œæˆ...');
           end;
           //LoginGate.btStartStatus := 2;
           //MainOutMessage(sData);
@@ -2773,21 +2930,21 @@ begin
         end;
       SG_STARTNOW: begin
           if SelGate.MainFormHandle = Handle then begin
-            MainOutMessage('ÕıÔÚÆô¶¯½ÇÉ«Íø¹ØÒ»...');
+            MainOutMessage('æ­£åœ¨å¯åŠ¨è§’è‰²ç½‘å…³ä¸€...');
           end else
           if SelGate1.MainFormHandle = Handle then begin
-            MainOutMessage('ÕıÔÚÆô¶¯½ÇÉ«Íø¹Ø¶ş...');
+            MainOutMessage('æ­£åœ¨å¯åŠ¨è§’è‰²ç½‘å…³äºŒ...');
           end;
         end;
       SG_STARTOK: begin
           if SelGate.MainFormHandle = Handle then begin
             SelGate.btStartStatus := 2;
-            MainOutMessage('½ÇÉ«Íø¹ØÒ»Æô¶¯Íê³É...');
+            MainOutMessage('è§’è‰²ç½‘å…³ä¸€å¯åŠ¨å®Œæˆ...');
 
           end else
           if SelGate1.MainFormHandle = Handle then begin
             SelGate1.btStartStatus := 2;
-            MainOutMessage('½ÇÉ«Íø¹Ø¶şÆô¶¯Íê³É...');
+            MainOutMessage('è§’è‰²ç½‘å…³äºŒå¯åŠ¨å®Œæˆ...');
           end;
         end;}
 end;
@@ -2827,21 +2984,21 @@ begin
         end;
       SG_STARTNOW: begin
           if SelGate.MainFormHandle = Handle then begin
-            MainOutMessage('ÕıÔÚÆô¶¯½ÇÉ«Íø¹ØÒ»...');
+            MainOutMessage('æ­£åœ¨å¯åŠ¨è§’è‰²ç½‘å…³ä¸€...');
           end else
           if SelGate1.MainFormHandle = Handle then begin
-            MainOutMessage('ÕıÔÚÆô¶¯½ÇÉ«Íø¹Ø¶ş...');
+            MainOutMessage('æ­£åœ¨å¯åŠ¨è§’è‰²ç½‘å…³äºŒ...');
           end;
         end;
       SG_STARTOK: begin
           if SelGate.MainFormHandle = Handle then begin
             SelGate.btStartStatus := 2;
-            MainOutMessage('½ÇÉ«Íø¹ØÒ»Æô¶¯Íê³É...');
+            MainOutMessage('è§’è‰²ç½‘å…³ä¸€å¯åŠ¨å®Œæˆ...');
 
           end else
           if SelGate1.MainFormHandle = Handle then begin
             SelGate1.btStartStatus := 2;
-            MainOutMessage('½ÇÉ«Íø¹Ø¶şÆô¶¯Íê³É...');
+            MainOutMessage('è§’è‰²ç½‘å…³äºŒå¯åŠ¨å®Œæˆ...');
           end;
         end;
     end;
@@ -3009,14 +3166,14 @@ begin
           for I := Low(RunGate) to High(RunGate) do begin
             if RunGate[I].MainFormHandle = Handle then begin
               case I of
-                0: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹ØÒ»...');
-                1: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹Ø¶ş...');
-                2: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹ØÈı...');
-                3: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹ØËÄ...');
-                4: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹ØÎå...');
-                5: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹ØÁù...');
-                6: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹ØÆß...');
-                7: MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·Íø¹Ø°Ë...');
+                0: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³ä¸€...');
+                1: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³äºŒ...');
+                2: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³ä¸‰...');
+                3: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³å››...');
+                4: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³äº”...');
+                5: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³å…­...');
+                6: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³ä¸ƒ...');
+                7: MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆç½‘å…³å…«...');
               end;
               break;
             end;
@@ -3027,14 +3184,14 @@ begin
             if RunGate[I].MainFormHandle = Handle then begin
               RunGate[I].btStartStatus := 2;
               case I of
-                0: MainOutMessage('ÓÎÏ·Íø¹ØÒ»Æô¶¯Íê³É...');
-                1: MainOutMessage('ÓÎÏ·Íø¹Ø¶şÆô¶¯Íê³É...');
-                2: MainOutMessage('ÓÎÏ·Íø¹ØÈıÆô¶¯Íê³É...');
-                3: MainOutMessage('ÓÎÏ·Íø¹ØËÄÆô¶¯Íê³É...');
-                4: MainOutMessage('ÓÎÏ·Íø¹ØÎåÆô¶¯Íê³É...');
-                5: MainOutMessage('ÓÎÏ·Íø¹ØÁùÆô¶¯Íê³É...');
-                6: MainOutMessage('ÓÎÏ·Íø¹ØÆßÆô¶¯Íê³É...');
-                7: MainOutMessage('ÓÎÏ·Íø¹Ø°ËÆô¶¯Íê³É...');
+                0: MainOutMessage('æ¸¸æˆç½‘å…³ä¸€å¯åŠ¨å®Œæˆ...');
+                1: MainOutMessage('æ¸¸æˆç½‘å…³äºŒå¯åŠ¨å®Œæˆ...');
+                2: MainOutMessage('æ¸¸æˆç½‘å…³ä¸‰å¯åŠ¨å®Œæˆ...');
+                3: MainOutMessage('æ¸¸æˆç½‘å…³å››å¯åŠ¨å®Œæˆ...');
+                4: MainOutMessage('æ¸¸æˆç½‘å…³äº”å¯åŠ¨å®Œæˆ...');
+                5: MainOutMessage('æ¸¸æˆç½‘å…³å…­å¯åŠ¨å®Œæˆ...');
+                6: MainOutMessage('æ¸¸æˆç½‘å…³ä¸ƒå¯åŠ¨å®Œæˆ...');
+                7: MainOutMessage('æ¸¸æˆç½‘å…³å…«å¯åŠ¨å®Œæˆ...');
               end;
               break;
             end;
@@ -3044,11 +3201,34 @@ begin
   end;
 end;
 
+
+procedure TfrmMain.ProcessPlugTopMsg(wIdent: Word; sData: string);
+var
+  Handle: THandle;
+begin
+  case wIdent of
+    SG_FORMHANDLE: begin
+        Handle := StrToIntDef(sData, 0);
+        if Handle <> 0 then begin
+          PlugTop.MainFormHandle := Handle;
+          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
+        end;
+      end;
+    SG_STARTNOW: begin
+        MainOutMessage(sData);
+      end;
+    SG_STARTOK: begin
+        PlugTop.btStartStatus := 2;
+        MainOutMessage(sData);
+      end;
+  end;
+end;
+
 procedure TfrmMain.ButtonReLoadConfigClick(Sender: TObject);
 begin
   LoadConfig();
   RefGameConsole();
-  Application.MessageBox('ÅäÖÃÖØ¼ÓÔØÍê³É...', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
+  Application.MessageBox('é…ç½®é‡åŠ è½½å®Œæˆ...', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
 end;
 
 procedure TfrmMain.EditLoginGate_MainFormXChange(Sender: TObject);
@@ -3123,6 +3303,12 @@ end;
 procedure TfrmMain.CheckSelGate2Click(Sender: TObject);
 begin
   SelGate1.boGetStart := CheckSelGate2.Checked;
+end;
+
+procedure TfrmMain.CheckBoxPlugTopClick(Sender: TObject);
+begin
+  g_Config.PlugTop.GetStart := CheckBoxPlugTop.Checked;
+  g_IniConf.WriteBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);
 end;
 
 procedure TfrmMain.CheckBoxAutoRunBakClick(Sender: TObject);
@@ -3307,7 +3493,7 @@ end;
 
 procedure TfrmMain.MemoLogChange(Sender: TObject);
 begin
-  if MemoLog.Lines.Count > 100 then
+  if MemoLog.Lines.Count > 200 then
     MemoLog.Clear;
 end;
 
@@ -3315,7 +3501,7 @@ procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   if m_nStartStatus = 2 then begin
     if
-      Application.MessageBox('ÓÎÏ··şÎñÆ÷ÕıÔÚÔËĞĞ£¬ÊÇ·ñÍ£Ö¹ÓÎÏ··şÎñÆ÷ ?', 'È·ÈÏĞÅÏ¢', MB_YESNO +
+      Application.MessageBox('æ¸¸æˆæœåŠ¡å™¨æ­£åœ¨è¿è¡Œï¼Œæ˜¯å¦åœæ­¢æ¸¸æˆæœåŠ¡å™¨ ?', 'ç¡®è®¤ä¿¡æ¯', MB_YESNO +
         MB_ICONQUESTION) = mrYes then begin
       ButtonStartGameClick(ButtonStartGame);
     end;
@@ -3323,7 +3509,7 @@ begin
     Exit;
   end;
 
-  if Application.MessageBox('ÊÇ·ñÈ·ÈÏ¹Ø±Õ¿ØÖÆÌ¨ ?', 'È·ÈÏĞÅÏ¢',
+  if Application.MessageBox('æ˜¯å¦ç¡®è®¤å…³é—­æ§åˆ¶å° ?', 'ç¡®è®¤ä¿¡æ¯',
     MB_YESNO + MB_ICONQUESTION) = mrYes then begin
     CanClose := True;
   end
@@ -3401,10 +3587,10 @@ end;
 function TfrmMain.StartService: Boolean;
 begin
   //  Result := False;
-  MainOutMessage('ÕıÔÚÆô¶¯ÓÎÏ·¿Í»§¶Ë¿ØÖÆÆ÷...');
+  MainOutMessage('æ­£åœ¨å¯åŠ¨æ¸¸æˆå®¢æˆ·ç«¯æ§åˆ¶å™¨...');
   m_dwShowTick := GetTickCount();
   Timer.Enabled := True;
-  MainOutMessage('ÓÎÏ·¿ØÖÆÌ¨Æô¶¯Íê³É...');
+  MainOutMessage('æ¸¸æˆæ§åˆ¶å°å¯åŠ¨å®Œæˆ...');
   Result := True;
 end;
 {
@@ -3416,9 +3602,9 @@ end;      }
 
 procedure TfrmMain.ButtonGeneralDefalultClick(Sender: TObject);
 begin
-  EditGameDir.Text := '.\';
+  EditGameDir.Text := 'D:\MirServer\';
   EditHeroDB.Text := 'HeroDB';
-  EditGameName.Text := 'GameOfMir';
+  EditGameName.Text := 'å°ä¼ å¥‡';
   EditGameExtIPaddr.Text := '127.0.0.1';
   //CheckBoxDynamicIPMode.Checked := False;
 end;
@@ -3426,8 +3612,8 @@ end;
 procedure TfrmMain.ButtonRunGateDefaultClick(Sender: TObject);
 begin
   CheckBoxboRunGate_GetStart1.Checked := True;
-  CheckBoxboRunGate_GetStart2.Checked := True;
-  CheckBoxboRunGate_GetStart3.Checked := True;
+  CheckBoxboRunGate_GetStart2.Checked := False;
+  CheckBoxboRunGate_GetStart3.Checked := False;
   CheckBoxboRunGate_GetStart4.Checked := False;
   CheckBoxboRunGate_GetStart5.Checked := False;
   CheckBoxboRunGate_GetStart6.Checked := False;
@@ -3536,17 +3722,17 @@ begin
   case m_nBackStartStatus of
     0: begin
         m_nBackStartStatus := 1;
-        ButtonBackStart.Caption := 'Í£Ö¹(&T)';
+        ButtonBackStart.Caption := 'åœæ­¢(&T)';
         g_BackUpManager.Start();
         LabelBackMsg.Font.Color := clGreen;
-        LabelBackMsg.Caption := 'Êı¾İ±¸·İ¹¦ÄÜÆô¶¯ÖĞ...';
+        LabelBackMsg.Caption := 'æ•°æ®å¤‡ä»½åŠŸèƒ½å¯åŠ¨ä¸­...';
       end;
     1: begin
         m_nBackStartStatus := 0;
-        ButtonBackStart.Caption := 'Æô¶¯(&B)';
+        ButtonBackStart.Caption := 'å¯åŠ¨(&B)';
         g_BackUpManager.Stop();
         LabelBackMsg.Font.Color := clRed;
-        LabelBackMsg.Caption := 'Êı¾İ±¸·İ¹¦ÄÜÒÑÍ£Ö¹...';
+        LabelBackMsg.Caption := 'æ•°æ®å¤‡ä»½åŠŸèƒ½å·²åœæ­¢...';
       end;
   end;
 end;
@@ -3573,7 +3759,7 @@ begin
     end;
     Conini.Free;
   end;
-  Application.MessageBox('±£´æ³É¹¦£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK +
+  Application.MessageBox('ä¿å­˜æˆåŠŸï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK +
     MB_ICONINFORMATION);
   ButtonBackSave.Enabled := True;
 end;
@@ -3643,10 +3829,10 @@ procedure TfrmMain.btDataListListClick(Sender: TObject);
 var
   sPort: string;
 begin
-  g_sDataListAddrs := InputBox('ÊäÈëĞÅÏ¢', 'ÇëÊäÈëÔ¶³ÌµØÖ·', g_sDataListAddrs);
-  sPort := InputBox('ÊäÈëĞÅÏ¢', 'ÇëÊäÈëÔ¶³Ì¶Ë¿Ú', IntToStr(g_wDataListPort));
+  g_sDataListAddrs := InputBox('è¾“å…¥ä¿¡æ¯', 'è¯·è¾“å…¥è¿œç¨‹åœ°å€', g_sDataListAddrs);
+  sPort := InputBox('è¾“å…¥ä¿¡æ¯', 'è¯·è¾“å…¥è¿œç¨‹ç«¯å£', IntToStr(g_wDataListPort));
   g_wDataListPort := StrToIntDef(sPort, g_wDataListPort);
-  g_sDataListPassWord := InputBox('ÊäÈëĞÅÏ¢', 'ÇëÊäÈëÁ¬½ÓÃÜÂë', g_sDataListPassWord);
+  g_sDataListPassWord := InputBox('è¾“å…¥ä¿¡æ¯', 'è¯·è¾“å…¥è¿æ¥å¯†ç ', g_sDataListPassWord);
   CSocket.Active := False;
   CSocket.Host := g_sDataListAddrs;
   CSocket.Port := g_wDataListPort;
@@ -3780,9 +3966,42 @@ begin
       TempString2.Free;
       Button1.Enabled := True;
     End;
-    Application.MessageBox('È«²¿ÇåÀíÍê³É£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
+    Application.MessageBox('å…¨éƒ¨æ¸…ç†å®Œæˆï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
   end else
-    Application.MessageBox('Çë½«·şÎñÆ÷´¦ÓÚÍ£Ö¹×´Ì¬ÏÂÔÙ½øĞĞ²Ù×÷£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONWARNING);
+    Application.MessageBox('è¯·å°†æœåŠ¡å™¨å¤„äºåœæ­¢çŠ¶æ€ä¸‹å†è¿›è¡Œæ“ä½œï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONWARNING);
+end;
+
+procedure TfrmMain.ButtonAllPortAddClick(Sender: TObject);
+var
+  portAdd: Integer;
+begin
+  if SpinEditAllPortAdd.Text = '' then begin
+    SpinEditAllPortAdd.Text := '0';
+  end;
+
+  portAdd := strtoint(SpinEditAllPortAdd.Text);
+
+  if not portAdd = 0 then
+    g_Config.DBServer.GatePort := g_Config.DBServer.GatePort + portAdd;
+    g_Config.DBServer.ServerPort := g_Config.DBServer.ServerPort + portAdd;
+    g_Config.LoginSrv.GatePort := g_Config.LoginSrv.GatePort + portAdd;
+    g_Config.LoginSrv.ServerPort := g_Config.LoginSrv.ServerPort + portAdd;
+    g_Config.LoginSrv.MonPort := g_Config.LoginSrv.MonPort + portAdd;
+    g_Config.M2Server.GatePort := g_Config.M2Server.GatePort + portAdd;
+    g_Config.M2Server.MsgSrvPort := g_Config.M2Server.MsgSrvPort + portAdd;
+    g_Config.LogServer.Port := g_Config.LogServer.Port + portAdd;
+    g_Config.RunGate.GatePort[0] := g_Config.RunGate.GatePort[0] + portAdd;
+    g_Config.RunGate.GatePort[1] := g_Config.RunGate.GatePort[1] + portAdd;
+    g_Config.RunGate.GatePort[2] := g_Config.RunGate.GatePort[2] + portAdd;
+    g_Config.RunGate.GatePort[3] := g_Config.RunGate.GatePort[3] + portAdd;
+    g_Config.RunGate.GatePort[4] := g_Config.RunGate.GatePort[4] + portAdd;
+    g_Config.RunGate.GatePort[5] := g_Config.RunGate.GatePort[5] + portAdd;
+    g_Config.RunGate.GatePort[6] := g_Config.RunGate.GatePort[6] + portAdd;
+    g_Config.RunGate.GatePort[7] := g_Config.RunGate.GatePort[7] + portAdd;
+    g_Config.SelGate.GatePort[0] := g_Config.SelGate.GatePort[0] + portAdd;
+    g_Config.SelGate.GatePort[1] := g_Config.SelGate.GatePort[1] + portAdd;
+    g_Config.LoginGate.GatePort := g_Config.LoginGate.GatePort + portAdd;
+    RefGameConsole();
 end;
 
 procedure TfrmMain.ButtonBackAddClick(Sender: TObject);
@@ -3795,18 +4014,18 @@ begin
   sSource := Trim(RzButtonEditSource.Text);
   sDest := Trim(RzButtonEditDest.Text);
   if sSource = '' then begin
-    Application.MessageBox('ÇëÑ¡ÔñÊı¾İÄ¿Â¼£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢',
+    Application.MessageBox('è¯·é€‰æ‹©æ•°æ®ç›®å½•ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯',
       MB_OK + MB_ICONINFORMATION);
     Exit;
   end;
   if sDest = '' then begin
-    Application.MessageBox('ÇëÑ¡Ôñ±¸·İÄ¿Â¼£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢',
+    Application.MessageBox('è¯·é€‰æ‹©å¤‡ä»½ç›®å½•ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯',
       MB_OK + MB_ICONINFORMATION);
     Exit;
   end;
   if g_BackUpManager.FindObject(sSource) <> nil then begin
-    Application.MessageBox('´ËÊı¾İÄ¿Â¼ÒÑ¾­´æÔÚ£¡£¡£¡',
-      'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
+    Application.MessageBox('æ­¤æ•°æ®ç›®å½•å·²ç»å­˜åœ¨ï¼ï¼ï¼',
+      'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
     Exit;
   end;
   if RadioButtonBackMode1.Checked then begin
@@ -3834,7 +4053,7 @@ begin
 
   g_BackUpManager.AddObjectToList(BackUpObject);
   RefBackListToView();
-  Application.MessageBox('Ôö¼Ó³É¹¦£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONINFORMATION);
+  Application.MessageBox('å¢åŠ æˆåŠŸï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONINFORMATION);
 end;
 
 procedure TfrmMain.ButtonBackDelClick(Sender: TObject);
@@ -3845,11 +4064,11 @@ begin
   if ListItem <> nil then begin
     if g_BackUpManager.DeleteObject(ListItem.Caption) then begin
       RefBackListToView();
-      Application.MessageBox('É¾³ı³É¹¦£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK +
+      Application.MessageBox('åˆ é™¤æˆåŠŸï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK +
         MB_ICONINFORMATION);
     end
     else
-      Application.MessageBox('É¾³ıÊ§°Ü£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK +
+      Application.MessageBox('åˆ é™¤å¤±è´¥ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK +
         MB_ICONERROR);
   end;
 end;
@@ -3866,17 +4085,17 @@ begin
     sSource := Trim(RzButtonEditSource.Text);
     sDest := Trim(RzButtonEditDest.Text);
     if sSource = '' then begin
-      Application.MessageBox('ÇëÑ¡ÔñÊı¾İÄ¿Â¼£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢',
+      Application.MessageBox('è¯·é€‰æ‹©æ•°æ®ç›®å½•ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯',
         MB_OK + MB_ICONINFORMATION);
       Exit;
     end;
     if sDest = '' then begin
-      Application.MessageBox('ÇëÑ¡Ôñ±¸·İÄ¿Â¼£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢',
+      Application.MessageBox('è¯·é€‰æ‹©å¤‡ä»½ç›®å½•ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯',
         MB_OK + MB_ICONINFORMATION);
       Exit;
     end;
     {if g_BackUpManager.FindObject(sSource) <> nil then begin
-      Application.MessageBox('´Ë±¸·İÄ¿Â¼ÒÑ¾­´æÔÚ£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK + MB_ICONERROR);
+      Application.MessageBox('æ­¤å¤‡ä»½ç›®å½•å·²ç»å­˜åœ¨ï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK + MB_ICONERROR);
       Exit;
     end;}
     if RadioButtonBackMode1.Checked then begin
@@ -3902,7 +4121,7 @@ begin
       BackUpObject.m_btBackUpMode := 1;
     end;
     BackUpObject.m_boZip := CheckBoxZip.Checked;
-    Application.MessageBox('ĞŞ¸Ä³É¹¦£¡£¡£¡', 'ÌáÊ¾ĞÅÏ¢', MB_OK +
+    Application.MessageBox('ä¿®æ”¹æˆåŠŸï¼ï¼ï¼', 'æç¤ºä¿¡æ¯', MB_OK +
       MB_ICONINFORMATION);
   end;
 end;
@@ -4012,7 +4231,7 @@ var
   NewDir: string;
 begin
   NewDir := RzButtonEditSource.Text;
-  if SelectDirectory('ÇëÑ¡ÔñÄãÒª±¸·İµÄÎÄ¼ş¼Ğ', '', NewDir, Handle) then begin
+  if SelectDirectory('è¯·é€‰æ‹©ä½ è¦å¤‡ä»½çš„æ–‡ä»¶å¤¹', '', NewDir, Handle) then begin
     RzButtonEditSource.Text := NewDir;
   end;
 end;
@@ -4022,7 +4241,7 @@ var
   NewDir: string;
 begin
   NewDir := RzButtonEditDest.Text;
-  if SelectDirectory('ÇëÑ¡Ôñ±¸·İÎÄ¼ş¼Ğ', '', NewDir, Handle) then begin
+  if SelectDirectory('è¯·é€‰æ‹©å¤‡ä»½æ–‡ä»¶å¤¹', '', NewDir, Handle) then begin
     RzButtonEditDest.Text := NewDir;
   end;
 end;

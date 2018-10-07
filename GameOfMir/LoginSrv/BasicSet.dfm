@@ -21,7 +21,7 @@ object FrmBasicSet: TFrmBasicSet
     Top = 8
     Width = 401
     Height = 193
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #22522#26412#35774#32622

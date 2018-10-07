@@ -1,0 +1,130 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{4274f04d-a60f-4bf0-9896-cee876ba3f85}</ProjectGuid>
+    <MainSource>UPServerSQL.dpr</MainSource>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>..\..\..\MirServer\用户更新工具\UPServerSQL.exe</DCC_DependencyCheckOutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_ExeOutput>..\..\..\MirServer\用户更新工具</DCC_ExeOutput>
+    <DCC_DcuOutput>..\..\..\Build\用户更新工具</DCC_DcuOutput>
+    <DCC_ObjOutput>..\..\..\Build\用户更新工具</DCC_ObjOutput>
+    <DCC_HppOutput>..\..\..\Build\用户更新工具</DCC_HppOutput>
+    <DCC_Define>RELEASE</DCC_Define>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_ExeOutput>..\..\..\MirServer\用户更新工具</DCC_ExeOutput>
+    <DCC_DcuOutput>..\..\..\Build\用户更新工具</DCC_DcuOutput>
+    <DCC_ObjOutput>..\..\..\Build\用户更新工具</DCC_ObjOutput>
+    <DCC_HppOutput>..\..\..\Build\用户更新工具</DCC_HppOutput>
+    <DCC_Define>DEBUG</DCC_Define>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+    <BorlandProject>
+<BorlandProject xmlns=""> <Delphi.Personality>   <Parameters>
+      <Parameters Name="UseLauncher">False</Parameters>
+      <Parameters Name="LoadAllSymbols">True</Parameters>
+      <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+    </Parameters>
+    <VersionInfo>
+      <VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+      <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+      <VersionInfo Name="MajorVer">1</VersionInfo>
+      <VersionInfo Name="MinorVer">0</VersionInfo>
+      <VersionInfo Name="Release">0</VersionInfo>
+      <VersionInfo Name="Build">0</VersionInfo>
+      <VersionInfo Name="Debug">False</VersionInfo>
+      <VersionInfo Name="PreRelease">False</VersionInfo>
+      <VersionInfo Name="Special">False</VersionInfo>
+      <VersionInfo Name="Private">False</VersionInfo>
+      <VersionInfo Name="DLL">False</VersionInfo>
+      <VersionInfo Name="Locale">2052</VersionInfo>
+      <VersionInfo Name="CodePage">936</VersionInfo>
+    </VersionInfo>
+    <VersionInfoKeys>
+      <VersionInfoKeys Name="CompanyName"></VersionInfoKeys>
+      <VersionInfoKeys Name="FileDescription"></VersionInfoKeys>
+      <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+      <VersionInfoKeys Name="InternalName"></VersionInfoKeys>
+      <VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys>
+      <VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
+      <VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys>
+      <VersionInfoKeys Name="ProductName"></VersionInfoKeys>
+      <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+      <VersionInfoKeys Name="Comments"></VersionInfoKeys>
+    </VersionInfoKeys>
+    <Excluded_Packages>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\HGEPackage.bpl">(untitled)</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dclcxSchedulerRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dclcxSchedulerRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinscxPCPainterRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinscxPCPainterRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinscxSchedulerPainterRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinscxSchedulerPainterRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinsdxDLPainterRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinsdxDLPainterRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinsdxBarPainterRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinsdxBarPainterRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinsdxNavBarPainterRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dxSkinsdxNavBarPainterRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dcldxPSdxLCLnkRS11.bpl">File C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\dcldxPSdxLCLnkRS11.bpl not found</Excluded_Packages>
+      <Excluded_Packages Name="$(BDS)\bin\bcboffice2k100.bpl">CodeGear C++Builder Office 2000 Servers Package</Excluded_Packages>
+      <Excluded_Packages Name="$(BDS)\bin\bcbofficexp100.bpl">CodeGear C++Builder Office XP Servers Package</Excluded_Packages>
+      <Excluded_Packages Name="$(BDS)\bin\dcloffice2k100.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+      <Excluded_Packages Name="$(BDS)\bin\dclofficexp100.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+    </Excluded_Packages>
+    <Source>
+      <Source Name="MainSource">UPServerSQL.dpr</Source>
+    </Source>
+  </Delphi.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <ItemGroup />
+  <ItemGroup>
+    <DelphiCompile Include="UPServerSQL.dpr">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="..\..\..\Common\DES.pas" />
+    <DCCReference Include="..\..\..\Common\GeneralCommon.pas" />
+    <DCCReference Include="..\..\..\Common\MD5Unit.pas" />
+    <DCCReference Include="..\..\..\MyCommon\MyCommon.pas" />
+    <DCCReference Include="..\Common\EDcode.pas" />
+    <DCCReference Include="..\Common\HUtil32.pas" />
+    <DCCReference Include="..\Common\SCShare.pas" />
+    <DCCReference Include="ENThread.pas" />
+    <DCCReference Include="FrmAccount.pas">
+      <Form>FormAccount</Form>
+    </DCCReference>
+    <DCCReference Include="FrmMain.pas">
+      <Form>FormMain</Form>
+    </DCCReference>
+    <DCCReference Include="Share.pas" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+</Project>

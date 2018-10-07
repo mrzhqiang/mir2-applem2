@@ -3540,8 +3540,8 @@ begin
 
       end;
     '-': begin
-        if PlayObject.m_Abil.Exp > LongWord(nExp) then begin
-          Dec(PlayObject.m_Abil.Exp, LongWord(nExp));
+        if PlayObject.m_Abil.Exp > Integer(nExp) then begin
+          Dec(PlayObject.m_Abil.Exp, Integer(nExp));
         end
         else begin
           PlayObject.m_Abil.Exp := 0;

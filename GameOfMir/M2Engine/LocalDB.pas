@@ -536,7 +536,6 @@ begin
         Magic.MaxTrain[2] := Query.FieldByName('L3Train').AsInteger;
         Magic.MaxTrain[3] := Magic.MaxTrain[2];
         Magic.btTrainLv := Query.FieldByName('NeedMax').AsInteger;
-        ;
         Magic.dwDelayTime := Query.FieldByName('Delay').AsInteger;
         Magic.btDefSpell := Query.FieldByName('DefSpell').AsInteger;
         Magic.btDefPower := Query.FieldByName('DefPower').AsInteger;

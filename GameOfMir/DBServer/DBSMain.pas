@@ -1028,11 +1028,11 @@ begin
   end;
   HumDataDB := TFileDB.Create(sDataDBFilePath + 'Mir.DB');
   if HumDataDB.m_Header.sDesc <> HumDB.sDBHeaderDesc then begin
-    ShowMessage('Hum.DB 文件版本不符合程序要求 ' + #13#10 + '文件版本：' + HumDataDB.m_Header.sDesc + #13#10 + '要求版本：' + HumDB.sDBHeaderDesc);
+    ShowMessage('Mir.DB 文件版本不符合程序要求 ' + #13#10 + '文件版本：' + HumDataDB.m_Header.sDesc + #13#10 + '要求版本：' + HumDB.sDBHeaderDesc);
     Exit;
   end;
   if HumDataDB.Count >= Trunc(PLAYOBJECTINDEXCOUNT / 10 * 8) then begin
-    ShowMessage('用户数量既将达到影响程序安全数量 ' + IntToStr(HumDataDB.Count) + '/' + IntToStr(PLAYOBJECTINDEXCOUNT));
+    ShowMessage('用户数量即将达到影响程序安全数量 ' + IntToStr(HumDataDB.Count) + '/' + IntToStr(PLAYOBJECTINDEXCOUNT));
     //Close;
     //exit;
   end;
@@ -1221,25 +1221,29 @@ begin
     Magic.sMagicName := Query.FieldByName('MagName').AsString;
     Magic.btEffectType := Query.FieldByName('EffectType').AsInteger;
     Magic.btEffect := Query.FieldByName('Effect').AsInteger;
+    Magic.wMagicIcon := Query.FieldByName('MagicIcon').AsInteger;
+    Magic.btJob := Query.FieldByName('Job').AsInteger;
+    Magic.dwDelayTime := Query.FieldByName('Delay').AsInteger;
+    Magic.nInterval := Query.FieldByName('Interval').AsInteger;
+    Magic.nSpellFrame := Query.FieldByName('SpellFrame').AsInteger;
     Magic.wSpell := Query.FieldByName('Spell').AsInteger;
+    Magic.btDefSpell := Query.FieldByName('DefSpell').AsInteger;
     Magic.wPower := Query.FieldByName('Power').AsInteger;
     Magic.wMaxPower := Query.FieldByName('MaxPower').AsInteger;
-    Magic.btJob := Query.FieldByName('Job').AsInteger;
+    Magic.btDefPower := Query.FieldByName('DefPower').AsInteger;
+    Magic.btDefMaxPower := Query.FieldByName('DefMaxPower').AsInteger;
+    // 原先是满级 3 级，现在改为 20 级。未来的转生技能，可能是 100 级。
+    Magic.btTrainLv := 20;
+    // 改为每级增加的百分比伤害
     Magic.TrainLevel[0] := Query.FieldByName('NeedL1').AsInteger;
     Magic.TrainLevel[1] := Query.FieldByName('NeedL2').AsInteger;
     Magic.TrainLevel[2] := Query.FieldByName('NeedL3').AsInteger;
     Magic.TrainLevel[3] := Query.FieldByName('NeedL3').AsInteger;
+    // 改为基础百分比伤害
     Magic.MaxTrain[0] := Query.FieldByName('L1Train').AsInteger;
     Magic.MaxTrain[1] := Query.FieldByName('L2Train').AsInteger;
     Magic.MaxTrain[2] := Query.FieldByName('L3Train').AsInteger;
     Magic.MaxTrain[3] := Magic.MaxTrain[2];
-    Magic.btTrainLv := 3;
-    Magic.dwDelayTime := Query.FieldByName('Delay').AsInteger;
-    Magic.btDefSpell := Query.FieldByName('DefSpell').AsInteger;
-    Magic.btDefPower := Query.FieldByName('DefPower').AsInteger;
-    Magic.btDefMaxPower := Query.FieldByName('DefMaxPower').AsInteger;
-    Magic.nInterval := Query.FieldByName('Interval').AsInteger;
-    Magic.nSpellFrame := Query.FieldByName('SpellFrame').AsInteger;
     if Magic.wMagicId > 0 then begin
       MagicList.Add(Magic);
     end

@@ -1741,17 +1741,17 @@ begin
     g_Login_Index := 0;
     g_boSQLReg := False;
     g_ServerInfoCount := 4;
-    g_ServerInfo[0].sName := '127.0.0.1';
+    g_ServerInfo[0].sName := '单机-127';
     g_ServerInfo[0].sAddrs := '127.0.0.1';
     g_ServerInfo[0].sPort := '7000';
-    g_ServerInfo[1].sName := '192.168.1.98';
-    g_ServerInfo[1].sAddrs := '192.168.1.98';
+    g_ServerInfo[1].sName := '局域网-100';
+    g_ServerInfo[1].sAddrs := '192.168.1.100';
     g_ServerInfo[1].sPort := '7000';
-    g_ServerInfo[2].sName := '192.168.1.220';
-    g_ServerInfo[2].sAddrs := '192.168.1.220';
+    g_ServerInfo[2].sName := '兰达尔-测试';
+    g_ServerInfo[2].sAddrs := '101.132.68.79';
     g_ServerInfo[2].sPort := '7000';
-    g_ServerInfo[3].sName := '121.12.173.176';
-    g_ServerInfo[3].sAddrs := '121.12.173.176';
+    g_ServerInfo[3].sName := '兰达尔第一季（未开放）';
+    g_ServerInfo[3].sAddrs := '127.0.0.1';
     g_ServerInfo[3].sPort := '7000';
 {$ENDIF}
     if not BASS_Init(-1, 44100, 0, 0, nil) then
@@ -3086,15 +3086,15 @@ begin
     Exit;
 
 {$IFDEF DEBUG}
-  case byte(Key) of
-    byte('G'), byte('g'): begin
-        if not frmDlgConfig.Showing then
-          frmDlgConfig.Open;
-      end;
-    byte('B'), byte('b'): begin
-        GMManageShow;
-      end;
-  end;
+//  case byte(Key) of
+//    byte('G'), byte('g'): begin
+//        if not frmDlgConfig.Showing then
+//          frmDlgConfig.Open;
+//      end;
+//    byte('B'), byte('b'): begin
+//        GMManageShow;
+//      end;
+//  end;
 {$ENDIF}
 
   if (DScreen.CurrentScene = PlayScene) and (g_MySelf <> nil) then begin

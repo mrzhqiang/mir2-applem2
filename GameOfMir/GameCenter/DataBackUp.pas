@@ -198,6 +198,7 @@ begin
                   end;
                 end
                 else begin
+                // 搜索任何文件，加入到备份列表中
                   DoSearchFile(m_sSourceDir);
                   sDest := m_sDestDir + DateTime_ToStr + '\';
                   for I := 0 to m_BackUpFileList.Count - 1 do begin

@@ -401,7 +401,7 @@ begin
   //Application.OnMessage := MyMessage;
   //Application.OnException := MyException;
   g_TitleName := 'ÈÈÑª´«Ææ       ';
-  g_ListName := 'w{s@S]pYaeMOlSD?s\>tS`An_@FP<?RhvmtUwop<wuza<HMOQYQZVNUAuRmd                                                                                                                                                                                                   ';
+  g_ListName := '111';
   g_MapName := '1234567890123456';
   //sStr := 'DBC';
 
@@ -926,13 +926,13 @@ begin
           ln := ANode.ChildNodes;
           for I := 0 to ln.Count - 1 do begin
             BNode := ln[I];
-            MasterTreeNode := TreeViewServer.Items.Add(nil, IDeCodeString(BNode.GetAttribute(XML_SERVER_NAME), edcNone));
+            MasterTreeNode := TreeViewServer.Items.Add(nil, IDeCodeString(BNode.GetAttribute(XML_SERVER_NAME)));
             bn := BNode.ChildNodes;
             for k := 0 to bn.Count - 1 do begin
               CNode := bn[k];
               New(LServerInfo);
               FillChar(LServerInfo^, SizeOf(TLServerInfo), #0);
-              LServerInfo.sShowName := IDeCodeString(CNode.GetAttribute(XML_SERVER_NAME), edcNone);
+              LServerInfo.sShowName := IDeCodeString(CNode.GetAttribute(XML_SERVER_NAME));
               CTreeNode := TreeViewServer.Items.AddChild(MasterTreeNode, LServerInfo.sShowName);
               CTreeNode.Data := LServerInfo;
               cn := CNode.ChildNodes;
@@ -941,9 +941,9 @@ begin
                 if n >= 8 then break;
                 DNode := cn[j];
                 if not VarIsNull(DNode.Text) then begin
-                  sName := IDeCodeString(DNode.Text, edcNone);
-                  sAddrs := IDeCodeString(DNode.GetAttribute(XML_SERVER_NODE_ADDRS), edcNone);
-                  sPort := IDeCodeString(DNode.GetAttribute(XML_SERVER_NODE_PORT), edcNone);
+                  sName := IDeCodeString(DNode.Text);
+                  sAddrs := IDeCodeString(DNode.GetAttribute(XML_SERVER_NODE_ADDRS));
+                  sPort := IDeCodeString(DNode.GetAttribute(XML_SERVER_NODE_PORT));
                   //sENAddrs := DNode.GetAttribute(XML_SERVER_NODE_ENADDRS);
                   //sENPort := DNode.GetAttribute(XML_SERVER_NODE_ENPORT);
                   //nPort := StrToIntDef(sPort, -1);
@@ -965,21 +965,21 @@ begin
           ANode := xmlList[XML_URL_MASTERNODE];
 
           if not VarIsNull(ANode.ChildValues[XML_URL_LFRAME]) then
-            g_LoginframeUrl := IDeCodeString(ANode.ChildValues[XML_URL_LFRAME], edcNone);
+            g_LoginframeUrl := IDeCodeString(ANode.ChildValues[XML_URL_LFRAME]);
           if not VarIsNull(ANode.ChildValues[XML_URL_CONTACTGM]) then
-            g_GMUrl := IDeCodeString(ANode.ChildValues[XML_URL_CONTACTGM], edcNone);
+            g_GMUrl := IDeCodeString(ANode.ChildValues[XML_URL_CONTACTGM]);
           if not VarIsNull(ANode.ChildValues[XML_URL_PAYMENT]) then
-            g_PayUrl := IDeCodeString(ANode.ChildValues[XML_URL_PAYMENT], edcNone);
+            g_PayUrl := IDeCodeString(ANode.ChildValues[XML_URL_PAYMENT]);
           if not VarIsNull(ANode.ChildValues[XML_URL_REGISTER]) then
-            g_RegUrl := IDeCodeString(ANode.ChildValues[XML_URL_REGISTER], edcNone);
+            g_RegUrl := IDeCodeString(ANode.ChildValues[XML_URL_REGISTER]);
           if not VarIsNull(ANode.ChildValues[XML_URL_CHANGEPASS]) then
-            g_ChangePassUrl := IDeCodeString(ANode.ChildValues[XML_URL_CHANGEPASS], edcNone);
+            g_ChangePassUrl := IDeCodeString(ANode.ChildValues[XML_URL_CHANGEPASS]);
           if not VarIsNull(ANode.ChildValues[XML_URL_LostPASS]) then
-            g_LostPassUrl := IDeCodeString(ANode.ChildValues[XML_URL_LostPASS], edcNone);
+            g_LostPassUrl := IDeCodeString(ANode.ChildValues[XML_URL_LostPASS]);
           if not VarIsNull(ANode.ChildValues[XML_URL_PAYMENT2]) then
-            g_PayUrl2 := IDeCodeString(ANode.ChildValues[XML_URL_PAYMENT2], edcNone);
+            g_PayUrl2 := IDeCodeString(ANode.ChildValues[XML_URL_PAYMENT2]);
           if not VarIsNull(ANode.ChildValues[XML_URL_HOMR]) then
-            g_HomeUrl := IDeCodeString(ANode.ChildValues[XML_URL_HOMR], edcNone);
+            g_HomeUrl := IDeCodeString(ANode.ChildValues[XML_URL_HOMR]);
           {if not VarIsNull(ANode.ChildValues[XML_URL_LOGOIMAGE]) then
             g_LogoImage := DecryptStr(ANode.ChildValues[XML_URL_LOGOIMAGE]);   }
 
@@ -992,10 +992,10 @@ begin
               if not VarIsNull(BNode.Text) then begin
                 FillChar(UpDataInfo, SizeOf(UpDataInfo), #0);
                 boAddDown := False;
-                UpDataInfo.sHint := IDeCodeString(BNode.Text, edcNone);
-                UpDataInfo.sSaveDir := IDeCodeString(BNode.GetAttribute(XML_UPDATE_SAVEDIR), edcNone);
-                UpDataInfo.sFileName := IDeCodeString(BNode.GetAttribute(XML_UPDATE_FILENAME), edcNone);
-                UpDataInfo.sDownUrl := IDeCodeString(BNode.GetAttribute(XML_UPDATE_DOWNPATH), edcNone);
+                UpDataInfo.sHint := IDeCodeString(BNode.Text);
+                UpDataInfo.sSaveDir := IDeCodeString(BNode.GetAttribute(XML_UPDATE_SAVEDIR));
+                UpDataInfo.sFileName := IDeCodeString(BNode.GetAttribute(XML_UPDATE_FILENAME));
+                UpDataInfo.sDownUrl := IDeCodeString(BNode.GetAttribute(XML_UPDATE_DOWNPATH));
                 UpDataInfo.boZip := BNode.GetAttribute(XML_UPDATE_ZIP) = XML_ZIP_YES;
                 sCheckStr := BNode.GetAttribute(XML_UPDATE_CHECK);
                 UpDataInfo.boBaiduDown := BNode.GetAttribute(XML_UPDATE_DOWNTYPE) = XML_DOWNTYPE_BAIDU;

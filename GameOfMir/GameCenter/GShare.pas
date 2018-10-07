@@ -1,4 +1,4 @@
-unit GShare;
+ï»¿unit GShare;
 
 interface
 uses
@@ -13,6 +13,7 @@ const
   tLoginGate = 4;
   tSelGate = 6;
   tRunGate = 8;
+  tPlugTop = 9;
 
   BasicSectionName = 'GameConfig';
   DBServerSectionName = 'DBServer';
@@ -22,14 +23,16 @@ const
   RunGateSectionName = 'RunGate';
   SelGateSectionName = 'SelGate';
   LoginGateSectionName = 'LoginGate';
+  PlugTopSectionName = 'PlugTop';
 
   sAllIPaddr = '0.0.0.0';
   sLocalIPaddr = '127.0.0.1';
   sLocalIPaddr2 = '127.0.0.2';
-  nLimitOnlineUser = 2000; //·şÎñÆ÷×î¸ßÉÏÏßÈËÊı
+  nLimitOnlineUser = 2000; //æœåŠ¡å™¨æœ€é«˜ä¸Šçº¿äººæ•°
 
   SERVERCONFIGDIR = 'Config\';
   SERVERCONFIGFILE = 'Config.ini';
+  PLUGTOPCONFIGFILE = 'TopSetup.ini';
   SERVERGAMEDATADIR = 'GameData\';
   SERVERLOGDIR = 'Log\';
 
@@ -67,20 +70,30 @@ const
 
   SelGateSectionName2 = 'SelGate';
 
+  PlugTopSectionName2 = 'Setup';
   LoginGateSectionName2 = 'LoginGate';
+
 
 type
   pTProgram = ^TProgram;
   TProgram = packed record
+    // æ˜¯å¦å…è®¸å¯åŠ¨
     boGetStart: Boolean;
-    boReStart: Boolean; //³ÌĞòÒì³£Í£Ö¹£¬ÊÇ·ñÖØĞÂÆô¶¯
+    // ç¨‹åºå¼‚å¸¸åœæ­¢ï¼Œæ˜¯å¦é‡æ–°å¯åŠ¨
+    boReStart: Boolean;
+    // 0,1,2,3 æœªå¯åŠ¨ï¼Œæ­£åœ¨å¯åŠ¨ï¼Œå·²å¯åŠ¨, æ­£åœ¨å…³é—­
     btStartStatus: Byte;
-    //0,1,2,3 Î´Æô¶¯£¬ÕıÔÚÆô¶¯£¬ÒÑÆô¶¯,ÕıÔÚ¹Ø±Õ
+    // ç¨‹åºæ–‡ä»¶
     sProgramFile: string[50];
+    // ç›®å½•
     sDirectory: string[100];
+    // è¿›ç¨‹ä¿¡æ¯
     ProcessInfo: TProcessInformation;
+    // è¿›ç¨‹å¤„ç†
     ProcessHandle: THandle;
+    // ä¸»çª—å£å¤„ç†
     MainFormHandle: THandle;
+    // çª—å£ä½ç½®
     nMainFormX: Integer;
     nMainFormY: Integer;
   end;
@@ -170,6 +183,13 @@ type
     ProgramFile: string[50];
   end;
 
+  TPlugTopConfig = packed record
+    MainFormX: Integer;
+    MainFormY: Integer;
+    GetStart: Boolean;
+    ProgramFile: string[50];
+  end;
+
   pTConfig = ^TConfig;
   TConfig = packed record
     DBServer: TDBServerConfig;
@@ -179,6 +199,7 @@ type
     RunGate: TRunGateConfig;
     SelGate: TSelGateConfig;
     LoginGate: TLoginGateConfig;
+    PlugTop: TPlugTopConfig;
   end;
 
 procedure LoadConfig();
@@ -199,10 +220,10 @@ var
 
   g_nFormIdx: Integer;
   g_IniConf: Tinifile;
-  g_sButtonStartGame: string = 'Æô¶¯ÓÎÏ··şÎñÆ÷(&S)';
-  g_sButtonStopGame: string = 'Í£Ö¹ÓÎÏ··şÎñÆ÷(&T)';
-  g_sButtonStopStartGame: string = 'ÖĞÖ¹Æô¶¯ÓÎÏ··şÎñÆ÷(&T)';
-  g_sButtonStopStopGame: string = 'ÖĞÖ¹Í£Ö¹ÓÎÏ··şÎñÆ÷(&T)';
+  g_sButtonStartGame: string = 'å¯åŠ¨æ¸¸æˆæœåŠ¡å™¨(&S)';
+  g_sButtonStopGame: string = 'åœæ­¢æ¸¸æˆæœåŠ¡å™¨(&T)';
+  g_sButtonStopStartGame: string = 'ä¸­æ­¢å¯åŠ¨æ¸¸æˆæœåŠ¡å™¨(&T)';
+  g_sButtonStopStopGame: string = 'ä¸­æ­¢åœæ­¢æ¸¸æˆæœåŠ¡å™¨(&T)';
 
   g_sConfFile: string = '.\Config.ini';
   g_sBackListFile: string = '.\BackupList.txt';
@@ -271,17 +292,24 @@ var
         GetStart: True;
         ProgramFile: 'LoginGate.exe';
       );
+      PlugTop: (
+        MainFormX: 200;
+        MainFormY: 0;
+        GetStart: True;
+        ProgramFile: 'PlugTop.exe';
+      );
     );
 
   DBServer: TProgram;
   LoginServer: TProgram;
   LogServer: TProgram;
   M2Server: TProgram;
-  RunGate: array[0..MAXRUNGATECOUNT - 1] of TProgram; //2006-11-12 Ôö¼Ó
+  RunGate: array[0..MAXRUNGATECOUNT - 1] of TProgram; //2006-11-12 å¢åŠ 
   SelGate: TProgram;
   SelGate1: TProgram;
   LoginGate: TProgram;
   LoginGate2: TProgram;
+  PlugTop: TProgram;
 
   g_dwStopTick: LongWord;
   g_dwStopTimeOut: LongWord = 10000;
@@ -289,7 +317,7 @@ var
   g_dwM2CheckCodeAddr: LongWord;
   g_dwDBCheckCodeAddr: LongWord;
 
-  g_BackUpManager: TBackUpManager; //ÎÄ¼ş±¸·İ
+  g_BackUpManager: TBackUpManager; //æ–‡ä»¶å¤‡ä»½
   m_nBackStartStatus: Integer = 0;
 
 implementation
@@ -367,7 +395,7 @@ begin
   g_sExtIPaddr2 := g_IniConf.ReadString(BasicSectionName, 'ExtIPaddr2', g_sExtIPaddr2);
   g_boAutoRunBak := g_IniConf.ReadBool(BasicSectionName, 'AutoRunBak', g_boAutoRunBak);
   g_boIP2 := g_IniConf.ReadBool(BasicSectionName, 'IP2', g_boIP2);
-  g_boCloseWuXin := g_IniConf.ReadBool(BasicSectionName, 'CloseWuXin', g_boCloseWuXin); 
+  g_boCloseWuXin := g_IniConf.ReadBool(BasicSectionName, 'CloseWuXin', g_boCloseWuXin);
 
   g_Config.DBServer.MainFormX := g_IniConf.ReadInteger(DBServerSectionName, 'MainFormX', g_Config.DBServer.MainFormX);
   g_Config.DBServer.MainFormY := g_IniConf.ReadInteger(DBServerSectionName, 'MainFormY', g_Config.DBServer.MainFormY);
@@ -424,6 +452,10 @@ begin
   g_Config.LoginGate.MainFormY := g_IniConf.ReadInteger(LoginGateSectionName, 'MainFormY', g_Config.LoginGate.MainFormY);
   g_Config.LoginGate.GatePort := g_IniConf.ReadInteger(LoginGateSectionName, 'GatePort', g_Config.LoginGate.GatePort);
   g_Config.LoginGate.GetStart := g_IniConf.ReadBool(LoginGateSectionName, 'GetStart', g_Config.LoginGate.GetStart);
+
+  g_Config.PlugTop.MainFormX := g_IniConf.ReadInteger(PlugTopSectionName, 'MainFormX', g_Config.PlugTop.MainFormX);
+  g_Config.PlugTop.MainFormY := g_IniConf.ReadInteger(PlugTopSectionName, 'MainFormY', g_Config.PlugTop.MainFormY);
+  g_Config.PlugTop.GetStart := g_IniConf.ReadBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);
 
 end;
 
@@ -494,6 +526,10 @@ begin
   g_IniConf.WriteInteger(LoginGateSectionName, 'MainFormY', g_Config.LoginGate.MainFormY);
   g_IniConf.WriteInteger(LoginGateSectionName, 'GatePort', g_Config.LoginGate.GatePort);
   g_IniConf.WriteBool(LoginGateSectionName, 'GetStart', g_Config.LoginGate.GetStart);
+
+//  g_IniConf.WriteInteger(PlugTopSectionName, 'MainFormX', g_Config.PlugTop.MainFormX);
+//  g_IniConf.WriteInteger(PlugTopSectionName, 'MainFormY', g_Config.PlugTop.MainFormY);
+  g_IniConf.WriteBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);
 
 end;
 

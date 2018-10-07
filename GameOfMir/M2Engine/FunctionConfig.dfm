@@ -36,7 +36,7 @@ object frmFunctionConfig: TfrmFunctionConfig
     Top = 8
     Width = 457
     Height = 345
-    ActivePage = TabSheet1
+    ActivePage = TabSheet23
     MultiLine = True
     TabOrder = 0
     OnChanging = FunctionConfigControlChanging
@@ -2115,7 +2115,7 @@ object frmFunctionConfig: TfrmFunctionConfig
             Top = 3
             Width = 432
             Height = 236
-            ActivePage = TabSheet36
+            ActivePage = TabSheet25
             TabOrder = 0
             object TabSheet8: TTabSheet
               Caption = #35825#24785#20043#20809
@@ -2787,7 +2787,7 @@ object frmFunctionConfig: TfrmFunctionConfig
             Top = 3
             Width = 432
             Height = 236
-            ActivePage = TabSheet31
+            ActivePage = ts9
             TabOrder = 0
             object TabSheet16: TTabSheet
               Caption = #26045#27602#26415
@@ -3374,7 +3374,7 @@ object frmFunctionConfig: TfrmFunctionConfig
             Top = 3
             Width = 432
             Height = 236
-            ActivePage = TabSheet29
+            ActivePage = TabSheet30
             TabOrder = 0
             object TabSheet29: TTabSheet
               Caption = #25252#20307#31070#30462

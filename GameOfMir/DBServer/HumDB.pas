@@ -8,9 +8,10 @@ const
   MAXPATHLEN = 255;
   DIRPATHLEN = 80;
   MapNameLen = 16;
-  ActorNameLen = 14;
+  ActorNameLen = 32;
 
-  sDBHeaderDesc = '新热血传奇数据库文件 2011/06/14';
+  // 这个常量是用来检测相关数据库文件版本的，一般不要轻易改它
+  sDBHeaderDesc = 'Randall数据库文件 2018/10/04';
   sDBIdxHeaderDesc = sDBHeaderDesc;
   
 type

@@ -392,8 +392,8 @@ begin
   end;
   //Application.OnMessage := MyMessage;
   //Application.OnException := MyException;
-  g_TitleName := '热血传奇    ';
-  g_ListName := 'http://www.xxxx.com/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+  g_TitleName := '热血传奇';
+  g_ListName := 'http://106.14.6.174/config.txt';
   g_MapName := '1234567890123456';
   sStr := 'DBC';
 

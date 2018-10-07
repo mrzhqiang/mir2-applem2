@@ -23,15 +23,11 @@ object frmViewList: TfrmViewList
     Top = 9
     Width = 899
     Height = 488
-    ActivePage = TabSheet4
+    ActivePage = TabSheet15
     TabOrder = 0
     OnChange = PageControl1Change
     object TabSheet15: TTabSheet
       Caption = #28216#25103#21015#34920
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControlViewList: TPageControl
         Left = 3
         Top = 3
@@ -42,10 +38,6 @@ object frmViewList: TfrmViewList
         object TabSheet10: TTabSheet
           Caption = #31649#29702#21592#21015#34920
           ImageIndex = 10
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox12: TGroupBox
             Left = 8
             Top = 4
@@ -590,10 +582,6 @@ object frmViewList: TfrmViewList
     object TabSheet1: TTabSheet
       Caption = #29289#21697#35268#21010
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 8
         Top = 8
@@ -630,7 +618,7 @@ object frmViewList: TfrmViewList
           Height = 20
           Style = csDropDownList
           Enabled = False
-          ItemHeight = 0
+          ItemHeight = 12
           ItemIndex = 0
           TabOrder = 2
           Text = #25152#26377#35774#32622

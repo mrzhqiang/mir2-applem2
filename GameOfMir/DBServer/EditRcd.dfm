@@ -21,14 +21,10 @@ object frmEditRcd: TfrmEditRcd
     Top = 9
     Width = 631
     Height = 323
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #22522#26412
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 11
         Top = 3
@@ -560,10 +556,6 @@ object frmEditRcd: TfrmEditRcd
     object TabSheet2: TTabSheet
       Caption = #25968#25454
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 7
         Top = 6
@@ -1063,10 +1055,6 @@ object frmEditRcd: TfrmEditRcd
     object TabSheet6: TTabSheet
       Caption = #20132#38469
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox7: TGroupBox
         Left = 11
         Top = 11
@@ -1240,10 +1228,6 @@ object frmEditRcd: TfrmEditRcd
     object TabSheet3: TTabSheet
       Caption = #25216#33021
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox3: TGroupBox
         Left = 7
         Top = 6
@@ -1340,10 +1324,6 @@ object frmEditRcd: TfrmEditRcd
     object TabSheet4: TTabSheet
       Caption = #35013#22791
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 7
         Top = 6
@@ -1410,10 +1390,6 @@ object frmEditRcd: TfrmEditRcd
     object TabSheet7: TTabSheet
       Caption = #32972#21253
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox10: TGroupBox
         Left = 7
         Top = 6
@@ -1457,10 +1433,6 @@ object frmEditRcd: TfrmEditRcd
     object TabSheet5: TTabSheet
       Caption = #20179#24211
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox5: TGroupBox
         Left = 7
         Top = 6

@@ -18702,8 +18702,8 @@ var
 begin
   for i := 0 to m_MagicList.Count - 1 do begin
     UserMagic := m_MagicList.Items[i];
-    if UserMagic.btLevel >= 4 then
-      UserMagic.btLevel := 0;
+    if UserMagic.btLevel > 100 then
+      UserMagic.btLevel := 100;
   end;
   inherited;
 end;

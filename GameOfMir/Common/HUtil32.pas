@@ -248,6 +248,7 @@ function CheckByteStatus(Value, btValType: Byte): Boolean;
 begin
   Result := False;
   if Value > 0 then
+    // 128 / (2^btValType)
     if ((128 shr btValType) and (Value)) <> 0 then
       Result := True;
 end;
@@ -385,7 +386,16 @@ begin
   case btJob of
     0: Result := '战士';
     1: Result := '法师';
-    2: Result := '道士';
+    2: Result := '术士';
+    10: Result := '狂暴战士';
+    11: Result := '坚盾战士';
+    12: Result := '武器战士';
+    20: Result := '寒冰法师';
+    21: Result := '烈焰法师';
+    22: Result := '神圣法师';
+    30: Result := '神符术士';
+    31: Result := '暗杀术士';
+    32: Result := '天工术士';
   else
     Result := '未知';
   end;

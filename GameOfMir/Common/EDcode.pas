@@ -5,20 +5,28 @@ interface
 uses
   SysUtils, Grobal2;
 const
+  // 旧模式？
   OLDMODE = 0;
+  // 新模式？
   NEWMODE = 1;
+  // 编码模式
   ENDECODEMODE = NEWMODE;
 
-
+  // 制作默认消息：通过 wIdent（识别符），nRecog（未知），WParam（参数）
+  // ，wSeries（系列） 生成
+function MakeDefaultMsg(wIdent: Word; nRecog: Integer; WParam, wTag, wSeries: Word): TDefaultMessage;
+  // 对默认消息进行编码，生成字符串
 function EncodeMessage(smsg: TDefaultMessage): string;
+  // 对字符串进行解码，生成默认消息
 function DecodeMessage(str: string): TDefaultMessage;
+  // 对字符串进行编码，生成编码字符串
 function EncodeString(str: string): string;
+  // 对编码字符串进行解码，生成可识别的字符串
 function DecodeString(str: string): string;
 function EncodeBuffer(Buf: PChar; bufsize: Integer): string;
 procedure DecodeBuffer(Src: string; Buf: PChar; bufsize: Integer);
 procedure Decode6BitBuf(sSource: PChar; pbuf: PChar; nSrcLen, nBufLen: Integer);
 procedure Encode6BitBuf(pSrc, PDest: PChar; nSrcLen, nDestLen: Integer);
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; WParam, wTag, wSeries: Word): TDefaultMessage;
 function EncodeLongBuffer(Buf: PChar; bufsize: Integer): string;
 procedure DecodeLongBuffer(Src: string; Buf: PChar; bufsize: Integer);
 

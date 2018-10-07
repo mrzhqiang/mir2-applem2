@@ -161,7 +161,7 @@ procedure TFrmSqlSock.SendGameGoldChange(WaitID, nDBIndex, nCMD: Integer; sSendM
 var
   DefMsg: TDefaultMessage;
 begin
-  DefMsg := MakeDefaultMsg(SQL_CM_GAMEGOLDCHANGE, WaitID, LoWord(nDBIndex), HiWord(nDBIndex), nCMD);
+  DefMsg := MakeDefaultMsg(SQL_CM_GAMEGOLDCHANGE { 10004 }, WaitID, LoWord(nDBIndex), HiWord(nDBIndex), nCMD);
   SendSocket(EncodeMessage(DefMsg) + EncodeString(sSendMsg));
 end;
 
@@ -169,7 +169,7 @@ procedure TFrmSqlSock.SendKeepAlive;
 var
   DefMsg: TDefaultMessage;
 begin
-  DefMsg := MakeDefaultMsg(SQL_KEEPALIVE, 0, 0, 0, 0);
+  DefMsg := MakeDefaultMsg(SQL_KEEPALIVE { 1000 }, 0, 0, 0, 0);
   SendSocket(EncodeMessage(DefMsg) + EncodeString(UserLimit.sServerName + '/' + IntToStr(nOnlineCountMin)));
 end;
 

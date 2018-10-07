@@ -1,7 +1,7 @@
 object frmGameConfig: TfrmGameConfig
   Left = 173
   Top = 173
-  ActiveControl = EditDefGuildMemberLimit
+  ActiveControl = EditKillMonExpMultiple
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = #28216#25103#21442#25968
@@ -37,7 +37,7 @@ object frmGameConfig: TfrmGameConfig
     Top = 9
     Width = 489
     Height = 257
-    ActivePage = TabSheet4
+    ActivePage = ExpSheet
     TabOrder = 0
     OnChanging = GameConfigControlChanging
     object GeneralSheet: TTabSheet
@@ -5211,6 +5211,10 @@ object frmGameConfig: TfrmGameConfig
     object TabSheet7: TTabSheet
       Caption = #20215#26684#36153#29992
       ImageIndex = 10
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox48: TGroupBox
         Left = 8
         Top = 8
@@ -5353,6 +5357,10 @@ object frmGameConfig: TfrmGameConfig
     object TabSheet9: TTabSheet
       Caption = #20154#29289#27515#20129
       ImageIndex = 12
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ButtonHumanDieSave: TButton
         Left = 411
         Top = 184

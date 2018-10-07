@@ -514,7 +514,7 @@ object frmItemSet: TfrmItemSet
         Top = 4
         Width = 465
         Height = 245
-        ActivePage = TabSheet7
+        ActivePage = TabSheet11
         MultiLine = True
         TabOrder = 0
         object TabSheet10: TTabSheet

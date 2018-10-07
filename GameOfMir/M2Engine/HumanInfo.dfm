@@ -22,10 +22,14 @@ object frmHumanInfo: TfrmHumanInfo
     Top = 8
     Width = 633
     Height = 241
-    ActivePage = TabSheet2
+    ActivePage = TabSheet4
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #20154#29289#20449#24687
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 8
         Top = 13
@@ -390,6 +394,10 @@ object frmHumanInfo: TfrmHumanInfo
     object TabSheet2: TTabSheet
       Caption = #26222#36890#25968#25454
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 9
         Top = 10
@@ -987,6 +995,10 @@ object frmHumanInfo: TfrmHumanInfo
     object TabSheet4: TTabSheet
       Caption = #36523#19978#35013#22791
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox7: TGroupBox
         Left = 8
         Top = 8
@@ -1022,6 +1034,10 @@ object frmHumanInfo: TfrmHumanInfo
     object TabSheet5: TTabSheet
       Caption = #32972#21253#29289#21697
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox8: TGroupBox
         Left = 8
         Top = 8
@@ -1057,6 +1073,10 @@ object frmHumanInfo: TfrmHumanInfo
     object TabSheet6: TTabSheet
       Caption = #20179#24211#29289#21697
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox10: TGroupBox
         Left = 8
         Top = 8

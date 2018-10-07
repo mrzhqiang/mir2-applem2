@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 106
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'AppleM2'#28216#25103#25511#21046#21488'(2012-05-01)'
+  Caption = 'Randall '#25511#21046#21488'(2018-08-18)'
   ClientHeight = 376
   ClientWidth = 536
   Color = clBtnFace
@@ -25,7 +25,7 @@ object frmMain: TfrmMain
     Top = 8
     Width = 520
     Height = 360
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     HotTrack = True
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -37,6 +37,7 @@ object frmMain: TfrmMain
         Height = 313
         Caption = #26381#21153#22120#25511#21046
         TabOrder = 0
+        OnClick = GroupBox5Click
         object Label24: TLabel
           Left = 330
           Top = 133
@@ -53,7 +54,7 @@ object frmMain: TfrmMain
         end
         object ButtonStartGame: TButton
           Left = 166
-          Top = 266
+          Top = 275
           Width = 145
           Height = 33
           Caption = #21551#21160#28216#25103#25511#21046#22120'(&S)'
@@ -136,9 +137,9 @@ object frmMain: TfrmMain
         end
         object MemoLog: TMemo
           Left = 8
-          Top = 152
+          Top = 176
           Width = 473
-          Height = 105
+          Height = 93
           Color = clNone
           Font.Charset = ANSI_CHARSET
           Font.Color = clYellow
@@ -435,37 +436,31 @@ object frmMain: TfrmMain
           Visible = False
           OnClick = CheckSelGate1Click
         end
+        object CheckBoxPlugTop: TCheckBox
+          Left = 8
+          Top = 153
+          Width = 162
+          Height = 17
+          Caption = #25490#34892#27036#25554#20214'(PlugTop)'
+          TabOrder = 35
+          OnClick = CheckBoxPlugTopClick
+        end
       end
     end
     object TabSheet2: TTabSheet
       Caption = #37197#32622#21521#23548
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object PageControl2: TPageControl
-        Left = 480
-        Top = 144
-        Width = 289
-        Height = 193
-        TabOrder = 0
-      end
       object PageControl3: TPageControl
         Left = 0
         Top = 0
         Width = 512
-        Height = 333
+        Height = 332
         ActivePage = TabSheet4
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
         TabPosition = tpBottom
         object TabSheet4: TTabSheet
           Caption = #31532#19968#27493'('#22522#26412#35774#32622')'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox1: TGroupBox
             Left = 3
             Top = 13
@@ -575,6 +570,26 @@ object frmMain: TfrmMain
               Text = '127.0.0.1'
               Visible = False
             end
+            object SpinEditAllPortAdd: TSpinEdit
+              Left = 136
+              Top = 154
+              Width = 97
+              Height = 21
+              MaxValue = 0
+              MinValue = 0
+              TabOrder = 7
+              Value = 0
+              OnChange = SpinEditAllPortAddChange
+            end
+            object ButtonAllPortAdd: TButton
+              Left = 5
+              Top = 150
+              Width = 125
+              Height = 25
+              Caption = #25152#26377#31471#21475#25209#37327#22686#21152':'
+              TabOrder = 8
+              OnClick = ButtonAllPortAddClick
+            end
           end
           object ButtonNext1: TButton
             Left = 408
@@ -614,10 +629,6 @@ object frmMain: TfrmMain
         object TabSheet5: TTabSheet
           Caption = #31532#20108#27493'('#30331#24405#32593#20851')'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object ButtonNext2: TButton
             Left = 408
             Top = 263
@@ -743,10 +754,6 @@ object frmMain: TfrmMain
         object TabSheet6: TTabSheet
           Caption = #31532#19977#27493'('#35282#33394#32593#20851')'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox3: TGroupBox
             Left = 8
             Top = 8
@@ -896,10 +903,6 @@ object frmMain: TfrmMain
         object TabSheet12: TTabSheet
           Caption = #31532#22235#27493'('#28216#25103#32593#20851')'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object ButtonPrv4: TButton
             Left = 320
             Top = 263
@@ -1207,10 +1210,6 @@ object frmMain: TfrmMain
         object TabSheet7: TTabSheet
           Caption = #31532#20116#27493'('#30331#24405#26381#21153#22120')'
           ImageIndex = 3
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox9: TGroupBox
             Left = 8
             Top = 8
@@ -1366,10 +1365,6 @@ object frmMain: TfrmMain
         object TabSheet8: TTabSheet
           Caption = #31532#20845#27493'('#25968#25454#24211#26381#21153#22120')'
           ImageIndex = 4
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox11: TGroupBox
             Left = 8
             Top = 8
@@ -1510,10 +1505,6 @@ object frmMain: TfrmMain
         object TabSheet9: TTabSheet
           Caption = #31532#19971#27493'('#28216#25103#26085#24535#26381#21153#22120')'
           ImageIndex = 5
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox13: TGroupBox
             Left = 8
             Top = 8
@@ -1639,10 +1630,6 @@ object frmMain: TfrmMain
         object TabSheet10: TTabSheet
           Caption = #31532#20843#27493'('#28216#25103#24341#25806#20027#26381#21153#22120')'
           ImageIndex = 6
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object GroupBox15: TGroupBox
             Left = 8
             Top = 8
@@ -1783,10 +1770,6 @@ object frmMain: TfrmMain
         object TabSheet11: TTabSheet
           Caption = #31532#20061#27493'('#20445#23384#37197#32622')'
           ImageIndex = 7
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object ButtonSave: TButton
             Left = 408
             Top = 263
@@ -1820,10 +1803,6 @@ object frmMain: TfrmMain
     object TabSheet3: TTabSheet
       Caption = #25968#25454#22791#20221
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LabelBackMsg: TLabel
         Left = 384
         Top = 304
@@ -2035,8 +2014,8 @@ object frmMain: TfrmMain
         OnClick = ButtonBackDelClick
       end
       object ButtonBackAdd: TButton
-        Left = 152
-        Top = 296
+        Left = 153
+        Top = 295
         Width = 65
         Height = 25
         Caption = #22686#21152'(&A)'
@@ -2044,8 +2023,8 @@ object frmMain: TfrmMain
         OnClick = ButtonBackAddClick
       end
       object ButtonBackStart: TButton
-        Left = 296
-        Top = 296
+        Left = 295
+        Top = 295
         Width = 75
         Height = 25
         Caption = #21551#21160'(&B)'
@@ -2065,10 +2044,6 @@ object frmMain: TfrmMain
     object TabSheetDebug: TTabSheet
       Caption = #27979#35797
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox29: TGroupBox
         Left = 8
         Top = 0
@@ -2201,10 +2176,6 @@ object frmMain: TfrmMain
     object tsDataList: TTabSheet
       Caption = #25968#25454#21015#34920
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label27: TLabel
         Left = 10
         Top = 279
@@ -2295,10 +2266,6 @@ object frmMain: TfrmMain
     object TabSheet13: TTabSheet
       Caption = #24320#21306#25968#25454#28165#29702
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox25: TGroupBox
         Left = 8
         Top = 8

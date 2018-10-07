@@ -17,7 +17,7 @@ const
 
   Var_Interface = Var_Default;
 
-  CLIENT_VERSION_NUMBER = 20120501;
+  CLIENT_VERSION_NUMBER = 20181001;
   CLIENT_VERSION_MARK = $1FFFFFF;
 
   CLIENT_VERSIONEX_MIR2 = $2000000;
@@ -36,15 +36,15 @@ $40000000
 $80000000  }
   
 
-  g_sProgram = '程序制作: Apple';
-  g_sWebSite = '官方网站: http://www.applem2.com';
+  g_sProgram = '程序制作: mrzhqiang';
+  g_sWebSite = '官方网站: http://randall.top';
 
-  GROBAL2VER = 20090404;
-
-  GATEMAXSESSION = 1000; //最大用户连接数
-
-  PLAYOBJECTINDEXCOUNT = 1000000;
+  // 某种匹配符？
+  GROBAL2VER = 20181001;
+  //最大用户连接数
+  GATEMAXSESSION = 1000;
   //用户索引最大记录数,如果已创建人物数量大于这个值,整体系统可能会出错
+  PLAYOBJECTINDEXCOUNT = 1000000;
 
   CanStrengthenArr: array[0..6] of Byte = (0, 3, 6, 9, 12, 15, 18);
   CanStrengthenMax: array[0..5] of Byte = (16, 20, 21, 15, 24, 6);
@@ -1184,7 +1184,7 @@ type
 
   TOnActionTypeArr = set of TOnActionType;
 
-  TStdMode = (tm_Drug, tm_Restrict, tm_Reel, tm_Book, tm_Weapon, tm_Rock, 
+  TStdMode = (tm_Drug, tm_Restrict, tm_Reel, tm_Book, tm_Weapon, tm_Rock,
     tm_Cowry, tm_AddBag, tm_House, tm_Dress, tm_Helmet, tm_Necklace, tm_Ring, tm_ArmRing, tm_Amulet, tm_Belt,
     tm_Boot, tm_Stone, tm_Light, tm_Open, tm_Flesh, tm_Ore, tm_Dice,
     tm_Mission, tm_MissionSP, tm_MakeStone, tm_MakeProp, tm_MakePropSP, tm_unknown, tm_ResetStone,
@@ -1607,7 +1607,9 @@ type
 
   TStdItem = packed record
     Idx: Word;
-    Name: string[14];
+    // 物品名字，一般来说应该有一个前缀，位于人物的物品数据库中
+    // 但这里为了方便开发，暂时增加了名字长度
+    Name: string[24];
     StdMode2: Byte;
     StdMode: TStdMode;
     StdModeEx: TStdModeEx;
@@ -1695,28 +1697,48 @@ type
 
   pTMagic = ^TMagic;
   TMagic = packed record
+    // 技能序号，每个 ID 对应一种技能，比如：火球术的 ID 是 1
     wMagicId: Word;
-    sMagicName: string[10];
-    btEffectType: Byte;
-    btEffect: Byte;
+    // 技能名字
+    sMagicName: string[24];
+    // 技能效果类型
+    btEffectType: Word;
+    // 技能效果
+    btEffect: Word;
+    // 技能图标
     wMagicIcon: Word;
+    // 指定职业
     btJob: Byte;
+    // 延迟时间
     dwDelayTime: LongWord;
+    // 间隔时间
     nInterval: LongWord;
-    nSpellFrame: Byte;
-
+    // 技能帧
+    nSpellFrame: Word;
+    // 基础消耗
     wSpell: Word;
+    // 等级消耗
     btDefSpell: Word;
-
+    // 基础伤害
     wPower: Word;
+    // 基础最大伤害
     wMaxPower: Word;
-
+    // 等级伤害
     btDefPower: Word;
+    // 等级最大伤害
     btDefMaxPower: Word;
-
-    TrainLevel: array[0..3] of Byte;
-    MaxTrain: array[0..3] of Integer;
+    // 最高等级
     btTrainLv: Byte;
+    // 升级需要人物等级
+    TrainLevel: array[0..3] of Byte;
+    // 升级需要熟练度
+    MaxTrain: array[0..3] of Integer;
+    // 技能模式：
+    // mm_Attack，攻击技能；
+    // mm_Passiveness，被动技能：
+    // mm_Warr，战士技能：
+    // mm_MagLock，锁定技能：
+    // mm_Open，开放技能；
     MagicMode: TMagicMode;
   end;
 
@@ -1749,6 +1771,7 @@ type
     isScreen: TObject;
   end;
 
+  {客户端技能}
   TClientMagic = packed record
     btMagID: Word;
     Level: Byte;
@@ -1758,6 +1781,7 @@ type
   end;
   PTClientMagic = ^TClientMagic;
 
+  {用户技能}
   TUserMagic = packed record
     MagicInfo: pTMagic;
     wMagIdx: Word;
@@ -2639,26 +2663,43 @@ type
   //THumanEMailInfo = array[0..MAXEMAILCOUNT - 1] of TDBEMailInfo;
 
   pTHumData = ^THumData;
+  { 人物数据 }
   THumData = packed record
+    // 记录索引
     nIdx: Integer;
+    // 人物名字——目测
     sChrName: string[ActorNameLen];
+    // 当前地图名字
     sCurMap: string[MapNameLen];
+    // 当前X坐标
     wCurX: Word;
+    // 当前Y坐标
     wCurY: Word;
+    // 未知属性？
     btDir: Byte;
+    // 发型
     btHair: Byte;
+    // 性别
     btSex: Byte;
+    // 职业：范围0 -- 255
     btJob: Byte;
+    // 金币
     nGold: Integer;
+    // 绑定金币
     nBindGold: Integer;
-
+    // 角色能力
     Abil: TAbility;
+    // 裸体能力？
     NakedAbil: TNakedAbil;
+    // 裸体数量？
     nNakedAbilCount: Word;
+    // 时间状态列表
     wStatusTimeArr: TStatusTime;
+    // 家地图名字
     sHomeMap: string[MapNameLen];
     wHomeX: Word;
     wHomeY: Word;
+    // 死亡地图名字
     sDieMap: string[MapNameLen];
     wDieX: Word;
     wDieY: Word;
@@ -2679,7 +2720,7 @@ type
     StorageLockTime: TDateTime;
     btReLevel: Byte;
 
-    nGameGold: Integer; //
+    nGameGold: Integer; // 游戏
     nGamePoint: Integer;
     nGameDiamond: Integer;
     nGameGird: Integer;

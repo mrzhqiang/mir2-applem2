@@ -7,7 +7,7 @@ uses
 
 const
   //g_sVersion = '程序版本: 1.00 Build 20080825';
-  g_sUpDateTime = '更新日期: 2012/05/01';
+  g_sUpDateTime = '更新日期: 2018/10/05';
 
   SIZEOFTHUMAN = 44032;
 
@@ -142,7 +142,7 @@ var
   n4ADBB8: Integer;
   bo4ADB1C: Boolean;
 
-  sServerName: string = '新热血传奇';
+  sServerName: string = 'Randall';
   sConfFileName: string = '.\Dbsrc.ini';
   sConfClass: string = 'DBServer';
   sGateConfFileName: string = '.\!serverinfo.txt';
@@ -373,6 +373,7 @@ begin
   end;
 end;
 
+{获取技能名字，通过技能 ID}
 function GetMagicName(wMagicId: Word): string;
 var
   i: Integer;

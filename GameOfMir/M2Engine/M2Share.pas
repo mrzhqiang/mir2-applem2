@@ -10,7 +10,7 @@ uses
 
 const
 
-  g_sUpDateTime = '更新日期: 2012/05/01';
+  g_sUpDateTime = '更新日期: 2018/09/02';
 
   TESTMODE = 0;
   nVersionType = 0;
