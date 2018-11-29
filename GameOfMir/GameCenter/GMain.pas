@@ -1089,11 +1089,6 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   // 布尔类型，表示当窗体创建和初始化时，无法进行其他操作，保证窗体正常显示
   m_boOpen := False;
-  // g_IniConf 是读取的 Config.ini 文件
-  // ReadInteger 是读取 int 类型（对应 java 基本类型）
-  // 取出 [Setup] 部分 FormID 的值
-  // 若不存在则得到 g_nFormIdx 的值，由于它是全局变量，则为 0
-  g_nFormIdx := g_IniConf.ReadInteger('Setup', 'FormID', g_nFormIdx);
   // 这里是将 ProcessMessage 方法赋给应用的 OnMessage，用于托管所有消息
   // 而 ProcessMessage 则实现为 遇到 WM_SENDPROCMSG 类型的消息，直接拦截它
   Application.OnMessage := ProcessMessage;
@@ -1112,12 +1107,12 @@ begin
   // 1 停止。
   m_nBackStartStatus := 0;
   // 备忘录组件实例，清理一下内容
-  MemoLog.Clear;
+//  MemoLog.Clear;
   //mmoDataListLog.Clear;
   // 创建一个字符串列表，好像是引擎更新数据之类的东西，【没有意义】
-  g_GetDatList := TStringList.Create;
+//  g_GetDatList := TStringList.Create;
   // 获得系统自启动以来的毫秒值，用于数据更新检查，【没有意义】
-  m_dwRefTick := GetTickCount;
+//  m_dwRefTick := GetTickCount;
   // 从控制台配置文件 Config.ini 中加载参数
   LoadConfig();
   // 从备份配置文件 BackupList.ini 中加载参数
@@ -1564,6 +1559,8 @@ end;
 procedure TfrmMain.RefGameConsole();
 begin
   m_boOpen := False;
+
+  // 设置选中状态
   CheckBoxM2Server.Checked := g_Config.M2Server.GetStart;
   CheckBoxDBServer.Checked := g_Config.DBServer.GetStart;
   CheckBoxLoginServer.Checked := g_Config.LoginSrv.GetStart;
@@ -1580,7 +1577,8 @@ begin
   CheckBoxRunGate6.Checked := g_Config.RunGate.GetStart[6];
   CheckBoxRunGate7.Checked := g_Config.RunGate.GetStart[7];
   CheckBoxPlugTop.Checked := g_Config.PlugTop.GetStart;
-  
+
+  // 第一步 基本设置
   EditGameDir.Text := g_sGameDirectory;
   EditHeroDB.Text := g_sHeroDBName;
   EditGameName.Text := g_sGameName;
@@ -1588,32 +1586,24 @@ begin
   EditGameExtIPAddr2.Text := g_sExtIPAddr2;
   CheckBoxIP2.Checked := g_boIP2;
   CheckBoxCloseWuXin.Checked := g_boCloseWuXin;
+               
+  // 第二步 登录网关
+  EditLoginGate_MainFormX.Value := g_Config.LoginGate.MainFormX;
+  EditLoginGate_MainFormY.Value := g_Config.LoginGate.MainFormY;
+  CheckBoxboLoginGate_GetStart.Checked := g_Config.LoginGate.GetStart;
+  EditLoginGate_GatePort.Text := IntToStr(g_Config.LoginGate.GatePort);
 
-  EditDBServer_MainFormX.Value := g_Config.DBServer.MainFormX;
-  EditDBServer_MainFormY.Value := g_Config.DBServer.MainFormY;
-  EditDBServerGatePort.Text := IntToStr(g_Config.DBServer.GatePort);
-  EditDBServerServerPort.Text := IntToStr(g_Config.DBServer.ServerPort);
-  CheckBoxDBServerGetStart.Checked := g_Config.DBServer.GetStart;
-
-  EditLoginServer_MainFormX.Value := g_Config.LoginSrv.MainFormX;
-  EditLoginServer_MainFormY.Value := g_Config.LoginSrv.MainFormY;
-  EditLoginServerGatePort.Text := IntToStr(g_Config.LoginSrv.GatePort);
-  EditLoginServerServerPort.Text := IntToStr(g_Config.LoginSrv.ServerPort);
-  EditLoginServerMonPort.Text := IntToStr(g_Config.LoginSrv.MonPort);
-  CheckBoxboLoginServer_GetStart.Checked := g_Config.LoginSrv.GetStart;
-
-  EditM2Server_MainFormX.Value := g_Config.M2Server.MainFormX;
-  EditM2Server_MainFormY.Value := g_Config.M2Server.MainFormY;
-  EditM2ServerGatePort.Text := IntToStr(g_Config.M2Server.GatePort);
-  EditM2ServerMsgSrvPort.Text := IntToStr(g_Config.M2Server.MsgSrvPort);
-  CheckBoxM2ServerGetStart.Checked := g_Config.M2Server.GetStart;
-
-  EditLogServer_MainFormX.Value := g_Config.LogServer.MainFormX;
-  EditLogServer_MainFormY.Value := g_Config.LogServer.MainFormY;
-  EditLogServerPort.Text := IntToStr(g_Config.LogServer.Port);
-  CheckBoxLogServerGetStart.Checked := g_Config.LogServer.GetStart;
-
-  //EditRunGate_Connt.Value := g_Config.RunGate.Count;
+  // 第三步 角色网关
+  EditSelGate_MainFormX.Value := g_Config.SelGate.MainFormX;
+  EditSelGate_MainFormY.Value := g_Config.SelGate.MainFormY;
+  CheckBoxboSelGate_GetStart.Checked := g_Config.SelGate.GetStart1;
+  CheckBoxboSelGate_GetStart2.Checked := g_Config.SelGate.GetStart2;
+  EditSelGate_GatePort.Text := IntToStr(g_Config.SelGate.GatePort[0]);
+  EditSelGate_GatePort1.Text := IntToStr(g_Config.SelGate.GatePort[1]);
+          
+  // 第四步 游戏网关
+  EditRunGate_MainFormX.Value := g_Config.RunGate.MainFormX;
+  EditRunGate_MainFormY.Value := g_Config.RunGate.MainFormY;
   CheckBoxboRunGate_GetStart1.Checked := g_Config.RunGate.GetStart[0];
   CheckBoxboRunGate_GetStart2.Checked := g_Config.RunGate.GetStart[1];
   CheckBoxboRunGate_GetStart3.Checked := g_Config.RunGate.GetStart[2];
@@ -1622,8 +1612,7 @@ begin
   CheckBoxboRunGate_GetStart6.Checked := g_Config.RunGate.GetStart[5];
   CheckBoxboRunGate_GetStart7.Checked := g_Config.RunGate.GetStart[6];
   CheckBoxboRunGate_GetStart8.Checked := g_Config.RunGate.GetStart[7];
-  EditRunGate_MainFormX.Value := g_Config.RunGate.MainFormX;
-  EditRunGate_MainFormY.Value := g_Config.RunGate.MainFormY;
+  // 游戏网关端口
   EditRunGate_GatePort1.Text := IntToStr(g_Config.RunGate.GatePort[0]);
   EditRunGate_GatePort2.Text := IntToStr(g_Config.RunGate.GatePort[1]);
   EditRunGate_GatePort3.Text := IntToStr(g_Config.RunGate.GatePort[2]);
@@ -1632,18 +1621,34 @@ begin
   EditRunGate_GatePort6.Text := IntToStr(g_Config.RunGate.GatePort[5]);
   EditRunGate_GatePort7.Text := IntToStr(g_Config.RunGate.GatePort[6]);
   EditRunGate_GatePort8.Text := IntToStr(g_Config.RunGate.GatePort[7]);
+        
+  // 第五步 登录服务器
+  EditLoginServer_MainFormX.Value := g_Config.LoginSrv.MainFormX;
+  EditLoginServer_MainFormY.Value := g_Config.LoginSrv.MainFormY;
+  EditLoginServerGatePort.Text := IntToStr(g_Config.LoginSrv.GatePort);
+  EditLoginServerServerPort.Text := IntToStr(g_Config.LoginSrv.ServerPort);
+  EditLoginServerMonPort.Text := IntToStr(g_Config.LoginSrv.MonPort);
+  CheckBoxboLoginServer_GetStart.Checked := g_Config.LoginSrv.GetStart;
 
-  EditSelGate_MainFormX.Value := g_Config.SelGate.MainFormX;
-  EditSelGate_MainFormY.Value := g_Config.SelGate.MainFormY;
-  CheckBoxboSelGate_GetStart.Checked := g_Config.SelGate.GetStart1;
-  CheckBoxboSelGate_GetStart2.Checked := g_Config.SelGate.GetStart2;
-  EditSelGate_GatePort.Text := IntToStr(g_Config.SelGate.GatePort[0]);
-  EditSelGate_GatePort1.Text := IntToStr(g_Config.SelGate.GatePort[1]);
+  // 第六步 数据库服务器
+  EditDBServer_MainFormX.Value := g_Config.DBServer.MainFormX;
+  EditDBServer_MainFormY.Value := g_Config.DBServer.MainFormY;
+  EditDBServerGatePort.Text := IntToStr(g_Config.DBServer.GatePort);
+  EditDBServerServerPort.Text := IntToStr(g_Config.DBServer.ServerPort);
+  CheckBoxDBServerGetStart.Checked := g_Config.DBServer.GetStart;
 
-  EditLoginGate_MainFormX.Value := g_Config.LoginGate.MainFormX;
-  EditLoginGate_MainFormY.Value := g_Config.LoginGate.MainFormY;
-  CheckBoxboLoginGate_GetStart.Checked := g_Config.LoginGate.GetStart;
-  EditLoginGate_GatePort.Text := IntToStr(g_Config.LoginGate.GatePort);
+  // 第七步 游戏日志服务器
+  EditLogServer_MainFormX.Value := g_Config.LogServer.MainFormX;
+  EditLogServer_MainFormY.Value := g_Config.LogServer.MainFormY;
+  EditLogServerPort.Text := IntToStr(g_Config.LogServer.Port);
+  CheckBoxLogServerGetStart.Checked := g_Config.LogServer.GetStart;
+
+  // 第八步 游戏引擎主服务器
+  EditM2Server_MainFormX.Value := g_Config.M2Server.MainFormX;
+  EditM2Server_MainFormY.Value := g_Config.M2Server.MainFormY;
+  EditM2ServerGatePort.Text := IntToStr(g_Config.M2Server.GatePort);
+  EditM2ServerMsgSrvPort.Text := IntToStr(g_Config.M2Server.MsgSrvPort);
+  CheckBoxM2ServerGetStart.Checked := g_Config.M2Server.GetStart;
 
   m_boOpen := True;
 end;
@@ -3587,10 +3592,10 @@ end;
 function TfrmMain.StartService: Boolean;
 begin
   //  Result := False;
-  MainOutMessage('正在启动游戏客户端控制器...');
+  MainOutMessage('正在启动...');
   m_dwShowTick := GetTickCount();
   Timer.Enabled := True;
-  MainOutMessage('游戏控制台启动完成...');
+  MainOutMessage('启动完成...');
   Result := True;
 end;
 {

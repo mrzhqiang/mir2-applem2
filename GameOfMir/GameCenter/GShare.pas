@@ -228,14 +228,15 @@ var
   g_sConfFile: string = '.\Config.ini';
   g_sBackListFile: string = '.\BackupList.txt';
 
-  g_sGameName: string = 'GameOfMir';
-  g_sGameDirectory: string = '.\';
+  g_sGameName: string = '兰达尔第一季';
+
+  g_sGameDirectory: string = 'D:\mir-server\MirServer\';
   g_sHeroDBName: string = 'HeroDB';
   g_sExtIPaddr: string = '127.0.0.1';
   g_sExtIPaddr2: string = '127.0.0.1';
   g_boAutoRunBak: Boolean = False;
-  g_boCloseWuXin: Boolean = False;
   g_boIP2: Boolean = False;
+  g_boCloseWuXin: Boolean = False;
 
   g_Config: TConfig = (
       DBServer: (
@@ -388,6 +389,7 @@ end;
 
 procedure LoadConfig();
 begin
+  // [GameConfig]
   g_sGameDirectory := g_IniConf.ReadString(BasicSectionName, 'GameDirectory', g_sGameDirectory);
   g_sHeroDBName := g_IniConf.ReadString(BasicSectionName, 'HeroDBName', g_sHeroDBName);
   g_sGameName := g_IniConf.ReadString(BasicSectionName, 'GameName', g_sGameName);
@@ -396,31 +398,31 @@ begin
   g_boAutoRunBak := g_IniConf.ReadBool(BasicSectionName, 'AutoRunBak', g_boAutoRunBak);
   g_boIP2 := g_IniConf.ReadBool(BasicSectionName, 'IP2', g_boIP2);
   g_boCloseWuXin := g_IniConf.ReadBool(BasicSectionName, 'CloseWuXin', g_boCloseWuXin);
-
+  // [DBServer]
   g_Config.DBServer.MainFormX := g_IniConf.ReadInteger(DBServerSectionName, 'MainFormX', g_Config.DBServer.MainFormX);
   g_Config.DBServer.MainFormY := g_IniConf.ReadInteger(DBServerSectionName, 'MainFormY', g_Config.DBServer.MainFormY);
   g_Config.DBServer.GatePort := g_IniConf.ReadInteger(DBServerSectionName, 'GatePort', g_Config.DBServer.GatePort);
   g_Config.DBServer.ServerPort := g_IniConf.ReadInteger(DBServerSectionName, 'ServerPort', g_Config.DBServer.ServerPort);
   g_Config.DBServer.GetStart := g_IniConf.ReadBool(DBServerSectionName, 'GetStart', g_Config.DBServer.GetStart);
-
+  // [LoginSrv]
   g_Config.LoginSrv.MainFormX := g_IniConf.ReadInteger(LoginSrvSectionName, 'MainFormX', g_Config.LoginSrv.MainFormX);
   g_Config.LoginSrv.MainFormY := g_IniConf.ReadInteger(LoginSrvSectionName, 'MainFormY', g_Config.LoginSrv.MainFormY);
   g_Config.LoginSrv.GatePort := g_IniConf.ReadInteger(LoginSrvSectionName, 'GatePort', g_Config.LoginSrv.GatePort);
   g_Config.LoginSrv.ServerPort := g_IniConf.ReadInteger(LoginSrvSectionName, 'ServerPort', g_Config.LoginSrv.ServerPort);
   g_Config.LoginSrv.MonPort := g_IniConf.ReadInteger(LoginSrvSectionName, 'MonPort', g_Config.LoginSrv.MonPort);
   g_Config.LoginSrv.GetStart := g_IniConf.ReadBool(LoginSrvSectionName, 'GetStart', g_Config.LoginSrv.GetStart);
-
+  // [M2Server]
   g_Config.M2Server.MainFormX := g_IniConf.ReadInteger(M2ServerSectionName, 'MainFormX', g_Config.M2Server.MainFormX);
   g_Config.M2Server.MainFormY := g_IniConf.ReadInteger(M2ServerSectionName, 'MainFormY', g_Config.M2Server.MainFormY);
   g_Config.M2Server.GatePort := g_IniConf.ReadInteger(M2ServerSectionName, 'GatePort', g_Config.M2Server.GatePort);
   g_Config.M2Server.MsgSrvPort := g_IniConf.ReadInteger(M2ServerSectionName, 'MsgSrvPort', g_Config.M2Server.MsgSrvPort);
   g_Config.M2Server.GetStart := g_IniConf.ReadBool(M2ServerSectionName, 'GetStart', g_Config.M2Server.GetStart);
-
+  // [LogServer]
   g_Config.LogServer.MainFormX := g_IniConf.ReadInteger(LogServerSectionName, 'MainFormX', g_Config.LogServer.MainFormX);
   g_Config.LogServer.MainFormY := g_IniConf.ReadInteger(LogServerSectionName, 'MainFormY', g_Config.LogServer.MainFormY);
   g_Config.LogServer.Port := g_IniConf.ReadInteger(LogServerSectionName, 'Port', g_Config.LogServer.Port);
   g_Config.LogServer.GetStart := g_IniConf.ReadBool(LogServerSectionName, 'GetStart', g_Config.LogServer.GetStart);
-
+  // [RunGate]
   g_Config.RunGate.MainFormX := g_IniConf.ReadInteger(RunGateSectionName, 'MainFormX', g_Config.RunGate.MainFormX);
   g_Config.RunGate.MainFormY := g_IniConf.ReadInteger(RunGateSectionName, 'MainFormY', g_Config.RunGate.MainFormY);
   g_Config.RunGate.GetStart[0] := g_IniConf.ReadBool(RunGateSectionName, 'GetStart1', g_Config.RunGate.GetStart[0]);
@@ -431,7 +433,7 @@ begin
   g_Config.RunGate.GetStart[5] := g_IniConf.ReadBool(RunGateSectionName, 'GetStart6', g_Config.RunGate.GetStart[5]);
   g_Config.RunGate.GetStart[6] := g_IniConf.ReadBool(RunGateSectionName, 'GetStart7', g_Config.RunGate.GetStart[6]);
   g_Config.RunGate.GetStart[7] := g_IniConf.ReadBool(RunGateSectionName, 'GetStart8', g_Config.RunGate.GetStart[7]);
-
+  // RunGate Port
   g_Config.RunGate.GatePort[0] := g_IniConf.ReadInteger(RunGateSectionName, 'GatePort1', g_Config.RunGate.GatePort[0]);
   g_Config.RunGate.GatePort[1] := g_IniConf.ReadInteger(RunGateSectionName, 'GatePort2', g_Config.RunGate.GatePort[1]);
   g_Config.RunGate.GatePort[2] := g_IniConf.ReadInteger(RunGateSectionName, 'GatePort3', g_Config.RunGate.GatePort[2]);
@@ -440,19 +442,19 @@ begin
   g_Config.RunGate.GatePort[5] := g_IniConf.ReadInteger(RunGateSectionName, 'GatePort6', g_Config.RunGate.GatePort[5]);
   g_Config.RunGate.GatePort[6] := g_IniConf.ReadInteger(RunGateSectionName, 'GatePort7', g_Config.RunGate.GatePort[6]);
   g_Config.RunGate.GatePort[7] := g_IniConf.ReadInteger(RunGateSectionName, 'GatePort8', g_Config.RunGate.GatePort[7]);
-
+  // [SelGate]
   g_Config.SelGate.MainFormX := g_IniConf.ReadInteger(SelGateSectionName, 'MainFormX', g_Config.SelGate.MainFormX);
   g_Config.SelGate.MainFormY := g_IniConf.ReadInteger(SelGateSectionName, 'MainFormY', g_Config.SelGate.MainFormY);
   g_Config.SelGate.GatePort[0] := g_IniConf.ReadInteger(SelGateSectionName, 'GatePort1', g_Config.SelGate.GatePort[0]);
   g_Config.SelGate.GatePort[1] := g_IniConf.ReadInteger(SelGateSectionName, 'GatePort2', g_Config.SelGate.GatePort[1]);
   g_Config.SelGate.GetStart1 := g_IniConf.ReadBool(SelGateSectionName, 'GetStart1', g_Config.SelGate.GetStart1);
   g_Config.SelGate.GetStart2 := g_IniConf.ReadBool(SelGateSectionName, 'GetStart2', g_Config.SelGate.GetStart2);
-
+  // [LoginGate]
   g_Config.LoginGate.MainFormX := g_IniConf.ReadInteger(LoginGateSectionName, 'MainFormX', g_Config.LoginGate.MainFormX);
   g_Config.LoginGate.MainFormY := g_IniConf.ReadInteger(LoginGateSectionName, 'MainFormY', g_Config.LoginGate.MainFormY);
   g_Config.LoginGate.GatePort := g_IniConf.ReadInteger(LoginGateSectionName, 'GatePort', g_Config.LoginGate.GatePort);
   g_Config.LoginGate.GetStart := g_IniConf.ReadBool(LoginGateSectionName, 'GetStart', g_Config.LoginGate.GetStart);
-
+  // [PlugTop]
   g_Config.PlugTop.MainFormX := g_IniConf.ReadInteger(PlugTopSectionName, 'MainFormX', g_Config.PlugTop.MainFormX);
   g_Config.PlugTop.MainFormY := g_IniConf.ReadInteger(PlugTopSectionName, 'MainFormY', g_Config.PlugTop.MainFormY);
   g_Config.PlugTop.GetStart := g_IniConf.ReadBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);

@@ -25,7 +25,7 @@ object frmMain: TfrmMain
     Top = 8
     Width = 520
     Height = 360
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     HotTrack = True
     TabOrder = 0
     object TabSheet1: TTabSheet
