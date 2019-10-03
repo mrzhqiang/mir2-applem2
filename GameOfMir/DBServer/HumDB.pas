@@ -10,7 +10,7 @@ const
   MapNameLen = 16;
   ActorNameLen = 14;
 
-  sDBHeaderDesc = '新热血传奇数据库文件 2011/06/14';
+  sDBHeaderDesc = 'Randall数据库文件 2018/10/04';
   sDBIdxHeaderDesc = sDBHeaderDesc;
   
 type
