@@ -566,7 +566,7 @@ begin
           Move(s28[1], ABuffer[0], nLen);
         end;
         Inc(g_nSendLogCount);
-        IdUDPClientLog.SendBuffer(ABuffer);
+        IdUDPClientLog.Send(string(ABuffer));
       except
         Inc(g_nSendLogErrorCount);
         Continue;
