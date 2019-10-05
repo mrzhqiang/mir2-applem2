@@ -1071,8 +1071,8 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   m_boOpen := False;
-  g_nFormIdx := g_IniConf.ReadInteger('Setup', 'FormID', g_nFormIdx);
-  Application.OnMessage := ProcessMessage;
+//  g_nFormIdx := g_IniConf.ReadInteger('Setup', 'FormID', g_nFormIdx);
+//  Application.OnMessage := ProcessMessage;
   PageControl1.ActivePageIndex := 0;
   PageControl3.ActivePageIndex := 0;
   m_nStartStatus := 0;
@@ -3307,7 +3307,7 @@ end;
 
 procedure TfrmMain.MemoLogChange(Sender: TObject);
 begin
-  if MemoLog.Lines.Count > 100 then
+  if MemoLog.Lines.Count > 500 then
     MemoLog.Clear;
 end;
 
@@ -3417,7 +3417,7 @@ end;      }
 procedure TfrmMain.ButtonGeneralDefalultClick(Sender: TObject);
 begin
   EditGameDir.Text := '.\';
-  EditHeroDB.Text := 'HeroDB';
+  EditHeroDB.Text := 'randall';
   EditGameName.Text := 'GameOfMir';
   EditGameExtIPaddr.Text := '127.0.0.1';
   //CheckBoxDynamicIPMode.Checked := False;
