@@ -8,533 +8,533 @@
   resources were bound to the produced executable.
 */
 
-#define ObjBase_sExceptionMsg1 64688
-#define ObjBase_sExceptionMsg2 64689
-#define ObjBase_sExceptionMsg3 64690
-#define ObjBase_sExceptionMsg4 64691
-#define ObjBase_sExceptionMsg5 64692
-#define ObjBase_sExceptionMsg6 64693
-#define ObjBase_sExceptionMsg7 64694
-#define ObjBase_sExceptionMsg 64695
-#define ObjBase_sExceptionMsg 64696
-#define Envir_sExceptionMsg 64697
-#define Envir_sExceptionMsg 64698
-#define Envir_sExceptionMsg1 64699
-#define Envir_sExceptionMsg2 64700
-#define Envir_sExceptionMsg 64701
-#define Envir_sExceptionMsg 64702
-#define ObjBase_sExceptionMsg2 64704
-#define ObjBase_sExceptionMsg3 64705
-#define ObjBase_sExceptionMsg4 64706
-#define ObjBase_sExceptionMsg5 64707
-#define ObjBase_sExceptionMsg6 64708
-#define ObjBase_sExceptionMsg1 64709
-#define ObjBase_sExceptionMsg2 64710
+#define ObjBase_sExceptionMsg 64688
+#define ObjBase_sExceptionMsg 64689
+#define svMain_sGateIdx 64690
+#define svMain_sGateIPaddr 64691
+#define svMain_sGateListMsg 64692
+#define svMain_sGateSendCount 64693
+#define svMain_sGateMsgCount 64694
+#define svMain_sGateSendKB 64695
+#define svMain_sGateUserCount 64696
+#define svMain_sCloseServerYesNo 64697
+#define svMain_sCloseServerTitle 64698
+#define svMain_sCloseServer 64699
+#define svMain_sCloseServer1 64700
+#define svMain_sGatePortOpen 64701
+#define svMain_sGatePortClose 64702
+#define ObjBase_sExceptionMsg 64704
+#define ObjBase_sExceptionMsg7 64705
+#define ObjBase_sExceptionMsg 64706
+#define ObjBase_sExceptionMsg1 64707
+#define ObjBase_sExceptionMsg2 64708
+#define ObjBase_sExceptionMsg3 64709
+#define ObjBase_sExceptionMsg 64710
 #define ObjBase_sExceptionMsg 64711
-#define ObjBase_sExceptionMsg7 64712
-#define ObjBase_sExceptionMsg 64713
-#define ObjBase_sExceptionMsg1 64714
-#define ObjBase_sExceptionMsg2 64715
-#define ObjBase_sExceptionMsg3 64716
-#define ObjBase_sExceptionMsg 64717
-#define ObjBase_sExceptionMsg 64718
-#define ObjBase_sExceptionMsg0 64719
-#define ObjPlay_sExceptionMsg 64720
-#define ObjPlay_sExceptionMsg 64721
-#define ObjPlay_sExceptionMsg 64722
-#define ObjPlay_sExceptionMsg 64723
-#define ObjPlay_sExceptionMsg1 64724
-#define ObjPlay_sExceptionMsg2 64725
-#define ObjPlay_sExceptionMsg 64726
-#define ObjPlay_sExceptionMsg 64727
-#define ObjPlay_sExceptionMsg 64728
-#define ObjPlay_sExceptionMsg 64729
-#define ObjPlay_sExceptionMsg 64730
-#define ObjBase_sExceptionMsg 64731
-#define ObjBase_sExceptionMsg 64732
-#define ObjBase_sExceptionMsg 64733
-#define ObjBase_sExceptionMsg 64734
-#define ObjBase_sExceptionMsg1 64735
-#define ObjNpc_sExceptionMsg 64736
-#define FrnEngn_sExceptionMsg 64737
-#define ObjPlay_sDelItems 64738
-#define ObjPlay_sDelStorage 64739
-#define ObjPlay_sDelBagItem 64740
-#define ObjPlay_sExceptionMsg1 64741
-#define ObjPlay_sExceptionMsg2 64742
-#define ObjPlay_sExceptionMsg4 64743
-#define ObjPlay_sExceptionMsg 64744
-#define ObjPlay_sExceptionMsg 64745
-#define ObjPlay_sExceptionMsg 64746
-#define ObjPlay_sExceptionMsg 64747
-#define ObjPlay_sExceptionMsg 64748
-#define ObjPlay_sExceptionMsg 64749
-#define ObjPlay_sExceptionMsg 64750
-#define ObjPlay_sExceptionMsg 64751
-#define ObjPlayCmd_sDelOK 64752
-#define ObjNpc_sExceptionMsg 64753
-#define ObjNpc_sExceptionMsg 64754
-#define ObjNpc_sExceptionMsg1 64755
-#define ObjNpc_sExceptionMsg2 64756
-#define ObjNpc_sExceptionMsg 64757
-#define ObjNpc_sExceptionMsg 64758
-#define ObjNpc_sOutMessage 64759
-#define ObjNpc_sVarFound 64760
-#define ObjNpc_sVarTypeError 64761
-#define ObjNpc_sVarFound 64762
-#define ObjNpc_sVarTypeError 64763
-#define ObjNpc_sVarFound 64764
-#define ObjNpc_sVarTypeError 64765
-#define ObjNpc_sVarFound 64766
-#define ObjNpc_sVarTypeError 64767
-#define UsrEngn_sExceptionMsg3 64768
-#define UsrEngn_sExceptionMsg4 64769
-#define UsrEngn_sExceptionMsg5 64770
-#define UsrEngn_sExceptionMsg6 64771
-#define UsrEngn_sExceptionMsg7 64772
-#define UsrEngn_sExceptionMsg8 64773
-#define UsrEngn_sExceptionMsg9 64774
-#define UsrEngn_sExceptionMsg 64775
-#define UsrEngn_sExceptionMsg 64776
-#define UsrEngn_sExceptionMsg 64777
-#define UsrEngn_sExceptionMsg 64778
-#define UsrEngn_sExceptionMsg 64779
-#define UsrEngn_sExceptionMsg 64780
-#define UsrEngn_sExceptionMsg 64781
-#define ObjMon_sExceptionMsg 64782
-#define ObjPlayCmd_sOutFormatMsg 64783
-#define svMain_sGateSendCount 64784
-#define svMain_sGateMsgCount 64785
-#define svMain_sGateSendKB 64786
-#define svMain_sGateUserCount 64787
-#define svMain_sCloseServerYesNo 64788
-#define svMain_sCloseServerTitle 64789
-#define svMain_sCloseServer 64790
-#define svMain_sCloseServer1 64791
-#define svMain_sGatePortOpen 64792
-#define svMain_sGatePortClose 64793
-#define UsrEngn_sExceptionMsg 64794
-#define UsrEngn_sChangeServerFail1 64795
-#define UsrEngn_sChangeServerFail2 64796
-#define UsrEngn_sErrorEnvirIsNil 64797
-#define UsrEngn_sExceptionMsg1 64798
-#define UsrEngn_sExceptionMsg2 64799
-#define ActionSpeedConfig_sExitMsg 64800
-#define ActionSpeedConfig_sExitMsgTitle 64801
-#define ActionSpeedConfig_sExitMsg 64802
-#define ActionSpeedConfig_sExitMsgTitle 64803
-#define ViewKernelInfo_sNo 64804
-#define ViewKernelInfo_sHandle 64805
-#define ViewKernelInfo_sThreadID 64806
-#define ViewKernelInfo_sRunTime 64807
-#define ViewKernelInfo_sRunFlag 64808
-#define RunDB_sLoadDBTimeOut 64809
-#define RunDB_sSaveDBTimeOut 64810
-#define FrmShop_sText 64811
-#define FrnEmail_sExceptionMsg 64812
-#define svMain_sGateIdx 64813
-#define svMain_sGateIPaddr 64814
-#define svMain_sGateListMsg 64815
-#define bdeconst_SHandleError 64816
-#define bdeconst_SNoReferenceTableName 64817
-#define bdeconst_SEmptySQLStatement 64818
-#define bdeconst_SNoParameterValue 64819
-#define bdeconst_SLoginError 64820
-#define bdeconst_SInitError 64821
-#define bdeconst_SIDAPILangID 64822
-#define bdeconst_SBDEError 64823
-#define bdeconst_SNoDataSetField 64824
-#define bdeconst_SNoCachedUpdates 64825
-#define bdeconst_SNoFieldAccess 64826
-#define bdeconst_SUntitled 64827
-#define bdeconst_SLocalTransDirty 64828
-#define LocalDB_sSQLString 64829
-#define LocalDB_sSQLString 64830
-#define LocalDB_sSQLString 64831
-#define ComConst_SOleError 64832
-#define ComConst_SNoMethod 64833
-#define ComConst_SVarNotObject 64834
-#define ComConst_STooManyParams 64835
-#define bdeconst_SAutoSessionExclusive 64836
-#define bdeconst_SAutoSessionExists 64837
-#define bdeconst_SAutoSessionActive 64838
-#define bdeconst_SDuplicateDatabaseName 64839
-#define bdeconst_SDuplicateSessionName 64840
-#define bdeconst_SInvalidSessionName 64841
-#define bdeconst_SDatabaseNameMissing 64842
-#define bdeconst_SSessionNameMissing 64843
-#define bdeconst_SDatabaseOpen 64844
-#define bdeconst_SDatabaseClosed 64845
-#define bdeconst_SDatabaseHandleSet 64846
-#define bdeconst_SSessionActive 64847
-#define DBConsts_STextFalse 64848
-#define DBConsts_STextTrue 64849
-#define DBConsts_SParameterNotFound 64850
-#define DBConsts_SInvalidVersion 64851
-#define DBConsts_SBadFieldType 64852
-#define DBConsts_SProviderSQLNotSupported 64853
-#define DBConsts_SProviderExecuteNotSupported 64854
-#define DBConsts_SExprNoAggOnCalcs 64855
-#define DBConsts_SDataSetUnidirectional 64856
-#define DBConsts_SUnassignedVar 64857
-#define DBConsts_SRecordNotFound 64858
-#define DBConsts_SBcdOverflow 64859
-#define DBConsts_SInvalidBcdValue 64860
-#define DBConsts_SInvalidFormatType 64861
-#define DBConsts_SCouldNotParseTimeStamp 64862
-#define DBConsts_SInvalidSqlTimeStamp 64863
-#define DBConsts_SExprNoRParen 64864
-#define DBConsts_SExprNoRParenOrComma 64865
-#define DBConsts_SExprExpected 64866
-#define DBConsts_SExprBadField 64867
-#define DBConsts_SExprBadNullTest 64868
-#define DBConsts_SExprRangeError 64869
-#define DBConsts_SExprIncorrect 64870
-#define DBConsts_SExprNothing 64871
-#define DBConsts_SExprTypeMis 64872
-#define DBConsts_SExprBadScope 64873
-#define DBConsts_SExprNoArith 64874
-#define DBConsts_SExprNotAgg 64875
-#define DBConsts_SExprBadConst 64876
-#define DBConsts_SExprNoAggFilter 64877
-#define DBConsts_SExprEmptyInList 64878
-#define DBConsts_SInvalidKeywordUse 64879
-#define DBConsts_SInvalidCalcType 64880
-#define DBConsts_SFieldReadOnly 64881
-#define DBConsts_SNotIndexField 64882
-#define DBConsts_SCircularDataLink 64883
-#define DBConsts_SLookupInfoError 64884
-#define DBConsts_SDataSourceChange 64885
-#define DBConsts_SDataSetOpen 64886
-#define DBConsts_SNotEditing 64887
-#define DBConsts_SDataSetClosed 64888
-#define DBConsts_SDataSetReadOnly 64889
-#define DBConsts_SNestedDataSetClass 64890
-#define DBConsts_SExprTermination 64891
-#define DBConsts_SExprNameError 64892
-#define DBConsts_SExprStringError 64893
-#define DBConsts_SExprInvalidChar 64894
-#define DBConsts_SExprNoLParen 64895
-#define DBConsts_SFieldNameMissing 64896
-#define DBConsts_SDuplicateFieldName 64897
-#define DBConsts_SFieldNotFound 64898
-#define DBConsts_SFieldAccessError 64899
-#define DBConsts_SFieldValueError 64900
-#define DBConsts_SFieldRangeError 64901
-#define DBConsts_SBcdFieldRangeError 64902
-#define DBConsts_SInvalidIntegerValue 64903
-#define DBConsts_SInvalidBoolValue 64904
-#define DBConsts_SInvalidFloatValue 64905
-#define DBConsts_SFieldTypeMismatch 64906
-#define DBConsts_SFieldSizeMismatch 64907
-#define DBConsts_SInvalidVarByteArray 64908
-#define DBConsts_SFieldOutOfRange 64909
-#define DBConsts_SFieldRequired 64910
-#define DBConsts_SDataSetMissing 64911
-#define RzBorder_sRzColorGradientActiveCaption 64912
-#define RzBorder_sRzColorGradientInactiveCaption 64913
-#define RzBorder_sRzColorMenuHighlight 64914
-#define RzBorder_sRzColorMenuBar 64915
-#define RzPopups_sRzHowToSelectTime 64916
-#define RzPopups_sRzCaptionAM 64917
-#define RzPopups_sRzCaptionPM 64918
-#define RzPopups_sRzCaptionSet 64919
-#define RzPopups_sRzCaptionClearBtn 64920
-#define RzPopups_sRzCaptionTodayBtn 64921
-#define RzPopups_sRzDateMax 64922
-#define RzPopups_sRzDateMin 64923
-#define RzPopups_sRzDateRange 64924
-#define DBConsts_SInvalidFieldSize 64925
-#define DBConsts_SInvalidFieldKind 64926
-#define DBConsts_SUnknownFieldType 64927
-#define RzBorder_sRzColorActiveBorder 64928
-#define RzBorder_sRzColorInactiveBorder 64929
-#define RzBorder_sRzColorAppWorkSpace 64930
-#define RzBorder_sRzColorHighlight 64931
-#define RzBorder_sRzColorHighlightText 64932
-#define RzBorder_sRzColorBtnFace 64933
-#define RzBorder_sRzColorBtnShadow 64934
-#define RzBorder_sRzColorGrayText 64935
-#define RzBorder_sRzColorBtnText 64936
-#define RzBorder_sRzColorInactiveCaptionText 64937
-#define RzBorder_sRzColorBtnHighlight 64938
-#define RzBorder_sRzColor3DDkShadow 64939
-#define RzBorder_sRzColor3DLight 64940
-#define RzBorder_sRzColorInfoText 64941
-#define RzBorder_sRzColorInfoBk 64942
-#define RzBorder_sRzColorHotLight 64943
-#define RzBorder_sRzColorLightYellow 64944
-#define RzBorder_sRzColorLightGreen 64945
-#define RzBorder_sRzColorLightTurquoise 64946
-#define RzBorder_sRzColorPaleBlue 64947
-#define RzBorder_sRzColorLavender 64948
-#define RzBorder_sRzColorWhite 64949
-#define RzBorder_sRzColorScrollBar 64950
-#define RzBorder_sRzColorBackground 64951
-#define RzBorder_sRzColorActiveCaption 64952
-#define RzBorder_sRzColorInactiveCaption 64953
-#define RzBorder_sRzColorMenu 64954
-#define RzBorder_sRzColorWindow 64955
-#define RzBorder_sRzColorWindowFrame 64956
-#define RzBorder_sRzColorMenuText 64957
-#define RzBorder_sRzColorWindowText 64958
-#define RzBorder_sRzColorCaptionText 64959
-#define RzBorder_sRzColorLime 64960
-#define RzBorder_sRzColorSeaGreen 64961
-#define RzBorder_sRzColorAqua 64962
-#define RzBorder_sRzColorLightBlue 64963
-#define RzBorder_sRzColorViolet 64964
-#define RzBorder_sRzColorGray40 64965
-#define RzBorder_sRzColorPink 64966
-#define RzBorder_sRzColorGold 64967
-#define RzBorder_sRzColorYellow 64968
-#define RzBorder_sRzColorBrightGreen 64969
-#define RzBorder_sRzColorTurquoise 64970
-#define RzBorder_sRzColorSkyBlue 64971
-#define RzBorder_sRzColorPlum 64972
-#define RzBorder_sRzColorGray25 64973
-#define RzBorder_sRzColorRose 64974
-#define RzBorder_sRzColorTan 64975
-#define RzBorder_sRzColorOliveGreen 64976
-#define RzBorder_sRzColorDarkGreen 64977
-#define RzBorder_sRzColorDarkTeal 64978
-#define RzBorder_sRzColorDarkBlue 64979
-#define RzBorder_sRzColorIndigo 64980
-#define RzBorder_sRzColorGray80 64981
-#define RzBorder_sRzColorDarkRed 64982
-#define RzBorder_sRzColorOrange 64983
-#define RzBorder_sRzColorDarkYellow 64984
-#define RzBorder_sRzColorGreen 64985
-#define RzBorder_sRzColorTeal 64986
-#define RzBorder_sRzColorBlue 64987
-#define RzBorder_sRzColorBlueGray 64988
-#define RzBorder_sRzColorGray50 64989
-#define RzBorder_sRzColorRed 64990
-#define RzBorder_sRzColorLightOrange 64991
-#define IdResourceStringsCore_RSNotConnected 64992
-#define IdResourceStringsCore_RSObjectTypeNotSupported 64993
-#define IdResourceStringsCore_RSIdNoDataToRead 64994
-#define IdResourceStringsCore_RSReadTimeout 64995
-#define IdResourceStringsCore_RSReadLnMaxLineLengthExceeded 64996
-#define IdResourceStringsCore_RSConnectTimeout 64997
-#define IdResourceStringsCore_RSAlreadyConnected 64998
-#define IdResourceStringsCore_RSMaximumNumberOfCaptureLineExceeded 64999
-#define IdResourceStringsCore_RSTransparentProxyCannotBind 65000
-#define IdResourceStringsCore_RSTransparentProxyCanNotSupportUDP 65001
-#define IdResourceStringsCore_RSBufferMissingTerminator 65002
-#define IdResourceStringsCore_RSBufferInvalidStartPos 65003
-#define IdResourceStringsCore_RSReplyInvalidCode 65004
-#define IdResourceStringsCore_RSUDPMustUseProxyOpen 65005
-#define RzBorder_sRzColorBlack 65006
-#define RzBorder_sRzColorBrown 65007
-#define IdResourceStringsCore_RSSocksUnknownError 65008
-#define IdResourceStringsCore_RSSocksServerRespondError 65009
-#define IdResourceStringsCore_RSSocksAuthMethodError 65010
-#define IdResourceStringsCore_RSSocksAuthError 65011
-#define IdResourceStringsCore_RSSocksServerGeneralError 65012
-#define IdResourceStringsCore_RSSocksServerPermissionError 65013
-#define IdResourceStringsCore_RSSocksServerNetUnreachableError 65014
-#define IdResourceStringsCore_RSSocksServerHostUnreachableError 65015
-#define IdResourceStringsCore_RSSocksServerConnectionRefusedError 65016
-#define IdResourceStringsCore_RSSocksServerTTLExpiredError 65017
-#define IdResourceStringsCore_RSSocksServerCommandError 65018
-#define IdResourceStringsCore_RSSocksServerAddressError 65019
-#define IdResourceStringsCore_RSInterceptCircularLink 65020
-#define IdResourceStringsCore_RSNotEnoughDataInBuffer 65021
-#define IdResourceStringsCore_RSTooMuchDataInBuffer 65022
-#define IdResourceStringsCore_RSFileNotFound 65023
-#define IdResourceStrings_RSCannotSetIPVersionWhenConnected 65024
-#define IdResourceStrings_RSCannotBindRange 65025
-#define IdResourceStrings_RSConnectionClosedGracefully 65026
-#define IdResourceStrings_RSCouldNotBindSocket 65027
-#define IdResourceStrings_RSInvalidPortRange 65028
-#define IdResourceStrings_RSInvalidServiceName 65029
-#define IdResourceStrings_RSIPv6Unavailable 65030
-#define IdResourceStrings_RSInvalidIPv6Address 65031
-#define IdResourceStrings_RSIPVersionUnsupported 65032
-#define IdResourceStrings_RSNotAllBytesSent 65033
-#define IdResourceStrings_RSPackageSizeTooBig 65034
-#define IdResourceStrings_RSSetSizeExceeded 65035
-#define IdResourceStringsCore_RSSocksUDPNotSupported 65036
-#define IdResourceStringsCore_RSSocksRequestFailed 65037
-#define IdResourceStringsCore_RSSocksRequestServerFailed 65038
-#define IdResourceStringsCore_RSSocksRequestIdentFailed 65039
-#define IdResourceStrings_RSStackENOBUFS 65040
-#define IdResourceStrings_RSStackEISCONN 65041
-#define IdResourceStrings_RSStackENOTCONN 65042
-#define IdResourceStrings_RSStackESHUTDOWN 65043
-#define IdResourceStrings_RSStackETOOMANYREFS 65044
-#define IdResourceStrings_RSStackETIMEDOUT 65045
-#define IdResourceStrings_RSStackECONNREFUSED 65046
-#define IdResourceStrings_RSStackELOOP 65047
-#define IdResourceStrings_RSStackENAMETOOLONG 65048
-#define IdResourceStrings_RSStackEHOSTDOWN 65049
-#define IdResourceStrings_RSStackEHOSTUNREACH 65050
-#define IdResourceStrings_RSStackENOTEMPTY 65051
-#define IdResourceStrings_RSStackHOST_NOT_FOUND 65052
-#define IdResourceStrings_RSStackClassUndefined 65053
-#define IdResourceStrings_RSStackAlreadyCreated 65054
-#define IdResourceStrings_RSAntiFreezeOnlyOne 65055
-#define IdResourceStrings_RSStackEDESTADDRREQ 65056
-#define IdResourceStrings_RSStackEMSGSIZE 65057
-#define IdResourceStrings_RSStackEPROTOTYPE 65058
-#define IdResourceStrings_RSStackENOPROTOOPT 65059
-#define IdResourceStrings_RSStackEPROTONOSUPPORT 65060
-#define IdResourceStrings_RSStackESOCKTNOSUPPORT 65061
-#define IdResourceStrings_RSStackEOPNOTSUPP 65062
-#define IdResourceStrings_RSStackEPFNOSUPPORT 65063
-#define IdResourceStrings_RSStackEAFNOSUPPORT 65064
-#define IdResourceStrings_RSStackEADDRINUSE 65065
-#define IdResourceStrings_RSStackEADDRNOTAVAIL 65066
-#define IdResourceStrings_RSStackENETDOWN 65067
-#define IdResourceStrings_RSStackENETUNREACH 65068
-#define IdResourceStrings_RSStackENETRESET 65069
-#define IdResourceStrings_RSStackECONNABORTED 65070
-#define IdResourceStrings_RSStackECONNRESET 65071
-#define IdResourceStrings_RSStatusConnecting 65072
-#define IdResourceStrings_RSStatusConnected 65073
-#define IdResourceStrings_RSStatusDisconnecting 65074
-#define IdResourceStrings_RSStatusDisconnected 65075
-#define IdResourceStrings_RSStatusText 65076
-#define IdResourceStrings_RSStackError 65077
-#define IdResourceStrings_RSStackEINTR 65078
-#define IdResourceStrings_RSStackEBADF 65079
-#define IdResourceStrings_RSStackEACCES 65080
-#define IdResourceStrings_RSStackEFAULT 65081
-#define IdResourceStrings_RSStackEINVAL 65082
-#define IdResourceStrings_RSStackEMFILE 65083
-#define IdResourceStrings_RSStackEWOULDBLOCK 65084
-#define IdResourceStrings_RSStackEINPROGRESS 65085
-#define IdResourceStrings_RSStackEALREADY 65086
-#define IdResourceStrings_RSStackENOTSOCK 65087
-#define RunSock_sExceptionMsg 65088
-#define RunSock_sKickUserMsg 65089
-#define ComStrs_sTabFailClear 65090
-#define ComStrs_sTabFailDelete 65091
-#define ComStrs_sTabFailRetrieve 65092
-#define ComStrs_sTabFailGetObject 65093
-#define ComStrs_sTabFailSet 65094
-#define ComStrs_sTabFailSetObject 65095
-#define ComStrs_sTabMustBeMultiLine 65096
-#define ComStrs_sInvalidOwner 65097
-#define ComStrs_sPageIndexError 65098
-#define ComStrs_sInvalidComCtl32 65099
-#define IdResourceStrings_RSWinsockCallError 65100
-#define IdResourceStrings_RSWinsockLoadError 65101
-#define IdResourceStrings_RSWinsockInitializationError 65102
-#define IdResourceStrings_RSStatusResolving 65103
-#define RunSock_sKickGate 65104
-#define RunSock_sGateClose 65105
-#define RunSock_sExceptionMsg1 65106
-#define RunSock_sExceptionMsg2 65107
-#define RunSock_sExceptionMsg3 65108
-#define RunSock_sExceptionMsg1 65109
-#define RunSock_sExceptionMsg 65110
-#define RunSock_sExceptionMsg 65111
-#define RunSock_sExceptionMsg 65112
-#define RunSock_sDisable 65113
-#define RunSock_sExceptionMsg2 65114
-#define RunSock_sExceptionMsg0 65115
-#define RunSock_sExceptionMsg1 65116
-#define RunSock_sExceptionMsg2 65117
-#define RunSock_sExceptionMsg4 65118
-#define RunSock_sExceptionMsg 65119
-#define Castle_sWallWarStop 65120
-#define Castle_sMsg 65121
-#define Magic_sDisableInSafeZoneFireCross 65122
-#define Magic_sDisableInSafeZoneFireCross1 65123
-#define IdSrvClient_sFormatMsg 65124
-#define IdSrvClient_sFormatMsg 65125
-#define IdSrvClient_sFormatMsg 65126
-#define IdSrvClient_sFormatMsg 65127
-#define IdSrvClient_sFormatMsg 65128
-#define IdSrvClient_sExceptionMsg 65129
-#define IdSrvClient_sExceptionMsg 65130
-#define IdSrvClient_sExceptionMsg 65131
-#define IdSrvClient_sExceptionMsg 65132
-#define IdSrvClient_sGetFailMsg 65133
-#define IdSrvClient_sExceptionMsg 65134
-#define RunSock_sGateOpen 65135
-#define M2Share_g_sGamecommandMakeItemNameNotFound 65136
-#define M2Share_g_sGamecommandSuperMakeHelpMsg 65137
-#define M2Share_g_sGameCommandViewWhisperHelpMsg 65138
-#define M2Share_g_sGameCommandViewWhisperMsg1 65139
-#define M2Share_g_sGameCommandViewWhisperMsg2 65140
-#define M2Share_g_sGameCommandReAliveHelpMsg 65141
-#define M2Share_g_sGameCommandReAliveMsg 65142
-#define M2Share_g_sGameCommandChangeJobHelpMsg 65143
-#define M2Share_g_sGameCommandChangeJobMsg 65144
-#define M2Share_g_sGameCommandChangeJobHumanMsg 65145
-#define Castle_sWarStartMsg 65146
-#define Castle_sWarStopTimeMsg 65147
-#define Castle_sExceptionMsg 65148
-#define Castle_sGetCastleMsg 65149
-#define Castle_sWarStartMsg 65150
-#define Castle_sWarStartMsg 65151
-#define M2Share_g_sGameCommandFreePKHelpMsg 65152
-#define M2Share_g_sGameCommandFreePKHumanMsg 65153
-#define M2Share_g_sGameCommandFreePKMsg 65154
-#define M2Share_g_sGameCommandPKPointHelpMsg 65155
-#define M2Share_g_sGameCommandPKPointMsg 65156
-#define M2Share_g_sGameCommandIncPkPointHelpMsg 65157
-#define M2Share_g_sGameCommandIncPkPointAddPointMsg 65158
-#define M2Share_g_sGameCommandIncPkPointDecPointMsg 65159
-#define M2Share_g_sGameCommandHumanLocalHelpMsg 65160
-#define M2Share_g_sGameCommandHumanLocalMsg 65161
-#define M2Share_g_sGameCommandPrvMsgHelpMsg 65162
-#define M2Share_g_sGameCommandPrvMsgUnLimitMsg 65163
-#define M2Share_g_sGameCommandPrvMsgLimitMsg 65164
-#define M2Share_g_sGamecommandMakeHelpMsg 65165
-#define M2Share_g_sGamecommandMakeInCastleWarRange 65166
-#define M2Share_g_sGamecommandMakeInSafeZoneRange 65167
-#define M2Share_g_sGameCommandSbkGoldHelpMsg 65168
-#define M2Share_g_sGameCommandSbkGoldCastleNotFoundMsg 65169
-#define M2Share_g_sGameCommandSbkGoldShowMsg 65170
-#define M2Share_g_sGameCommandRecallHelpMsg 65171
-#define M2Share_g_sGameCommandReGotoHelpMsg 65172
-#define M2Share_g_sGameCommandShowHumanFlagHelpMsg 65173
-#define M2Share_g_sGameCommandShowHumanFlagONMsg 65174
-#define M2Share_g_sGameCommandShowHumanFlagOFFMsg 65175
-#define M2Share_g_sGameCommandMobHelpMsg 65176
-#define M2Share_g_sGameCommandMobMsg 65177
-#define M2Share_g_sGameCommandMobNpcHelpMsg 65178
-#define M2Share_g_sGameCommandDelNpcMsg 65179
-#define M2Share_g_sGameCommandRecallMobHelpMsg 65180
-#define M2Share_g_sGameCommandLotteryTicketMsg 65181
-#define M2Share_g_sGameCommandReloadLineNoticeSuccessMsg 65182
-#define M2Share_g_sGameCommandReloadLineNoticeFailMsg 65183
-#define M2Share_g_sGameCommandShutupHelpMsg 65184
-#define M2Share_g_sGameCommandShutupHumanMsg 65185
-#define M2Share_g_sGameCommandGamePointHelpMsg 65186
-#define M2Share_g_sGameCommandCreditPointHelpMsg 65187
-#define M2Share_g_sGameCommandCreditPointHumanMsg 65188
-#define M2Share_g_sGameCommandCreditPointGMMsg 65189
-#define M2Share_g_sGameCommandGameGoldHumanMsg 65190
-#define M2Share_g_sGameCommandGameGoldGMMsg 65191
-#define M2Share_g_sGameCommandMapInfoMsg 65192
-#define M2Share_g_sGameCommandMapInfoSizeMsg 65193
-#define M2Share_g_sGameCommandMapInfoCountMsg 65194
-#define M2Share_g_sGameCommandShutupReleaseHelpMsg 65195
-#define M2Share_g_sGameCommandShutupReleaseCanSendMsg 65196
-#define M2Share_g_sGameCommandShutupReleaseHumanCanSendMsg 65197
-#define M2Share_g_sGameCommandShutupListIsNullMsg 65198
-#define M2Share_g_sGameCommandLevelConsoleMsg 65199
-#define M2Share_g_sGameCommandPermissionTooLow 65200
-#define M2Share_g_sGameCommandParamUnKnow 65201
-#define M2Share_g_sGameCommandMoveHelpMsg 65202
-#define M2Share_g_sGameCommandPositionMoveHelpMsg 65203
-#define M2Share_g_sGameCommandPositionMoveCanotMoveToMap 65204
-#define M2Share_g_sGameCommandInfoHelpMsg 65205
-#define M2Share_g_sNowNotOnLineOrOnOtherServer 65206
-#define M2Share_g_sGameCommandMobCountHelpMsg 65207
-#define M2Share_g_sGameCommandMobCountMapNotFound 65208
-#define M2Share_g_sGameCommandMobCountMonsterCount 65209
-#define M2Share_g_sGameCommandHumanCountHelpMsg 65210
-#define M2Share_g_sGameCommandKickHumanHelpMsg 65211
-#define M2Share_g_sGameCommandTingHelpMsg 65212
-#define M2Share_g_sGameCommandSuperTingHelpMsg 65213
-#define M2Share_g_sGameCommandMapMoveHelpMsg 65214
-#define M2Share_g_sGameCommandMapMoveMapNotFound 65215
+#define ObjBase_sExceptionMsg0 64712
+#define ObjBase_sExceptionMsg1 64713
+#define ObjBase_sExceptionMsg2 64714
+#define ObjBase_sExceptionMsg3 64715
+#define ObjBase_sExceptionMsg4 64716
+#define ObjBase_sExceptionMsg5 64717
+#define ObjBase_sExceptionMsg6 64718
+#define ObjBase_sExceptionMsg7 64719
+#define Envir_sExceptionMsg1 64720
+#define Envir_sExceptionMsg2 64721
+#define Envir_sExceptionMsg 64722
+#define Envir_sExceptionMsg 64723
+#define ObjBase_sExceptionMsg 64724
+#define ObjBase_sExceptionMsg 64725
+#define ObjBase_sExceptionMsg 64726
+#define ObjBase_sExceptionMsg 64727
+#define ObjBase_sExceptionMsg1 64728
+#define ObjBase_sExceptionMsg2 64729
+#define ObjBase_sExceptionMsg3 64730
+#define ObjBase_sExceptionMsg4 64731
+#define ObjBase_sExceptionMsg5 64732
+#define ObjBase_sExceptionMsg6 64733
+#define ObjBase_sExceptionMsg1 64734
+#define ObjBase_sExceptionMsg2 64735
+#define M2Share_g_sGameCommandPrvMsgLimitMsg 64736
+#define M2Share_g_sGamecommandMakeHelpMsg 64737
+#define M2Share_g_sGamecommandMakeInCastleWarRange 64738
+#define M2Share_g_sGamecommandMakeInSafeZoneRange 64739
+#define M2Share_g_sGamecommandMakeItemNameNotFound 64740
+#define M2Share_g_sGamecommandSuperMakeHelpMsg 64741
+#define M2Share_g_sGameCommandViewWhisperHelpMsg 64742
+#define M2Share_g_sGameCommandViewWhisperMsg1 64743
+#define M2Share_g_sGameCommandViewWhisperMsg2 64744
+#define M2Share_g_sGameCommandReAliveHelpMsg 64745
+#define M2Share_g_sGameCommandReAliveMsg 64746
+#define M2Share_g_sGameCommandChangeJobHelpMsg 64747
+#define M2Share_g_sGameCommandChangeJobMsg 64748
+#define M2Share_g_sGameCommandChangeJobHumanMsg 64749
+#define Envir_sExceptionMsg 64750
+#define Envir_sExceptionMsg 64751
+#define M2Share_g_sGameCommandRecallMobHelpMsg 64752
+#define M2Share_g_sGameCommandLotteryTicketMsg 64753
+#define M2Share_g_sGameCommandReloadLineNoticeSuccessMsg 64754
+#define M2Share_g_sGameCommandReloadLineNoticeFailMsg 64755
+#define M2Share_g_sGameCommandFreePKHelpMsg 64756
+#define M2Share_g_sGameCommandFreePKHumanMsg 64757
+#define M2Share_g_sGameCommandFreePKMsg 64758
+#define M2Share_g_sGameCommandPKPointHelpMsg 64759
+#define M2Share_g_sGameCommandPKPointMsg 64760
+#define M2Share_g_sGameCommandIncPkPointHelpMsg 64761
+#define M2Share_g_sGameCommandIncPkPointAddPointMsg 64762
+#define M2Share_g_sGameCommandIncPkPointDecPointMsg 64763
+#define M2Share_g_sGameCommandHumanLocalHelpMsg 64764
+#define M2Share_g_sGameCommandHumanLocalMsg 64765
+#define M2Share_g_sGameCommandPrvMsgHelpMsg 64766
+#define M2Share_g_sGameCommandPrvMsgUnLimitMsg 64767
+#define M2Share_g_sGameCommandShutupReleaseCanSendMsg 64768
+#define M2Share_g_sGameCommandShutupReleaseHumanCanSendMsg 64769
+#define M2Share_g_sGameCommandShutupListIsNullMsg 64770
+#define M2Share_g_sGameCommandLevelConsoleMsg 64771
+#define M2Share_g_sGameCommandSbkGoldHelpMsg 64772
+#define M2Share_g_sGameCommandSbkGoldCastleNotFoundMsg 64773
+#define M2Share_g_sGameCommandSbkGoldShowMsg 64774
+#define M2Share_g_sGameCommandRecallHelpMsg 64775
+#define M2Share_g_sGameCommandReGotoHelpMsg 64776
+#define M2Share_g_sGameCommandShowHumanFlagHelpMsg 64777
+#define M2Share_g_sGameCommandShowHumanFlagONMsg 64778
+#define M2Share_g_sGameCommandShowHumanFlagOFFMsg 64779
+#define M2Share_g_sGameCommandMobHelpMsg 64780
+#define M2Share_g_sGameCommandMobMsg 64781
+#define M2Share_g_sGameCommandMobNpcHelpMsg 64782
+#define M2Share_g_sGameCommandDelNpcMsg 64783
+#define M2Share_g_sGameCommandTingHelpMsg 64784
+#define M2Share_g_sGameCommandSuperTingHelpMsg 64785
+#define M2Share_g_sGameCommandMapMoveHelpMsg 64786
+#define M2Share_g_sGameCommandMapMoveMapNotFound 64787
+#define M2Share_g_sGameCommandShutupHelpMsg 64788
+#define M2Share_g_sGameCommandShutupHumanMsg 64789
+#define M2Share_g_sGameCommandGamePointHelpMsg 64790
+#define M2Share_g_sGameCommandCreditPointHelpMsg 64791
+#define M2Share_g_sGameCommandCreditPointHumanMsg 64792
+#define M2Share_g_sGameCommandCreditPointGMMsg 64793
+#define M2Share_g_sGameCommandGameGoldHumanMsg 64794
+#define M2Share_g_sGameCommandGameGoldGMMsg 64795
+#define M2Share_g_sGameCommandMapInfoMsg 64796
+#define M2Share_g_sGameCommandMapInfoSizeMsg 64797
+#define M2Share_g_sGameCommandMapInfoCountMsg 64798
+#define M2Share_g_sGameCommandShutupReleaseHelpMsg 64799
+#define ObjNpc_sVarFound 64800
+#define ObjNpc_sVarTypeError 64801
+#define ObjNpc_sExceptionMsg 64802
+#define M2Share_g_sHumanDieEvent 64803
+#define M2Share_g_sGameCommandPermissionTooLow 64804
+#define M2Share_g_sGameCommandParamUnKnow 64805
+#define M2Share_g_sGameCommandMoveHelpMsg 64806
+#define M2Share_g_sGameCommandPositionMoveHelpMsg 64807
+#define M2Share_g_sGameCommandPositionMoveCanotMoveToMap 64808
+#define M2Share_g_sGameCommandInfoHelpMsg 64809
+#define M2Share_g_sNowNotOnLineOrOnOtherServer 64810
+#define M2Share_g_sGameCommandMobCountHelpMsg 64811
+#define M2Share_g_sGameCommandMobCountMapNotFound 64812
+#define M2Share_g_sGameCommandMobCountMonsterCount 64813
+#define M2Share_g_sGameCommandHumanCountHelpMsg 64814
+#define M2Share_g_sGameCommandKickHumanHelpMsg 64815
+#define ObjPlay_sExceptionMsg 64816
+#define ObjPlay_sExceptionMsg 64817
+#define ObjPlay_sExceptionMsg 64818
+#define ObjNpc_sExceptionMsg 64819
+#define ObjNpc_sExceptionMsg 64820
+#define ObjNpc_sExceptionMsg1 64821
+#define ObjNpc_sExceptionMsg2 64822
+#define ObjNpc_sExceptionMsg 64823
+#define ObjNpc_sExceptionMsg 64824
+#define ObjNpc_sOutMessage 64825
+#define ObjNpc_sVarFound 64826
+#define ObjNpc_sVarTypeError 64827
+#define ObjNpc_sVarFound 64828
+#define ObjNpc_sVarTypeError 64829
+#define ObjNpc_sVarFound 64830
+#define ObjNpc_sVarTypeError 64831
+#define ObjPlay_sExceptionMsg 64832
+#define ObjPlay_sExceptionMsg 64833
+#define ObjPlay_sExceptionMsg 64834
+#define ObjPlay_sExceptionMsg 64835
+#define ObjPlay_sExceptionMsg 64836
+#define ObjPlay_sExceptionMsg 64837
+#define ObjPlay_sExceptionMsg 64838
+#define ObjPlay_sExceptionMsg 64839
+#define ObjPlay_sExceptionMsg 64840
+#define ObjPlay_sExceptionMsg 64841
+#define ObjPlay_sExceptionMsg 64842
+#define ObjPlay_sExceptionMsg 64843
+#define ObjPlay_sExceptionMsg1 64844
+#define ObjPlay_sExceptionMsg2 64845
+#define ObjPlay_sExceptionMsg 64846
+#define ObjPlay_sExceptionMsg 64847
+#define UsrEngn_sExceptionMsg7 64848
+#define UsrEngn_sExceptionMsg8 64849
+#define UsrEngn_sExceptionMsg9 64850
+#define UsrEngn_sExceptionMsg 64851
+#define UsrEngn_sExceptionMsg 64852
+#define UsrEngn_sExceptionMsg 64853
+#define UsrEngn_sExceptionMsg 64854
+#define UsrEngn_sExceptionMsg 64855
+#define UsrEngn_sExceptionMsg 64856
+#define UsrEngn_sExceptionMsg 64857
+#define ObjPlay_sDelItems 64858
+#define ObjPlay_sDelStorage 64859
+#define ObjPlay_sDelBagItem 64860
+#define ObjPlay_sExceptionMsg1 64861
+#define ObjPlay_sExceptionMsg2 64862
+#define ObjPlay_sExceptionMsg4 64863
+#define RunSock_sKickUserMsg 64864
+#define FrnEmail_sExceptionMsg 64865
+#define ObjPlayCmd_sOutFormatMsg 64866
+#define ObjPlayCmd_sDelOK 64867
+#define Magic_sDisableInSafeZoneFireCross 64868
+#define Magic_sDisableInSafeZoneFireCross1 64869
+#define UsrEngn_sExceptionMsg 64870
+#define UsrEngn_sChangeServerFail1 64871
+#define UsrEngn_sChangeServerFail2 64872
+#define UsrEngn_sErrorEnvirIsNil 64873
+#define UsrEngn_sExceptionMsg1 64874
+#define UsrEngn_sExceptionMsg2 64875
+#define UsrEngn_sExceptionMsg3 64876
+#define UsrEngn_sExceptionMsg4 64877
+#define UsrEngn_sExceptionMsg5 64878
+#define UsrEngn_sExceptionMsg6 64879
+#define RunSock_sGateClose 64880
+#define RunSock_sExceptionMsg1 64881
+#define RunSock_sExceptionMsg2 64882
+#define RunSock_sExceptionMsg3 64883
+#define RunSock_sExceptionMsg1 64884
+#define RunSock_sExceptionMsg 64885
+#define RunSock_sExceptionMsg 64886
+#define RunSock_sExceptionMsg 64887
+#define RunSock_sDisable 64888
+#define RunSock_sExceptionMsg2 64889
+#define RunSock_sExceptionMsg0 64890
+#define RunSock_sExceptionMsg1 64891
+#define RunSock_sExceptionMsg2 64892
+#define RunSock_sExceptionMsg4 64893
+#define RunSock_sExceptionMsg 64894
+#define RunSock_sExceptionMsg 64895
+#define ViewKernelInfo_sHandle 64896
+#define ViewKernelInfo_sThreadID 64897
+#define ViewKernelInfo_sRunTime 64898
+#define ViewKernelInfo_sRunFlag 64899
+#define LocalDB_sSQLString 64900
+#define LocalDB_sSQLString 64901
+#define LocalDB_sSQLString 64902
+#define ActionSpeedConfig_sExitMsg 64903
+#define ActionSpeedConfig_sExitMsgTitle 64904
+#define ActionSpeedConfig_sExitMsg 64905
+#define ActionSpeedConfig_sExitMsgTitle 64906
+#define RunDB_sLoadDBTimeOut 64907
+#define RunDB_sSaveDBTimeOut 64908
+#define FrnEngn_sExceptionMsg 64909
+#define RunSock_sGateOpen 64910
+#define RunSock_sKickGate 64911
+#define bdeconst_SSessionActive 64912
+#define bdeconst_SHandleError 64913
+#define bdeconst_SNoReferenceTableName 64914
+#define bdeconst_SEmptySQLStatement 64915
+#define bdeconst_SNoParameterValue 64916
+#define bdeconst_SLoginError 64917
+#define bdeconst_SInitError 64918
+#define bdeconst_SIDAPILangID 64919
+#define bdeconst_SBDEError 64920
+#define bdeconst_SNoDataSetField 64921
+#define bdeconst_SNoCachedUpdates 64922
+#define bdeconst_SNoFieldAccess 64923
+#define bdeconst_SUntitled 64924
+#define bdeconst_SLocalTransDirty 64925
+#define FrmShop_sText 64926
+#define ViewKernelInfo_sNo 64927
+#define DBConsts_SInvalidSqlTimeStamp 64928
+#define ComConst_SOleError 64929
+#define ComConst_SNoMethod 64930
+#define ComConst_SVarNotObject 64931
+#define ComConst_STooManyParams 64932
+#define bdeconst_SAutoSessionExclusive 64933
+#define bdeconst_SAutoSessionExists 64934
+#define bdeconst_SAutoSessionActive 64935
+#define bdeconst_SDuplicateDatabaseName 64936
+#define bdeconst_SDuplicateSessionName 64937
+#define bdeconst_SInvalidSessionName 64938
+#define bdeconst_SDatabaseNameMissing 64939
+#define bdeconst_SSessionNameMissing 64940
+#define bdeconst_SDatabaseOpen 64941
+#define bdeconst_SDatabaseClosed 64942
+#define bdeconst_SDatabaseHandleSet 64943
+#define DBConsts_SInvalidKeywordUse 64944
+#define DBConsts_STextFalse 64945
+#define DBConsts_STextTrue 64946
+#define DBConsts_SParameterNotFound 64947
+#define DBConsts_SInvalidVersion 64948
+#define DBConsts_SBadFieldType 64949
+#define DBConsts_SProviderSQLNotSupported 64950
+#define DBConsts_SProviderExecuteNotSupported 64951
+#define DBConsts_SExprNoAggOnCalcs 64952
+#define DBConsts_SDataSetUnidirectional 64953
+#define DBConsts_SUnassignedVar 64954
+#define DBConsts_SRecordNotFound 64955
+#define DBConsts_SBcdOverflow 64956
+#define DBConsts_SInvalidBcdValue 64957
+#define DBConsts_SInvalidFormatType 64958
+#define DBConsts_SCouldNotParseTimeStamp 64959
+#define DBConsts_SExprNoLParen 64960
+#define DBConsts_SExprNoRParen 64961
+#define DBConsts_SExprNoRParenOrComma 64962
+#define DBConsts_SExprExpected 64963
+#define DBConsts_SExprBadField 64964
+#define DBConsts_SExprBadNullTest 64965
+#define DBConsts_SExprRangeError 64966
+#define DBConsts_SExprIncorrect 64967
+#define DBConsts_SExprNothing 64968
+#define DBConsts_SExprTypeMis 64969
+#define DBConsts_SExprBadScope 64970
+#define DBConsts_SExprNoArith 64971
+#define DBConsts_SExprNotAgg 64972
+#define DBConsts_SExprBadConst 64973
+#define DBConsts_SExprNoAggFilter 64974
+#define DBConsts_SExprEmptyInList 64975
+#define DBConsts_SDataSetMissing 64976
+#define DBConsts_SInvalidCalcType 64977
+#define DBConsts_SFieldReadOnly 64978
+#define DBConsts_SNotIndexField 64979
+#define DBConsts_SCircularDataLink 64980
+#define DBConsts_SLookupInfoError 64981
+#define DBConsts_SDataSourceChange 64982
+#define DBConsts_SDataSetOpen 64983
+#define DBConsts_SNotEditing 64984
+#define DBConsts_SDataSetClosed 64985
+#define DBConsts_SDataSetReadOnly 64986
+#define DBConsts_SNestedDataSetClass 64987
+#define DBConsts_SExprTermination 64988
+#define DBConsts_SExprNameError 64989
+#define DBConsts_SExprStringError 64990
+#define DBConsts_SExprInvalidChar 64991
+#define DBConsts_SUnknownFieldType 64992
+#define DBConsts_SFieldNameMissing 64993
+#define DBConsts_SDuplicateFieldName 64994
+#define DBConsts_SFieldNotFound 64995
+#define DBConsts_SFieldAccessError 64996
+#define DBConsts_SFieldValueError 64997
+#define DBConsts_SFieldRangeError 64998
+#define DBConsts_SBcdFieldRangeError 64999
+#define DBConsts_SInvalidIntegerValue 65000
+#define DBConsts_SInvalidBoolValue 65001
+#define DBConsts_SInvalidFloatValue 65002
+#define DBConsts_SFieldTypeMismatch 65003
+#define DBConsts_SFieldSizeMismatch 65004
+#define DBConsts_SInvalidVarByteArray 65005
+#define DBConsts_SFieldOutOfRange 65006
+#define DBConsts_SFieldRequired 65007
+#define Castle_sWarStartMsg 65008
+#define Castle_sWallWarStop 65009
+#define Castle_sMsg 65010
+#define IdSrvClient_sFormatMsg 65011
+#define IdSrvClient_sFormatMsg 65012
+#define IdSrvClient_sFormatMsg 65013
+#define IdSrvClient_sFormatMsg 65014
+#define IdSrvClient_sFormatMsg 65015
+#define IdSrvClient_sExceptionMsg 65016
+#define IdSrvClient_sExceptionMsg 65017
+#define IdSrvClient_sExceptionMsg 65018
+#define IdSrvClient_sExceptionMsg 65019
+#define IdSrvClient_sGetFailMsg 65020
+#define IdSrvClient_sExceptionMsg 65021
+#define DBConsts_SInvalidFieldSize 65022
+#define DBConsts_SInvalidFieldKind 65023
+#define IdResourceStringsCore_RSReadLnMaxLineLengthExceeded 65024
+#define IdResourceStringsCore_RSConnectTimeout 65025
+#define IdResourceStringsCore_RSAlreadyConnected 65026
+#define IdResourceStringsCore_RSMaximumNumberOfCaptureLineExceeded 65027
+#define IdResourceStringsCore_RSTransparentProxyCannotBind 65028
+#define IdResourceStringsCore_RSTransparentProxyCanNotSupportUDP 65029
+#define IdResourceStringsCore_RSBufferMissingTerminator 65030
+#define IdResourceStringsCore_RSBufferInvalidStartPos 65031
+#define IdResourceStringsCore_RSReplyInvalidCode 65032
+#define IdResourceStringsCore_RSUDPMustUseProxyOpen 65033
+#define ObjMon_sExceptionMsg 65034
+#define Castle_sWarStartMsg 65035
+#define Castle_sWarStopTimeMsg 65036
+#define Castle_sExceptionMsg 65037
+#define Castle_sGetCastleMsg 65038
+#define Castle_sWarStartMsg 65039
+#define IdResourceStringsCore_RSSocksServerGeneralError 65040
+#define IdResourceStringsCore_RSSocksServerPermissionError 65041
+#define IdResourceStringsCore_RSSocksServerNetUnreachableError 65042
+#define IdResourceStringsCore_RSSocksServerHostUnreachableError 65043
+#define IdResourceStringsCore_RSSocksServerConnectionRefusedError 65044
+#define IdResourceStringsCore_RSSocksServerTTLExpiredError 65045
+#define IdResourceStringsCore_RSSocksServerCommandError 65046
+#define IdResourceStringsCore_RSSocksServerAddressError 65047
+#define IdResourceStringsCore_RSInterceptCircularLink 65048
+#define IdResourceStringsCore_RSNotEnoughDataInBuffer 65049
+#define IdResourceStringsCore_RSTooMuchDataInBuffer 65050
+#define IdResourceStringsCore_RSFileNotFound 65051
+#define IdResourceStringsCore_RSNotConnected 65052
+#define IdResourceStringsCore_RSObjectTypeNotSupported 65053
+#define IdResourceStringsCore_RSIdNoDataToRead 65054
+#define IdResourceStringsCore_RSReadTimeout 65055
+#define IdResourceStrings_RSInvalidPortRange 65056
+#define IdResourceStrings_RSInvalidServiceName 65057
+#define IdResourceStrings_RSIPv6Unavailable 65058
+#define IdResourceStrings_RSInvalidIPv6Address 65059
+#define IdResourceStrings_RSIPVersionUnsupported 65060
+#define IdResourceStrings_RSNotAllBytesSent 65061
+#define IdResourceStrings_RSPackageSizeTooBig 65062
+#define IdResourceStrings_RSSetSizeExceeded 65063
+#define IdResourceStringsCore_RSSocksUDPNotSupported 65064
+#define IdResourceStringsCore_RSSocksRequestFailed 65065
+#define IdResourceStringsCore_RSSocksRequestServerFailed 65066
+#define IdResourceStringsCore_RSSocksRequestIdentFailed 65067
+#define IdResourceStringsCore_RSSocksUnknownError 65068
+#define IdResourceStringsCore_RSSocksServerRespondError 65069
+#define IdResourceStringsCore_RSSocksAuthMethodError 65070
+#define IdResourceStringsCore_RSSocksAuthError 65071
+#define IdResourceStrings_RSStackETOOMANYREFS 65072
+#define IdResourceStrings_RSStackETIMEDOUT 65073
+#define IdResourceStrings_RSStackECONNREFUSED 65074
+#define IdResourceStrings_RSStackELOOP 65075
+#define IdResourceStrings_RSStackENAMETOOLONG 65076
+#define IdResourceStrings_RSStackEHOSTDOWN 65077
+#define IdResourceStrings_RSStackEHOSTUNREACH 65078
+#define IdResourceStrings_RSStackENOTEMPTY 65079
+#define IdResourceStrings_RSStackHOST_NOT_FOUND 65080
+#define IdResourceStrings_RSStackClassUndefined 65081
+#define IdResourceStrings_RSStackAlreadyCreated 65082
+#define IdResourceStrings_RSAntiFreezeOnlyOne 65083
+#define IdResourceStrings_RSCannotSetIPVersionWhenConnected 65084
+#define IdResourceStrings_RSCannotBindRange 65085
+#define IdResourceStrings_RSConnectionClosedGracefully 65086
+#define IdResourceStrings_RSCouldNotBindSocket 65087
+#define IdResourceStrings_RSStackEPROTONOSUPPORT 65088
+#define IdResourceStrings_RSStackESOCKTNOSUPPORT 65089
+#define IdResourceStrings_RSStackEOPNOTSUPP 65090
+#define IdResourceStrings_RSStackEPFNOSUPPORT 65091
+#define IdResourceStrings_RSStackEAFNOSUPPORT 65092
+#define IdResourceStrings_RSStackEADDRINUSE 65093
+#define IdResourceStrings_RSStackEADDRNOTAVAIL 65094
+#define IdResourceStrings_RSStackENETDOWN 65095
+#define IdResourceStrings_RSStackENETUNREACH 65096
+#define IdResourceStrings_RSStackENETRESET 65097
+#define IdResourceStrings_RSStackECONNABORTED 65098
+#define IdResourceStrings_RSStackECONNRESET 65099
+#define IdResourceStrings_RSStackENOBUFS 65100
+#define IdResourceStrings_RSStackEISCONN 65101
+#define IdResourceStrings_RSStackENOTCONN 65102
+#define IdResourceStrings_RSStackESHUTDOWN 65103
+#define IdResourceStrings_RSStatusText 65104
+#define IdResourceStrings_RSStackError 65105
+#define IdResourceStrings_RSStackEINTR 65106
+#define IdResourceStrings_RSStackEBADF 65107
+#define IdResourceStrings_RSStackEACCES 65108
+#define IdResourceStrings_RSStackEFAULT 65109
+#define IdResourceStrings_RSStackEINVAL 65110
+#define IdResourceStrings_RSStackEMFILE 65111
+#define IdResourceStrings_RSStackEWOULDBLOCK 65112
+#define IdResourceStrings_RSStackEINPROGRESS 65113
+#define IdResourceStrings_RSStackEALREADY 65114
+#define IdResourceStrings_RSStackENOTSOCK 65115
+#define IdResourceStrings_RSStackEDESTADDRREQ 65116
+#define IdResourceStrings_RSStackEMSGSIZE 65117
+#define IdResourceStrings_RSStackEPROTOTYPE 65118
+#define IdResourceStrings_RSStackENOPROTOOPT 65119
+#define RzPopups_sRzCaptionAM 65120
+#define RzPopups_sRzCaptionPM 65121
+#define RzPopups_sRzCaptionSet 65122
+#define RzPopups_sRzCaptionClearBtn 65123
+#define RzPopups_sRzCaptionTodayBtn 65124
+#define RzPopups_sRzDateMax 65125
+#define RzPopups_sRzDateMin 65126
+#define RzPopups_sRzDateRange 65127
+#define IdResourceStrings_RSWinsockCallError 65128
+#define IdResourceStrings_RSWinsockLoadError 65129
+#define IdResourceStrings_RSWinsockInitializationError 65130
+#define IdResourceStrings_RSStatusResolving 65131
+#define IdResourceStrings_RSStatusConnecting 65132
+#define IdResourceStrings_RSStatusConnected 65133
+#define IdResourceStrings_RSStatusDisconnecting 65134
+#define IdResourceStrings_RSStatusDisconnected 65135
+#define RzBorder_sRzColorBtnFace 65136
+#define RzBorder_sRzColorBtnShadow 65137
+#define RzBorder_sRzColorGrayText 65138
+#define RzBorder_sRzColorBtnText 65139
+#define RzBorder_sRzColorInactiveCaptionText 65140
+#define RzBorder_sRzColorBtnHighlight 65141
+#define RzBorder_sRzColor3DDkShadow 65142
+#define RzBorder_sRzColor3DLight 65143
+#define RzBorder_sRzColorInfoText 65144
+#define RzBorder_sRzColorInfoBk 65145
+#define RzBorder_sRzColorHotLight 65146
+#define RzBorder_sRzColorGradientActiveCaption 65147
+#define RzBorder_sRzColorGradientInactiveCaption 65148
+#define RzBorder_sRzColorMenuHighlight 65149
+#define RzBorder_sRzColorMenuBar 65150
+#define RzPopups_sRzHowToSelectTime 65151
+#define RzBorder_sRzColorWhite 65152
+#define RzBorder_sRzColorScrollBar 65153
+#define RzBorder_sRzColorBackground 65154
+#define RzBorder_sRzColorActiveCaption 65155
+#define RzBorder_sRzColorInactiveCaption 65156
+#define RzBorder_sRzColorMenu 65157
+#define RzBorder_sRzColorWindow 65158
+#define RzBorder_sRzColorWindowFrame 65159
+#define RzBorder_sRzColorMenuText 65160
+#define RzBorder_sRzColorWindowText 65161
+#define RzBorder_sRzColorCaptionText 65162
+#define RzBorder_sRzColorActiveBorder 65163
+#define RzBorder_sRzColorInactiveBorder 65164
+#define RzBorder_sRzColorAppWorkSpace 65165
+#define RzBorder_sRzColorHighlight 65166
+#define RzBorder_sRzColorHighlightText 65167
+#define RzBorder_sRzColorGray40 65168
+#define RzBorder_sRzColorPink 65169
+#define RzBorder_sRzColorGold 65170
+#define RzBorder_sRzColorYellow 65171
+#define RzBorder_sRzColorBrightGreen 65172
+#define RzBorder_sRzColorTurquoise 65173
+#define RzBorder_sRzColorSkyBlue 65174
+#define RzBorder_sRzColorPlum 65175
+#define RzBorder_sRzColorGray25 65176
+#define RzBorder_sRzColorRose 65177
+#define RzBorder_sRzColorTan 65178
+#define RzBorder_sRzColorLightYellow 65179
+#define RzBorder_sRzColorLightGreen 65180
+#define RzBorder_sRzColorLightTurquoise 65181
+#define RzBorder_sRzColorPaleBlue 65182
+#define RzBorder_sRzColorLavender 65183
+#define RzBorder_sRzColorGray80 65184
+#define RzBorder_sRzColorDarkRed 65185
+#define RzBorder_sRzColorOrange 65186
+#define RzBorder_sRzColorDarkYellow 65187
+#define RzBorder_sRzColorGreen 65188
+#define RzBorder_sRzColorTeal 65189
+#define RzBorder_sRzColorBlue 65190
+#define RzBorder_sRzColorBlueGray 65191
+#define RzBorder_sRzColorGray50 65192
+#define RzBorder_sRzColorRed 65193
+#define RzBorder_sRzColorLightOrange 65194
+#define RzBorder_sRzColorLime 65195
+#define RzBorder_sRzColorSeaGreen 65196
+#define RzBorder_sRzColorAqua 65197
+#define RzBorder_sRzColorLightBlue 65198
+#define RzBorder_sRzColorViolet 65199
+#define ComStrs_sTabFailDelete 65200
+#define ComStrs_sTabFailRetrieve 65201
+#define ComStrs_sTabFailGetObject 65202
+#define ComStrs_sTabFailSet 65203
+#define ComStrs_sTabFailSetObject 65204
+#define ComStrs_sTabMustBeMultiLine 65205
+#define ComStrs_sInvalidOwner 65206
+#define ComStrs_sPageIndexError 65207
+#define ComStrs_sInvalidComCtl32 65208
+#define RzBorder_sRzColorBlack 65209
+#define RzBorder_sRzColorBrown 65210
+#define RzBorder_sRzColorOliveGreen 65211
+#define RzBorder_sRzColorDarkGreen 65212
+#define RzBorder_sRzColorDarkTeal 65213
+#define RzBorder_sRzColorDarkBlue 65214
+#define RzBorder_sRzColorIndigo 65215
 #define ExtCtrls_clNameInactiveCaption 65216
 #define ExtCtrls_clNameInactiveCaptionText 65217
 #define ExtCtrls_clNameInfoBk 65218
@@ -550,7 +550,7 @@
 #define ExtCtrls_clNameWindow 65228
 #define ExtCtrls_clNameWindowFrame 65229
 #define ExtCtrls_clNameWindowText 65230
-#define M2Share_g_sHumanDieEvent 65231
+#define ComStrs_sTabFailClear 65231
 #define ExtCtrls_clNameActiveCaption 65232
 #define ExtCtrls_clNameAppWorkSpace 65233
 #define ExtCtrls_clNameBackground 65234
@@ -857,28 +857,21 @@
 #define SysConst_SEndOfFile 65535
 STRINGTABLE
 BEGIN
-	ObjBase_sExceptionMsg1,	"[Exception] TBaseObject::Run 1 "
-	ObjBase_sExceptionMsg2,	"[Exception] TBaseObject::Run 2"
-	ObjBase_sExceptionMsg3,	"[Exception] TBaseObject::Run 3 "
-	ObjBase_sExceptionMsg4,	"[Exception] TBaseObject::Run 4 Code:%d"
-	ObjBase_sExceptionMsg5,	"[Exception] TBaseObject::Run 5"
-	ObjBase_sExceptionMsg6,	"[Exception] TBaseObject::Run 6"
-	ObjBase_sExceptionMsg7,	"[Exception] TBaseObject::Run 7"
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::Operate "
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::RunTo"
-	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::AddToMap"
-	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::MoveToMovingObject"
-	Envir_sExceptionMsg1,	"[Exception] TEnvirnoment::DeleteFromMap -> Except 1 ** %d"
-	Envir_sExceptionMsg2,	"[Exception] TEnvirnoment::DeleteFromMap -> Except 2 ** %d"
-	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::VerifyMapTime"
-	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::ArroundDoorOpened "
-	ObjBase_sExceptionMsg2,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleItems Dispose"
-	ObjBase_sExceptionMsg3,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleItems Clear"
-	ObjBase_sExceptionMsg4,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleEvents Clear"
-	ObjBase_sExceptionMsg5,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleActors Dispose"
-	ObjBase_sExceptionMsg6,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleActors Clear"
-	ObjBase_sExceptionMsg1,	"[Exception] TBaseObject::SearchViewRange Code:%d"
-	ObjBase_sExceptionMsg2,	"[Exception] TBaseObject::SearchViewRange 1-%d %s %s %d %d %d"
+	svMain_sGateIdx,	"网关"
+	svMain_sGateIPaddr,	"网关地址"
+	svMain_sGateListMsg,	"队列数据"
+	svMain_sGateSendCount,	"发送数据"
+	svMain_sGateMsgCount,	"剩余数据"
+	svMain_sGateSendKB,	"平均流量"
+	svMain_sGateUserCount,	"最高人数"
+	svMain_sCloseServerYesNo,	"是否确认关闭游戏服务器？"
+	svMain_sCloseServerTitle,	"确认信息"
+	svMain_sCloseServer,	"%s [正在关闭服务器(%d/%d/%d)...]"
+	svMain_sCloseServer1,	"%s [服务器已关闭]"
+	svMain_sGatePortOpen,	"游戏网关端口(%s:%d)已打开..."
+	svMain_sGatePortClose,	"游戏网关端口(%s:%d)已关闭..."
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::Walk  CheckCode:%d %s %s %d:%d"
 	ObjBase_sExceptionMsg7,	"[Exception] TBaseObject::EnterAnotherMap"
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::ScatterBagItems"
@@ -888,39 +881,112 @@ BEGIN
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::_Attack Name:= %s Code:=%d"
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::WalkTo"
 	ObjBase_sExceptionMsg0,	"[Exception] TBaseObject::Run 0"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::UserOffLineLogon"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::UserLogon"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ClientGuildAlly"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject.ClientUserShop"
-	ObjPlay_sExceptionMsg1,	"[Exception] TPlayObject::SearchViewRange Code:%d"
-	ObjPlay_sExceptionMsg2,	"[Exception] TPlayObject::SearchViewRange 1-%d %s %s %d %d %d"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::GetShowName"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::MakeGhost"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ScatterBagItems"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject.AttackDir Code: %d"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::_Attack Name:= %s Code:=%d"
+	ObjBase_sExceptionMsg1,	"[Exception] TBaseObject::Run 1 "
+	ObjBase_sExceptionMsg2,	"[Exception] TBaseObject::Run 2"
+	ObjBase_sExceptionMsg3,	"[Exception] TBaseObject::Run 3 "
+	ObjBase_sExceptionMsg4,	"[Exception] TBaseObject::Run 4 Code:%d"
+	ObjBase_sExceptionMsg5,	"[Exception] TBaseObject::Run 5"
+	ObjBase_sExceptionMsg6,	"[Exception] TBaseObject::Run 6"
+	ObjBase_sExceptionMsg7,	"[Exception] TBaseObject::Run 7"
+	Envir_sExceptionMsg1,	"[Exception] TEnvirnoment::DeleteFromMap -> Except 1 ** %d"
+	Envir_sExceptionMsg2,	"[Exception] TEnvirnoment::DeleteFromMap -> Except 2 ** %d"
+	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::VerifyMapTime"
+	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::ArroundDoorOpened "
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::Destroy Code: %d"
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::AttackDir Code: %d"
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::GetMapBaseObjects"
 	ObjBase_sExceptionMsg,	"[Exception] TBaseObject::SendRefMsg Name = %s"
 	ObjBase_sExceptionMsg1,	"[Exception] TBaseObject::EnterAnotherMap -> MsgTargetList Clear"
+	ObjBase_sExceptionMsg2,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleItems Dispose"
+	ObjBase_sExceptionMsg3,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleItems Clear"
+	ObjBase_sExceptionMsg4,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleEvents Clear"
+	ObjBase_sExceptionMsg5,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleActors Dispose"
+	ObjBase_sExceptionMsg6,	"[Exception] TBaseObject::EnterAnotherMap -> VisbleActors Clear"
+	ObjBase_sExceptionMsg1,	"[Exception] TBaseObject::SearchViewRange Code:%d"
+	ObjBase_sExceptionMsg2,	"[Exception] TBaseObject::SearchViewRange 1-%d %s %s %d %d %d"
+	M2Share_g_sGameCommandPrvMsgLimitMsg,	"%s 已被加入禁止私聊列表..."
+	M2Share_g_sGamecommandMakeHelpMsg,	" 物品名称  数量"
+	M2Share_g_sGamecommandMakeInCastleWarRange,	"攻城区域，禁止使用此功能."
+	M2Share_g_sGamecommandMakeInSafeZoneRange,	"非安全区，禁止使用此功能."
+	M2Share_g_sGamecommandMakeItemNameNotFound,	"%s 物品名称不正确."
+	M2Share_g_sGamecommandSuperMakeHelpMsg,	"身上没指定物品."
+	M2Share_g_sGameCommandViewWhisperHelpMsg,	" 人物名称"
+	M2Share_g_sGameCommandViewWhisperMsg1,	"已停止侦听%s的私聊信息..."
+	M2Share_g_sGameCommandViewWhisperMsg2,	"正在侦听%s的私聊信息..."
+	M2Share_g_sGameCommandReAliveHelpMsg,	" 人物名称"
+	M2Share_g_sGameCommandReAliveMsg,	"%s 已获重生."
+	M2Share_g_sGameCommandChangeJobHelpMsg,	" 人物名称 职业类型(Warr Wizard Taos)"
+	M2Share_g_sGameCommandChangeJobMsg,	"%s 的职业更改成功。"
+	M2Share_g_sGameCommandChangeJobHumanMsg,	"职业更改成功。"
+	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::AddToMap"
+	Envir_sExceptionMsg,	"[Exception] TEnvirnoment::MoveToMovingObject"
+	M2Share_g_sGameCommandRecallMobHelpMsg,	"怪物名称 数量 等级"
+	M2Share_g_sGameCommandLotteryTicketMsg,	"已中彩票数:%d 未中彩票数:%d 一等奖:%d 二等奖:%d 三等奖:%d 四等奖:%d 五等奖:%d 六等奖:%d "
+	M2Share_g_sGameCommandReloadLineNoticeSuccessMsg,	"重新加载公告设置信息完成."
+	M2Share_g_sGameCommandReloadLineNoticeFailMsg,	"重新加载公告设置信息失败."
+	M2Share_g_sGameCommandFreePKHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandFreePKHumanMsg,	"你的PK值已经被清除..."
+	M2Share_g_sGameCommandFreePKMsg,	"%s的PK值已经被清除..."
+	M2Share_g_sGameCommandPKPointHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandPKPointMsg,	"%s的PK点数为:%d"
+	M2Share_g_sGameCommandIncPkPointHelpMsg,	"人物名称 PK点数"
+	M2Share_g_sGameCommandIncPkPointAddPointMsg,	"%s的PK值已增加%d点..."
+	M2Share_g_sGameCommandIncPkPointDecPointMsg,	"%s的PK值已减少%d点..."
+	M2Share_g_sGameCommandHumanLocalHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandHumanLocalMsg,	"%s来自:%s"
+	M2Share_g_sGameCommandPrvMsgHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandPrvMsgUnLimitMsg,	"%s 已从禁止私聊列表中删除..."
+	M2Share_g_sGameCommandShutupReleaseCanSendMsg,	"你已经恢复聊天功能."
+	M2Share_g_sGameCommandShutupReleaseHumanCanSendMsg,	"%s 已经恢复聊天。"
+	M2Share_g_sGameCommandShutupListIsNullMsg,	"禁言列表为空."
+	M2Share_g_sGameCommandLevelConsoleMsg,	"[等级调整] %s (%d -> %d)"
+	M2Share_g_sGameCommandSbkGoldHelpMsg,	"城堡名称 控制符(=、-、+) 金币数(1-100000000)"
+	M2Share_g_sGameCommandSbkGoldCastleNotFoundMsg,	"城堡%s未找到."
+	M2Share_g_sGameCommandSbkGoldShowMsg,	"%s的金币数为: %d 今天收入: %d"
+	M2Share_g_sGameCommandRecallHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandReGotoHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandShowHumanFlagHelpMsg,	"人物名称 标识号"
+	M2Share_g_sGameCommandShowHumanFlagONMsg,	"%s: [%d] = ON"
+	M2Share_g_sGameCommandShowHumanFlagOFFMsg,	"%s: [%d] = OFF"
+	M2Share_g_sGameCommandMobHelpMsg,	"怪物名称 数量 等级 五行(1-5)"
+	M2Share_g_sGameCommandMobMsg,	"怪物名称不正确或其它未问题."
+	M2Share_g_sGameCommandMobNpcHelpMsg,	"NPC名称 脚本文件名 外形(数字) 属沙城(0,1)"
+	M2Share_g_sGameCommandDelNpcMsg,	"命令使用方法不正确，必须与NPC面对面，才能使用此命令."
+	M2Share_g_sGameCommandTingHelpMsg,	"人物名称"
+	M2Share_g_sGameCommandSuperTingHelpMsg,	"人物名称 范围(0-10)"
+	M2Share_g_sGameCommandMapMoveHelpMsg,	"源地图  目标地图"
+	M2Share_g_sGameCommandMapMoveMapNotFound,	"地图%s不存在."
+	M2Share_g_sGameCommandShutupHelpMsg,	"人物名称  时间长度(分钟)"
+	M2Share_g_sGameCommandShutupHumanMsg,	"%s 已被禁言%d分钟"
+	M2Share_g_sGameCommandGamePointHelpMsg,	"人物名称 控制符(+,-,=) 游戏点数(1-100000000)"
+	M2Share_g_sGameCommandCreditPointHelpMsg,	"人物名称 控制符(+,-,=) 声望点数(0-255)"
+	M2Share_g_sGameCommandCreditPointHumanMsg,	"你的声望点已增加%d点，当前总声望点数为%d点。"
+	M2Share_g_sGameCommandCreditPointGMMsg,	"%s的声望点已增加%d点，当前总声望点数为%d点。"
+	M2Share_g_sGameCommandGameGoldHumanMsg,	"你的%s已增加%d，当前拥有%d%s。"
+	M2Share_g_sGameCommandGameGoldGMMsg,	"%s的%s已增加%d，当前拥有%d%s。"
+	M2Share_g_sGameCommandMapInfoMsg,	"地图名称: %s(%s)"
+	M2Share_g_sGameCommandMapInfoSizeMsg,	"地图大小: X(%d) Y(%d)"
+	M2Share_g_sGameCommandMapInfoCountMsg,	"地图人数: %d"
+	M2Share_g_sGameCommandShutupReleaseHelpMsg,	"人物名称"
+	ObjNpc_sVarFound,	"变量%s不存在，变量类型:%s"
+	ObjNpc_sVarTypeError,	"变量类型错误，错误类型:%s 当前支持类型(HUMAN、GUILD、GLOBAL)"
 	ObjNpc_sExceptionMsg,	"[Exception] TGuildOfficial::UserSelect... "
-	FrnEngn_sExceptionMsg,	"[Exception] TFrontEngine::Execute"
-	ObjPlay_sDelItems,	"删除复制品 [%s]%d %s"
-	ObjPlay_sDelStorage,	"仓库%s已经到期！"
-	ObjPlay_sDelBagItem,	"你的物品[%s]已经到期！"
-	ObjPlay_sExceptionMsg1,	"[Exception] TPlayObject::Run -> Operate 1 Code=%d"
-	ObjPlay_sExceptionMsg2,	"[Exception] TPlayObject::Run -> Operate 2 # %s Ident:%d Sender:%d wP:%d nP1:%d nP2:%d np3:%d Msg:%s Check:%d"
-	ObjPlay_sExceptionMsg4,	"[Exception] TPlayObject::Run -> ClearObj"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::HorseRunTo"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ProcessUserLineMsg Msg = %s"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject.ProcessSayMsg Msg = %s"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ClientHitXY"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::RunNotice"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::SendSocket.."
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::DropUseItems"
-	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::GainExp"
-	ObjPlayCmd_sDelOK,	"删除NPC成功..."
+	M2Share_g_sHumanDieEvent,	"人物死亡事件"
+	M2Share_g_sGameCommandPermissionTooLow,	"权限不够."
+	M2Share_g_sGameCommandParamUnKnow,	"命令格式: @%s %s"
+	M2Share_g_sGameCommandMoveHelpMsg,	"地图号"
+	M2Share_g_sGameCommandPositionMoveHelpMsg,	"地图号 座标X 座标Y"
+	M2Share_g_sGameCommandPositionMoveCanotMoveToMap,	"无法移动到地图: %s X:%s Y:%s"
+	M2Share_g_sGameCommandInfoHelpMsg,	"人物名称"
+	M2Share_g_sNowNotOnLineOrOnOtherServer,	"%s 现在不在线，或在其它服务器上."
+	M2Share_g_sGameCommandMobCountHelpMsg,	"地图号"
+	M2Share_g_sGameCommandMobCountMapNotFound,	"指定的地图不存在."
+	M2Share_g_sGameCommandMobCountMonsterCount,	"怪物数量：%d"
+	M2Share_g_sGameCommandHumanCountHelpMsg,	"地图号"
+	M2Share_g_sGameCommandKickHumanHelpMsg,	"人物名称"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ScatterBagItems"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject.AttackDir Code: %d"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::_Attack Name:= %s Code:=%d"
 	ObjNpc_sExceptionMsg,	"[Exception] TCastleManager::UserSelect... "
 	ObjNpc_sExceptionMsg,	"[Exception] TMerchant::UserSelect... Data: %s"
 	ObjNpc_sExceptionMsg1,	"[Exception] TMerchant::Run... Code = %d"
@@ -934,12 +1000,22 @@ BEGIN
 	ObjNpc_sVarTypeError,	"变量类型错误，错误类型:%s 当前支持类型(HUMAN、GUILD、GLOBAL)"
 	ObjNpc_sVarFound,	"变量%s不存在，变量类型:%s"
 	ObjNpc_sVarTypeError,	"变量类型错误，错误类型:%s 当前支持类型(HUMAN、GUILD、GLOBAL)"
-	ObjNpc_sVarFound,	"变量%s不存在，变量类型:%s"
-	ObjNpc_sVarTypeError,	"变量类型错误，错误类型:%s 当前支持类型(HUMAN、GUILD、GLOBAL)"
-	UsrEngn_sExceptionMsg3,	"[Exception] TUserEngine::ProcessHumans ClosePlayer.Delete"
-	UsrEngn_sExceptionMsg4,	"[Exception] TUserEngine::ProcessHumans RunNotice"
-	UsrEngn_sExceptionMsg5,	"[Exception] TUserEngine::ProcessHumans Human.Operate Code: %d"
-	UsrEngn_sExceptionMsg6,	"[Exception] TUserEngine::ProcessHumans Human.Finalize Code: %d"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::HorseRunTo"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ProcessUserLineMsg Msg = %s"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject.ProcessSayMsg Msg = %s"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ClientHitXY"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::RunNotice"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::SendSocket.."
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::DropUseItems"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::GainExp"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::UserOffLineLogon"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::UserLogon"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::ClientGuildAlly"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject.ClientUserShop"
+	ObjPlay_sExceptionMsg1,	"[Exception] TPlayObject::SearchViewRange Code:%d"
+	ObjPlay_sExceptionMsg2,	"[Exception] TPlayObject::SearchViewRange 1-%d %s %s %d %d %d"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::GetShowName"
+	ObjPlay_sExceptionMsg,	"[Exception] TPlayObject::MakeGhost"
 	UsrEngn_sExceptionMsg7,	"[Exception] TUserEngine::ProcessHumans RunSocket.CloseUser Code: %d"
 	UsrEngn_sExceptionMsg8,	"[Exception] TUserEngine::ProcessHumans"
 	UsrEngn_sExceptionMsg9,	"[Exception] TUserEngine::ProcessHumans -> OffLine"
@@ -950,329 +1026,28 @@ BEGIN
 	UsrEngn_sExceptionMsg,	"[Exception] TUserEngine::RegenMonsters"
 	UsrEngn_sExceptionMsg,	"[Exception] TUserEngine::ProcessFBMap"
 	UsrEngn_sExceptionMsg,	"[Exception] TUserEngine::ProcessData"
-	ObjMon_sExceptionMsg,	"[Exception] TSnowfieldKavassMon.Attack Code: %d"
+	ObjPlay_sDelItems,	"删除复制品 [%s]%d %s"
+	ObjPlay_sDelStorage,	"仓库%s已经到期！"
+	ObjPlay_sDelBagItem,	"你的物品[%s]已经到期！"
+	ObjPlay_sExceptionMsg1,	"[Exception] TPlayObject::Run -> Operate 1 Code=%d"
+	ObjPlay_sExceptionMsg2,	"[Exception] TPlayObject::Run -> Operate 2 # %s Ident:%d Sender:%d wP:%d nP1:%d nP2:%d np3:%d Msg:%s Check:%d"
+	ObjPlay_sExceptionMsg4,	"[Exception] TPlayObject::Run -> ClearObj"
+	RunSock_sKickUserMsg,	"当前登录帐号正在其它位置登录，本机已被强行离线."
+	FrnEmail_sExceptionMsg,	"[Exception] TUserEMail.Execute"
 	ObjPlayCmd_sOutFormatMsg,	"[权限调整] %s (%s %d -> %d)"
-	svMain_sGateSendCount,	"发送数据"
-	svMain_sGateMsgCount,	"剩余数据"
-	svMain_sGateSendKB,	"平均流量"
-	svMain_sGateUserCount,	"最高人数"
-	svMain_sCloseServerYesNo,	"是否确认关闭游戏服务器？"
-	svMain_sCloseServerTitle,	"确认信息"
-	svMain_sCloseServer,	"%s [正在关闭服务器(%d/%d/%d)...]"
-	svMain_sCloseServer1,	"%s [服务器已关闭]"
-	svMain_sGatePortOpen,	"游戏网关端口(%s:%d)已打开..."
-	svMain_sGatePortClose,	"游戏网关端口(%s:%d)已关闭..."
+	ObjPlayCmd_sDelOK,	"删除NPC成功..."
+	Magic_sDisableInSafeZoneFireCross,	"安全区不允许使用..."
+	Magic_sDisableInSafeZoneFireCross1,	"当前地图不允许使用..."
 	UsrEngn_sExceptionMsg,	"[Exception] TUserEngine::MakeNewHuman"
 	UsrEngn_sChangeServerFail1,	"chg-server-fail-1 [%d] -> [%d] [%s]"
 	UsrEngn_sChangeServerFail2,	"chg-server-fail-2 [%d] -> [%d] [%s]"
 	UsrEngn_sErrorEnvirIsNil,	"[Error] PlayObject.PEnvir = nil"
 	UsrEngn_sExceptionMsg1,	"[Exception] TUserEngine::ProcessHumans -> Ready, Save, Load... Code:=%d"
 	UsrEngn_sExceptionMsg2,	"[Exception] TUserEngine::ProcessHumans ClosePlayer.Delete - Free"
-	ActionSpeedConfig_sExitMsg,	"设置已被修改是否不保存设置退出？"
-	ActionSpeedConfig_sExitMsgTitle,	"确认信息"
-	ActionSpeedConfig_sExitMsg,	"是否确认恢复默认设置？"
-	ActionSpeedConfig_sExitMsgTitle,	"确认信息"
-	ViewKernelInfo_sNo,	"序号"
-	ViewKernelInfo_sHandle,	"句柄"
-	ViewKernelInfo_sThreadID,	"线程ID"
-	ViewKernelInfo_sRunTime,	"运行时间"
-	ViewKernelInfo_sRunFlag,	"运行状态"
-	RunDB_sLoadDBTimeOut,	"[RunDB] 读取人物数据超时... ["
-	RunDB_sSaveDBTimeOut,	"[RunDB] 保存人物数据超时... ["
-	FrmShop_sText,	"%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d"
-	FrnEmail_sExceptionMsg,	"[Exception] TUserEMail.Execute"
-	svMain_sGateIdx,	"网关"
-	svMain_sGateIPaddr,	"网关地址"
-	svMain_sGateListMsg,	"队列数据"
-	bdeconst_SHandleError,	"Error creating cursor handle"
-	bdeconst_SNoReferenceTableName,	"ReferenceTableName not specified for field '%s'"
-	bdeconst_SEmptySQLStatement,	"No SQL statement available"
-	bdeconst_SNoParameterValue,	"No value for parameter '%s'"
-	bdeconst_SLoginError,	"Cannot connect to database '%s'"
-	bdeconst_SInitError,	"An error occurred while attempting to initialize the Borland Database Engine (error $%.4x)"
-	bdeconst_SIDAPILangID,	"0009"
-	bdeconst_SBDEError,	"BDE error $%.4x"
-	bdeconst_SNoDataSetField,	"Missing DataSetField property"
-	bdeconst_SNoCachedUpdates,	"Not in cached update mode"
-	bdeconst_SNoFieldAccess,	"Cannot access field '%s' in a filter"
-	bdeconst_SUntitled,	"Untitled Application"
-	bdeconst_SLocalTransDirty,	"The transaction isolation level must be dirty read for local databases"
-	LocalDB_sSQLString,	"select * from StdItems"
-	LocalDB_sSQLString,	"select * from Magic"
-	LocalDB_sSQLString,	"select * from Monster"
-	ComConst_SOleError,	"OLE error %.8x"
-	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
-	ComConst_SVarNotObject,	"Variant does not reference an automation object"
-	ComConst_STooManyParams,	"Dispatch methods do not support more than 64 parameters"
-	bdeconst_SAutoSessionExclusive,	"Cannot enable AutoSessionName property with more than one session on a form or data-module"
-	bdeconst_SAutoSessionExists,	"Cannot add a session to the form or data-module while session '%s' has AutoSessionName enabled"
-	bdeconst_SAutoSessionActive,	"Cannot modify SessionName while AutoSessionName is enabled"
-	bdeconst_SDuplicateDatabaseName,	"Duplicate database name '%s'"
-	bdeconst_SDuplicateSessionName,	"Duplicate session name '%s'"
-	bdeconst_SInvalidSessionName,	"Invalid session name %s"
-	bdeconst_SDatabaseNameMissing,	"Database name missing"
-	bdeconst_SSessionNameMissing,	"Session name missing"
-	bdeconst_SDatabaseOpen,	"Cannot perform this operation on an open database"
-	bdeconst_SDatabaseClosed,	"Cannot perform this operation on a closed database"
-	bdeconst_SDatabaseHandleSet,	"Database handle owned by a different session"
-	bdeconst_SSessionActive,	"Cannot perform this operation on an active session"
-	DBConsts_STextFalse,	"False"
-	DBConsts_STextTrue,	"True"
-	DBConsts_SParameterNotFound,	"Parameter '%s' not found"
-	DBConsts_SInvalidVersion,	"Unable to load bind parameters"
-	DBConsts_SBadFieldType,	"Field '%s' is of an unsupported type"
-	DBConsts_SProviderSQLNotSupported,	"SQL not supported: %s"
-	DBConsts_SProviderExecuteNotSupported,	"Execute not supported: %s"
-	DBConsts_SExprNoAggOnCalcs,	"Field '%s' is not the correct type of calculated field to be used in an aggregate, use an internalcalc"
-	DBConsts_SDataSetUnidirectional,	"Operation not allowed on a unidirectional dataset"
-	DBConsts_SUnassignedVar,	"Unassigned variant value"
-	DBConsts_SRecordNotFound,	"Record not found"
-	DBConsts_SBcdOverflow,	"BCD overflow"
-	DBConsts_SInvalidBcdValue,	"%s is not a valid BCD value"
-	DBConsts_SInvalidFormatType,	"Invalid format type for BCD"
-	DBConsts_SCouldNotParseTimeStamp,	"Could not parse SQL TimeStamp string"
-	DBConsts_SInvalidSqlTimeStamp,	"Invalid SQL date/time values"
-	DBConsts_SExprNoRParen,	"')' expected but %s found"
-	DBConsts_SExprNoRParenOrComma,	"')' or ',' expected but %s found"
-	DBConsts_SExprExpected,	"Expression expected but %s found"
-	DBConsts_SExprBadField,	"Field '%s' cannot be used in a filter expression"
-	DBConsts_SExprBadNullTest,	"NULL only allowed with '=' and '<>'"
-	DBConsts_SExprRangeError,	"Constant out of range"
-	DBConsts_SExprIncorrect,	"Incorrectly formed filter expression"
-	DBConsts_SExprNothing,	"nothing"
-	DBConsts_SExprTypeMis,	"Type mismatch in expression"
-	DBConsts_SExprBadScope,	"Operation cannot mix aggregate value with record-varying value"
-	DBConsts_SExprNoArith,	"Arithmetic in filter expressions not supported"
-	DBConsts_SExprNotAgg,	"Expression is not an aggregate expression"
-	DBConsts_SExprBadConst,	"Constant is not correct type %s"
-	DBConsts_SExprNoAggFilter,	"Aggregate expressions not allowed in filters"
-	DBConsts_SExprEmptyInList,	"IN predicate list may not be empty"
-	DBConsts_SInvalidKeywordUse,	"Invalid use of keyword"
-	DBConsts_SInvalidCalcType,	"Field '%s' cannot be a calculated or lookup field"
-	DBConsts_SFieldReadOnly,	"Field '%s' cannot be modified"
-	DBConsts_SNotIndexField,	"Field '%s' is not indexed and cannot be modified"
-	DBConsts_SCircularDataLink,	"Circular datalinks are not allowed"
-	DBConsts_SLookupInfoError,	"Lookup information for field '%s' is incomplete"
-	DBConsts_SDataSourceChange,	"DataSource cannot be changed"
-	DBConsts_SDataSetOpen,	"Cannot perform this operation on an open dataset"
-	DBConsts_SNotEditing,	"Dataset not in edit or insert mode"
-	DBConsts_SDataSetClosed,	"Cannot perform this operation on a closed dataset"
-	DBConsts_SDataSetReadOnly,	"Cannot modify a read-only dataset"
-	DBConsts_SNestedDataSetClass,	"Nested dataset must inherit from %s"
-	DBConsts_SExprTermination,	"Filter expression incorrectly terminated"
-	DBConsts_SExprNameError,	"Unterminated field name"
-	DBConsts_SExprStringError,	"Unterminated string constant"
-	DBConsts_SExprInvalidChar,	"Invalid filter expression character: '%s'"
-	DBConsts_SExprNoLParen,	"'(' expected but %s found"
-	DBConsts_SFieldNameMissing,	"Field name missing"
-	DBConsts_SDuplicateFieldName,	"Duplicate field name '%s'"
-	DBConsts_SFieldNotFound,	"Field '%s' not found"
-	DBConsts_SFieldAccessError,	"Cannot access field '%s' as type %s"
-	DBConsts_SFieldValueError,	"Invalid value for field '%s'"
-	DBConsts_SFieldRangeError,	"%g is not a valid value for field '%s'. The allowed range is %g to %g"
-	DBConsts_SBcdFieldRangeError,	"%s is not a valid value for field '%s'. The allowed range is %s to %s"
-	DBConsts_SInvalidIntegerValue,	"'%s' is not a valid integer value for field '%s'"
-	DBConsts_SInvalidBoolValue,	"'%s' is not a valid boolean value for field '%s'"
-	DBConsts_SInvalidFloatValue,	"'%s' is not a valid floating point value for field '%s'"
-	DBConsts_SFieldTypeMismatch,	"Type mismatch for field '%s', expecting: %s actual: %s"
-	DBConsts_SFieldSizeMismatch,	"Size mismatch for field '%s', expecting: %d actual: %d"
-	DBConsts_SInvalidVarByteArray,	"Invalid variant type or size for field '%s'"
-	DBConsts_SFieldOutOfRange,	"Value of field '%s' is out of range"
-	DBConsts_SFieldRequired,	"Field '%s' must have a value"
-	DBConsts_SDataSetMissing,	"Field '%s' has no dataset"
-	RzBorder_sRzColorGradientActiveCaption,	"Gradient Active Caption"
-	RzBorder_sRzColorGradientInactiveCaption,	"Gradient Inactive Caption"
-	RzBorder_sRzColorMenuHighlight,	"Menu Highlight"
-	RzBorder_sRzColorMenuBar,	"Menu Bar"
-	RzPopups_sRzHowToSelectTime,	"Left-click to set Hour\rRight-click to set Minute\r    Ctrl key restricts to %d minutes"
-	RzPopups_sRzCaptionAM,	"AM"
-	RzPopups_sRzCaptionPM,	"PM"
-	RzPopups_sRzCaptionSet,	"Set"
-	RzPopups_sRzCaptionClearBtn,	"Clear"
-	RzPopups_sRzCaptionTodayBtn,	"Today"
-	RzPopups_sRzDateMax,	"Date exceeds maximum of %s"
-	RzPopups_sRzDateMin,	"Date is less than minimum of %s"
-	RzPopups_sRzDateRange,	"Date is beyond valid date range"
-	DBConsts_SInvalidFieldSize,	"Invalid field size"
-	DBConsts_SInvalidFieldKind,	"Invalid FieldKind"
-	DBConsts_SUnknownFieldType,	"Field '%s' is of an unknown type"
-	RzBorder_sRzColorActiveBorder,	"Active Border"
-	RzBorder_sRzColorInactiveBorder,	"Inactive Border"
-	RzBorder_sRzColorAppWorkSpace,	"App WorkSpace"
-	RzBorder_sRzColorHighlight,	"Highlight"
-	RzBorder_sRzColorHighlightText,	"Highlight Text"
-	RzBorder_sRzColorBtnFace,	"Button Face"
-	RzBorder_sRzColorBtnShadow,	"Button Shadow"
-	RzBorder_sRzColorGrayText,	"Gray Text"
-	RzBorder_sRzColorBtnText,	"Button Text"
-	RzBorder_sRzColorInactiveCaptionText,	"Inactive Caption Text"
-	RzBorder_sRzColorBtnHighlight,	"Button Highlight"
-	RzBorder_sRzColor3DDkShadow,	"3D Dark Shadow"
-	RzBorder_sRzColor3DLight,	"3D Light"
-	RzBorder_sRzColorInfoText,	"Info Text"
-	RzBorder_sRzColorInfoBk,	"Info Background"
-	RzBorder_sRzColorHotLight,	"Hot Light"
-	RzBorder_sRzColorLightYellow,	"Light Yellow"
-	RzBorder_sRzColorLightGreen,	"Light Green"
-	RzBorder_sRzColorLightTurquoise,	"Light Turquoise"
-	RzBorder_sRzColorPaleBlue,	"Pale Blue"
-	RzBorder_sRzColorLavender,	"Lavender"
-	RzBorder_sRzColorWhite,	"White"
-	RzBorder_sRzColorScrollBar,	"Scroll Bar"
-	RzBorder_sRzColorBackground,	"Background"
-	RzBorder_sRzColorActiveCaption,	"Active Caption"
-	RzBorder_sRzColorInactiveCaption,	"Inactive Caption"
-	RzBorder_sRzColorMenu,	"Menu"
-	RzBorder_sRzColorWindow,	"Window"
-	RzBorder_sRzColorWindowFrame,	"Window Frame"
-	RzBorder_sRzColorMenuText,	"Menu Text"
-	RzBorder_sRzColorWindowText,	"Window Text"
-	RzBorder_sRzColorCaptionText,	"Caption Text"
-	RzBorder_sRzColorLime,	"Lime"
-	RzBorder_sRzColorSeaGreen,	"Sea Green"
-	RzBorder_sRzColorAqua,	"Aqua"
-	RzBorder_sRzColorLightBlue,	"Light Blue"
-	RzBorder_sRzColorViolet,	"Violet"
-	RzBorder_sRzColorGray40,	"Gray 40%"
-	RzBorder_sRzColorPink,	"Pink"
-	RzBorder_sRzColorGold,	"Gold"
-	RzBorder_sRzColorYellow,	"Yellow"
-	RzBorder_sRzColorBrightGreen,	"Bright Green"
-	RzBorder_sRzColorTurquoise,	"Turquoise"
-	RzBorder_sRzColorSkyBlue,	"Sky Blue"
-	RzBorder_sRzColorPlum,	"Plum"
-	RzBorder_sRzColorGray25,	"Gray 25%"
-	RzBorder_sRzColorRose,	"Rose"
-	RzBorder_sRzColorTan,	"Tan"
-	RzBorder_sRzColorOliveGreen,	"Olive Green"
-	RzBorder_sRzColorDarkGreen,	"Dark Green"
-	RzBorder_sRzColorDarkTeal,	"Dark Teal"
-	RzBorder_sRzColorDarkBlue,	"Dark Blue"
-	RzBorder_sRzColorIndigo,	"Indigo"
-	RzBorder_sRzColorGray80,	"Gray 80%"
-	RzBorder_sRzColorDarkRed,	"Dark Red"
-	RzBorder_sRzColorOrange,	"Orange"
-	RzBorder_sRzColorDarkYellow,	"Dark Yellow"
-	RzBorder_sRzColorGreen,	"Green"
-	RzBorder_sRzColorTeal,	"Teal"
-	RzBorder_sRzColorBlue,	"Blue"
-	RzBorder_sRzColorBlueGray,	"Blue Gray"
-	RzBorder_sRzColorGray50,	"Gray 50%"
-	RzBorder_sRzColorRed,	"Red"
-	RzBorder_sRzColorLightOrange,	"Light Orange"
-	IdResourceStringsCore_RSNotConnected,	"Not Connected"
-	IdResourceStringsCore_RSObjectTypeNotSupported,	"Object type not supported."
-	IdResourceStringsCore_RSIdNoDataToRead,	"No data to read."
-	IdResourceStringsCore_RSReadTimeout,	"Read Timeout"
-	IdResourceStringsCore_RSReadLnMaxLineLengthExceeded,	"Max line length exceeded."
-	IdResourceStringsCore_RSConnectTimeout,	"Connect timed out."
-	IdResourceStringsCore_RSAlreadyConnected,	"Already connected."
-	IdResourceStringsCore_RSMaximumNumberOfCaptureLineExceeded,	"Maximum number of line allowed exceeded"
-	IdResourceStringsCore_RSTransparentProxyCannotBind,	"Transparent proxy cannot bind."
-	IdResourceStringsCore_RSTransparentProxyCanNotSupportUDP,	"UDP Not supported by this proxy."
-	IdResourceStringsCore_RSBufferMissingTerminator,	"Buffer terminator must be specified."
-	IdResourceStringsCore_RSBufferInvalidStartPos,	"Buffer start position is invalid."
-	IdResourceStringsCore_RSReplyInvalidCode,	"Reply Code is not valid: %s"
-	IdResourceStringsCore_RSUDPMustUseProxyOpen,	"You must use proxyOpen"
-	RzBorder_sRzColorBlack,	"Black"
-	RzBorder_sRzColorBrown,	"Brown"
-	IdResourceStringsCore_RSSocksUnknownError,	"Unknown socks error."
-	IdResourceStringsCore_RSSocksServerRespondError,	"Socks server did not respond."
-	IdResourceStringsCore_RSSocksAuthMethodError,	"Invalid socks authentication method."
-	IdResourceStringsCore_RSSocksAuthError,	"Authentication error to socks server."
-	IdResourceStringsCore_RSSocksServerGeneralError,	"General SOCKS server failure."
-	IdResourceStringsCore_RSSocksServerPermissionError,	"Connection not allowed by ruleset."
-	IdResourceStringsCore_RSSocksServerNetUnreachableError,	"Network unreachable."
-	IdResourceStringsCore_RSSocksServerHostUnreachableError,	"Host unreachable."
-	IdResourceStringsCore_RSSocksServerConnectionRefusedError,	"Connection refused."
-	IdResourceStringsCore_RSSocksServerTTLExpiredError,	"TTL expired."
-	IdResourceStringsCore_RSSocksServerCommandError,	"Command not supported."
-	IdResourceStringsCore_RSSocksServerAddressError,	"Address type not supported."
-	IdResourceStringsCore_RSInterceptCircularLink,	"%d: Circular links are not allowed"
-	IdResourceStringsCore_RSNotEnoughDataInBuffer,	"Not enough data in buffer."
-	IdResourceStringsCore_RSTooMuchDataInBuffer,	"Too much data in buffer."
-	IdResourceStringsCore_RSFileNotFound,	"File \"%s\" not found"
-	IdResourceStrings_RSCannotSetIPVersionWhenConnected,	"Cannot change IPVersion when connected"
-	IdResourceStrings_RSCannotBindRange,	"Can not bind in port range (%d - %d)"
-	IdResourceStrings_RSConnectionClosedGracefully,	"Connection Closed Gracefully."
-	IdResourceStrings_RSCouldNotBindSocket,	"Could not bind socket. Address and port are already in use."
-	IdResourceStrings_RSInvalidPortRange,	"Invalid Port Range (%d - %d)"
-	IdResourceStrings_RSInvalidServiceName,	"%s is not a valid service."
-	IdResourceStrings_RSIPv6Unavailable,	"IPv6 unavailable"
-	IdResourceStrings_RSInvalidIPv6Address,	"%s is not a valid IPv6 address"
-	IdResourceStrings_RSIPVersionUnsupported,	"The requested IPVersion / Address family is not supported."
-	IdResourceStrings_RSNotAllBytesSent,	"Not all bytes sent."
-	IdResourceStrings_RSPackageSizeTooBig,	"Package Size Too Big."
-	IdResourceStrings_RSSetSizeExceeded,	"Set Size Exceeded."
-	IdResourceStringsCore_RSSocksUDPNotSupported,	"UDP is not support in this SOCKS version."
-	IdResourceStringsCore_RSSocksRequestFailed,	"Request rejected or failed."
-	IdResourceStringsCore_RSSocksRequestServerFailed,	"Request rejected because SOCKS server cannot connect."
-	IdResourceStringsCore_RSSocksRequestIdentFailed,	"Request rejected because the client program and identd report different user-ids."
-	IdResourceStrings_RSStackENOBUFS,	"No buffer space available."
-	IdResourceStrings_RSStackEISCONN,	"Socket is already connected."
-	IdResourceStrings_RSStackENOTCONN,	"Socket is not connected."
-	IdResourceStrings_RSStackESHUTDOWN,	"Cannot send or receive after socket is closed."
-	IdResourceStrings_RSStackETOOMANYREFS,	"Too many references, cannot splice."
-	IdResourceStrings_RSStackETIMEDOUT,	"Connection timed out."
-	IdResourceStrings_RSStackECONNREFUSED,	"Connection refused."
-	IdResourceStrings_RSStackELOOP,	"Too many levels of symbolic links."
-	IdResourceStrings_RSStackENAMETOOLONG,	"File name too long."
-	IdResourceStrings_RSStackEHOSTDOWN,	"Host is down."
-	IdResourceStrings_RSStackEHOSTUNREACH,	"No route to host."
-	IdResourceStrings_RSStackENOTEMPTY,	"Directory not empty"
-	IdResourceStrings_RSStackHOST_NOT_FOUND,	"Host not found."
-	IdResourceStrings_RSStackClassUndefined,	"Stack Class is undefined."
-	IdResourceStrings_RSStackAlreadyCreated,	"Stack already created."
-	IdResourceStrings_RSAntiFreezeOnlyOne,	"Only one TIdAntiFreeze can exist per application."
-	IdResourceStrings_RSStackEDESTADDRREQ,	"Destination address required."
-	IdResourceStrings_RSStackEMSGSIZE,	"Message too long."
-	IdResourceStrings_RSStackEPROTOTYPE,	"Protocol wrong type for socket."
-	IdResourceStrings_RSStackENOPROTOOPT,	"Bad protocol option."
-	IdResourceStrings_RSStackEPROTONOSUPPORT,	"Protocol not supported."
-	IdResourceStrings_RSStackESOCKTNOSUPPORT,	"Socket type not supported."
-	IdResourceStrings_RSStackEOPNOTSUPP,	"Operation not supported on socket."
-	IdResourceStrings_RSStackEPFNOSUPPORT,	"Protocol family not supported."
-	IdResourceStrings_RSStackEAFNOSUPPORT,	"Address family not supported by protocol family."
-	IdResourceStrings_RSStackEADDRINUSE,	"Address already in use."
-	IdResourceStrings_RSStackEADDRNOTAVAIL,	"Cannot assign requested address."
-	IdResourceStrings_RSStackENETDOWN,	"Network is down."
-	IdResourceStrings_RSStackENETUNREACH,	"Network is unreachable."
-	IdResourceStrings_RSStackENETRESET,	"Net dropped connection or reset."
-	IdResourceStrings_RSStackECONNABORTED,	"Software caused connection abort."
-	IdResourceStrings_RSStackECONNRESET,	"Connection reset by peer."
-	IdResourceStrings_RSStatusConnecting,	"Connecting to %s."
-	IdResourceStrings_RSStatusConnected,	"Connected."
-	IdResourceStrings_RSStatusDisconnecting,	"Disconnecting."
-	IdResourceStrings_RSStatusDisconnected,	"Disconnected."
-	IdResourceStrings_RSStatusText,	"%s"
-	IdResourceStrings_RSStackError,	"Socket Error # %d\r\n%s"
-	IdResourceStrings_RSStackEINTR,	"Interrupted system call."
-	IdResourceStrings_RSStackEBADF,	"Bad file number."
-	IdResourceStrings_RSStackEACCES,	"Access denied."
-	IdResourceStrings_RSStackEFAULT,	"Buffer fault."
-	IdResourceStrings_RSStackEINVAL,	"Invalid argument."
-	IdResourceStrings_RSStackEMFILE,	"Too many open files."
-	IdResourceStrings_RSStackEWOULDBLOCK,	"Operation would block."
-	IdResourceStrings_RSStackEINPROGRESS,	"Operation now in progress."
-	IdResourceStrings_RSStackEALREADY,	"Operation already in progress."
-	IdResourceStrings_RSStackENOTSOCK,	"Socket operation on non-socket."
-	RunSock_sExceptionMsg,	"[Exception] TRunSocket::KickUser"
-	RunSock_sKickUserMsg,	"当前登录帐号正在其它位置登录，本机已被强行离线."
-	ComStrs_sTabFailClear,	"Failed to clear tab control"
-	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
-	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
-	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
-	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
-	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
-	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
-	ComStrs_sInvalidOwner,	"Invalid owner"
-	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
-	ComStrs_sInvalidComCtl32,	"This control requires version 4.70 or greater of COMCTL32.DLL"
-	IdResourceStrings_RSWinsockCallError,	"Error on call Winsock2 library function %s"
-	IdResourceStrings_RSWinsockLoadError,	"Error on loading Winsock2 library (%s)"
-	IdResourceStrings_RSWinsockInitializationError,	"Winsock Initialization Error."
-	IdResourceStrings_RSStatusResolving,	"Resolving hostname %s."
-	RunSock_sKickGate,	"服务器未就绪: %s"
+	UsrEngn_sExceptionMsg3,	"[Exception] TUserEngine::ProcessHumans ClosePlayer.Delete"
+	UsrEngn_sExceptionMsg4,	"[Exception] TUserEngine::ProcessHumans RunNotice"
+	UsrEngn_sExceptionMsg5,	"[Exception] TUserEngine::ProcessHumans Human.Operate Code: %d"
+	UsrEngn_sExceptionMsg6,	"[Exception] TUserEngine::ProcessHumans Human.Finalize Code: %d"
 	RunSock_sGateClose,	"游戏网关[%d](%s:%d)已关闭..."
 	RunSock_sExceptionMsg1,	"[Exception] TRunSocket::ExecGateBuffers -> pBuffer"
 	RunSock_sExceptionMsg2,	"[Exception] TRunSocket::ExecGateBuffers -> @pwork,ExecGateMsg "
@@ -1288,10 +1063,122 @@ BEGIN
 	RunSock_sExceptionMsg2,	"[Exception] TRunSocket::CloseUser 2"
 	RunSock_sExceptionMsg4,	"[Exception] TRunSocket::CloseUser 4"
 	RunSock_sExceptionMsg,	"[Exception] TRunSocket::ExecGateMsg %d"
+	RunSock_sExceptionMsg,	"[Exception] TRunSocket::KickUser"
+	ViewKernelInfo_sHandle,	"句柄"
+	ViewKernelInfo_sThreadID,	"线程ID"
+	ViewKernelInfo_sRunTime,	"运行时间"
+	ViewKernelInfo_sRunFlag,	"运行状态"
+	LocalDB_sSQLString,	"select * from StdItems"
+	LocalDB_sSQLString,	"select * from Magic"
+	LocalDB_sSQLString,	"select * from Monster"
+	ActionSpeedConfig_sExitMsg,	"设置已被修改是否不保存设置退出？"
+	ActionSpeedConfig_sExitMsgTitle,	"确认信息"
+	ActionSpeedConfig_sExitMsg,	"是否确认恢复默认设置？"
+	ActionSpeedConfig_sExitMsgTitle,	"确认信息"
+	RunDB_sLoadDBTimeOut,	"[RunDB] 读取人物数据超时... ["
+	RunDB_sSaveDBTimeOut,	"[RunDB] 保存人物数据超时... ["
+	FrnEngn_sExceptionMsg,	"[Exception] TFrontEngine::Execute"
+	RunSock_sGateOpen,	"游戏网关[%d](%s:%d)已打开..."
+	RunSock_sKickGate,	"服务器未就绪: %s"
+	bdeconst_SSessionActive,	"Cannot perform this operation on an active session"
+	bdeconst_SHandleError,	"Error creating cursor handle"
+	bdeconst_SNoReferenceTableName,	"ReferenceTableName not specified for field '%s'"
+	bdeconst_SEmptySQLStatement,	"No SQL statement available"
+	bdeconst_SNoParameterValue,	"No value for parameter '%s'"
+	bdeconst_SLoginError,	"Cannot connect to database '%s'"
+	bdeconst_SInitError,	"An error occurred while attempting to initialize the Borland Database Engine (error $%.4x)"
+	bdeconst_SIDAPILangID,	"0009"
+	bdeconst_SBDEError,	"BDE error $%.4x"
+	bdeconst_SNoDataSetField,	"Missing DataSetField property"
+	bdeconst_SNoCachedUpdates,	"Not in cached update mode"
+	bdeconst_SNoFieldAccess,	"Cannot access field '%s' in a filter"
+	bdeconst_SUntitled,	"Untitled Application"
+	bdeconst_SLocalTransDirty,	"The transaction isolation level must be dirty read for local databases"
+	FrmShop_sText,	"%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d"
+	ViewKernelInfo_sNo,	"序号"
+	DBConsts_SInvalidSqlTimeStamp,	"Invalid SQL date/time values"
+	ComConst_SOleError,	"OLE error %.8x"
+	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
+	ComConst_SVarNotObject,	"Variant does not reference an automation object"
+	ComConst_STooManyParams,	"Dispatch methods do not support more than 64 parameters"
+	bdeconst_SAutoSessionExclusive,	"Cannot enable AutoSessionName property with more than one session on a form or data-module"
+	bdeconst_SAutoSessionExists,	"Cannot add a session to the form or data-module while session '%s' has AutoSessionName enabled"
+	bdeconst_SAutoSessionActive,	"Cannot modify SessionName while AutoSessionName is enabled"
+	bdeconst_SDuplicateDatabaseName,	"Duplicate database name '%s'"
+	bdeconst_SDuplicateSessionName,	"Duplicate session name '%s'"
+	bdeconst_SInvalidSessionName,	"Invalid session name %s"
+	bdeconst_SDatabaseNameMissing,	"Database name missing"
+	bdeconst_SSessionNameMissing,	"Session name missing"
+	bdeconst_SDatabaseOpen,	"Cannot perform this operation on an open database"
+	bdeconst_SDatabaseClosed,	"Cannot perform this operation on a closed database"
+	bdeconst_SDatabaseHandleSet,	"Database handle owned by a different session"
+	DBConsts_SInvalidKeywordUse,	"Invalid use of keyword"
+	DBConsts_STextFalse,	"False"
+	DBConsts_STextTrue,	"True"
+	DBConsts_SParameterNotFound,	"Parameter '%s' not found"
+	DBConsts_SInvalidVersion,	"Unable to load bind parameters"
+	DBConsts_SBadFieldType,	"Field '%s' is of an unsupported type"
+	DBConsts_SProviderSQLNotSupported,	"SQL not supported: %s"
+	DBConsts_SProviderExecuteNotSupported,	"Execute not supported: %s"
+	DBConsts_SExprNoAggOnCalcs,	"Field '%s' is not the correct type of calculated field to be used in an aggregate, use an internalcalc"
+	DBConsts_SDataSetUnidirectional,	"Operation not allowed on a unidirectional dataset"
+	DBConsts_SUnassignedVar,	"Unassigned variant value"
+	DBConsts_SRecordNotFound,	"Record not found"
+	DBConsts_SBcdOverflow,	"BCD overflow"
+	DBConsts_SInvalidBcdValue,	"%s is not a valid BCD value"
+	DBConsts_SInvalidFormatType,	"Invalid format type for BCD"
+	DBConsts_SCouldNotParseTimeStamp,	"Could not parse SQL TimeStamp string"
+	DBConsts_SExprNoLParen,	"'(' expected but %s found"
+	DBConsts_SExprNoRParen,	"')' expected but %s found"
+	DBConsts_SExprNoRParenOrComma,	"')' or ',' expected but %s found"
+	DBConsts_SExprExpected,	"Expression expected but %s found"
+	DBConsts_SExprBadField,	"Field '%s' cannot be used in a filter expression"
+	DBConsts_SExprBadNullTest,	"NULL only allowed with '=' and '<>'"
+	DBConsts_SExprRangeError,	"Constant out of range"
+	DBConsts_SExprIncorrect,	"Incorrectly formed filter expression"
+	DBConsts_SExprNothing,	"nothing"
+	DBConsts_SExprTypeMis,	"Type mismatch in expression"
+	DBConsts_SExprBadScope,	"Operation cannot mix aggregate value with record-varying value"
+	DBConsts_SExprNoArith,	"Arithmetic in filter expressions not supported"
+	DBConsts_SExprNotAgg,	"Expression is not an aggregate expression"
+	DBConsts_SExprBadConst,	"Constant is not correct type %s"
+	DBConsts_SExprNoAggFilter,	"Aggregate expressions not allowed in filters"
+	DBConsts_SExprEmptyInList,	"IN predicate list may not be empty"
+	DBConsts_SDataSetMissing,	"Field '%s' has no dataset"
+	DBConsts_SInvalidCalcType,	"Field '%s' cannot be a calculated or lookup field"
+	DBConsts_SFieldReadOnly,	"Field '%s' cannot be modified"
+	DBConsts_SNotIndexField,	"Field '%s' is not indexed and cannot be modified"
+	DBConsts_SCircularDataLink,	"Circular datalinks are not allowed"
+	DBConsts_SLookupInfoError,	"Lookup information for field '%s' is incomplete"
+	DBConsts_SDataSourceChange,	"DataSource cannot be changed"
+	DBConsts_SDataSetOpen,	"Cannot perform this operation on an open dataset"
+	DBConsts_SNotEditing,	"Dataset not in edit or insert mode"
+	DBConsts_SDataSetClosed,	"Cannot perform this operation on a closed dataset"
+	DBConsts_SDataSetReadOnly,	"Cannot modify a read-only dataset"
+	DBConsts_SNestedDataSetClass,	"Nested dataset must inherit from %s"
+	DBConsts_SExprTermination,	"Filter expression incorrectly terminated"
+	DBConsts_SExprNameError,	"Unterminated field name"
+	DBConsts_SExprStringError,	"Unterminated string constant"
+	DBConsts_SExprInvalidChar,	"Invalid filter expression character: '%s'"
+	DBConsts_SUnknownFieldType,	"Field '%s' is of an unknown type"
+	DBConsts_SFieldNameMissing,	"Field name missing"
+	DBConsts_SDuplicateFieldName,	"Duplicate field name '%s'"
+	DBConsts_SFieldNotFound,	"Field '%s' not found"
+	DBConsts_SFieldAccessError,	"Cannot access field '%s' as type %s"
+	DBConsts_SFieldValueError,	"Invalid value for field '%s'"
+	DBConsts_SFieldRangeError,	"%g is not a valid value for field '%s'. The allowed range is %g to %g"
+	DBConsts_SBcdFieldRangeError,	"%s is not a valid value for field '%s'. The allowed range is %s to %s"
+	DBConsts_SInvalidIntegerValue,	"'%s' is not a valid integer value for field '%s'"
+	DBConsts_SInvalidBoolValue,	"'%s' is not a valid boolean value for field '%s'"
+	DBConsts_SInvalidFloatValue,	"'%s' is not a valid floating point value for field '%s'"
+	DBConsts_SFieldTypeMismatch,	"Type mismatch for field '%s', expecting: %s actual: %s"
+	DBConsts_SFieldSizeMismatch,	"Size mismatch for field '%s', expecting: %d actual: %d"
+	DBConsts_SInvalidVarByteArray,	"Invalid variant type or size for field '%s'"
+	DBConsts_SFieldOutOfRange,	"Value of field '%s' is out of range"
+	DBConsts_SFieldRequired,	"Field '%s' must have a value"
+	Castle_sWarStartMsg,	"[%s 攻城战已经开始]"
 	Castle_sWallWarStop,	"[%s 攻城战已经结束]"
 	Castle_sMsg,	"%d年%d月%d日"
-	Magic_sDisableInSafeZoneFireCross,	"安全区不允许使用..."
-	Magic_sDisableInSafeZoneFireCross1,	"当前地图不允许使用..."
 	IdSrvClient_sFormatMsg,	"(%d/%s)"
 	IdSrvClient_sFormatMsg,	"(%d/%s)"
 	IdSrvClient_sFormatMsg,	"(%d/%s)"
@@ -1303,87 +1190,200 @@ BEGIN
 	IdSrvClient_sExceptionMsg,	"[Exception] FrmIdSoc::DelSession %d"
 	IdSrvClient_sGetFailMsg,	"[非法登录] 全局会话验证失败(%s/%s/%d)"
 	IdSrvClient_sExceptionMsg,	"[Exception] FrmIdSoc::GetCancelAdmissionA"
-	RunSock_sGateOpen,	"游戏网关[%d](%s:%d)已打开..."
-	M2Share_g_sGamecommandMakeItemNameNotFound,	"%s 物品名称不正确."
-	M2Share_g_sGamecommandSuperMakeHelpMsg,	"身上没指定物品."
-	M2Share_g_sGameCommandViewWhisperHelpMsg,	" 人物名称"
-	M2Share_g_sGameCommandViewWhisperMsg1,	"已停止侦听%s的私聊信息..."
-	M2Share_g_sGameCommandViewWhisperMsg2,	"正在侦听%s的私聊信息..."
-	M2Share_g_sGameCommandReAliveHelpMsg,	" 人物名称"
-	M2Share_g_sGameCommandReAliveMsg,	"%s 已获重生."
-	M2Share_g_sGameCommandChangeJobHelpMsg,	" 人物名称 职业类型(Warr Wizard Taos)"
-	M2Share_g_sGameCommandChangeJobMsg,	"%s 的职业更改成功。"
-	M2Share_g_sGameCommandChangeJobHumanMsg,	"职业更改成功。"
+	DBConsts_SInvalidFieldSize,	"Invalid field size"
+	DBConsts_SInvalidFieldKind,	"Invalid FieldKind"
+	IdResourceStringsCore_RSReadLnMaxLineLengthExceeded,	"Max line length exceeded."
+	IdResourceStringsCore_RSConnectTimeout,	"Connect timed out."
+	IdResourceStringsCore_RSAlreadyConnected,	"Already connected."
+	IdResourceStringsCore_RSMaximumNumberOfCaptureLineExceeded,	"Maximum number of line allowed exceeded"
+	IdResourceStringsCore_RSTransparentProxyCannotBind,	"Transparent proxy cannot bind."
+	IdResourceStringsCore_RSTransparentProxyCanNotSupportUDP,	"UDP Not supported by this proxy."
+	IdResourceStringsCore_RSBufferMissingTerminator,	"Buffer terminator must be specified."
+	IdResourceStringsCore_RSBufferInvalidStartPos,	"Buffer start position is invalid."
+	IdResourceStringsCore_RSReplyInvalidCode,	"Reply Code is not valid: %s"
+	IdResourceStringsCore_RSUDPMustUseProxyOpen,	"You must use proxyOpen"
+	ObjMon_sExceptionMsg,	"[Exception] TSnowfieldKavassMon.Attack Code: %d"
 	Castle_sWarStartMsg,	"[%s 攻城战已经开始]"
 	Castle_sWarStopTimeMsg,	"[%s 攻城战离结束还有%d分钟]"
 	Castle_sExceptionMsg,	"[Exception] TUserCastle::Run"
 	Castle_sGetCastleMsg,	"[%s 被(#6FFFF/8#6%s#5)占领]"
 	Castle_sWarStartMsg,	"[%s 攻城战已经开始]"
-	Castle_sWarStartMsg,	"[%s 攻城战已经开始]"
-	M2Share_g_sGameCommandFreePKHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandFreePKHumanMsg,	"你的PK值已经被清除..."
-	M2Share_g_sGameCommandFreePKMsg,	"%s的PK值已经被清除..."
-	M2Share_g_sGameCommandPKPointHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandPKPointMsg,	"%s的PK点数为:%d"
-	M2Share_g_sGameCommandIncPkPointHelpMsg,	"人物名称 PK点数"
-	M2Share_g_sGameCommandIncPkPointAddPointMsg,	"%s的PK值已增加%d点..."
-	M2Share_g_sGameCommandIncPkPointDecPointMsg,	"%s的PK值已减少%d点..."
-	M2Share_g_sGameCommandHumanLocalHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandHumanLocalMsg,	"%s来自:%s"
-	M2Share_g_sGameCommandPrvMsgHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandPrvMsgUnLimitMsg,	"%s 已从禁止私聊列表中删除..."
-	M2Share_g_sGameCommandPrvMsgLimitMsg,	"%s 已被加入禁止私聊列表..."
-	M2Share_g_sGamecommandMakeHelpMsg,	" 物品名称  数量"
-	M2Share_g_sGamecommandMakeInCastleWarRange,	"攻城区域，禁止使用此功能."
-	M2Share_g_sGamecommandMakeInSafeZoneRange,	"非安全区，禁止使用此功能."
-	M2Share_g_sGameCommandSbkGoldHelpMsg,	"城堡名称 控制符(=、-、+) 金币数(1-100000000)"
-	M2Share_g_sGameCommandSbkGoldCastleNotFoundMsg,	"城堡%s未找到."
-	M2Share_g_sGameCommandSbkGoldShowMsg,	"%s的金币数为: %d 今天收入: %d"
-	M2Share_g_sGameCommandRecallHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandReGotoHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandShowHumanFlagHelpMsg,	"人物名称 标识号"
-	M2Share_g_sGameCommandShowHumanFlagONMsg,	"%s: [%d] = ON"
-	M2Share_g_sGameCommandShowHumanFlagOFFMsg,	"%s: [%d] = OFF"
-	M2Share_g_sGameCommandMobHelpMsg,	"怪物名称 数量 等级 五行(1-5)"
-	M2Share_g_sGameCommandMobMsg,	"怪物名称不正确或其它未问题."
-	M2Share_g_sGameCommandMobNpcHelpMsg,	"NPC名称 脚本文件名 外形(数字) 属沙城(0,1)"
-	M2Share_g_sGameCommandDelNpcMsg,	"命令使用方法不正确，必须与NPC面对面，才能使用此命令."
-	M2Share_g_sGameCommandRecallMobHelpMsg,	"怪物名称 数量 等级"
-	M2Share_g_sGameCommandLotteryTicketMsg,	"已中彩票数:%d 未中彩票数:%d 一等奖:%d 二等奖:%d 三等奖:%d 四等奖:%d 五等奖:%d 六等奖:%d "
-	M2Share_g_sGameCommandReloadLineNoticeSuccessMsg,	"重新加载公告设置信息完成."
-	M2Share_g_sGameCommandReloadLineNoticeFailMsg,	"重新加载公告设置信息失败."
-	M2Share_g_sGameCommandShutupHelpMsg,	"人物名称  时间长度(分钟)"
-	M2Share_g_sGameCommandShutupHumanMsg,	"%s 已被禁言%d分钟"
-	M2Share_g_sGameCommandGamePointHelpMsg,	"人物名称 控制符(+,-,=) 游戏点数(1-100000000)"
-	M2Share_g_sGameCommandCreditPointHelpMsg,	"人物名称 控制符(+,-,=) 声望点数(0-255)"
-	M2Share_g_sGameCommandCreditPointHumanMsg,	"你的声望点已增加%d点，当前总声望点数为%d点。"
-	M2Share_g_sGameCommandCreditPointGMMsg,	"%s的声望点已增加%d点，当前总声望点数为%d点。"
-	M2Share_g_sGameCommandGameGoldHumanMsg,	"你的%s已增加%d，当前拥有%d%s。"
-	M2Share_g_sGameCommandGameGoldGMMsg,	"%s的%s已增加%d，当前拥有%d%s。"
-	M2Share_g_sGameCommandMapInfoMsg,	"地图名称: %s(%s)"
-	M2Share_g_sGameCommandMapInfoSizeMsg,	"地图大小: X(%d) Y(%d)"
-	M2Share_g_sGameCommandMapInfoCountMsg,	"地图人数: %d"
-	M2Share_g_sGameCommandShutupReleaseHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandShutupReleaseCanSendMsg,	"你已经恢复聊天功能."
-	M2Share_g_sGameCommandShutupReleaseHumanCanSendMsg,	"%s 已经恢复聊天。"
-	M2Share_g_sGameCommandShutupListIsNullMsg,	"禁言列表为空."
-	M2Share_g_sGameCommandLevelConsoleMsg,	"[等级调整] %s (%d -> %d)"
-	M2Share_g_sGameCommandPermissionTooLow,	"权限不够."
-	M2Share_g_sGameCommandParamUnKnow,	"命令格式: @%s %s"
-	M2Share_g_sGameCommandMoveHelpMsg,	"地图号"
-	M2Share_g_sGameCommandPositionMoveHelpMsg,	"地图号 座标X 座标Y"
-	M2Share_g_sGameCommandPositionMoveCanotMoveToMap,	"无法移动到地图: %s X:%s Y:%s"
-	M2Share_g_sGameCommandInfoHelpMsg,	"人物名称"
-	M2Share_g_sNowNotOnLineOrOnOtherServer,	"%s 现在不在线，或在其它服务器上."
-	M2Share_g_sGameCommandMobCountHelpMsg,	"地图号"
-	M2Share_g_sGameCommandMobCountMapNotFound,	"指定的地图不存在."
-	M2Share_g_sGameCommandMobCountMonsterCount,	"怪物数量：%d"
-	M2Share_g_sGameCommandHumanCountHelpMsg,	"地图号"
-	M2Share_g_sGameCommandKickHumanHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandTingHelpMsg,	"人物名称"
-	M2Share_g_sGameCommandSuperTingHelpMsg,	"人物名称 范围(0-10)"
-	M2Share_g_sGameCommandMapMoveHelpMsg,	"源地图  目标地图"
-	M2Share_g_sGameCommandMapMoveMapNotFound,	"地图%s不存在."
+	IdResourceStringsCore_RSSocksServerGeneralError,	"General SOCKS server failure."
+	IdResourceStringsCore_RSSocksServerPermissionError,	"Connection not allowed by ruleset."
+	IdResourceStringsCore_RSSocksServerNetUnreachableError,	"Network unreachable."
+	IdResourceStringsCore_RSSocksServerHostUnreachableError,	"Host unreachable."
+	IdResourceStringsCore_RSSocksServerConnectionRefusedError,	"Connection refused."
+	IdResourceStringsCore_RSSocksServerTTLExpiredError,	"TTL expired."
+	IdResourceStringsCore_RSSocksServerCommandError,	"Command not supported."
+	IdResourceStringsCore_RSSocksServerAddressError,	"Address type not supported."
+	IdResourceStringsCore_RSInterceptCircularLink,	"%d: Circular links are not allowed"
+	IdResourceStringsCore_RSNotEnoughDataInBuffer,	"Not enough data in buffer."
+	IdResourceStringsCore_RSTooMuchDataInBuffer,	"Too much data in buffer."
+	IdResourceStringsCore_RSFileNotFound,	"File \"%s\" not found"
+	IdResourceStringsCore_RSNotConnected,	"Not Connected"
+	IdResourceStringsCore_RSObjectTypeNotSupported,	"Object type not supported."
+	IdResourceStringsCore_RSIdNoDataToRead,	"No data to read."
+	IdResourceStringsCore_RSReadTimeout,	"Read Timeout"
+	IdResourceStrings_RSInvalidPortRange,	"Invalid Port Range (%d - %d)"
+	IdResourceStrings_RSInvalidServiceName,	"%s is not a valid service."
+	IdResourceStrings_RSIPv6Unavailable,	"IPv6 unavailable"
+	IdResourceStrings_RSInvalidIPv6Address,	"%s is not a valid IPv6 address"
+	IdResourceStrings_RSIPVersionUnsupported,	"The requested IPVersion / Address family is not supported."
+	IdResourceStrings_RSNotAllBytesSent,	"Not all bytes sent."
+	IdResourceStrings_RSPackageSizeTooBig,	"Package Size Too Big."
+	IdResourceStrings_RSSetSizeExceeded,	"Set Size Exceeded."
+	IdResourceStringsCore_RSSocksUDPNotSupported,	"UDP is not support in this SOCKS version."
+	IdResourceStringsCore_RSSocksRequestFailed,	"Request rejected or failed."
+	IdResourceStringsCore_RSSocksRequestServerFailed,	"Request rejected because SOCKS server cannot connect."
+	IdResourceStringsCore_RSSocksRequestIdentFailed,	"Request rejected because the client program and identd report different user-ids."
+	IdResourceStringsCore_RSSocksUnknownError,	"Unknown socks error."
+	IdResourceStringsCore_RSSocksServerRespondError,	"Socks server did not respond."
+	IdResourceStringsCore_RSSocksAuthMethodError,	"Invalid socks authentication method."
+	IdResourceStringsCore_RSSocksAuthError,	"Authentication error to socks server."
+	IdResourceStrings_RSStackETOOMANYREFS,	"Too many references, cannot splice."
+	IdResourceStrings_RSStackETIMEDOUT,	"Connection timed out."
+	IdResourceStrings_RSStackECONNREFUSED,	"Connection refused."
+	IdResourceStrings_RSStackELOOP,	"Too many levels of symbolic links."
+	IdResourceStrings_RSStackENAMETOOLONG,	"File name too long."
+	IdResourceStrings_RSStackEHOSTDOWN,	"Host is down."
+	IdResourceStrings_RSStackEHOSTUNREACH,	"No route to host."
+	IdResourceStrings_RSStackENOTEMPTY,	"Directory not empty"
+	IdResourceStrings_RSStackHOST_NOT_FOUND,	"Host not found."
+	IdResourceStrings_RSStackClassUndefined,	"Stack Class is undefined."
+	IdResourceStrings_RSStackAlreadyCreated,	"Stack already created."
+	IdResourceStrings_RSAntiFreezeOnlyOne,	"Only one TIdAntiFreeze can exist per application."
+	IdResourceStrings_RSCannotSetIPVersionWhenConnected,	"Cannot change IPVersion when connected"
+	IdResourceStrings_RSCannotBindRange,	"Can not bind in port range (%d - %d)"
+	IdResourceStrings_RSConnectionClosedGracefully,	"Connection Closed Gracefully."
+	IdResourceStrings_RSCouldNotBindSocket,	"Could not bind socket. Address and port are already in use."
+	IdResourceStrings_RSStackEPROTONOSUPPORT,	"Protocol not supported."
+	IdResourceStrings_RSStackESOCKTNOSUPPORT,	"Socket type not supported."
+	IdResourceStrings_RSStackEOPNOTSUPP,	"Operation not supported on socket."
+	IdResourceStrings_RSStackEPFNOSUPPORT,	"Protocol family not supported."
+	IdResourceStrings_RSStackEAFNOSUPPORT,	"Address family not supported by protocol family."
+	IdResourceStrings_RSStackEADDRINUSE,	"Address already in use."
+	IdResourceStrings_RSStackEADDRNOTAVAIL,	"Cannot assign requested address."
+	IdResourceStrings_RSStackENETDOWN,	"Network is down."
+	IdResourceStrings_RSStackENETUNREACH,	"Network is unreachable."
+	IdResourceStrings_RSStackENETRESET,	"Net dropped connection or reset."
+	IdResourceStrings_RSStackECONNABORTED,	"Software caused connection abort."
+	IdResourceStrings_RSStackECONNRESET,	"Connection reset by peer."
+	IdResourceStrings_RSStackENOBUFS,	"No buffer space available."
+	IdResourceStrings_RSStackEISCONN,	"Socket is already connected."
+	IdResourceStrings_RSStackENOTCONN,	"Socket is not connected."
+	IdResourceStrings_RSStackESHUTDOWN,	"Cannot send or receive after socket is closed."
+	IdResourceStrings_RSStatusText,	"%s"
+	IdResourceStrings_RSStackError,	"Socket Error # %d\r\n%s"
+	IdResourceStrings_RSStackEINTR,	"Interrupted system call."
+	IdResourceStrings_RSStackEBADF,	"Bad file number."
+	IdResourceStrings_RSStackEACCES,	"Access denied."
+	IdResourceStrings_RSStackEFAULT,	"Buffer fault."
+	IdResourceStrings_RSStackEINVAL,	"Invalid argument."
+	IdResourceStrings_RSStackEMFILE,	"Too many open files."
+	IdResourceStrings_RSStackEWOULDBLOCK,	"Operation would block."
+	IdResourceStrings_RSStackEINPROGRESS,	"Operation now in progress."
+	IdResourceStrings_RSStackEALREADY,	"Operation already in progress."
+	IdResourceStrings_RSStackENOTSOCK,	"Socket operation on non-socket."
+	IdResourceStrings_RSStackEDESTADDRREQ,	"Destination address required."
+	IdResourceStrings_RSStackEMSGSIZE,	"Message too long."
+	IdResourceStrings_RSStackEPROTOTYPE,	"Protocol wrong type for socket."
+	IdResourceStrings_RSStackENOPROTOOPT,	"Bad protocol option."
+	RzPopups_sRzCaptionAM,	"AM"
+	RzPopups_sRzCaptionPM,	"PM"
+	RzPopups_sRzCaptionSet,	"Set"
+	RzPopups_sRzCaptionClearBtn,	"Clear"
+	RzPopups_sRzCaptionTodayBtn,	"Today"
+	RzPopups_sRzDateMax,	"Date exceeds maximum of %s"
+	RzPopups_sRzDateMin,	"Date is less than minimum of %s"
+	RzPopups_sRzDateRange,	"Date is beyond valid date range"
+	IdResourceStrings_RSWinsockCallError,	"Error on call Winsock2 library function %s"
+	IdResourceStrings_RSWinsockLoadError,	"Error on loading Winsock2 library (%s)"
+	IdResourceStrings_RSWinsockInitializationError,	"Winsock Initialization Error."
+	IdResourceStrings_RSStatusResolving,	"Resolving hostname %s."
+	IdResourceStrings_RSStatusConnecting,	"Connecting to %s."
+	IdResourceStrings_RSStatusConnected,	"Connected."
+	IdResourceStrings_RSStatusDisconnecting,	"Disconnecting."
+	IdResourceStrings_RSStatusDisconnected,	"Disconnected."
+	RzBorder_sRzColorBtnFace,	"Button Face"
+	RzBorder_sRzColorBtnShadow,	"Button Shadow"
+	RzBorder_sRzColorGrayText,	"Gray Text"
+	RzBorder_sRzColorBtnText,	"Button Text"
+	RzBorder_sRzColorInactiveCaptionText,	"Inactive Caption Text"
+	RzBorder_sRzColorBtnHighlight,	"Button Highlight"
+	RzBorder_sRzColor3DDkShadow,	"3D Dark Shadow"
+	RzBorder_sRzColor3DLight,	"3D Light"
+	RzBorder_sRzColorInfoText,	"Info Text"
+	RzBorder_sRzColorInfoBk,	"Info Background"
+	RzBorder_sRzColorHotLight,	"Hot Light"
+	RzBorder_sRzColorGradientActiveCaption,	"Gradient Active Caption"
+	RzBorder_sRzColorGradientInactiveCaption,	"Gradient Inactive Caption"
+	RzBorder_sRzColorMenuHighlight,	"Menu Highlight"
+	RzBorder_sRzColorMenuBar,	"Menu Bar"
+	RzPopups_sRzHowToSelectTime,	"Left-click to set Hour\rRight-click to set Minute\r    Ctrl key restricts to %d minutes"
+	RzBorder_sRzColorWhite,	"White"
+	RzBorder_sRzColorScrollBar,	"Scroll Bar"
+	RzBorder_sRzColorBackground,	"Background"
+	RzBorder_sRzColorActiveCaption,	"Active Caption"
+	RzBorder_sRzColorInactiveCaption,	"Inactive Caption"
+	RzBorder_sRzColorMenu,	"Menu"
+	RzBorder_sRzColorWindow,	"Window"
+	RzBorder_sRzColorWindowFrame,	"Window Frame"
+	RzBorder_sRzColorMenuText,	"Menu Text"
+	RzBorder_sRzColorWindowText,	"Window Text"
+	RzBorder_sRzColorCaptionText,	"Caption Text"
+	RzBorder_sRzColorActiveBorder,	"Active Border"
+	RzBorder_sRzColorInactiveBorder,	"Inactive Border"
+	RzBorder_sRzColorAppWorkSpace,	"App WorkSpace"
+	RzBorder_sRzColorHighlight,	"Highlight"
+	RzBorder_sRzColorHighlightText,	"Highlight Text"
+	RzBorder_sRzColorGray40,	"Gray 40%"
+	RzBorder_sRzColorPink,	"Pink"
+	RzBorder_sRzColorGold,	"Gold"
+	RzBorder_sRzColorYellow,	"Yellow"
+	RzBorder_sRzColorBrightGreen,	"Bright Green"
+	RzBorder_sRzColorTurquoise,	"Turquoise"
+	RzBorder_sRzColorSkyBlue,	"Sky Blue"
+	RzBorder_sRzColorPlum,	"Plum"
+	RzBorder_sRzColorGray25,	"Gray 25%"
+	RzBorder_sRzColorRose,	"Rose"
+	RzBorder_sRzColorTan,	"Tan"
+	RzBorder_sRzColorLightYellow,	"Light Yellow"
+	RzBorder_sRzColorLightGreen,	"Light Green"
+	RzBorder_sRzColorLightTurquoise,	"Light Turquoise"
+	RzBorder_sRzColorPaleBlue,	"Pale Blue"
+	RzBorder_sRzColorLavender,	"Lavender"
+	RzBorder_sRzColorGray80,	"Gray 80%"
+	RzBorder_sRzColorDarkRed,	"Dark Red"
+	RzBorder_sRzColorOrange,	"Orange"
+	RzBorder_sRzColorDarkYellow,	"Dark Yellow"
+	RzBorder_sRzColorGreen,	"Green"
+	RzBorder_sRzColorTeal,	"Teal"
+	RzBorder_sRzColorBlue,	"Blue"
+	RzBorder_sRzColorBlueGray,	"Blue Gray"
+	RzBorder_sRzColorGray50,	"Gray 50%"
+	RzBorder_sRzColorRed,	"Red"
+	RzBorder_sRzColorLightOrange,	"Light Orange"
+	RzBorder_sRzColorLime,	"Lime"
+	RzBorder_sRzColorSeaGreen,	"Sea Green"
+	RzBorder_sRzColorAqua,	"Aqua"
+	RzBorder_sRzColorLightBlue,	"Light Blue"
+	RzBorder_sRzColorViolet,	"Violet"
+	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
+	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
+	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
+	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
+	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
+	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
+	ComStrs_sInvalidOwner,	"Invalid owner"
+	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	ComStrs_sInvalidComCtl32,	"This control requires version 4.70 or greater of COMCTL32.DLL"
+	RzBorder_sRzColorBlack,	"Black"
+	RzBorder_sRzColorBrown,	"Brown"
+	RzBorder_sRzColorOliveGreen,	"Olive Green"
+	RzBorder_sRzColorDarkGreen,	"Dark Green"
+	RzBorder_sRzColorDarkTeal,	"Dark Teal"
+	RzBorder_sRzColorDarkBlue,	"Dark Blue"
+	RzBorder_sRzColorIndigo,	"Indigo"
 	ExtCtrls_clNameInactiveCaption,	"Inactive Caption"
 	ExtCtrls_clNameInactiveCaptionText,	"Inactive Caption Text"
 	ExtCtrls_clNameInfoBk,	"Info Background"
@@ -1399,7 +1399,7 @@ BEGIN
 	ExtCtrls_clNameWindow,	"Window Background"
 	ExtCtrls_clNameWindowFrame,	"Window Frame"
 	ExtCtrls_clNameWindowText,	"Window Text"
-	M2Share_g_sHumanDieEvent,	"人物死亡事件"
+	ComStrs_sTabFailClear,	"Failed to clear tab control"
 	ExtCtrls_clNameActiveCaption,	"Active Caption"
 	ExtCtrls_clNameAppWorkSpace,	"Application Workspace"
 	ExtCtrls_clNameBackground,	"Background"
@@ -1706,38 +1706,40 @@ BEGIN
 	SysConst_SEndOfFile,	"Read beyond end of file"
 END
 
-/* d:\program files\codegear\rad studio\5.0\lib\Controls.res */
-/* d:\program files\codegear\rad studio\5.0\lib\Buttons.res */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\IdSrvClient.dfm */
-/* d:\program files\codegear\rad studio\5.0\lib\ExtDlgs.res */
-/* D:\Program Files\Raize\RC4\Lib\BDS2006\RzCmboBx.res */
-/* D:\Program Files\Raize\RC4\Lib\BDS2006\RzCommonBitmaps.res */
-/* D:\Program Files\Raize\RC4\Lib\BDS2006\RzCommonCursors.res */
-/* D:\Program Files\Raize\RC4\Lib\BDS2006\RzToolbarForm.DFM */
-/* D:\Program Files\Raize\RC4\Lib\BDS2006\RzSplit.res */
-/* d:\program files\codegear\rad studio\5.0\lib\SPIN.RES */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\FSrvValue.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\GeneralConfig.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ActionSpeedConfig.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\GameConfig.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\FunctionConfig.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ViewSession.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\HumanInfo.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ViewOnlineHuman.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ViewLevel.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ViewList.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\OnlineMsg.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ViewKernelInfo.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ConfigMerchant.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ItemSet.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\ConfigMonGen.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\GameCommand.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\MonsterConfig.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\AttackSabukWallConfig.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\CastleManage.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\EngineRegister.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\FrmShop.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\OnlineEmail.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\svMain.dfm */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\M2Server.res */
-/* D:\我的文档\Delphi\我的代码\Legend of Mir2\GameOfMir\M2Engine\M2Server.drf */
+/* c:\program files (x86)\codegear\rad studio\5.0\lib\Controls.res */
+/* c:\program files (x86)\codegear\rad studio\5.0\lib\Buttons.res */
+/* C:\Program Files (x86)\Raize\RC5\Lib\BDS2006\RzCmboBx.res */
+/* c:\program files (x86)\codegear\rad studio\5.0\lib\ExtDlgs.res */
+/* C:\Program Files (x86)\Raize\RC5\Lib\BDS2006\RzCommonBitmaps.res */
+/* C:\Program Files (x86)\Raize\RC5\Lib\BDS2006\RzCommonCursors.res */
+/* C:\Program Files (x86)\Raize\RC5\Lib\BDS2006\RzToolbarForm.dfm */
+/* C:\Program Files (x86)\Raize\RC5\Lib\BDS2006\RzSplit.res */
+/* IdSrvClient.dfm */
+/* c:\program files (x86)\codegear\rad studio\5.0\lib\SPIN.RES */
+/* EditCompoundInfo.dfm */
+/* ViewCompoundInfo.dfm */
+/* OnlineEmail.dfm */
+/* FrmShop.dfm */
+/* EngineRegister.dfm */
+/* AttackSabukWallConfig.dfm */
+/* CastleManage.dfm */
+/* MonsterConfig.dfm */
+/* GameCommand.dfm */
+/* ConfigMonGen.dfm */
+/* ItemSet.dfm */
+/* ConfigMerchant.dfm */
+/* ViewKernelInfo.dfm */
+/* OnlineMsg.dfm */
+/* ViewList.dfm */
+/* ViewLevel.dfm */
+/* HumanInfo.dfm */
+/* ViewOnlineHuman.dfm */
+/* ViewSession.dfm */
+/* FunctionConfig.dfm */
+/* ActionSpeedConfig.dfm */
+/* GameConfig.dfm */
+/* GeneralConfig.dfm */
+/* FSrvValue.dfm */
+/* svMain.dfm */
+/* H:\github\mir2-applem2\GameOfMir\M2Engine\M2Server.res */
+/* H:\github\mir2-applem2\GameOfMir\M2Engine\M2Server.drf */

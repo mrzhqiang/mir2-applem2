@@ -1,7 +1,7 @@
 object FrmMain: TFrmMain
   Left = 549
   Top = 307
-  ClientHeight = 319
+  ClientHeight = 339
   ClientWidth = 435
   Color = clBtnFace
   Font.Charset = GB2312_CHARSET
@@ -19,15 +19,16 @@ object FrmMain: TFrmMain
     Left = 0
     Top = 235
     Width = 435
-    Height = 84
+    Height = 104
     Orientation = orVertical
     Position = 55
-    Percent = 66
+    Percent = 53
     SplitterWidth = 2
     Align = alClient
     BorderShadow = clBtnFace
     Color = 16744448
     TabOrder = 0
+    ExplicitHeight = 84
     BarSize = (
       0
       55
@@ -40,13 +41,14 @@ object FrmMain: TFrmMain
       Left = 0
       Top = 0
       Width = 435
-      Height = 27
+      Height = 47
       Orientation = orVertical
       Position = 0
       Percent = 0
       SplitterWidth = 0
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 27
       BarSize = (
         0
         0
@@ -82,7 +84,7 @@ object FrmMain: TFrmMain
     Left = 0
     Top = 235
     Width = 435
-    Height = 84
+    Height = 104
     Align = alClient
     ColCount = 7
     Ctl3D = True
@@ -92,6 +94,7 @@ object FrmMain: TFrmMain
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect]
     ParentCtl3D = False
     TabOrder = 2
+    ExplicitHeight = 84
     ColWidths = (
       28
       110
