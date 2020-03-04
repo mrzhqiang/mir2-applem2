@@ -417,7 +417,9 @@ type
     procedure GenRunGateConfig();
     procedure GenPlugTopConfig();
     procedure StartGame();
+    procedure CancelStartGame();
     procedure StopGame();
+    procedure CancelStopGame();
     procedure MainOutMessage(sMsg: string);
     procedure MainOutDataListMessage(sMsg: string);
     procedure ProcessDBServerMsg(wIdent: Word; sData: string);
@@ -1886,50 +1888,37 @@ end;
 procedure TfrmMain.ButtonStartGameClick(Sender: TObject);
 begin
   SetWindowPos(Self.Handle, Self.Handle, Self.Left, Self.Top, Self.Width, Self.Height, $40);
+  // 根据当前 启动状态 选定不同的执行逻辑
+  // 0 default 开始启动
+  // 1 starting 可以中断启动，跳到运行状态
+  // 2 running 可以停止
+  // 3 stopping 可以中断停止，回到运行状态
   case m_nStartStatus of
-    0: begin
-        if Application.MessageBox('确认启动游戏服务器 ?',
-          '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
-          //if g_boGetDataListOK then begin
-            StartGame();
-          //end;
+    0:begin
+        if Application.MessageBox('确认启动游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
+        begin
+          StartGame();
         end;
       end;
-    1: begin
-        if Application.MessageBox('确认中断启动游戏服务器 ?',
-          '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
-          TimerStartGame.Enabled := False;
-          m_nStartStatus := 2;
-          ButtonStartGame.Caption := g_sButtonStopGame;
+    1:begin
+        if Application.MessageBox('确认中断启动游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
+        begin
+          CancelStartGame();
         end;
       end;
-    2: begin
-        if Application.MessageBox('确认停止游戏服务器 ?',
-          '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
+    2:begin
+        if Application.MessageBox('确认停止游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
+        begin
           StopGame();
         end;
       end;
-    3: begin
-        if Application.MessageBox('确认中断停止游戏服务器 ?',
-          '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then begin
-          TimerStopGame.Enabled := False;
-          m_nStartStatus := 2;
-          ButtonStartGame.Caption := g_sButtonStopGame;
+    3:begin
+        if Application.MessageBox('确认中断停止游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
+        begin
+          CancelStopGame();
         end;
       end;
   end;
-  {
-  if CreateProcess(nil,
-                   PChar(sProgamFile),
-                   nil,
-                   nil,
-                   False,
-                   IDLE_PRIORITY_CLASS,
-                   nil,
-                   nil,
-                   StartUpInfo,
-                   ProcessInfo) then begin
-  }
 end;
 
 function TfrmMain.SendDataListData(wIdent: Word; sData: string): Boolean;
@@ -2099,6 +2088,13 @@ begin
   TimerStartGame.Enabled := True;
 end;
 
+procedure TfrmMain.CancelStartGame;
+begin
+  TimerStartGame.Enabled := False;
+  m_nStartStatus := 2;
+  ButtonStartGame.Caption := g_sButtonStopGame;
+end;
+
 procedure TfrmMain.StopGame;
 begin
   ButtonStartGame.Caption := g_sButtonStopStopGame;
@@ -2107,6 +2103,13 @@ begin
   TimerStopGame.Enabled := True;
   m_boGateStop := False;
   m_nStartStatus := 3;
+end;
+
+procedure TfrmMain.CancelStopGame;
+begin
+  TimerStopGame.Enabled := False;
+  m_nStartStatus := 2;
+  ButtonStartGame.Caption := g_sButtonStopGame;
 end;
 
 procedure TfrmMain.TimerStartGameTimer(Sender: TObject);
