@@ -250,21 +250,6 @@ type
     btDataListList: TButton;
     Label27: TLabel;
     LabelLog: TLabel;
-    CheckDBServer: TCheckBox;
-    CheckM2Server: TCheckBox;
-    CheckRunGate1: TCheckBox;
-    CheckRunGate7: TCheckBox;
-    CheckRunGate5: TCheckBox;
-    CheckRunGate3: TCheckBox;
-    CheckLoginSrv: TCheckBox;
-    CheckLogServer: TCheckBox;
-    CheckRunGate2: TCheckBox;
-    CheckRunGate4: TCheckBox;
-    CheckRunGate6: TCheckBox;
-    CheckRunGate8: TCheckBox;
-    CheckSelGate2: TCheckBox;
-    CheckLoginGate: TCheckBox;
-    CheckSelGate1: TCheckBox;
     CheckBoxAutoRunBak: TCheckBox;
     pm1: TPopupMenu;
     N1: TMenuItem;
@@ -378,20 +363,11 @@ type
     procedure CheckBoxSelGate1Click(Sender: TObject);
     procedure CheckBoxboRunGate_GetStart2Click(Sender: TObject);
     procedure btDataListListClick(Sender: TObject);
-    procedure CheckDBServerClick(Sender: TObject);
-    procedure CheckM2ServerClick(Sender: TObject);
-    procedure CheckLoginSrvClick(Sender: TObject);
-    procedure CheckLogServerClick(Sender: TObject);
-    procedure CheckLoginGateClick(Sender: TObject);
-    procedure CheckSelGate1Click(Sender: TObject);
-    procedure CheckSelGate2Click(Sender: TObject);
-    procedure CheckRunGate1Click(Sender: TObject);
     procedure ComboBoxRunStatusChange(Sender: TObject);
     procedure CheckBoxAutoRunBakClick(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure CheckBoxIP2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure GroupBox5Click(Sender: TObject);
     procedure CheckBoxPlugTopClick(Sender: TObject);
     procedure SpinEditAllPortAddChange(Sender: TObject);
     procedure ButtonAllPortAddClick(Sender: TObject);
@@ -1078,73 +1054,29 @@ begin
   end;
 end;
 
-procedure TfrmMain.GroupBox5Click(Sender: TObject);
-begin
-
-end;
-
-// TfrmMain 是主窗体，继承自 TForm（窗体类）
-// 其中 FormCreate 表示当窗体创建时会自动调用的方法
-// 类似 android 中 activity 的 onCreated 方法
-// 或者 java 中的 main 方法
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  // 布尔类型，表示当窗体创建和初始化时，无法进行其他操作，保证窗体正常显示
   m_boOpen := False;
   // 这里是将 ProcessMessage 方法赋给应用的 OnMessage，用于托管所有消息
   // 而 ProcessMessage 则实现为 遇到 WM_SENDPROCMSG 类型的消息，直接拦截它
   Application.OnMessage := ProcessMessage;
-  // 主页面 切换到服务端控制页面
   PageControl1.ActivePageIndex := 0;
-  // 配置向导页面 切换到第一步（基本设置）
   PageControl3.ActivePageIndex := 0;
-  // 启动状态：
-  // 0 初始状态，可以启动服务器；
-  // 1 启动中，可以中断启动；
-  // 2 已经中断启动，可以停止服务器；
-  // 3 停止中，可以中断停止；一旦停止完毕，则回归初始状态。
   m_nStartStatus := 0;
-  // 备份功能状态：
-  // 0 启动；
-  // 1 停止。
   m_nBackStartStatus := 0;
-  // 备忘录组件实例，清理一下内容
-//  MemoLog.Clear;
-  //mmoDataListLog.Clear;
-  // 创建一个字符串列表，好像是引擎更新数据之类的东西，【没有意义】
-//  g_GetDatList := TStringList.Create;
-  // 获得系统自启动以来的毫秒值，用于数据更新检查，【没有意义】
-//  m_dwRefTick := GetTickCount;
-  // 从控制台配置文件 Config.ini 中加载参数
+  MemoLog.Clear;
   LoadConfig();
-  // 从备份配置文件 BackupList.ini 中加载参数
   LoadBackList();
-  // 目测是将备份文件列入视图组件中，比如有多少备份文件，就显示多少
   RefBackListToView();
-  // 清理某个列表组件，目前不知道具体是什么
   ListViewDataList.Clear;
-  // 如果启动服务失败，那就直接退出，一般不可能出现这种情况
-  // 逻辑是：显示正在启动，获得系统启动时长，开启计时器，显示启动完毕
   if not StartService() then
     Exit;
-  // 根据 Config.ini 配置文件中的参数，初始化游戏控制台的相关组件状态
   RefGameConsole();
-  // 调试标签不可见
   TabSheetDebug.TabVisible := False;
-  // 数据列表标签不可见
   tsDataList.TabVisible := False;
-  {if g_boShowDebugTab then begin
-    TabSheetDebug.TabVisible := True;
-    TimerCheckDebug.Enabled := True;
-  end;    }
-  // 复选框，自动运行备份，默认选中状态：False
   CheckBoxAutoRunBak.Checked := g_boAutoRunBak;
-  // 完成窗体创建，解锁 参数调整
   m_boOpen := True;
-  // 如果自动运行备份系统可用，那么就根据 备份功能状态 进行启动或停止
   if g_boAutoRunBak then ButtonBackStartClick(ButtonBackStart);
-  //MainOutMessage('游戏控制器启动成功...');
-//  SetWindowPos(Self.Handle,HWND_TOPMOST,Self.Left,Self.Top,Self.Width,Self.Height,$40);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -1894,25 +1826,25 @@ begin
   // 2 running 可以停止
   // 3 stopping 可以中断停止，回到运行状态
   case m_nStartStatus of
-    0:begin
+    0: begin
         if Application.MessageBox('确认启动游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
         begin
           StartGame();
         end;
       end;
-    1:begin
+    1: begin
         if Application.MessageBox('确认中断启动游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
         begin
           CancelStartGame();
         end;
       end;
-    2:begin
+    2: begin
         if Application.MessageBox('确认停止游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
         begin
           StopGame();
         end;
       end;
-    3:begin
+    3: begin
         if Application.MessageBox('确认中断停止游戏服务器 ?', '确认信息', MB_YESNO + MB_ICONQUESTION) = mrYes then
         begin
           CancelStopGame();
@@ -1963,22 +1895,18 @@ end;
 
 procedure TfrmMain.StartGame;
 var
-  //  nRetCode: Integer;
   I: Integer;
 begin
-// GetTickCount 表示自系统启动以来，经历的毫秒数，long类型
+  // GetTickCount 表示自系统启动以来经历的毫秒数
   m_dwRunTick := GetTickCount;
-  // 用 #0 填充 DBServer 的 SizeOf TProgram 数量
+  // 分配 DBServer 的内存
   FillChar(DBServer, SizeOf(TProgram), #0);
-  // 是否启动程序（有些是可选的，用户可以不启动它们，比如日志服务器）
+  // 是否启动程序（有些程序和插件是可选的，可以不启动，比如日志服务器）
   DBServer.boGetStart := g_Config.DBServer.GetStart;
-  // 程序发生异常时，是否自动重启（待确认）
+  // fixme 这个字段无用，未来将删除
   DBServer.boReStart := True;
-  // 服务端目录+数据库服务器目录
   DBServer.sDirectory := g_sGameDirectory + 'DBServer\';
-  // 要启动的程序文件名
   DBServer.sProgramFile := g_Config.DBServer.ProgramFile;
-  // 程序启动后，所处的屏幕坐标
   DBServer.nMainFormX := g_Config.DBServer.MainFormX;
   DBServer.nMainFormY := g_Config.DBServer.MainFormY;
 
@@ -2020,7 +1948,7 @@ begin
     if I in [2, 3, 6, 7] then
       RunGate[I].nMainFormY := g_Config.RunGate.MainFormY + 187
     else
-      RunGate[I].nMainFormY := g_Config.RunGate.MainFormY; //187
+      RunGate[I].nMainFormY := g_Config.RunGate.MainFormY;
   end;
 
   FillChar(SelGate, SizeOf(TProgram), #0);
@@ -2063,28 +1991,8 @@ begin
   PlugTop.nMainFormX := g_Config.PlugTop.MainFormX;
   PlugTop.nMainFormY := g_Config.PlugTop.MainFormY;
 
-
-  // 控制台首页的复选框按钮状态
-  CheckDBServer.Checked := DBServer.boGetStart;
-  CheckLoginSrv.Checked := LoginServer.boGetStart;
-  CheckM2Server.Checked := M2Server.boGetStart;
-  CheckLogServer.Checked := LogServer.boGetStart;
-  CheckLoginGate.Checked := LoginGate.boGetStart;
-  CheckSelGate1.Checked := SelGate.boGetStart;
-  CheckSelGate2.Checked := SelGate1.boGetStart;
-  CheckRunGate1.Checked := RunGate[0].boGetStart;
-  CheckRunGate2.Checked := RunGate[1].boGetStart;
-  CheckRunGate3.Checked := RunGate[2].boGetStart;
-  CheckRunGate4.Checked := RunGate[3].boGetStart;
-  CheckRunGate5.Checked := RunGate[4].boGetStart;
-  CheckRunGate6.Checked := RunGate[5].boGetStart;
-  CheckRunGate7.Checked := RunGate[6].boGetStart;
-  CheckRunGate8.Checked := RunGate[7].boGetStart;
-  // 控制台启动按钮的文字标题
   ButtonStartGame.Caption := g_sButtonStopStartGame;
-  // 启动状态为启动中
   m_nStartStatus := 1;
-  // 启动计时器开始运行
   TimerStartGame.Enabled := True;
 end;
 
@@ -2113,13 +2021,12 @@ begin
 end;
 
 procedure TfrmMain.TimerStartGameTimer(Sender: TObject);
-// 获取运行网关启动状态的函数
   function GetStartRunGate: Boolean;
   var
     I: Integer;
   begin
     Result := False;
-    // 如果从低到高找到允许启动的运行网关中，处于正在启动状态的某一个，则返回真
+    // 如果还有任意一个正在启动的网关，那么返回 true
     for I := Low(RunGate) to High(RunGate) do begin
       if RunGate[I].boGetStart and (RunGate[I].btStartStatus = 1) then begin
         Result := True;
@@ -2140,20 +2047,17 @@ begin
           if nRetCode = 0 then begin
             DBServer.btStartStatus := 1;
             DBServer.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, DBServer.ProcessInfo.dwProcessId);
-          end
-          else begin
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        DBServer.btStartStatus:=2;
+      1: begin
+          // 启动中，需要等待
           Exit;
         end;
     end;
   end;
   if LoginServer.boGetStart then begin
-    case LoginServer.btStartStatus of //
+    case LoginServer.btStartStatus of
       0: begin
           nRetCode := RunProgram(LoginServer, IntToStr(Self.Handle), 0);
           if nRetCode = 0 then begin
@@ -2162,19 +2066,17 @@ begin
           end
           else begin
             LoginServer.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        LoginServer.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
   end;
 
   if LogServer.boGetStart then begin
-    case LogServer.btStartStatus of //
+    case LogServer.btStartStatus of
       0: begin
           nRetCode := RunProgram(LogServer, IntToStr(Self.Handle), 0);
           if nRetCode = 0 then begin
@@ -2183,19 +2085,17 @@ begin
           end
           else begin
             LogServer.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        LogServer.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
   end;
 
   if M2Server.boGetStart then begin
-    case M2Server.btStartStatus of //
+    case M2Server.btStartStatus of
       0: begin
           nRetCode := RunProgram(M2Server, IntToStr(Self.Handle), 0);
           if nRetCode = 0 then begin
@@ -2204,19 +2104,17 @@ begin
           end
           else begin
             M2Server.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        M2Server.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
   end;
-
+  // 运行网关正在启动，需要等待全部启动完毕
   if GetStartRunGate then
-    Exit; //有网关正在启动等待
+    Exit;
     
   boStartRunGateOK := True;
   for I := Low(RunGate) to High(RunGate) do begin
@@ -2236,11 +2134,12 @@ begin
       end;
     end;
   end;
+  // 运行网关是否启动完毕
   if not boStartRunGateOK then
     Exit;
 
   if SelGate.boGetStart then begin
-    case SelGate.btStartStatus of //
+    case SelGate.btStartStatus of
       0: begin
           GenMutSelGateConfig(0);
           nRetCode := RunProgram(SelGate, IntToStr(Self.Handle), 0);
@@ -2250,19 +2149,17 @@ begin
           end
           else begin
             SelGate.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        SelGate.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
   end;
 
   if SelGate1.boGetStart then begin
-    case SelGate1.btStartStatus of //
+    case SelGate1.btStartStatus of
       0: begin
           GenMutSelGateConfig(1);
           nRetCode := RunProgram(SelGate1, IntToStr(Self.Handle), 0);
@@ -2272,16 +2169,15 @@ begin
           end
           else begin
             SelGate1.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        SelGate1.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
   end;
+  // 这里是游戏启动模式的判断
   if ComboBoxRunStatus.ItemIndex = 1 then begin
     if (GetTickCount - m_dwRunTick) < m_dwRunTime then
       exit;
@@ -2291,8 +2187,9 @@ begin
     if (wHour <> m_btHour) or (wMin <> m_btMinute) then
       exit;
   end;
+  // 以登录网关作为游戏是否启动的依据，也就是唯一对外的入口是否打开
   if LoginGate.boGetStart then begin
-    case LoginGate.btStartStatus of //
+    case LoginGate.btStartStatus of
       0: begin
           GenMutLoginGateConfig(0);
           nRetCode := RunProgram(LoginGate, IntToStr(Self.Handle), 0);
@@ -2302,18 +2199,16 @@ begin
           end
           else begin
             LoginGate.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        LoginGate.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
   end;
   if LoginGate2.boGetStart then begin
-    case LoginGate2.btStartStatus of //
+    case LoginGate2.btStartStatus of
       0: begin
           GenMutLoginGateConfig(1);
           nRetCode := RunProgram(LoginGate2, IntToStr(Self.Handle), 0);
@@ -2323,12 +2218,10 @@ begin
           end
           else begin
             LoginGate2.btStartStatus := 9;
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        LoginGate2.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
@@ -2340,14 +2233,10 @@ begin
           if nRetCode = 0 then begin
             PlugTop.btStartStatus := 1;
             PlugTop.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, PlugTop.ProcessInfo.dwProcessId);
-          end
-          else begin
-            //ShowMessage(IntToStr(nRetCode));
           end;
           Exit;
         end;
-      1: begin //如果状态为1 则还没启动完成
-          //        PlugTop.btStartStatus:=2;
+      1: begin
           Exit;
         end;
     end;
@@ -2356,9 +2245,7 @@ begin
   TimerStartGame.Enabled := False;
   TimerCheckRun.Enabled := True;
   ButtonStartGame.Caption := g_sButtonStopGame;
-  //  ButtonStartGame.Enabled:=True;
   m_nStartStatus := 2;
-  //  SetWindowPos(Self.Handle,HWND_TOPMOST,Self.Left,Self.Top,Self.Width,Self.Height,$40);
 end;
 
 procedure TfrmMain.TimerStopGameTimer(Sender: TObject);
@@ -2367,6 +2254,7 @@ procedure TfrmMain.TimerStopGameTimer(Sender: TObject);
     I: Integer;
   begin
     Result := False;
+    // 任意一个开启的运行网关，如果是已启动或者正在关闭状态，返回 true
     for I := Low(RunGate) to High(RunGate) do begin
       if RunGate[I].boGetStart and (RunGate[I].btStartStatus in [2, 3]) then begin
         Result := True;
@@ -2376,9 +2264,30 @@ procedure TfrmMain.TimerStopGameTimer(Sender: TObject);
   end;
 var
   dwExitCode: LongWord;
-  //  nRetCode: Integer;
   I: Integer;
 begin
+  if PlugTop.boGetStart and (PlugTop.btStartStatus in [2, 3]) then begin
+    GetExitCodeProcess(PlugTop.ProcessHandle, dwExitCode);
+    if dwExitCode = STILL_ACTIVE then begin
+      if PlugTop.btStartStatus = 3 then begin
+        if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
+          StopProgram(PlugTop, 0);
+          MainOutMessage('正常关闭超时，排行榜插件已被强行停止...');
+        end;
+        Exit;
+      end;
+      SendProgramMsg(PlugTop.MainFormHandle, GS_QUIT, '');
+      g_dwStopTick := GetTickCount();
+      PlugTop.btStartStatus := 3;
+      Exit;
+    end
+    else begin
+      CloseHandle(PlugTop.ProcessHandle);
+      PlugTop.btStartStatus := 0;
+      MainOutMessage('排行榜插件已停止...');
+    end;
+  end;
+
   if LoginGate.boGetStart and (LoginGate.btStartStatus in [2, 3]) then begin
     GetExitCodeProcess(LoginGate.ProcessHandle, dwExitCode);
     if dwExitCode = STILL_ACTIVE then begin
@@ -2387,7 +2296,7 @@ begin
           StopProgram(LoginGate, 0);
           MainOutMessage('正常关闭超时，登录网关一已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(LoginGate.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2409,7 +2318,7 @@ begin
           StopProgram(LoginGate2, 0);
           MainOutMessage('正常关闭超时，登录网关二已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(LoginGate2.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2431,7 +2340,7 @@ begin
           StopProgram(SelGate, 0);
           MainOutMessage('正常关闭超时，角色网关一已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(SelGate.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2453,7 +2362,7 @@ begin
           StopProgram(SelGate1, 0);
           MainOutMessage('正常关闭超时，角色网关二已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(SelGate1.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2493,7 +2402,7 @@ begin
                 MainOutMessage('正常关闭超时，游戏网关八已被强行停止...');
             end;
           end;
-          break; //如果正在关闭则等待，不处理下面
+          break;
         end;
         SendProgramMsg(RunGate[I].MainFormHandle, GS_QUIT, '');
         g_dwStopTick := GetTickCount();
@@ -2535,11 +2444,8 @@ begin
     GetExitCodeProcess(M2Server.ProcessHandle, dwExitCode);
     if dwExitCode = STILL_ACTIVE then begin
       if M2Server.btStartStatus = 3 then begin
-        {if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
-          StopProgram(M2Server, 1000);
-          MainOutMessage('正常关闭超时，游戏引擎主程序已被强行停止...');
-        end;    }
-        Exit; //如果正在关闭则等待，不处理下面
+        // todo 有必要的话，应该检测是否超时
+        Exit;
       end;
       SendProgramMsg(M2Server.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2561,7 +2467,7 @@ begin
           StopProgram(LoginServer, 1000);
           MainOutMessage('正常关闭超时，登录服务器已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(LoginServer.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2583,7 +2489,7 @@ begin
           StopProgram(LogServer, 0);
           MainOutMessage('正常关闭超时，游戏日志服务器已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(LogServer.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2605,7 +2511,7 @@ begin
           StopProgram(DBServer, 0);
           MainOutMessage('正常关闭超时，游戏数据库服务器已被强行停止...');
         end;
-        Exit; //如果正在关闭则等待，不处理下面
+        Exit;
       end;
       SendProgramMsg(DBServer.MainFormHandle, GS_QUIT, '');
       g_dwStopTick := GetTickCount();
@@ -2616,28 +2522,6 @@ begin
       CloseHandle(DBServer.ProcessHandle);
       DBServer.btStartStatus := 0;
       MainOutMessage('游戏数据库服务器已停止...');
-    end;
-  end;
-
-  if PlugTop.boGetStart and (PlugTop.btStartStatus in [2, 3]) then begin
-    GetExitCodeProcess(PlugTop.ProcessHandle, dwExitCode);
-    if dwExitCode = STILL_ACTIVE then begin
-      if PlugTop.btStartStatus = 3 then begin
-        if GetTickCount - g_dwStopTick > g_dwStopTimeOut then begin
-          StopProgram(PlugTop, 0);
-          MainOutMessage('正常关闭超时，排行榜插件已被强行停止...');
-        end;
-        Exit; //如果正在关闭则等待，不处理下面
-      end;
-      SendProgramMsg(PlugTop.MainFormHandle, GS_QUIT, '');
-      g_dwStopTick := GetTickCount();
-      PlugTop.btStartStatus := 3;
-      Exit;
-    end
-    else begin
-      CloseHandle(PlugTop.ProcessHandle);
-      PlugTop.btStartStatus := 0;
-      MainOutMessage('排行榜插件已停止...');
     end;
   end;
 
@@ -2782,10 +2666,10 @@ begin
       nRetCode := RunProgram(LoginGate, IntToStr(Self.Handle), 0);
       if nRetCode = 0 then begin
         CloseHandle(LoginGate.ProcessHandle);
+        LoginGate.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginGate.ProcessInfo.dwProcessId);
         if LoginGate.MainFormHandle <> 0 then
           MainOutMessage('登录网关一异常关闭，已被重新启动...');
         LoginGate.MainFormHandle := 0;
-        LoginGate.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginGate.ProcessInfo.dwProcessId);
       end;
     end;
   end;
@@ -2797,10 +2681,10 @@ begin
       nRetCode := RunProgram(LoginGate2, IntToStr(Self.Handle), 0);
       if nRetCode = 0 then begin
         CloseHandle(LoginGate2.ProcessHandle);
+        LoginGate2.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginGate2.ProcessInfo.dwProcessId);
         if LoginGate2.MainFormHandle <> 0 then
           MainOutMessage('登录网关二异常关闭，已被重新启动...');
         LoginGate2.MainFormHandle := 0;
-        LoginGate2.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, LoginGate2.ProcessInfo.dwProcessId);
 
       end;
     end;
@@ -2810,7 +2694,6 @@ begin
     GetExitCodeProcess(PlugTop.ProcessHandle, dwExitCode);
     if (dwExitCode <> STILL_ACTIVE) or (PlugTop.ProcessHandle = 0) then begin
       nRetCode := RunProgram(PlugTop, IntToStr(Self.Handle), 0);
-
       if nRetCode = 0 then begin
         CloseHandle(PlugTop.ProcessHandle);
         PlugTop.ProcessHandle := OpenProcess(PROCESS_ALL_ACCESS, False, PlugTop.ProcessInfo.dwProcessId);
@@ -3269,50 +3152,6 @@ begin
   g_Config.SelGate.GetStart1 := CheckBoxSelGate.Checked;
 end;
 
-procedure TfrmMain.CheckDBServerClick(Sender: TObject);
-begin
-  DBServer.boGetStart := CheckDBServer.Checked;
-end;
-
-procedure TfrmMain.CheckLoginGateClick(Sender: TObject);
-begin
-  LoginGate.boGetStart := CheckLoginGate.Checked;
-end;
-
-procedure TfrmMain.CheckLoginSrvClick(Sender: TObject);
-begin
-  LoginServer.boGetStart := CheckLoginSrv.Checked;
-end;
-
-procedure TfrmMain.CheckLogServerClick(Sender: TObject);
-begin
-  LogServer.boGetStart := CheckLogServer.Checked;
-end;
-
-procedure TfrmMain.CheckM2ServerClick(Sender: TObject);
-begin
-  M2Server.boGetStart := CheckM2Server.Checked;
-end;
-
-procedure TfrmMain.CheckRunGate1Click(Sender: TObject);
-begin
-  with Sender as TCheckBox do begin
-    if Tag in [Low(RunGate)..High(RunGate)] then begin
-      RunGate[Tag].boGetStart := Checked;
-    end;
-  end;
-end;
-
-procedure TfrmMain.CheckSelGate1Click(Sender: TObject);
-begin
-  SelGate.boGetStart := CheckSelGate1.Checked;
-end;
-
-procedure TfrmMain.CheckSelGate2Click(Sender: TObject);
-begin
-  SelGate1.boGetStart := CheckSelGate2.Checked;
-end;
-
 procedure TfrmMain.CheckBoxPlugTopClick(Sender: TObject);
 begin
   g_Config.PlugTop.GetStart := CheckBoxPlugTop.Checked;
@@ -3501,7 +3340,7 @@ end;
 
 procedure TfrmMain.MemoLogChange(Sender: TObject);
 begin
-  if MemoLog.Lines.Count > 200 then
+  if MemoLog.Lines.Count > 2000 then
     MemoLog.Clear;
 end;
 

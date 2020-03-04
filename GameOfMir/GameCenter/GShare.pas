@@ -77,23 +77,17 @@ const
 type
   pTProgram = ^TProgram;
   TProgram = packed record
-    // 是否允许启动
     boGetStart: Boolean;
-    // 程序异常停止，是否重新启动
     boReStart: Boolean;
     // 0,1,2,3 未启动，正在启动，已启动, 正在关闭
     btStartStatus: Byte;
-    // 程序文件
     sProgramFile: string[50];
-    // 目录
     sDirectory: string[100];
-    // 进程信息
     ProcessInfo: TProcessInformation;
-    // 进程处理
+    // 进程句柄，用来获取进程实例，鱼儿上钩咯
     ProcessHandle: THandle;
-    // 主窗口处理
+    // 窗口句柄
     MainFormHandle: THandle;
-    // 窗口位置
     nMainFormX: Integer;
     nMainFormY: Integer;
   end;
@@ -347,19 +341,11 @@ begin
     nil, //lpEnvironment,
     PChar(sCurDirectory), //lpCurrentDirectory,
     StartupInfo, //lpStartupInfo,
-    ProgramInfo.ProcessInfo) then begin //lpProcessInformation
-
+    ProgramInfo.ProcessInfo) then //lpProcessInformation
+  begin
     Result := GetLastError();
   end;
   Sleep(dwWaitTime);
-{var
-  sCommandLine: string;
-begin
-  Result := 0;
-  sCommandLine := format('.\Execute\%s %s %d %d 1', [ProgramInfo.sProgramFile, sHandle, ProgramInfo.nMainFormX, ProgramInfo.nMainFormY]);
-  if not ((ABuffer <> nil) and MemExecute(ABuffer^, nLen, sCommandLine, ProgramInfo.ProcessInfo)) then
-    Result := GetLastError();
-  Sleep(dwWaitTime);   }
 end;
 
 function StopProgram(var ProgramInfo: TProgram; dwWaitTime: LongWord): Integer;
