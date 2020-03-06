@@ -25,15 +25,11 @@ object frmMain: TfrmMain
     Top = 8
     Width = 520
     Height = 360
-    ActivePage = ControlTab
+    ActivePage = ConfigTab
     HotTrack = True
     TabOrder = 0
     object ControlTab: TTabSheet
       Caption = #25511#21046#20013#24515
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object ControlGroup: TGroupBox
         Left = 8
         Top = 3
@@ -281,16 +277,12 @@ object frmMain: TfrmMain
     object ConfigTab: TTabSheet
       Caption = #37197#32622#21521#23548
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl3: TPageControl
         Left = 0
         Top = 0
         Width = 512
         Height = 332
-        ActivePage = TabSheet4
+        ActivePage = TabSheet12
         Align = alClient
         TabOrder = 0
         TabPosition = tpBottom
@@ -816,13 +808,6 @@ object frmMain: TfrmMain
               Height = 57
               Caption = #24320#21551#32593#20851#25968#37327
               TabOrder = 1
-              object Label23: TLabel
-                Left = 8
-                Top = 20
-                Width = 30
-                Height = 12
-                Caption = #25968#37327':'
-              end
               object CheckBoxboRunGate_GetStart1: TCheckBox
                 Left = 8
                 Top = 16
@@ -1638,10 +1623,6 @@ object frmMain: TfrmMain
     object TabSheet3: TTabSheet
       Caption = #25968#25454#22791#20221
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LabelBackMsg: TLabel
         Left = 384
         Top = 304

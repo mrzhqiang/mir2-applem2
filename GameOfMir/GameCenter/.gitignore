@@ -1,0 +1,5 @@
+.idea
+__history
+*.dcu
+*.local
+*.iml

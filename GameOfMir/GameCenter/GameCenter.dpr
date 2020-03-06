@@ -11,7 +11,6 @@ uses
   EDcode in '..\Common\EDcode.pas',
   SEShare in '..\Common\SEShare.pas',
   MD5Unit in '..\Common\MD5Unit.pas',
-  TextForm in 'TextForm.pas' {FormText},
   MemRun in '..\MyCommon\MemRun.pas';
 
 {$R *.res}
@@ -23,7 +22,6 @@ begin
   Application.HintHidePause := 15000;
   Application.Title := 'GameCenter';
   Application.CreateForm(TfrmMain, frmMain);
-  //Application.CreateForm(TFormText, FormText);
   Application.Run;
 end.
 
