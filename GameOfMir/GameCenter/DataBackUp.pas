@@ -170,12 +170,10 @@ var
   sLineText: string;
   sNewDir: string;
   I: Integer;
-  //boStartBackUp: Boolean;
 begin
   try
     if not m_boBackUp then
       Exit;
-//    boStartBackUp := False;
     case m_btBackUpMode of
       0: begin
           case m_wStatus of
@@ -191,24 +189,24 @@ begin
                   if m_nErrorCount < 2 then begin
                     sDest := m_sDestDir + DateTime_ToStr + '\';
                     if not DirectoryExists(sDest) then
-                      ForceDirectories(sDest); //创建目录
+                      ForceDirectories(sDest);
                     sDest := sDest + GetLastDirName + '.ZIP';
                     if not ZipFile(sDest, m_sSourceDir) then
                       Inc(m_nErrorCount);
                   end;
                 end
                 else begin
-                // 搜索任何文件，加入到备份列表中
+                  // 搜索任何文件，加入到备份列表中
                   DoSearchFile(m_sSourceDir);
                   sDest := m_sDestDir + DateTime_ToStr + '\';
                   for I := 0 to m_BackUpFileList.Count - 1 do begin
                     if m_boStopSearch then
                       break;
                     sLineText := m_BackUpFileList.Strings[I];
-                    sLineText := AnsiReplaceText(sLineText, m_sSourceDir, sDest); //新的文件路径
+                    sLineText := AnsiReplaceText(sLineText, m_sSourceDir, sDest);
                     sNewDir := GetDirName(sLineText);
                     if not DirectoryExists(sNewDir) then
-                      ForceDirectories(sNewDir); //创建目录
+                      ForceDirectories(sNewDir);
                     CopyFile(m_BackUpFileList.Strings[I], sLineText);
                   end;
                 end;
@@ -236,7 +234,7 @@ begin
                     if m_nErrorCount < 2 then begin
                       sDest := m_sDestDir + DateTime_ToStr + '\';
                       if not DirectoryExists(sDest) then
-                        ForceDirectories(sDest); //创建目录
+                        ForceDirectories(sDest);
                       sDest := sDest + GetLastDirName + '.ZIP';
                       if not ZipFile(sDest, m_sSourceDir) then
                         Inc(m_nErrorCount);
@@ -249,10 +247,10 @@ begin
                       if m_boStopSearch then
                         break;
                       sLineText := m_BackUpFileList.Strings[I];
-                      sLineText := AnsiReplaceText(sLineText, m_sSourceDir, sDest); //新的文件路径
+                      sLineText := AnsiReplaceText(sLineText, m_sSourceDir, sDest);
                       sNewDir := GetDirName(sLineText);
                       if not DirectoryExists(sNewDir) then
-                        ForceDirectories(sNewDir); //创建目录
+                        ForceDirectories(sNewDir);
                       CopyFile(m_BackUpFileList.Strings[I], sLineText);
                     end;
                   end;

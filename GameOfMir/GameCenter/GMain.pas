@@ -10,98 +10,93 @@ uses
 
 type
   TfrmMain = class(TForm)
-    PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
-    PageControl3: TPageControl;
-    TabSheet4: TTabSheet;
-    TabSheet5: TTabSheet;
-    TabSheet6: TTabSheet;
-    GroupBox1: TGroupBox;
-    Label1: TLabel;
-    EditGameDir: TEdit;
-    Label2: TLabel;
-    EditHeroDB: TEdit;
-    ButtonNext1: TButton;
-    ButtonNext2: TButton;
-    GroupBox2: TGroupBox;
-    ButtonPrv2: TButton;
-    EditGameName: TEdit;
-    Label3: TLabel;
-    Label4: TLabel;
-    EditGameExtIPaddr: TEdit;
-    GroupBox5: TGroupBox;
-    ButtonStartGame: TButton;
-    CheckBoxM2Server: TCheckBox;
-    CheckBoxDBServer: TCheckBox;
-    CheckBoxLoginServer: TCheckBox;
-    CheckBoxLogServer: TCheckBox;
-    CheckBoxSelGate1: TCheckBox;
-    CheckBoxRunGate: TCheckBox;
-    CheckBoxRunGate1: TCheckBox;
-    CheckBoxRunGate2: TCheckBox;
     TimerStartGame: TTimer;
     TimerStopGame: TTimer;
     TimerCheckRun: TTimer;
+    PageControl: TPageControl;
+    ControlTab: TTabSheet;
+    ControlGroup: TGroupBox;
+    DBServerCheckBox: TCheckBox;
+    LoginServerCheckBox: TCheckBox;
+    M2ServerCheckBox: TCheckBox;
+    LogServerCheckBox: TCheckBox;
+    RunGateCheckBox: TCheckBox;
+    RunGate1CheckBox: TCheckBox;
+    RunGate2CheckBox: TCheckBox;
+    RunGate3CheckBox: TCheckBox;
+    RunGate4CheckBox: TCheckBox;
+    RunGate5CheckBox: TCheckBox;
+    RunGate6CheckBox: TCheckBox;
+    RunGate7CheckBox: TCheckBox;
+    SelGateCheckBox: TCheckBox;
+    SelGate1CheckBox: TCheckBox;
+    LoginGateCheckBox: TCheckBox;
+    PlugTopCheckBox: TCheckBox;
+    RunStatusComboBox: TComboBox;
+    StartHoursLabel: TLabel;
+    EditHour: TSpinEdit;  
+    StartMinutesLabel: TLabel;
+    EditMinute: TSpinEdit;
     MemoLog: TMemo;
+    StartGameButton: TButton;
+    ConfigTab: TTabSheet;
+    PageControl3: TPageControl;
+    TabSheet4: TTabSheet;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label30: TLabel;
+    EditGameDir: TEdit;
+    EditHeroDB: TEdit;
+    EditGameName: TEdit;
+    EditGameExtIPaddr: TEdit;
+    ButtonGeneralDefalult: TButton;
+    CheckBoxIP2: TCheckBox;
+    EditGameExtIPaddr2: TEdit;
+    SpinEditAllPortAdd: TSpinEdit;
+    ButtonAllPortAdd: TButton;
+    ButtonNext1: TButton;
     ButtonReLoadConfig: TButton;
+    GroupBox20: TGroupBox;
+    CheckBoxCloseWuXin: TCheckBox;
+    TabSheet5: TTabSheet;
+    ButtonNext2: TButton;
+    GroupBox2: TGroupBox;
     GroupBox7: TGroupBox;
     Label9: TLabel;
-    EditLoginGate_MainFormX: TSpinEdit;
     Label10: TLabel;
+    EditLoginGate_MainFormX: TSpinEdit;
     EditLoginGate_MainFormY: TSpinEdit;
+    ButtonLoginGateDefault: TButton;
+    GroupBox23: TGroupBox;
+    Label28: TLabel;
+    EditLoginGate_GatePort: TEdit;
+    GroupBox27: TGroupBox;
+    CheckBoxboLoginGate_GetStart: TCheckBox;
+    ButtonPrv2: TButton;
+    TabSheet6: TTabSheet;
     GroupBox3: TGroupBox;
     GroupBox8: TGroupBox;
     Label11: TLabel;
     Label12: TLabel;
     EditSelGate_MainFormX: TSpinEdit;
     EditSelGate_MainFormY: TSpinEdit;
-    TabSheet7: TTabSheet;
-    GroupBox9: TGroupBox;
-    GroupBox10: TGroupBox;
-    Label13: TLabel;
-    Label14: TLabel;
-    EditLoginServer_MainFormX: TSpinEdit;
-    EditLoginServer_MainFormY: TSpinEdit;
-    TabSheet8: TTabSheet;
-    GroupBox11: TGroupBox;
-    GroupBox12: TGroupBox;
-    Label15: TLabel;
-    Label16: TLabel;
-    EditDBServer_MainFormX: TSpinEdit;
-    EditDBServer_MainFormY: TSpinEdit;
-    TabSheet9: TTabSheet;
-    GroupBox13: TGroupBox;
-    GroupBox14: TGroupBox;
-    Label17: TLabel;
-    Label18: TLabel;
-    EditLogServer_MainFormX: TSpinEdit;
-    EditLogServer_MainFormY: TSpinEdit;
-    TabSheet10: TTabSheet;
-    GroupBox15: TGroupBox;
-    GroupBox16: TGroupBox;
-    Label19: TLabel;
-    Label20: TLabel;
-    EditM2Server_MainFormX: TSpinEdit;
-    EditM2Server_MainFormY: TSpinEdit;
-    TabSheet11: TTabSheet;
-    ButtonSave: TButton;
-    ButtonGenGameConfig: TButton;
+    ButtonSelGateDefault: TButton;
+    GroupBox24: TGroupBox;
+    Label29: TLabel;
+    Label49: TLabel;
+    EditSelGate_GatePort: TEdit;
+    EditSelGate_GatePort1: TEdit;
+    GroupBox28: TGroupBox;
+    CheckBoxboSelGate_GetStart: TCheckBox;
+    CheckBoxboSelGate_GetStart2: TCheckBox;
     ButtonPrv3: TButton;
     ButtonNext3: TButton;
     TabSheet12: TTabSheet;
     ButtonPrv4: TButton;
     ButtonNext4: TButton;
-    ButtonPrv5: TButton;
-    ButtonNext5: TButton;
-    ButtonPrv6: TButton;
-    ButtonNext6: TButton;
-    ButtonPrv7: TButton;
-    ButtonNext7: TButton;
-    ButtonPrv8: TButton;
-    ButtonNext8: TButton;
-    ButtonPrv9: TButton;
     GroupBox17: TGroupBox;
     GroupBox18: TGroupBox;
     Label21: TLabel;
@@ -110,135 +105,6 @@ type
     EditRunGate_MainFormY: TSpinEdit;
     GroupBox19: TGroupBox;
     Label23: TLabel;
-    Timer: TTimer;
-    GroupBox22: TGroupBox;
-    LabelRunGate_GatePort1: TLabel;
-    EditRunGate_GatePort1: TEdit;
-    LabelLabelRunGate_GatePort2: TLabel;
-    EditRunGate_GatePort2: TEdit;
-    LabelRunGate_GatePort3: TLabel;
-    EditRunGate_GatePort3: TEdit;
-    LabelRunGate_GatePort4: TLabel;
-    EditRunGate_GatePort4: TEdit;
-    LabelRunGate_GatePort5: TLabel;
-    EditRunGate_GatePort5: TEdit;
-    LabelRunGate_GatePort6: TLabel;
-    EditRunGate_GatePort6: TEdit;
-    LabelRunGate_GatePort7: TLabel;
-    EditRunGate_GatePort7: TEdit;
-    EditRunGate_GatePort8: TEdit;
-    LabelRunGate_GatePort78: TLabel;
-    ButtonRunGateDefault: TButton;
-    ButtonSelGateDefault: TButton;
-    ButtonGeneralDefalult: TButton;
-    ButtonLoginGateDefault: TButton;
-    ButtonLoginSrvDefault: TButton;
-    ButtonDBServerDefault: TButton;
-    ButtonLogServerDefault: TButton;
-    ButtonM2ServerDefault: TButton;
-    GroupBox23: TGroupBox;
-    Label28: TLabel;
-    EditLoginGate_GatePort: TEdit;
-    GroupBox24: TGroupBox;
-    Label29: TLabel;
-    EditSelGate_GatePort: TEdit;
-    GroupBox27: TGroupBox;
-    CheckBoxboLoginGate_GetStart: TCheckBox;
-    GroupBox28: TGroupBox;
-    CheckBoxboSelGate_GetStart: TCheckBox;
-    TabSheetDebug: TTabSheet;
-    GroupBox29: TGroupBox;
-    GroupBox30: TGroupBox;
-    Label45: TLabel;
-    EditM2CheckCodeAddr: TEdit;
-    TimerCheckDebug: TTimer;
-    Label46: TLabel;
-    EditM2CheckCode: TEdit;
-    ButtonM2Suspend: TButton;
-    GroupBox31: TGroupBox;
-    Label47: TLabel;
-    Label48: TLabel;
-    EditDBCheckCodeAddr: TEdit;
-    EditDBCheckCode: TEdit;
-    Button3: TButton;
-    Label49: TLabel;
-    EditSelGate_GatePort1: TEdit;
-    GroupBox33: TGroupBox;
-    Label50: TLabel;
-    Label51: TLabel;
-    EditLoginServerGatePort: TEdit;
-    EditLoginServerServerPort: TEdit;
-    GroupBox34: TGroupBox;
-    CheckBoxboLoginServer_GetStart: TCheckBox;
-    GroupBox35: TGroupBox;
-    CheckBoxDBServerGetStart: TCheckBox;
-    GroupBox36: TGroupBox;
-    Label52: TLabel;
-    Label53: TLabel;
-    EditDBServerGatePort: TEdit;
-    EditDBServerServerPort: TEdit;
-    GroupBox37: TGroupBox;
-    CheckBoxLogServerGetStart: TCheckBox;
-    GroupBox38: TGroupBox;
-    Label54: TLabel;
-    EditLogServerPort: TEdit;
-    GroupBox39: TGroupBox;
-    Label55: TLabel;
-    EditM2ServerGatePort: TEdit;
-    GroupBox40: TGroupBox;
-    CheckBoxM2ServerGetStart: TCheckBox;
-    Label56: TLabel;
-    EditM2ServerMsgSrvPort: TEdit;
-    Label57: TLabel;
-    EditDBCheckStr: TEdit;
-    Label58: TLabel;
-    EditM2CheckStr: TEdit;
-    CheckBoxRunGate3: TCheckBox;
-    CheckBoxRunGate4: TCheckBox;
-    CheckBoxRunGate5: TCheckBox;
-    CheckBoxRunGate6: TCheckBox;
-    CheckBoxRunGate7: TCheckBox;
-    GroupBox4: TGroupBox;
-    ListViewDataBackup: TListView;
-    GroupBox6: TGroupBox;
-    ButtonBackChg: TButton;
-    ButtonBackDel: TButton;
-    ButtonBackAdd: TButton;
-    ButtonBackStart: TButton;
-    ButtonBackSave: TButton;
-    RadioButtonBackMode1: TRadioButton;
-    Label5: TLabel;
-    Label6: TLabel;
-    RzButtonEditSource: TRzButtonEdit;
-    RzButtonEditDest: TRzButtonEdit;
-    RadioButtonBackMode2: TRadioButton;
-    RzSpinEditHour1: TRzSpinEdit;
-    RzSpinEditHour2: TRzSpinEdit;
-    Label7: TLabel;
-    RzSpinEditMin1: TRzSpinEdit;
-    Label8: TLabel;
-    CheckBoxBackUp: TCheckBox;
-    Label64: TLabel;
-    RzSpinEditMin2: TRzSpinEdit;
-    Label65: TLabel;
-    CheckBoxZip: TCheckBox;
-    LabelBackMsg: TLabel;
-    tsDataList: TTabSheet;
-    GroupBox21: TGroupBox;
-    ListViewDataList: TListView;
-    btDataListSelect: TButton;
-    btDataListAll: TButton;
-    CSocket: TClientSocket;
-    CheckBoxSelGate: TCheckBox;
-    CheckBoxLoginGate: TCheckBox;
-    ComboBoxRunStatus: TComboBox;
-    EditHour: TSpinEdit;
-    EditMinute: TSpinEdit;
-    Label24: TLabel;
-    Label25: TLabel;
-    EditLoginServerMonPort: TEdit;
-    Label26: TLabel;
-    CheckBoxboSelGate_GetStart2: TCheckBox;
     CheckBoxboRunGate_GetStart1: TCheckBox;
     CheckBoxboRunGate_GetStart2: TCheckBox;
     CheckBoxboRunGate_GetStart3: TCheckBox;
@@ -247,18 +113,123 @@ type
     CheckBoxboRunGate_GetStart6: TCheckBox;
     CheckBoxboRunGate_GetStart7: TCheckBox;
     CheckBoxboRunGate_GetStart8: TCheckBox;
-    btDataListList: TButton;
-    Label27: TLabel;
-    LabelLog: TLabel;
+    GroupBox22: TGroupBox;
+    LabelRunGate_GatePort1: TLabel;
+    LabelLabelRunGate_GatePort2: TLabel;
+    LabelRunGate_GatePort3: TLabel;
+    LabelRunGate_GatePort4: TLabel;
+    LabelRunGate_GatePort5: TLabel;
+    LabelRunGate_GatePort6: TLabel;
+    LabelRunGate_GatePort7: TLabel;
+    LabelRunGate_GatePort78: TLabel;
+    EditRunGate_GatePort1: TEdit;
+    EditRunGate_GatePort2: TEdit;
+    EditRunGate_GatePort3: TEdit;
+    EditRunGate_GatePort4: TEdit;
+    EditRunGate_GatePort5: TEdit;
+    EditRunGate_GatePort6: TEdit;
+    EditRunGate_GatePort7: TEdit;
+    EditRunGate_GatePort8: TEdit;
+    ButtonRunGateDefault: TButton;
+    TabSheet7: TTabSheet;
+    GroupBox9: TGroupBox;
+    GroupBox10: TGroupBox;
+    Label13: TLabel;
+    Label14: TLabel;
+    EditLoginServer_MainFormX: TSpinEdit;
+    EditLoginServer_MainFormY: TSpinEdit;
+    ButtonLoginSrvDefault: TButton;
+    GroupBox33: TGroupBox;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label26: TLabel;
+    EditLoginServerGatePort: TEdit;
+    EditLoginServerServerPort: TEdit;
+    EditLoginServerMonPort: TEdit;
+    GroupBox34: TGroupBox;
+    CheckBoxboLoginServer_GetStart: TCheckBox;
+    ButtonPrv5: TButton;
+    ButtonNext5: TButton;
+    TabSheet8: TTabSheet;
+    GroupBox11: TGroupBox;
+    GroupBox12: TGroupBox;
+    Label15: TLabel;
+    Label16: TLabel;
+    EditDBServer_MainFormX: TSpinEdit;
+    EditDBServer_MainFormY: TSpinEdit;
+    ButtonDBServerDefault: TButton;
+    GroupBox35: TGroupBox;
+    CheckBoxDBServerGetStart: TCheckBox;
+    GroupBox36: TGroupBox;
+    Label52: TLabel;
+    Label53: TLabel;
+    EditDBServerGatePort: TEdit;
+    EditDBServerServerPort: TEdit;
+    ButtonPrv6: TButton;
+    ButtonNext6: TButton;
+    TabSheet9: TTabSheet;
+    GroupBox13: TGroupBox;
+    GroupBox14: TGroupBox;
+    Label17: TLabel;
+    Label18: TLabel;
+    EditLogServer_MainFormX: TSpinEdit;
+    EditLogServer_MainFormY: TSpinEdit;
+    ButtonLogServerDefault: TButton;
+    GroupBox37: TGroupBox;
+    CheckBoxLogServerGetStart: TCheckBox;
+    GroupBox38: TGroupBox;
+    Label54: TLabel;
+    EditLogServerPort: TEdit;
+    ButtonPrv7: TButton;
+    ButtonNext7: TButton;
+    TabSheet10: TTabSheet;
+    GroupBox15: TGroupBox;
+    GroupBox16: TGroupBox;
+    Label19: TLabel;
+    Label20: TLabel;
+    EditM2Server_MainFormX: TSpinEdit;
+    EditM2Server_MainFormY: TSpinEdit;
+    ButtonM2ServerDefault: TButton;
+    GroupBox39: TGroupBox;
+    Label55: TLabel;
+    Label56: TLabel;
+    EditM2ServerGatePort: TEdit;
+    EditM2ServerMsgSrvPort: TEdit;
+    GroupBox40: TGroupBox;
+    CheckBoxM2ServerGetStart: TCheckBox;
+    ButtonPrv8: TButton;
+    ButtonNext8: TButton;
+    TabSheet11: TTabSheet;
+    ButtonSave: TButton;
+    ButtonGenGameConfig: TButton;
+    ButtonPrv9: TButton;
+    TabSheet3: TTabSheet;
+    LabelBackMsg: TLabel;
+    GroupBox4: TGroupBox;
+    ListViewDataBackup: TListView;
+    GroupBox6: TGroupBox;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label64: TLabel;
+    Label65: TLabel;
+    RadioButtonBackMode1: TRadioButton;
+    RzButtonEditSource: TRzButtonEdit;
+    RzButtonEditDest: TRzButtonEdit;
+    RadioButtonBackMode2: TRadioButton;
+    RzSpinEditHour1: TRzSpinEdit;
+    RzSpinEditHour2: TRzSpinEdit;
+    RzSpinEditMin1: TRzSpinEdit;
+    CheckBoxBackUp: TCheckBox;
+    RzSpinEditMin2: TRzSpinEdit;
+    CheckBoxZip: TCheckBox;
     CheckBoxAutoRunBak: TCheckBox;
-    pm1: TPopupMenu;
-    N1: TMenuItem;
-    dlgSave: TSaveDialog;
-    CheckBoxIP2: TCheckBox;
-    EditGameExtIPaddr2: TEdit;
-    Label30: TLabel;
-    GroupBox20: TGroupBox;
-    CheckBoxCloseWuXin: TCheckBox;
+    ButtonBackChg: TButton;
+    ButtonBackDel: TButton;
+    ButtonBackAdd: TButton;
+    ButtonBackStart: TButton;
+    ButtonBackSave: TButton;
     TabSheet13: TTabSheet;
     GroupBox25: TGroupBox;
     CheckBox1: TCheckBox;
@@ -272,11 +243,8 @@ type
     CheckBox9: TCheckBox;
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
-    Button1: TButton;
     CheckBox12: TCheckBox;
-    CheckBoxPlugTop: TCheckBox;
-    SpinEditAllPortAdd: TSpinEdit;
-    ButtonAllPortAdd: TButton;
+    Button1: TButton;
     procedure ButtonNext1Click(Sender: TObject);
     procedure ButtonPrv2Click(Sender: TObject);
     procedure ButtonNext2Click(Sender: TObject);
@@ -284,14 +252,14 @@ type
     procedure ButtonSaveClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ButtonGenGameConfigClick(Sender: TObject);
-    procedure ButtonStartGameClick(Sender: TObject);
+    procedure StartGameButtonClick(Sender: TObject);
     procedure TimerStartGameTimer(Sender: TObject);
-    procedure CheckBoxDBServerClick(Sender: TObject);
-    procedure CheckBoxLoginServerClick(Sender: TObject);
-    procedure CheckBoxM2ServerClick(Sender: TObject);
-    procedure CheckBoxLogServerClick(Sender: TObject);
-    procedure CheckBoxLoginGateClick(Sender: TObject);
-    procedure CheckBoxRunGateClick(Sender: TObject);
+    procedure DBServerCheckBoxClick(Sender: TObject);
+    procedure LoginServerCheckBoxClick(Sender: TObject);
+    procedure M2ServerCheckBoxClick(Sender: TObject);
+    procedure LogServerCheckBoxClick(Sender: TObject);
+    procedure LoginGateCheckBoxClick(Sender: TObject);
+    procedure RunGateCheckBoxClick(Sender: TObject);
     procedure TimerStopGameTimer(Sender: TObject);
     procedure TimerCheckRunTimer(Sender: TObject);
     procedure ButtonReLoadConfigClick(Sender: TObject);
@@ -331,7 +299,6 @@ type
     procedure ButtonM2ServerDefaultClick(Sender: TObject);
     procedure CheckBoxboLoginGate_GetStartClick(Sender: TObject);
     procedure CheckBoxboSelGate_GetStartClick(Sender: TObject);
-    procedure TimerCheckDebugTimer(Sender: TObject);
     procedure ButtonM2SuspendClick(Sender: TObject);
     procedure CheckBoxboLoginServer_GetStartClick(Sender: TObject);
     procedure CheckBoxDBServerGetStartClick(Sender: TObject);
@@ -349,33 +316,22 @@ type
     procedure RadioButtonBackMode2Click(Sender: TObject);
     procedure EditRunGate_MainFormXChange(Sender: TObject);
     procedure EditRunGate_MainFormYChange(Sender: TObject);
-    procedure btDataListAllClick(Sender: TObject);
-    procedure CSocketConnect(Sender: TObject; Socket: TCustomWinSocket);
-    procedure CSocketDisconnect(Sender: TObject; Socket: TCustomWinSocket);
-    procedure CSocketError(Sender: TObject; Socket: TCustomWinSocket; ErrorEvent: TErrorEvent; var ErrorCode: Integer);
-    procedure CSocketConnecting(Sender: TObject; Socket: TCustomWinSocket);
-    procedure CSocketRead(Sender: TObject; Socket: TCustomWinSocket);
     procedure FormDestroy(Sender: TObject);
-    procedure ListViewDataListDblClick(Sender: TObject);
-    procedure btDataListSelectClick(Sender: TObject);
-    procedure CheckBoxSelGateClick(Sender: TObject);
+    procedure SelGateCheckBoxClick(Sender: TObject);
     procedure CheckBoxboSelGate_GetStart2Click(Sender: TObject);
-    procedure CheckBoxSelGate1Click(Sender: TObject);
+    procedure SelGate1CheckBoxClick(Sender: TObject);
     procedure CheckBoxboRunGate_GetStart2Click(Sender: TObject);
-    procedure btDataListListClick(Sender: TObject);
-    procedure ComboBoxRunStatusChange(Sender: TObject);
+    procedure RunStatusComboBoxChange(Sender: TObject);
     procedure CheckBoxAutoRunBakClick(Sender: TObject);
-    procedure N1Click(Sender: TObject);
     procedure CheckBoxIP2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure CheckBoxPlugTopClick(Sender: TObject);
+    procedure PlugTopCheckBoxClick(Sender: TObject);
     procedure SpinEditAllPortAddChange(Sender: TObject);
     procedure ButtonAllPortAddClick(Sender: TObject);
   private
     m_boOpen: Boolean;
     m_nStartStatus: Integer;
     m_dwShowTick: LongWord;
-    m_dwRefTick: LongWord;
     m_btHour: Byte;
     m_btMinute: Byte;
     m_dwRunTime: LongWord;
@@ -397,47 +353,23 @@ type
     procedure StopGame();
     procedure CancelStopGame();
     procedure MainOutMessage(sMsg: string);
-    procedure MainOutDataListMessage(sMsg: string);
     procedure ProcessDBServerMsg(wIdent: Word; sData: string);
     procedure ProcessLoginSrvMsg(wIdent: Word; sData: string);
-    //procedure ProcessLoginSrvGetUserAccount(sData: string);
-    //procedure ProcessLoginSrvChangeUserAccountStatus(sData: string);
-//    procedure UserAccountEditMode(boChecked: Boolean);
     procedure ProcessLogServerMsg(wIdent: Word; sData: string);
-
     procedure ProcessLoginGateMsg(wIdent: Word; sData: string);
-    //procedure ProcessLoginGate1Msg(wIdent: Word; sData: string);
-
     procedure ProcessSelGateMsg(wIdent: Word; sData: string);
-    //procedure ProcessSelGate1Msg(wIdent: Word; sData: string);
-
     procedure ProcessRunGateMsg(wIdent: Word; sData: string);
     procedure ProcessPlugTopMsg(wIdent: Word; sData: string);
     function ProcessM2ServerMsg(wIdent: Word; sData: string): Integer;
     procedure GetMutRunGateConfing(nIndex: Integer);
-
     function StartService(): Boolean;
-    //procedure StopService();
-    procedure RefGameDebug();
     procedure GenMutSelGateConfig(nIndex: Integer);
     procedure GenMutLoginGateConfig(nIndex: Integer);
-
     procedure LoadBackList();
     procedure RefBackListToView();
-    function SendDataListData(wIdent: Word; sData: string): Boolean;
-    function RefDataListItem(): Boolean;
-    procedure ClearDataListItem();
-    function NewDataListInfo(): pTDataListInfo;
-    procedure DisposeDataListInfo(DataListInfo: pTDataListInfo);
-    function GetNextData(): Boolean;
-//    function GetFileData(sFileName: string; out FileBuffer: PChar; out nBufferLen: Integer): Boolean;
-    function MapGetFileData(sFileName: string; boBackData: Boolean): Integer;
-    { Private declarations }
   public
     procedure ProcessMessage(var Msg: TMsg; var Handled: Boolean);
     procedure MyMessage(var MsgData: TWmCopyData); message WM_COPYDATA;
-
-    { Public declarations }
   end;
 
 var
@@ -483,7 +415,7 @@ begin
           POleStr(Root), Eaten, RootItemIDList, Flags);
       end;
       with BrowseInfo do begin
-        hwndOwner := Owner; //Application.Handle;
+        hwndOwner := Owner;
         pidlRoot := RootItemIDList;
         pszDisplayName := Buffer;
         lpszTitle := PChar(Caption);
@@ -515,13 +447,6 @@ procedure TfrmMain.MainOutMessage(sMsg: string);
 begin
   sMsg := '[' + DateTimeToStr(Now) + '] ' + sMsg;
   MemoLog.Lines.Add(sMsg);
-end;
-
-procedure TfrmMain.MainOutDataListMessage(sMsg: string);
-begin
-  LabelLog.Caption := sMsg;
-  //sMsg := '[' + DateTimeToStr(Now) + '] ' + sMsg;
-  //mmoDataListLog.Lines.Add(sMsg);
 end;
 
 procedure TfrmMain.ButtonNext1Click(Sender: TObject);
@@ -813,7 +738,7 @@ begin
     ButtonGenGameConfigClick(ButtonGenGameConfig);
   end;
   PageControl3.ActivePageIndex := 0;
-  PageControl1.ActivePageIndex := 0;
+  PageControl.ActivePageIndex := 0;
 end;
 
 procedure TfrmMain.LoadBackList();
@@ -876,182 +801,15 @@ begin
   end;
 end;
 
-procedure TfrmMain.N1Click(Sender: TObject);
-var
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-  FileStream: TFileStream;
+procedure TfrmMain.RunStatusComboBoxChange(Sender: TObject);
 begin
-  if (ListViewDataList.ItemIndex >= 0) and (ListViewDataList.ItemIndex < ListViewDataList.Items.Count) then begin
-    Item := ListViewDataList.Items[ListViewDataList.ItemIndex];
-    DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-    if (DataListInfo <> nil) and (DataListInfo.Data <> nil) and (DataListInfo.DataSize > 0) then begin
-      dlgSave.FileName := '.\' + ExtractFileName(Item.Caption);
-      if dlgSave.Execute(Handle) then begin
-        if FileExists(dlgSave.FileName) then begin
-          if Application.MessageBox('文件已经存在，是否覆盖原文件？', '提示信息',
-            MB_OKCANCEL + MB_ICONQUESTION + MB_DEFBUTTON2) = IDCANCEL then
-          begin
-            Exit;
-          end;
-          if not DeleteFile(dlgSave.FileName) then begin
-            Application.MessageBox('删除原文件失败！', '提示信息', MB_OK + MB_ICONSTOP);
-            Exit;
-          end;
-        end;
-        FileStream := TFileStream.Create(dlgSave.FileName, fmCreate);
-        Try
-          if not FileStream.Write(DataListInfo.Data^, DataListInfo.DataSize) = DataListInfo.DataSize then begin
-            Application.MessageBox('保存文件失败', '提示信息', MB_OK + MB_ICONSTOP);
-          end else
-            Application.MessageBox('输入完成！', '提示信息', MB_OK + MB_ICONINFORMATION);
-        Finally
-          FileStream.Free;
-        End;
-      end;
-    end;
-  end;
-end;
-
-function TfrmMain.NewDataListInfo(): pTDataListInfo;
-begin
-  New(Result);
-  FillChar(Result^, SizeOf(TDataListInfo), #0);
-end;
-
-procedure TfrmMain.DisposeDataListInfo(DataListInfo: pTDataListInfo);
-begin
-  if DataListInfo.MapFileBuffer <> nil then
-    UnMapViewOfFile(DataListInfo.MapFileBuffer);
-  if DataListInfo.MapFileHandle <> 0 then
-    CloseHandle(DataListInfo.MapFileHandle);
-  if DataListInfo.Data <> nil then
-    FreeMem(DataListInfo.Data);
-  Dispose(DataListInfo);
-end;
-
-procedure TfrmMain.ClearDataListItem();
-var
-  Item: TListItem;
-begin
-  for Item in ListViewDataList.Items do
-    DisposeDataListInfo(pTDataListInfo(Item.SubItems.Objects[0]));
-  ListViewDataList.Clear;
-  GroupBox21.Caption := '数据列表';
-end;
-
-procedure TfrmMain.ComboBoxRunStatusChange(Sender: TObject);
-begin
-  if Sender = ComboBoxRunStatus then begin
-    EditHour.Enabled := (ComboBoxRunStatus.ItemIndex > 0) and ComboBoxRunStatus.Enabled;
-    EditMinute.Enabled := (ComboBoxRunStatus.ItemIndex > 0) and ComboBoxRunStatus.Enabled;
+  if Sender = RunStatusComboBox then begin
+    EditHour.Enabled := (RunStatusComboBox.ItemIndex > 0) and RunStatusComboBox.Enabled;
+    EditMinute.Enabled := (RunStatusComboBox.ItemIndex > 0) and RunStatusComboBox.Enabled;
   end;
   m_btHour := EditHour.Value;
   m_btMinute := EditMinute.Value;
   m_dwRunTime := (60 * 1000 * m_btMinute) + (60 * 60 * 1000 * m_btHour);
-end;
-
-function TfrmMain.RefDataListItem: Boolean;
-  function CheckAddItem(sFileName: string): TListItem;
-  var
-    Item: TListItem;
-  begin
-    Result := nil;
-    for Item in ListViewDataList.Items do begin
-      if CompareText(sFileName, Item.Caption) = 0 then begin
-        Result := Item;
-        break;
-      end;
-    end;
-  end;
-var
-  sData, sFileName, sFileTime: string;
-  I: Integer;
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-begin
-  Result := False;
-  //ClearDataListItem;
-  for I := 0 to g_GetDatList.Count - 1 do begin
-    sData := g_GetDatList[i];
-    sData := GetValidStr3(sData, sFileName, [#9]);
-    sData := GetValidStr3(sData, sFileTime, [#9]);
-    if (sFileName <> '') and (sFileTime <> '') then begin
-      Item := CheckAddItem(sFileName);
-      if Item = nil then begin
-        DataListInfo := NewDataListInfo;
-        DataListInfo.sFileName := sFileName;
-        DataListInfo.DateTime := 0;
-        Item := ListViewDataList.Items.Add;
-        Item.Caption := sFileName;
-        Item.SubItems.AddObject(DateTimeToStr(DataListInfo.DateTime), TObject(DataListInfo));
-        Item.SubItems.Add('0');
-        Item.SubItems.Add('未更新');
-        DataListInfo.Item := Item;
-      end else begin
-        if StrToDateTimeDef(Item.SubItems[0], 0) < StrToDateTimeDef(sFileTime, 0) then begin
-          Item.SubItems[2] := '有新版本';
-        end;
-      end;
-    end;
-  end;
-  g_GetDatList.Clear;
-  GroupBox21.Caption := Format('数据列表(%d)', [ListViewDataList.Items.Count]);
-  MainOutDataListMessage('列表更新完成...');
-  g_boGetDataListOK := True;
-  //Result := GetNextData();
-
-end;
-
-function TfrmMain.GetNextData(): Boolean;
-var
-  DefMessage: TDefMessage;
-  SendBuffer: PChar;
-  nSendCount: Integer;
-  nWaitTick: LongWord;
-  nMsgLen: Integer;
-  DataListInfo: pTDataListInfo;
-  sData: string;
-  Item: TListItem;
-begin
-  Result := False;
-  if (g_GetDatList.Count > 0) then begin
-    if g_GetDatList.Objects[0] <> nil then begin
-      DataListInfo := pTDataListInfo(g_GetDatList.Objects[0]);
-      Item := DataListInfo.Item;
-      Item.SubItems.Strings[2] := '正在更新';
-      MainOutDataListMessage('正在更新[' + DataListInfo.sFileName + ']...');
-      sData := Trim(DataListInfo.sFileName);
-      nMsgLen := Length(sData) + 1;
-      DefMessage := MakeDefMessage(SEC_GETFILE, Integer(DataListInfo), DataListInfo.DateTime, nMsgLen);
-      SendBuffer := AllocMem(SizeOf(TDefMessage) + nMsgLen);
-      try
-        Move(DefMessage, SendBuffer^, SizeOf(TDefMessage));
-        Move(sData[1], SendBuffer[SizeOf(TDefMessage)], nMsgLen);
-        nSendCount := 0;
-        while CSocket.Active and (CSocket.Socket.SendBuf(SendBuffer^, SizeOf(TDefMessage) + nMsgLen) = -1) do begin
-          Inc(nSendCount);
-          if nSendCount > 10 then begin
-            MainOutDataListMessage('发送获取[' + sData + ']的数据失败...');
-            exit;
-          end;
-          nWaitTick := GetTickCount + 1000;
-          while GetTickCount < nWaitTick do begin
-            Application.ProcessMessages;
-            Sleep(1);
-          end;
-        end;
-      finally
-        FreeMem(SendBuffer);
-      end;
-      Result := True;
-    end else begin
-      g_GetDatList.Delete(0);
-      Result := GetNextData;
-    end;
-  end else begin
-    MainOutDataListMessage('数据更新完成...');
-  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -1060,7 +818,7 @@ begin
   // 这里是将 ProcessMessage 方法赋给应用的 OnMessage，用于托管所有消息
   // 而 ProcessMessage 则实现为 遇到 WM_SENDPROCMSG 类型的消息，直接拦截它
   Application.OnMessage := ProcessMessage;
-  PageControl1.ActivePageIndex := 0;
+  PageControl.ActivePageIndex := 0;
   PageControl3.ActivePageIndex := 0;
   m_nStartStatus := 0;
   m_nBackStartStatus := 0;
@@ -1068,12 +826,9 @@ begin
   LoadConfig();
   LoadBackList();
   RefBackListToView();
-  ListViewDataList.Clear;
   if not StartService() then
     Exit;
   RefGameConsole();
-  TabSheetDebug.TabVisible := False;
-  tsDataList.TabVisible := False;
   CheckBoxAutoRunBak.Checked := g_boAutoRunBak;
   m_boOpen := True;
   if g_boAutoRunBak then ButtonBackStartClick(ButtonBackStart);
@@ -1081,7 +836,6 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  ClearDataListItem;
   g_GetDatList.Free;
 end;
 
@@ -1222,13 +976,6 @@ begin
     SaveList.Add(sIniFile);
   end;
   SaveList.SaveToFile(g_sGameDirectory + 'LoginSrv\!addrtable.txt');
-
-
-  {sIniFile := g_sGameDirectory + 'LoginSrv\IdLog';
-  if not DirectoryExists(sIniFile) then begin
-    CreateDir(sIniFile);
-  end;      }
-
   sIniFile := g_sGameDirectory + 'LoginSrv\ChrLog';
   if not DirectoryExists(sIniFile) then begin
     CreateDir(sIniFile);
@@ -1493,24 +1240,23 @@ end;
 procedure TfrmMain.RefGameConsole();
 begin
   m_boOpen := False;
-
   // 设置选中状态
-  CheckBoxM2Server.Checked := g_Config.M2Server.GetStart;
-  CheckBoxDBServer.Checked := g_Config.DBServer.GetStart;
-  CheckBoxLoginServer.Checked := g_Config.LoginSrv.GetStart;
-  CheckBoxLogServer.Checked := g_Config.LogServer.GetStart;
-  CheckBoxLoginGate.Checked := g_Config.LoginGate.GetStart;
-  CheckBoxSelGate.Checked := g_Config.SelGate.GetStart1;
-  CheckBoxSelGate1.Checked := g_Config.SelGate.GetStart2;
-  CheckBoxRunGate.Checked := g_Config.RunGate.GetStart[0];
-  CheckBoxRunGate1.Checked := g_Config.RunGate.GetStart[1];
-  CheckBoxRunGate2.Checked := g_Config.RunGate.GetStart[2];
-  CheckBoxRunGate3.Checked := g_Config.RunGate.GetStart[3];
-  CheckBoxRunGate4.Checked := g_Config.RunGate.GetStart[4];
-  CheckBoxRunGate5.Checked := g_Config.RunGate.GetStart[5];
-  CheckBoxRunGate6.Checked := g_Config.RunGate.GetStart[6];
-  CheckBoxRunGate7.Checked := g_Config.RunGate.GetStart[7];
-  CheckBoxPlugTop.Checked := g_Config.PlugTop.GetStart;
+  M2ServerCheckBox.Checked := g_Config.M2Server.GetStart;
+  DBServerCheckBox.Checked := g_Config.DBServer.GetStart;
+  LoginServerCheckBox.Checked := g_Config.LoginSrv.GetStart;
+  LogServerCheckBox.Checked := g_Config.LogServer.GetStart;
+  LoginGateCheckBox.Checked := g_Config.LoginGate.GetStart;
+  SelGateCheckBox.Checked := g_Config.SelGate.GetStart1;
+  SelGate1CheckBox.Checked := g_Config.SelGate.GetStart2;
+  RunGateCheckBox.Checked := g_Config.RunGate.GetStart[0];
+  RunGate1CheckBox.Checked := g_Config.RunGate.GetStart[1];
+  RunGate2CheckBox.Checked := g_Config.RunGate.GetStart[2];
+  RunGate3CheckBox.Checked := g_Config.RunGate.GetStart[3];
+  RunGate4CheckBox.Checked := g_Config.RunGate.GetStart[4];
+  RunGate5CheckBox.Checked := g_Config.RunGate.GetStart[5];
+  RunGate6CheckBox.Checked := g_Config.RunGate.GetStart[6];
+  RunGate7CheckBox.Checked := g_Config.RunGate.GetStart[7];
+  PlugTopCheckBox.Checked := g_Config.PlugTop.GetStart;
 
   // 第一步 基本设置
   EditGameDir.Text := g_sGameDirectory;
@@ -1587,229 +1333,32 @@ begin
   m_boOpen := True;
 end;
 
-procedure TfrmMain.CheckBoxDBServerClick(Sender: TObject);
+procedure TfrmMain.DBServerCheckBoxClick(Sender: TObject);
 begin
-  g_Config.DBServer.GetStart := CheckBoxDBServer.Checked;
+  g_Config.DBServer.GetStart := DBServerCheckBox.Checked;
 end;
 
-procedure TfrmMain.CheckBoxLoginServerClick(Sender: TObject);
+procedure TfrmMain.LoginServerCheckBoxClick(Sender: TObject);
 begin
-  g_Config.LoginSrv.GetStart := CheckBoxLoginServer.Checked;
+  g_Config.LoginSrv.GetStart := LoginServerCheckBox.Checked;
 end;
 
-procedure TfrmMain.CheckBoxM2ServerClick(Sender: TObject);
+procedure TfrmMain.M2ServerCheckBoxClick(Sender: TObject);
 begin
-  g_Config.M2Server.GetStart := CheckBoxM2Server.Checked;
+  g_Config.M2Server.GetStart := M2ServerCheckBox.Checked;
 end;
 
-procedure TfrmMain.CheckBoxLogServerClick(Sender: TObject);
+procedure TfrmMain.LogServerCheckBoxClick(Sender: TObject);
 begin
-  g_Config.LogServer.GetStart := CheckBoxLogServer.Checked;
+  g_Config.LogServer.GetStart := LogServerCheckBox.Checked;
 end;
 
-procedure TfrmMain.CheckBoxLoginGateClick(Sender: TObject);
+procedure TfrmMain.LoginGateCheckBoxClick(Sender: TObject);
 begin
-  g_Config.LoginGate.GetStart := CheckBoxLoginGate.Checked;
+  g_Config.LoginGate.GetStart := LoginGateCheckBox.Checked;
 end;
 
-procedure TfrmMain.CSocketConnect(Sender: TObject; Socket: TCustomWinSocket);
-begin
-  btDataListAll.Enabled := False;
-  btDataListSelect.Enabled := False;
-  btDataListList.Enabled := False;
-  if g_DataListReadBuffer <> nil then
-    FreeMem(g_DataListReadBuffer);
-  g_DataListReadBuffer := nil;
-  g_nDataListReadLength := 0;
-  MainOutDataListMessage('连接远程服务器成功...');
-  MainOutDataListMessage('正在验证连接密码...');
-  if not SendDataListData(SEC_CHECKPASS, g_sDataListPassWord) then begin
-    MainOutDataListMessage('发送验证连接密码失败...');
-    Socket.Close;
-  end;
-end;
-
-procedure TfrmMain.CSocketConnecting(Sender: TObject; Socket: TCustomWinSocket);
-begin
-  MainOutDataListMessage('正在连接远程服务器...');
-  btDataListAll.Enabled := False;
-  btDataListSelect.Enabled := False;
-  btDataListList.Enabled := False;
-end;
-
-procedure TfrmMain.CSocketDisconnect(Sender: TObject; Socket: TCustomWinSocket);
-begin
-  btDataListAll.Enabled := True;
-  btDataListSelect.Enabled := True;
-  btDataListList.Enabled := True;
-  if g_DataListReadBuffer <> nil then
-    FreeMem(g_DataListReadBuffer);
-  g_DataListReadBuffer := nil;
-  g_nDataListReadLength := 0;
-  //MainOutDataListMessage('与远程服务器断开连接...');
-end;
-
-procedure TfrmMain.CSocketError(Sender: TObject; Socket: TCustomWinSocket; ErrorEvent: TErrorEvent; var ErrorCode: Integer);
-begin
-  ErrorCode := 0;
-  Socket.Close;
-  MainOutDataListMessage('连接远程服务器失败...');
-end;
-
-procedure TfrmMain.CSocketRead(Sender: TObject; Socket: TCustomWinSocket);
-var
-  nMsgLen: Integer;
-  RecvBuffer: PChar;
-  Buff, TempBuff: PChar;
-  nLen: Integer;
-  DefMessage: pTDefMessage;
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-begin
-  nMsgLen := Socket.ReceiveLength;
-  GetMem(RecvBuffer, nMsgLen);
-  nMsgLen := Socket.ReceiveBuf(RecvBuffer^, nMsgLen);
-  ReallocMem(g_DataListReadBuffer, g_nDataListReadLength + nMsgLen);
-  Move(RecvBuffer^, g_DataListReadBuffer[g_nDataListReadLength], nMsgLen);
-  Inc(g_nDataListReadLength, nMsgLen);
-  FreeMem(RecvBuffer);
-
-  Buff := g_DataListReadBuffer;
-  nLen := g_nDataListReadLength;
-  while (True) do begin
-    if nLen >= SizeOf(TDefMessage) then begin
-      DefMessage := pTDefMessage(Buff);
-      if DefMessage.Recog = MSGHEADCODE then begin
-        if (DefMessage.DataSize + SizeOf(TDefMessage)) > nLen then begin
-          if DefMessage.Ident = SES_FILE then begin
-            if GetTickCount > m_dwRefTick then begin
-              m_dwRefTick := GetTickCount + 500;
-              if (g_GetDatList.Count > 0) and (Integer(g_GetDatList.Objects[0]) = DefMessage.Param) then begin
-                DataListInfo := pTDataListInfo(g_GetDatList.Objects[0]);
-
-                Item := DataListInfo.Item;
-                Item.SubItems.Strings[0] := FormatDateTime('yyyy-mm-dd hh:mm:ss', DefMessage.DataTime);
-                Item.SubItems.Strings[1] := IntToStr(DefMessage.DataSize);
-                Item.SubItems.Strings[2] := IntToStr(Round((nLen - SizeOf(TDefMessage)) / DefMessage.DataSize * 100)) + '%';
-              end;
-            end;
-          end;
-          break;
-        end;
-        case DefMessage.Ident of
-          SES_CHECKPASS_OK: begin
-              if g_GetDatList.Count = 0 then begin
-                MainOutDataListMessage('正在获取数据列表...');
-                if not SendDataListData(SEC_GETFILELIST, 'TEST') then begin
-                  MainOutDataListMessage('发送获取数据列表失败...');
-                  Socket.Close;
-                  Exit;
-                end;
-              end else begin
-                if g_GetDatList.Objects[0] <> nil then begin
-                  GetNextData;
-                end else begin
-                  Socket.Close;
-                  Exit;
-                end;
-              end;
-            end;
-          SES_CHECKPASS_FAIR: begin
-              MainOutDataListMessage('密码验证失败...');
-              Socket.Close;
-              Exit;
-            end;
-          SES_FILELIST: begin
-              if DefMessage.DataSize > 0 then begin
-                TempBuff := PChar(@Buff[SizeOf(TDefMessage)]);
-                g_GetDatList.SetText(TempBuff);
-                if (g_GetDatList.Count > 0) then begin
-                  if not RefDataListItem then begin
-                    Socket.Close;
-                    Exit;
-                  end;
-                end else begin
-                  MainOutDataListMessage('没有可更新的数据列表...');
-                  Socket.Close;
-                  Exit;
-                end;
-              end else begin
-                MainOutDataListMessage('没有可更新的数据列表...');
-                Socket.Close;
-                Exit;
-              end;
-            end;
-          SES_FILE: begin
-              if (g_GetDatList.Count > 0) and (Integer(g_GetDatList.Objects[0]) = DefMessage.Param) then begin
-                DataListInfo := pTDataListInfo(g_GetDatList.Objects[0]);
-                Item := DataListInfo.Item;
-                TempBuff := PChar(@Buff[SizeOf(TDefMessage)]);
-                Dec(nLen, SizeOf(TDefMessage));
-                if (DefMessage.DataSize > 0) and (nLen >= DefMessage.DataSize) then begin
-                  if DataListInfo.MapFileBuffer <> nil then
-                    UnMapViewOfFile(DataListInfo.MapFileBuffer);
-                  if DataListInfo.MapFileHandle <> 0 then
-                    CloseHandle(DataListInfo.MapFileHandle);
-                  DataListInfo.MapFileBuffer := nil;
-                  DataListInfo.MapFileHandle := 0;
-                  ReallocMem(DataListInfo.Data, nLen);
-                  Move(TempBuff^, DataListInfo.Data^, nLen);
-                  DataListInfo.DateTime := DefMessage.DataTime;
-                  DataListInfo.DataSize := DefMessage.DataSize;
-                  Item.SubItems.Strings[0] := FormatDateTime('yyyy-mm-dd hh:mm:ss', DefMessage.DataTime);
-                  Item.SubItems.Strings[1] := IntToStr(DefMessage.DataSize);
-                  Item.SubItems.Strings[2] := '完成';
-                end else begin
-                  if (DefMessage.DataTime > 0) and (nLen >= DefMessage.DataSize) then begin
-                    DataListInfo.DateTime := DefMessage.DataTime;
-                    Item.SubItems.Strings[0] := FormatDateTime('yyyy-mm-dd hh:mm:ss', DefMessage.DataTime);
-                    Item.SubItems.Strings[1] := IntToStr(DataListInfo.DataSize);
-                    Item.SubItems.Strings[2] := '完成';
-                  end else begin
-                    MainOutDataListMessage('更新文件[' + g_GetDatList[0] + ']失败...');
-                    Item.SubItems.Strings[2] := '失败';
-                  end;
-                end;
-                g_GetDatList.Delete(0);
-                if not GetNextData then begin
-                  Socket.Close;
-                  Exit;
-                end;
-              end;
-            end;
-        end;
-        FreeMem(g_DataListReadBuffer);
-        g_DataListReadBuffer := nil;
-        g_nDataListReadLength := 0;
-        nLen := 0;
-        break;
-      end
-      else begin
-        Inc(Buff);
-        Dec(nLen);
-      end;
-    end
-    else
-      break;
-  end;
-  if nLen > 0 then begin
-    if g_nDataListReadLength = nLen then
-      exit;
-    GetMem(TempBuff, nLen);
-    Move(Buff^, TempBuff^, nLen);
-    FreeMem(g_DataListReadBuffer);
-    g_DataListReadBuffer := TempBuff;
-    g_nDataListReadLength := nLen;
-  end
-  else begin
-    if g_DataListReadBuffer <> nil then
-      FreeMem(g_DataListReadBuffer);
-    g_DataListReadBuffer := nil;
-    g_nDataListReadLength := 0;
-  end;
-end;
-
-procedure TfrmMain.CheckBoxRunGateClick(Sender: TObject);
+procedure TfrmMain.RunGateCheckBoxClick(Sender: TObject);
 begin
   with Sender as TCheckBox do begin
     if Tag in [Low(g_Config.RunGate.GetStart)..High(g_Config.RunGate.GetStart)] then
@@ -1817,7 +1366,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.ButtonStartGameClick(Sender: TObject);
+procedure TfrmMain.StartGameButtonClick(Sender: TObject);
 begin
   SetWindowPos(Self.Handle, Self.Handle, Self.Left, Self.Top, Self.Width, Self.Height, $40);
   // 根据当前 启动状态 选定不同的执行逻辑
@@ -1850,39 +1399,6 @@ begin
           CancelStopGame();
         end;
       end;
-  end;
-end;
-
-function TfrmMain.SendDataListData(wIdent: Word; sData: string): Boolean;
-var
-  DefMessage: TDefMessage;
-  SendBuffer: PChar;
-  nSendCount: Integer;
-  nWaitTick: LongWord;
-  nMsgLen: Integer;
-begin
-  Result := False;
-  sData := GetMD5TextOf16(Trim(sData));
-  nMsgLen := Length(sData) + 1;
-  DefMessage := MakeDefMessage(wIdent, 0, Now, nMsgLen);
-  SendBuffer := AllocMem(SizeOf(TDefMessage) + nMsgLen);
-  try
-    Move(DefMessage, SendBuffer^, SizeOf(TDefMessage));
-    Move(sData[1], SendBuffer[SizeOf(TDefMessage)], nMsgLen);
-    nSendCount := 0;
-    while CSocket.Active and (CSocket.Socket.SendBuf(SendBuffer^, SizeOf(TDefMessage) + nMsgLen) = -1) do begin
-      Inc(nSendCount);
-      if nSendCount > 10 then
-        exit;
-      nWaitTick := GetTickCount + 1000;
-      while GetTickCount < nWaitTick do begin
-        Application.ProcessMessages;
-        Sleep(1);
-      end;
-    end;
-    Result := True;
-  finally
-    FreeMem(SendBuffer);
   end;
 end;
 
@@ -1991,7 +1507,7 @@ begin
   PlugTop.nMainFormX := g_Config.PlugTop.MainFormX;
   PlugTop.nMainFormY := g_Config.PlugTop.MainFormY;
 
-  ButtonStartGame.Caption := g_sButtonStopStartGame;
+  StartGameButton.Caption := g_sButtonStopStartGame;
   m_nStartStatus := 1;
   TimerStartGame.Enabled := True;
 end;
@@ -2000,12 +1516,12 @@ procedure TfrmMain.CancelStartGame;
 begin
   TimerStartGame.Enabled := False;
   m_nStartStatus := 2;
-  ButtonStartGame.Caption := g_sButtonStopGame;
+  StartGameButton.Caption := g_sButtonStopGame;
 end;
 
 procedure TfrmMain.StopGame;
 begin
-  ButtonStartGame.Caption := g_sButtonStopStopGame;
+  StartGameButton.Caption := g_sButtonStopStopGame;
   MainOutMessage('正在开始停止服务器...');
   TimerCheckRun.Enabled := False;
   TimerStopGame.Enabled := True;
@@ -2017,7 +1533,7 @@ procedure TfrmMain.CancelStopGame;
 begin
   TimerStopGame.Enabled := False;
   m_nStartStatus := 2;
-  ButtonStartGame.Caption := g_sButtonStopGame;
+  StartGameButton.Caption := g_sButtonStopGame;
 end;
 
 procedure TfrmMain.TimerStartGameTimer(Sender: TObject);
@@ -2178,11 +1694,11 @@ begin
     end;
   end;
   // 这里是游戏启动模式的判断
-  if ComboBoxRunStatus.ItemIndex = 1 then begin
+  if RunStatusComboBox.ItemIndex = 1 then begin
     if (GetTickCount - m_dwRunTick) < m_dwRunTime then
       exit;
   end else
-  if ComboBoxRunStatus.ItemIndex = 2 then begin
+  if RunStatusComboBox.ItemIndex = 2 then begin
     DecodeTime(Time, wHour, wMin, wSec, wMSec);
     if (wHour <> m_btHour) or (wMin <> m_btMinute) then
       exit;
@@ -2244,7 +1760,7 @@ begin
 
   TimerStartGame.Enabled := False;
   TimerCheckRun.Enabled := True;
-  ButtonStartGame.Caption := g_sButtonStopGame;
+  StartGameButton.Caption := g_sButtonStopGame;
   m_nStartStatus := 2;
 end;
 
@@ -2526,7 +2042,7 @@ begin
   end;
 
   TimerStopGame.Enabled := False;
-  ButtonStartGame.Caption := g_sButtonStartGame;
+  StartGameButton.Caption := g_sButtonStartGame;
   m_nStartStatus := 0;
 end;
 
@@ -2708,7 +2224,6 @@ end;
 procedure TfrmMain.ProcessMessage(var Msg: TMsg; var Handled: Boolean);
 begin
   if Msg.message = WM_SENDPROCMSG then begin
-    //    ShowMessage('asfd');
     Handled := True;
   end;
 end;
@@ -2721,7 +2236,6 @@ begin
   MsgData.Result := 0;
   wIdent := HiWord(MsgData.From);
   wRecog := LoWord(MsgData.From);
-  //ProgramType:=TProgamType(LoWord(MsgData.From));
   sData := StrPas(MsgData.CopyDataStruct^.lpData);
   case wRecog of //
     tDBServer: ProcessDBServerMsg(wIdent, sData);
@@ -2745,7 +2259,6 @@ begin
         Handle := StrToIntDef(sData, 0);
         if Handle <> 0 then begin
           DBServer.MainFormHandle := Handle;
-          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
         end;
       end;
     SG_STARTNOW: begin
@@ -2778,11 +2291,6 @@ begin
           if LoginGate2.boGetStart and (LoginGate2.MainFormHandle = 0) then begin
             LoginGate2.MainFormHandle := Handle;
           end;
-         // Handle := StrToIntDef(sData, 0);
-         // if Handle <> 0 then begin
-           // LoginGate.MainFormHandle := Handle;
-            //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
-          //end;
         end;
       SG_STARTNOW: begin
           if LoginGate.MainFormHandle = Handle then begin
@@ -2791,7 +2299,6 @@ begin
           if LoginGate2.MainFormHandle = Handle then begin
             MainOutMessage('正在启动登录网关二...');
           end;
-          //MainOutMessage(sData);
         end;
       SG_STARTOK: begin
           if LoginGate.MainFormHandle = Handle then begin
@@ -2803,60 +2310,12 @@ begin
             LoginGate2.btStartStatus := 2;
             MainOutMessage('登录网关二启动完成...');
           end;
-          //LoginGate.btStartStatus := 2;
-          //MainOutMessage(sData);
         end;
       2: ;
       3: ;
     end;
   end;
-
-{  SG_FORMHANDLE: begin
-          if SelGate.boGetStart and (SelGate.MainFormHandle = 0) then begin
-            SelGate.MainFormHandle := Handle;
-          end else
-          if SelGate1.boGetStart and (SelGate1.MainFormHandle = 0) then begin
-            SelGate1.MainFormHandle := Handle;
-          end;
-        end;
-      SG_STARTNOW: begin
-          if SelGate.MainFormHandle = Handle then begin
-            MainOutMessage('正在启动角色网关一...');
-          end else
-          if SelGate1.MainFormHandle = Handle then begin
-            MainOutMessage('正在启动角色网关二...');
-          end;
-        end;
-      SG_STARTOK: begin
-          if SelGate.MainFormHandle = Handle then begin
-            SelGate.btStartStatus := 2;
-            MainOutMessage('角色网关一启动完成...');
-
-          end else
-          if SelGate1.MainFormHandle = Handle then begin
-            SelGate1.btStartStatus := 2;
-            MainOutMessage('角色网关二启动完成...');
-          end;
-        end;}
 end;
-    {
-procedure TfrmMain.ProcessLoginGate1Msg(wIdent: Word; sData: string);
-var
-  Handle: THandle;
-begin
-  case wIdent of
-    SG_FORMHANDLE: begin
-        Handle := StrToIntDef(sData, 0);
-        if Handle <> 0 then begin
-          LoginGate1.MainFormHandle := Handle;
-          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
-        end;
-      end;
-    1: ;
-    2: ;
-    3: ;
-  end;
-end;     }
 
 procedure TfrmMain.ProcessSelGateMsg(wIdent: Word; sData: string);
 var
@@ -2895,23 +2354,6 @@ begin
     end;
   end;
 end;
-{
-procedure TfrmMain.ProcessSelGate1Msg(wIdent: Word; sData: string);
-var
-  Handle: THandle;
-begin
-  case wIdent of
-    SG_FORMHANDLE: begin
-        Handle := StrToIntDef(sData, 0);
-        if Handle <> 0 then begin
-          SelGate1.MainFormHandle := Handle;
-        end;
-      end;
-    1: ;
-    2: ;
-    3: ;
-  end;
-end;       }
 
 function TfrmMain.ProcessM2ServerMsg(wIdent: Word; sData: string): integer;
 var
@@ -2923,7 +2365,6 @@ begin
         Handle := StrToIntDef(sData, 0);
         if Handle <> 0 then begin
           M2Server.MainFormHandle := Handle;
-          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
         end;
       end;
     SG_STARTNOW: begin
@@ -2936,60 +2377,6 @@ begin
     SG_CHECKCODEADDR: begin
         g_dwM2CheckCodeAddr := StrToIntDef(sData, -1);
       end;
-    SG_GETFILEDATA: begin
-      Result := MapGetFileData(sData, True);
-    end;
-    SG_CHECKFILE: begin
-      Result := MapGetFileData(sData, False);
-    end;
-  end;
-end;
-
-function TfrmMain.MapGetFileData(sFileName: string; boBackData: Boolean): Integer;
-var
-  nPos: Integer;
-  sName: string;
-  Item: TListItem;
-  Buffer: PChar;
-  FileHandle: THandle;
-  DataListInfo: pTDataListInfo;
-begin
-  Result := 0;
-  nPos := Pos('Envir\', sFileName);
-  if nPos > 0 then begin
-    sName := Copy(sFileName, nPos + 6, Length(sFileName) - 6);
-    sName := AnsiReplaceText(sName, '//', '\');
-    sName := AnsiReplaceText(sName, '/', '\');
-    sName := AnsiReplaceText(sName, '\\', '\');
-    sName := AnsiReplaceText(sName, '\\', '\');
-    if sName <> '' then begin
-      for Item in ListViewDataList.Items do begin
-        if CompareText(item.Caption, sName) = 0 then begin
-          if boBackData then begin
-            DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-            if (DataListInfo <> nil) and (DataListInfo.Data <> nil) and (DataListInfo.DataSize > 0) then begin
-              if (DataListInfo.MapFileHandle <> 0) and (DataListInfo.MapFileBuffer <> nil) then begin
-                Result := Integer(DataListInfo);
-              end else begin
-                FileHandle := CreateFileMapping($FFFFFFFF, nil, PAGE_READWRITE, 0, DataListInfo.DataSize + 4, PChar(IntToStr(Integer(DataListInfo))));
-                if FileHandle <> 0 then begin
-                  DataListInfo.MapFileHandle := FileHandle;
-                  Buffer := MapViewOfFile(FileHandle, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-                  if Buffer <> nil then begin
-                    DataListInfo.MapFileBuffer := Buffer;
-                    Move(DataListInfo.DataSize, Buffer^, SizeOf(Integer));
-                    Move(DataListInfo.Data^, Buffer[SizeOf(Integer)], DataListInfo.DataSize);
-                    Result := Integer(DataListInfo);
-                  end;
-                end;
-              end;
-            end;
-          end else
-            Result := 1;
-          break;
-        end;
-      end;
-    end;
   end;
 end;
 
@@ -3002,7 +2389,6 @@ begin
         Handle := StrToIntDef(sData, 0);
         if Handle <> 0 then begin
           LoginServer.MainFormHandle := Handle;
-          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
         end;
       end;
     SG_STARTNOW: begin
@@ -3024,7 +2410,6 @@ begin
         Handle := StrToIntDef(sData, 0);
         if Handle <> 0 then begin
           LogServer.MainFormHandle := Handle;
-          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
         end;
       end;
     SG_STARTNOW: begin
@@ -3102,7 +2487,6 @@ begin
         Handle := StrToIntDef(sData, 0);
         if Handle <> 0 then begin
           PlugTop.MainFormHandle := Handle;
-          //        SetWindowPos(Self.Handle,Handle,Self.Left,Self.Top,Self.Width,Self.Height,$40);
         end;
       end;
     SG_STARTNOW: begin
@@ -3142,19 +2526,19 @@ begin
   g_Config.LoginGate.MainFormY := EditLoginGate_MainFormY.Value;
 end;
 
-procedure TfrmMain.CheckBoxSelGate1Click(Sender: TObject);
+procedure TfrmMain.SelGate1CheckBoxClick(Sender: TObject);
 begin
-  g_Config.SelGate.GetStart2 := CheckBoxSelGate1.Checked;
+  g_Config.SelGate.GetStart2 := SelGate1CheckBox.Checked;
 end;
 
-procedure TfrmMain.CheckBoxSelGateClick(Sender: TObject);
+procedure TfrmMain.SelGateCheckBoxClick(Sender: TObject);
 begin
-  g_Config.SelGate.GetStart1 := CheckBoxSelGate.Checked;
+  g_Config.SelGate.GetStart1 := SelGateCheckBox.Checked;
 end;
 
-procedure TfrmMain.CheckBoxPlugTopClick(Sender: TObject);
+procedure TfrmMain.PlugTopCheckBoxClick(Sender: TObject);
 begin
-  g_Config.PlugTop.GetStart := CheckBoxPlugTop.Checked;
+  g_Config.PlugTop.GetStart := PlugTopCheckBox.Checked;
   g_IniConf.WriteBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);
 end;
 
@@ -3350,7 +2734,7 @@ begin
     if
       Application.MessageBox('游戏服务器正在运行，是否停止游戏服务器 ?', '确认信息', MB_YESNO +
         MB_ICONQUESTION) = mrYes then begin
-      ButtonStartGameClick(ButtonStartGame);
+      StartGameButtonClick(StartGameButton);
     end;
     CanClose := False;
     Exit;
@@ -3371,27 +2755,6 @@ begin
     end;
   end;
 end;
- {
-function TfrmMain.GetFileData(sFileName: string; out FileBuffer: PChar; out nBufferLen: Integer): Boolean;
-var
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-begin
-  Result := False;
-  FileBuffer := nil;
-  nBufferLen := 0;
-  for Item in ListViewDataList.Items do begin
-    if CompareText(Item.Caption, sFileName) = 0 then begin
-      DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-      if (DataListInfo <> nil) and (DataListInfo.DataSize > 0) and (DataListInfo.Data <> nil) then begin
-        FileBuffer := DataListInfo.Data;
-        nBufferLen := DataListInfo.DataSize;
-      end;
-      Result := True;
-      break;
-    end;
-  end;
-end;      }
 
 procedure TfrmMain.GetMutRunGateConfing(nIndex: Integer);
 var
@@ -3433,19 +2796,11 @@ end;
 
 function TfrmMain.StartService: Boolean;
 begin
-  //  Result := False;
   MainOutMessage('正在启动...');
   m_dwShowTick := GetTickCount();
-  Timer.Enabled := True;
   MainOutMessage('启动完成...');
   Result := True;
 end;
-{
-procedure TfrmMain.StopService;
-begin
-  Timer.Enabled := False;
-  g_IniConf.Free;
-end;      }
 
 procedure TfrmMain.ButtonGeneralDefalultClick(Sender: TObject);
 begin
@@ -3453,7 +2808,9 @@ begin
   EditHeroDB.Text := 'HeroDB';
   EditGameName.Text := '小传奇';
   EditGameExtIPaddr.Text := '127.0.0.1';
-  //CheckBoxDynamicIPMode.Checked := False;
+  CheckBoxIP2.Checked := False;
+  SpinEditAllPortAdd.Text := '0';
+  CheckBoxCloseWuXin.Checked := False;
 end;
 
 procedure TfrmMain.ButtonRunGateDefaultClick(Sender: TObject);
@@ -3532,33 +2889,6 @@ begin
   CheckBoxM2ServerGetStart.Checked := True;
 end;
 
-procedure TfrmMain.RefGameDebug;
-//var
-//  CheckCode: TCheckCode;
-//  dwReturn: LongWord;
-begin
-  {EditM2CheckCodeAddr.Text := IntToHex(g_dwM2CheckCodeAddr, 2);
-  FillChar(CheckCode, SizeOf(CheckCode), 0);
-  ReadProcessMemory(M2Server.ProcessHandle, Pointer(g_dwM2CheckCodeAddr), @CheckCode, SizeOf(CheckCode), dwReturn);
-  if dwReturn = SizeOf(CheckCode) then begin
-    EditM2CheckCode.Text := IntToStr(CheckCode.dwThread0);
-    EditM2CheckStr.Text := string(CheckCode.sThread0);
-  end;
-
-  EditDBCheckCodeAddr.Text := IntToHex(g_dwDBCheckCodeAddr, 2);
-  FillChar(CheckCode, SizeOf(CheckCode), 0);
-  ReadProcessMemory(DBServer.ProcessHandle, Pointer(g_dwDBCheckCodeAddr), @CheckCode, SizeOf(CheckCode), dwReturn);
-  if dwReturn = SizeOf(CheckCode) then begin
-    EditDBCheckCode.Text := IntToStr(CheckCode.dwThread0);
-    EditDBCheckStr.Text := string(CheckCode.sThread0);
-  end;}
-end;
-
-procedure TfrmMain.TimerCheckDebugTimer(Sender: TObject);
-begin
-  RefGameDebug();
-end;
-
 procedure TfrmMain.ButtonM2SuspendClick(Sender: TObject);
 begin
   SuspendThread(M2Server.ProcessInfo.hThread);
@@ -3609,81 +2939,6 @@ begin
   Application.MessageBox('保存成功！！！', '提示信息', MB_OK +
     MB_ICONINFORMATION);
   ButtonBackSave.Enabled := True;
-end;
-
-procedure TfrmMain.btDataListAllClick(Sender: TObject);
-var
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-  boSend: Boolean;
-begin
-  if not g_boGetDataListOK then exit;
-  boSend := False;
-  for Item in ListViewDataList.Items do begin
-    DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-    if DataListInfo <> nil then begin
-      g_GetDatList.AddObject(Item.Caption, TObject(DataListInfo));
-      boSend := True;
-    end;
-  end;
-  if boSend then begin
-    CSocket.Active := False;
-    CSocket.Host := g_sDataListAddrs;
-    CSocket.Port := g_wDataListPort;
-    CSocket.Active := True;
-  end;
-end;
-
-procedure TfrmMain.btDataListSelectClick(Sender: TObject);
-var
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-  boSend: Boolean;
-begin
-
-  if not g_boGetDataListOK then exit;
-  boSend := False;
-  for Item in ListViewDataList.Items do begin
-    if Item.Selected then begin
-      DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-      if DataListInfo <> nil then begin
-        g_GetDatList.AddObject(Item.Caption, TObject(DataListInfo));
-        boSend := True;
-      end;
-    end;
-  end;
-  if boSend then begin
-    CSocket.Active := False;
-    CSocket.Host := g_sDataListAddrs;
-    CSocket.Port := g_wDataListPort;
-    CSocket.Active := True;
-  end;
-
-  {if (ListViewDataList.ItemIndex >= 0) and (ListViewDataList.ItemIndex < ListViewDataList.Items.Count) then begin
-    Item := ListViewDataList.Items[ListViewDataList.ItemIndex];
-    DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-    if DataListInfo <> nil then begin
-      g_GetDatList.AddObject(Item.Caption, TObject(DataListInfo));
-      CSocket.Active := False;
-      CSocket.Host := g_sDataListAddrs;
-      CSocket.Port := g_wDataListPort;
-      CSocket.Active := True;
-    end;
-  end;  }
-end;
-
-procedure TfrmMain.btDataListListClick(Sender: TObject);
-var
-  sPort: string;
-begin
-  g_sDataListAddrs := InputBox('输入信息', '请输入远程地址', g_sDataListAddrs);
-  sPort := InputBox('输入信息', '请输入远程端口', IntToStr(g_wDataListPort));
-  g_wDataListPort := StrToIntDef(sPort, g_wDataListPort);
-  g_sDataListPassWord := InputBox('输入信息', '请输入连接密码', g_sDataListPassWord);
-  CSocket.Active := False;
-  CSocket.Host := g_sDataListAddrs;
-  CSocket.Port := g_wDataListPort;
-  CSocket.Active := True;
 end;
 
 procedure TfrmMain.Button1Click(Sender: TObject);
@@ -3828,32 +3083,30 @@ begin
 
   portAdd := strtoint(SpinEditAllPortAdd.Text);
 
-  if not portAdd = 0 then
-    g_Config.DBServer.GatePort := g_Config.DBServer.GatePort + portAdd;
-    g_Config.DBServer.ServerPort := g_Config.DBServer.ServerPort + portAdd;
-    g_Config.LoginSrv.GatePort := g_Config.LoginSrv.GatePort + portAdd;
-    g_Config.LoginSrv.ServerPort := g_Config.LoginSrv.ServerPort + portAdd;
-    g_Config.LoginSrv.MonPort := g_Config.LoginSrv.MonPort + portAdd;
-    g_Config.M2Server.GatePort := g_Config.M2Server.GatePort + portAdd;
-    g_Config.M2Server.MsgSrvPort := g_Config.M2Server.MsgSrvPort + portAdd;
-    g_Config.LogServer.Port := g_Config.LogServer.Port + portAdd;
-    g_Config.RunGate.GatePort[0] := g_Config.RunGate.GatePort[0] + portAdd;
-    g_Config.RunGate.GatePort[1] := g_Config.RunGate.GatePort[1] + portAdd;
-    g_Config.RunGate.GatePort[2] := g_Config.RunGate.GatePort[2] + portAdd;
-    g_Config.RunGate.GatePort[3] := g_Config.RunGate.GatePort[3] + portAdd;
-    g_Config.RunGate.GatePort[4] := g_Config.RunGate.GatePort[4] + portAdd;
-    g_Config.RunGate.GatePort[5] := g_Config.RunGate.GatePort[5] + portAdd;
-    g_Config.RunGate.GatePort[6] := g_Config.RunGate.GatePort[6] + portAdd;
-    g_Config.RunGate.GatePort[7] := g_Config.RunGate.GatePort[7] + portAdd;
-    g_Config.SelGate.GatePort[0] := g_Config.SelGate.GatePort[0] + portAdd;
-    g_Config.SelGate.GatePort[1] := g_Config.SelGate.GatePort[1] + portAdd;
-    g_Config.LoginGate.GatePort := g_Config.LoginGate.GatePort + portAdd;
-    RefGameConsole();
+  if portAdd >= 0 then
+    EditDBServerGatePort.Text := IntToStr(g_Config.DBServer.GatePort + portAdd);
+    EditDBServerServerPort.Text := IntToStr(g_Config.DBServer.ServerPort + portAdd);
+    EditLoginServerGatePort.Text := IntToStr(g_Config.LoginSrv.GatePort + portAdd);
+    EditLoginServerServerPort.Text := IntToStr(g_Config.LoginSrv.ServerPort + portAdd);
+    EditLoginServerMonPort.Text := IntToStr(g_Config.LoginSrv.MonPort + portAdd);
+    EditM2ServerGatePort.Text := IntToStr(g_Config.M2Server.GatePort + portAdd);
+    EditM2ServerMsgSrvPort.Text := IntToStr(g_Config.M2Server.MsgSrvPort + portAdd);
+    EditLogServerPort.Text := IntToStr(g_Config.LogServer.Port + portAdd);
+    EditRunGate_GatePort1.Text := IntToStr(g_Config.RunGate.GatePort[0] + portAdd);
+    EditRunGate_GatePort2.Text := IntToStr(g_Config.RunGate.GatePort[1] + portAdd);
+    EditRunGate_GatePort3.Text := IntToStr(g_Config.RunGate.GatePort[2] + portAdd);
+    EditRunGate_GatePort4.Text := IntToStr(g_Config.RunGate.GatePort[3] + portAdd);
+    EditRunGate_GatePort5.Text := IntToStr(g_Config.RunGate.GatePort[4] + portAdd);
+    EditRunGate_GatePort6.Text := IntToStr(g_Config.RunGate.GatePort[5] + portAdd);
+    EditRunGate_GatePort7.Text := IntToStr(g_Config.RunGate.GatePort[6] + portAdd);
+    EditRunGate_GatePort8.Text := IntToStr(g_Config.RunGate.GatePort[7] + portAdd);
+    EditSelGate_GatePort.Text := IntToStr(g_Config.SelGate.GatePort[0] + portAdd);
+    EditSelGate_GatePort1.Text := IntToStr(g_Config.SelGate.GatePort[1] + portAdd);
+    EditLoginGate_GatePort.Text := IntToStr(g_Config.LoginGate.GatePort + portAdd);
 end;
 
 procedure TfrmMain.ButtonBackAddClick(Sender: TObject);
 var
-  //  I: Integer;
   BackUpObject: TBackUpObject;
   sSource, sDest: string;
   wHour, wMin: Word;
@@ -3941,10 +3194,6 @@ begin
         MB_OK + MB_ICONINFORMATION);
       Exit;
     end;
-    {if g_BackUpManager.FindObject(sSource) <> nil then begin
-      Application.MessageBox('此备份目录已经存在！！！', '提示信息', MB_OK + MB_ICONERROR);
-      Exit;
-    end;}
     if RadioButtonBackMode1.Checked then begin
       wHour := RzSpinEditHour1.IntValue;
       wMin := RzSpinEditMin1.IntValue;
@@ -4010,53 +3259,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.ListViewDataListDblClick(Sender: TObject);
-var
-  Item: TListItem;
-  DataListInfo: pTDataListInfo;
-  ShowBuffer: PChar;
-begin
-  if (ListViewDataList.ItemIndex >= 0) and (ListViewDataList.ItemIndex < ListViewDataList.Items.Count) then begin
-    Item := ListViewDataList.Items[ListViewDataList.ItemIndex];
-    if CompareText(RightStr(Item.Caption, 3), 'TXT') = 0 then begin
-      DataListInfo := pTDataListInfo(Item.SubItems.Objects[0]);
-      if (DataListInfo <> nil) then begin
-        FormText := TFormText.Create(nil);
-        FormText.Memo1.Lines.Clear;
-        if (DataListInfo.Data <> nil) and (DataListInfo.DataSize > 0) then begin
-          ShowBuffer := AllocMem(DataListInfo.DataSize + 1);
-          Move(DataListInfo.Data^, ShowBuffer^, DataListInfo.DataSize);
-          FormText.Memo1.Lines.SetText(ShowBuffer);
-          FreeMem(ShowBuffer);
-        end;
-        if mrYes = FormText.ShowModal then begin
-          if DataListInfo.MapFileBuffer <> nil then
-            UnMapViewOfFile(DataListInfo.MapFileBuffer);
-          if DataListInfo.MapFileHandle <> 0 then
-            CloseHandle(DataListInfo.MapFileHandle);
-          DataListInfo.MapFileBuffer := nil;
-          DataListInfo.MapFileHandle := 0;
-          if DataListInfo.Data <> nil then
-            FreeMem(DataListInfo.Data);
-          DataListInfo.Data := nil;
-          DataListInfo.DataSize := 0;
-          ShowBuffer := FormText.Memo1.Lines.GetText;
-          if ShowBuffer <> nil then begin
-            DataListInfo.DataSize := Length(Strpas(ShowBuffer));
-            if DataListInfo.DataSize > 0 then begin
-              GetMem(DataListInfo.Data, DataListInfo.DataSize);
-              Move(ShowBuffer^, DataListInfo.Data^, DataListInfo.DataSize);
-            end;
-            StrDispose(ShowBuffer);
-          end;
-          Item.SubItems.Strings[1] := IntToStr(DataListInfo.DataSize);
-        end;
-        FreeAndNil(FormText);
-      end;
-    end;
-  end;
-end;
-
 procedure TfrmMain.RadioButtonBackMode1Click(Sender: TObject);
 begin
   RzSpinEditHour2.Enabled := not RadioButtonBackMode1.Checked;
@@ -4094,4 +3296,5 @@ begin
 end;
 
 end.
+
 

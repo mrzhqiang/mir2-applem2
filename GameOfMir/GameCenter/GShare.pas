@@ -28,7 +28,8 @@ const
   sAllIPaddr = '0.0.0.0';
   sLocalIPaddr = '127.0.0.1';
   sLocalIPaddr2 = '127.0.0.2';
-  nLimitOnlineUser = 2000; //服务器最高上线人数
+  // 服务器最高上线人数
+  nLimitOnlineUser = 2000;
 
   SERVERCONFIGDIR = 'Config\';
   SERVERCONFIGFILE = 'Config.ini';
@@ -102,14 +103,6 @@ type
     DataSize: Integer;
     Item: TListItem;
   end;
-
-
-
-  {TRunGateInfo = packed record
-    boGetStart: Boolean;
-    sGateAddr: string[15];
-    nGatePort: Integer;
-  end;   }
 
   TCheckCode = packed record
     dwThread0: LongWord;
@@ -299,7 +292,7 @@ var
   LoginServer: TProgram;
   LogServer: TProgram;
   M2Server: TProgram;
-  RunGate: array[0..MAXRUNGATECOUNT - 1] of TProgram; //2006-11-12 增加
+  RunGate: array[0..MAXRUNGATECOUNT - 1] of TProgram;
   SelGate: TProgram;
   SelGate1: TProgram;
   LoginGate: TProgram;
@@ -308,11 +301,10 @@ var
 
   g_dwStopTick: LongWord;
   g_dwStopTimeOut: LongWord = 10000;
-  //  g_boShowDebugTab: Boolean = False;
   g_dwM2CheckCodeAddr: LongWord;
   g_dwDBCheckCodeAddr: LongWord;
 
-  g_BackUpManager: TBackUpManager; //文件备份
+  g_BackUpManager: TBackUpManager;
   m_nBackStartStatus: Integer = 0;
 
 implementation
@@ -444,7 +436,6 @@ begin
   g_Config.PlugTop.MainFormX := g_IniConf.ReadInteger(PlugTopSectionName, 'MainFormX', g_Config.PlugTop.MainFormX);
   g_Config.PlugTop.MainFormY := g_IniConf.ReadInteger(PlugTopSectionName, 'MainFormY', g_Config.PlugTop.MainFormY);
   g_Config.PlugTop.GetStart := g_IniConf.ReadBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);
-
 end;
 
 procedure SaveConfig();
@@ -515,8 +506,8 @@ begin
   g_IniConf.WriteInteger(LoginGateSectionName, 'GatePort', g_Config.LoginGate.GatePort);
   g_IniConf.WriteBool(LoginGateSectionName, 'GetStart', g_Config.LoginGate.GetStart);
 
-//  g_IniConf.WriteInteger(PlugTopSectionName, 'MainFormX', g_Config.PlugTop.MainFormX);
-//  g_IniConf.WriteInteger(PlugTopSectionName, 'MainFormY', g_Config.PlugTop.MainFormY);
+  g_IniConf.WriteInteger(PlugTopSectionName, 'MainFormX', g_Config.PlugTop.MainFormX);
+  g_IniConf.WriteInteger(PlugTopSectionName, 'MainFormY', g_Config.PlugTop.MainFormY);
   g_IniConf.WriteBool(PlugTopSectionName, 'GetStart', g_Config.PlugTop.GetStart);
 
 end;

@@ -3,7 +3,7 @@ object frmMain: TfrmMain
   Top = 106
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Randall '#25511#21046#21488'(2018-08-18)'
+  Caption = #20848#36798#23572#25511#21046#21488'(2020.1.0)'
   ClientHeight = 376
   ClientWidth = 536
   Color = clBtnFace
@@ -20,101 +20,105 @@ object frmMain: TfrmMain
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 12
-  object PageControl1: TPageControl
+  object PageControl: TPageControl
     Left = 8
     Top = 8
     Width = 520
     Height = 360
-    ActivePage = TabSheet1
+    ActivePage = ControlTab
     HotTrack = True
     TabOrder = 0
-    object TabSheet1: TTabSheet
-      Caption = #26381#21153#31471#25511#21046
-      object GroupBox5: TGroupBox
+    object ControlTab: TTabSheet
+      Caption = #25511#21046#20013#24515
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+      object ControlGroup: TGroupBox
         Left = 8
         Top = 3
         Width = 497
         Height = 313
         Caption = #26381#21153#22120#25511#21046
         TabOrder = 0
-        object Label24: TLabel
+        object StartHoursLabel: TLabel
           Left = 330
           Top = 133
           Width = 30
           Height = 12
           Caption = #23567#26102':'
         end
-        object Label25: TLabel
+        object StartMinutesLabel: TLabel
           Left = 410
           Top = 133
           Width = 30
           Height = 12
           Caption = #20998#38047':'
         end
-        object ButtonStartGame: TButton
+        object StartGameButton: TButton
           Left = 166
           Top = 275
           Width = 145
           Height = 33
           Caption = #21551#21160#28216#25103#25511#21046#22120'(&S)'
           TabOrder = 0
-          OnClick = ButtonStartGameClick
+          OnClick = StartGameButtonClick
         end
-        object CheckBoxM2Server: TCheckBox
+        object M2ServerCheckBox: TCheckBox
           Left = 8
           Top = 33
           Width = 161
           Height = 17
           Caption = #28216#25103#20027#31243#24207'(M2Server):'
           TabOrder = 1
-          OnClick = CheckBoxM2ServerClick
+          OnClick = M2ServerCheckBoxClick
         end
-        object CheckBoxDBServer: TCheckBox
+        object DBServerCheckBox: TCheckBox
           Left = 8
           Top = 17
           Width = 177
           Height = 17
-          Caption = #28216#25103#25968#25454#24211'(DBServer):'
+          Caption = #25968#25454#24211#26381#21153#22120'(DBServer):'
           TabOrder = 2
-          OnClick = CheckBoxDBServerClick
+          OnClick = DBServerCheckBoxClick
         end
-        object CheckBoxLoginServer: TCheckBox
+        object LoginServerCheckBox: TCheckBox
           Left = 248
           Top = 17
           Width = 177
           Height = 17
-          Caption = #28216#25103#30331#38470#26381#21153#22120'(LoginSrv):'
+          Caption = #30331#38470#26381#21153#22120'(LoginSrv):'
           TabOrder = 3
-          OnClick = CheckBoxLoginServerClick
+          OnClick = LoginServerCheckBoxClick
         end
-        object CheckBoxLogServer: TCheckBox
+        object LogServerCheckBox: TCheckBox
           Left = 248
           Top = 33
           Width = 177
           Height = 17
-          Caption = #28216#25103#26085#24535#26381#21153#22120'(LogServer):'
+          Caption = #26085#24535#26381#21153#22120'(LogServer):'
           TabOrder = 4
-          OnClick = CheckBoxLogServerClick
+          OnClick = LogServerCheckBoxClick
         end
-        object CheckBoxSelGate1: TCheckBox
+        object SelGate1CheckBox: TCheckBox
           Left = 248
           Top = 113
           Width = 161
           Height = 17
-          Caption = #28216#25103#35282#33394#32593#20851#20108'(SelGate):'
+          Caption = #35282#33394#32593#20851#20108'(SelGate):'
           TabOrder = 5
-          OnClick = CheckBoxSelGate1Click
+          OnClick = SelGate1CheckBoxClick
         end
-        object CheckBoxRunGate: TCheckBox
+        object RunGateCheckBox: TCheckBox
           Left = 8
           Top = 49
           Width = 161
           Height = 17
           Caption = #28216#25103#32593#20851#19968'(Rungate):'
           TabOrder = 6
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxRunGate1: TCheckBox
+        object RunGate1CheckBox: TCheckBox
           Tag = 1
           Left = 248
           Top = 49
@@ -122,9 +126,9 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#20108'(Rungate):'
           TabOrder = 7
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxRunGate2: TCheckBox
+        object RunGate2CheckBox: TCheckBox
           Tag = 2
           Left = 8
           Top = 65
@@ -132,7 +136,7 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#19977'(Rungate):'
           TabOrder = 8
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
         object MemoLog: TMemo
           Left = 8
@@ -153,7 +157,7 @@ object frmMain: TfrmMain
           TabOrder = 9
           OnChange = MemoLogChange
         end
-        object CheckBoxRunGate3: TCheckBox
+        object RunGate3CheckBox: TCheckBox
           Tag = 3
           Left = 248
           Top = 65
@@ -161,9 +165,9 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#22235'(Rungate):'
           TabOrder = 10
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxRunGate4: TCheckBox
+        object RunGate4CheckBox: TCheckBox
           Tag = 4
           Left = 8
           Top = 81
@@ -171,9 +175,9 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#20116'(Rungate):'
           TabOrder = 11
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxRunGate5: TCheckBox
+        object RunGate5CheckBox: TCheckBox
           Tag = 5
           Left = 248
           Top = 81
@@ -181,9 +185,9 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#20845'(Rungate):'
           TabOrder = 12
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxRunGate6: TCheckBox
+        object RunGate6CheckBox: TCheckBox
           Tag = 6
           Left = 8
           Top = 97
@@ -191,9 +195,9 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#19971'(Rungate):'
           TabOrder = 13
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxRunGate7: TCheckBox
+        object RunGate7CheckBox: TCheckBox
           Tag = 7
           Left = 248
           Top = 97
@@ -201,27 +205,27 @@ object frmMain: TfrmMain
           Height = 17
           Caption = #28216#25103#32593#20851#20843'(Rungate):'
           TabOrder = 14
-          OnClick = CheckBoxRunGateClick
+          OnClick = RunGateCheckBoxClick
         end
-        object CheckBoxSelGate: TCheckBox
+        object SelGateCheckBox: TCheckBox
           Left = 8
           Top = 113
           Width = 161
           Height = 17
-          Caption = #28216#25103#35282#33394#32593#20851#19968'(SelGate):'
+          Caption = #35282#33394#32593#20851#19968'(SelGate):'
           TabOrder = 15
-          OnClick = CheckBoxSelGateClick
+          OnClick = SelGateCheckBoxClick
         end
-        object CheckBoxLoginGate: TCheckBox
+        object LoginGateCheckBox: TCheckBox
           Left = 8
           Top = 131
           Width = 162
           Height = 17
-          Caption = #28216#25103#30331#38470#32593#20851'(LoginGate): '
+          Caption = #30331#38470#32593#20851'(LoginGate): '
           TabOrder = 16
-          OnClick = CheckBoxLoginGateClick
+          OnClick = LoginGateCheckBoxClick
         end
-        object ComboBoxRunStatus: TComboBox
+        object RunStatusComboBox: TComboBox
           Left = 248
           Top = 129
           Width = 73
@@ -231,7 +235,7 @@ object frmMain: TfrmMain
           ItemIndex = 0
           TabOrder = 17
           Text = #27491#24120#21551#21160
-          OnChange = ComboBoxRunStatusChange
+          OnChange = RunStatusComboBoxChange
           Items.Strings = (
             #27491#24120#21551#21160
             #24310#26102#21551#21160
@@ -248,7 +252,7 @@ object frmMain: TfrmMain
           MinValue = 0
           TabOrder = 18
           Value = 0
-          OnChange = ComboBoxRunStatusChange
+          OnChange = RunStatusComboBoxChange
         end
         object EditMinute: TSpinEdit
           Left = 440
@@ -261,22 +265,26 @@ object frmMain: TfrmMain
           MinValue = 0
           TabOrder = 19
           Value = 0
-          OnChange = ComboBoxRunStatusChange
+          OnChange = RunStatusComboBoxChange
         end
-        object CheckBoxPlugTop: TCheckBox
+        object PlugTopCheckBox: TCheckBox
           Left = 8
           Top = 153
           Width = 162
           Height = 17
           Caption = #25490#34892#27036#25554#20214'(PlugTop)'
           TabOrder = 20
-          OnClick = CheckBoxPlugTopClick
+          OnClick = PlugTopCheckBoxClick
         end
       end
     end
-    object TabSheet2: TTabSheet
+    object ConfigTab: TTabSheet
       Caption = #37197#32622#21521#23548
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl3: TPageControl
         Left = 0
         Top = 0
@@ -344,7 +352,7 @@ object frmMain: TfrmMain
             end
             object EditHeroDB: TEdit
               Left = 136
-              Top = 48
+              Top = 46
               Width = 225
               Height = 20
               Hint = #26381#21153#22120#31471'BDE '#25968#25454#24211#21517#31216#65292#40664#35748#20026' '#8220'HeroDB'#8221#12290
@@ -1630,6 +1638,10 @@ object frmMain: TfrmMain
     object TabSheet3: TTabSheet
       Caption = #25968#25454#22791#20221
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabelBackMsg: TLabel
         Left = 384
         Top = 304
@@ -1868,228 +1880,6 @@ object frmMain: TfrmMain
         OnClick = ButtonBackSaveClick
       end
     end
-    object TabSheetDebug: TTabSheet
-      Caption = #27979#35797
-      ImageIndex = 6
-      object GroupBox29: TGroupBox
-        Left = 8
-        Top = 0
-        Width = 497
-        Height = 329
-        Caption = #36827#31243#20449#24687
-        TabOrder = 0
-        object GroupBox30: TGroupBox
-          Left = 8
-          Top = 16
-          Width = 265
-          Height = 113
-          Caption = #28216#25103#24341#25806
-          TabOrder = 0
-          object Label45: TLabel
-            Left = 8
-            Top = 20
-            Width = 30
-            Height = 12
-            Caption = #22320#22336':'
-          end
-          object Label46: TLabel
-            Left = 8
-            Top = 44
-            Width = 42
-            Height = 12
-            Caption = #26816#26597#30721':'
-          end
-          object Label58: TLabel
-            Left = 8
-            Top = 68
-            Width = 42
-            Height = 12
-            Caption = #26816#26597#20018':'
-          end
-          object EditM2CheckCodeAddr: TEdit
-            Left = 56
-            Top = 16
-            Width = 97
-            Height = 20
-            TabOrder = 0
-          end
-          object EditM2CheckCode: TEdit
-            Left = 56
-            Top = 40
-            Width = 97
-            Height = 20
-            TabOrder = 1
-          end
-          object ButtonM2Suspend: TButton
-            Left = 200
-            Top = 32
-            Width = 57
-            Height = 25
-            Caption = #26242#20572#31243#24207
-            TabOrder = 2
-            Visible = False
-            OnClick = ButtonM2SuspendClick
-          end
-          object EditM2CheckStr: TEdit
-            Left = 56
-            Top = 64
-            Width = 201
-            Height = 20
-            TabOrder = 3
-          end
-        end
-        object GroupBox31: TGroupBox
-          Left = 8
-          Top = 136
-          Width = 265
-          Height = 105
-          Caption = #25968#25454#24211
-          TabOrder = 1
-          object Label47: TLabel
-            Left = 8
-            Top = 20
-            Width = 30
-            Height = 12
-            Caption = #22320#22336':'
-          end
-          object Label48: TLabel
-            Left = 8
-            Top = 44
-            Width = 42
-            Height = 12
-            Caption = #26816#26597#30721':'
-          end
-          object Label57: TLabel
-            Left = 8
-            Top = 68
-            Width = 36
-            Height = 12
-            Caption = #26816#26597#20018
-          end
-          object EditDBCheckCodeAddr: TEdit
-            Left = 56
-            Top = 16
-            Width = 97
-            Height = 20
-            TabOrder = 0
-          end
-          object EditDBCheckCode: TEdit
-            Left = 56
-            Top = 40
-            Width = 97
-            Height = 20
-            TabOrder = 1
-          end
-          object Button3: TButton
-            Left = 200
-            Top = 32
-            Width = 57
-            Height = 25
-            Caption = #26242#20572#31243#24207
-            TabOrder = 2
-            Visible = False
-            OnClick = ButtonM2SuspendClick
-          end
-          object EditDBCheckStr: TEdit
-            Left = 56
-            Top = 64
-            Width = 201
-            Height = 20
-            TabOrder = 3
-          end
-        end
-      end
-    end
-    object tsDataList: TTabSheet
-      Caption = #25968#25454#21015#34920
-      ImageIndex = 4
-      object Label27: TLabel
-        Left = 10
-        Top = 279
-        Width = 30
-        Height = 12
-        Caption = #29366#24577':'
-      end
-      object LabelLog: TLabel
-        Left = 46
-        Top = 279
-        Width = 6
-        Height = 12
-      end
-      object GroupBox21: TGroupBox
-        Left = 8
-        Top = 8
-        Width = 497
-        Height = 264
-        Caption = #25968#25454#21015#34920
-        TabOrder = 0
-        object ListViewDataList: TListView
-          Left = 8
-          Top = 16
-          Width = 481
-          Height = 239
-          Columns = <
-            item
-              Caption = #25968#25454#21517#31216
-              Width = 205
-            end
-            item
-              Caption = #26356#26032#26085#26399
-              Width = 130
-            end
-            item
-              Caption = #25968#25454#22823#23567
-              Width = 60
-            end
-            item
-              Alignment = taCenter
-              Caption = #29366#24577
-              Width = 60
-            end>
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = #23435#20307
-          Font.Style = []
-          GridLines = True
-          MultiSelect = True
-          ReadOnly = True
-          RowSelect = True
-          ParentFont = False
-          PopupMenu = pm1
-          TabOrder = 0
-          ViewStyle = vsReport
-          OnDblClick = ListViewDataListDblClick
-        end
-      end
-      object btDataListSelect: TButton
-        Left = 8
-        Top = 296
-        Width = 89
-        Height = 25
-        Caption = #26356#26032#36873#20013'(&R)'
-        TabOrder = 1
-        OnClick = btDataListSelectClick
-      end
-      object btDataListAll: TButton
-        Left = 103
-        Top = 296
-        Width = 89
-        Height = 25
-        Caption = #26356#26032#20840#37096'(&A)'
-        TabOrder = 2
-        OnClick = btDataListAllClick
-      end
-      object btDataListList: TButton
-        Left = 198
-        Top = 296
-        Width = 89
-        Height = 25
-        Caption = #26356#26032#21015#34920'(&L)'
-        TabOrder = 3
-        OnClick = btDataListListClick
-      end
-    end
     object TabSheet13: TTabSheet
       Caption = #24320#21306#25968#25454#28165#29702
       ImageIndex = 5
@@ -2234,60 +2024,21 @@ object frmMain: TfrmMain
     Enabled = False
     Interval = 200
     OnTimer = TimerStartGameTimer
-    Left = 88
-    Top = 232
+    Left = 8
+    Top = 304
   end
   object TimerStopGame: TTimer
     Enabled = False
     Interval = 500
     OnTimer = TimerStopGameTimer
-    Left = 120
-    Top = 232
+    Left = 40
+    Top = 304
   end
   object TimerCheckRun: TTimer
     Enabled = False
     Interval = 2000
     OnTimer = TimerCheckRunTimer
-    Left = 152
-    Top = 232
-  end
-  object Timer: TTimer
-    Enabled = False
-    Interval = 10
-    Left = 184
-    Top = 232
-  end
-  object TimerCheckDebug: TTimer
-    Enabled = False
-    Interval = 500
-    OnTimer = TimerCheckDebugTimer
-    Left = 56
-    Top = 232
-  end
-  object CSocket: TClientSocket
-    Active = False
-    ClientType = ctNonBlocking
-    Port = 0
-    OnConnecting = CSocketConnecting
-    OnConnect = CSocketConnect
-    OnDisconnect = CSocketDisconnect
-    OnRead = CSocketRead
-    OnError = CSocketError
-    Left = 24
-    Top = 232
-  end
-  object pm1: TPopupMenu
-    Left = 216
-    Top = 232
-    object N1: TMenuItem
-      Caption = #36755#20986#21040#25991#20214'(&W)'
-      OnClick = N1Click
-    end
-  end
-  object dlgSave: TSaveDialog
-    FilterIndex = 0
-    Options = [ofHideReadOnly, ofNoChangeDir, ofNoNetworkButton, ofEnableSizing]
-    Left = 248
-    Top = 232
+    Left = 72
+    Top = 304
   end
 end
