@@ -16,3 +16,4 @@
 *.~*
 *.local
 .idea
+*.iml

@@ -1,0 +1,54 @@
+{$I RzComps.inc}
+
+package RaizeComponentsVclDb_Design;
+
+{$R 'RaizeComponentsVclDb_Design.res'}
+
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $50C00000}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+{$I RaizeComponentsVclDb_Description.inc}
+
+{$IFDEF VCL70}  {$I RaizeComponents_LibSuffix70.inc}  {$ENDIF}
+{$IFDEF VCL90}  {$I RaizeComponents_LibSuffix90.inc}  {$ENDIF}
+{$IFDEF VCL100} {$I RaizeComponents_LibSuffix100.inc} {$ENDIF}
+{$IFDEF VCL120} {$I RaizeComponents_LibSuffix120.inc} {$ENDIF}
+{$IFDEF VCL140} {$I RaizeComponents_LibSuffix140.inc} {$ENDIF}
+{$IFDEF VCL150} {$I RaizeComponents_LibSuffix150.inc} {$ENDIF}
+
+requires
+  VCL,
+  DesignIDE,
+  DclDB,
+  RaizeComponentsVcl_Design,
+  RaizeComponentsVclDb;
+
+contains
+  RaizeComponentsVclDb_Reg  in 'RaizeComponentsVclDb_Reg.pas',
+  RzDBDesignEditors         in 'RzDBDesignEditors.pas',
+  RzDBComboBoxEditor        in 'RzDBComboBoxEditor.pas',
+  RzDBNavEditor             in 'RzDBNavEditor.pas',
+  RzDBRadioGroupEditor      in 'RzDBRadioGroupEditor.pas';
+
+
+end.

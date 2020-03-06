@@ -1,0 +1,62 @@
+{$I RzComps.inc}
+
+package RaizeComponentsVclDb;
+
+{$R 'RaizeComponentsVclDb.res'}
+
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $50400000}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+{$I RaizeComponentsVclDb_Description.inc}
+
+{$IFDEF VCL70}  {$I RaizeComponents_LibSuffix70.inc}  {$ENDIF}
+{$IFDEF VCL90}  {$I RaizeComponents_LibSuffix90.inc}  {$ENDIF}
+{$IFDEF VCL100} {$I RaizeComponents_LibSuffix100.inc} {$ENDIF}
+{$IFDEF VCL120} {$I RaizeComponents_LibSuffix120.inc} {$ENDIF}
+{$IFDEF VCL140} {$I RaizeComponents_LibSuffix140.inc} {$ENDIF}
+{$IFDEF VCL150} {$I RaizeComponents_LibSuffix150.inc} {$ENDIF}
+
+requires
+  Vcl,
+  VclDB,
+  RaizeComponentsVcl;
+
+contains
+  RzDBBnEd         in 'RzDBBnEd.pas',
+  RzDBChk          in 'RzDBChk.pas',
+  RzDBCmbo         in 'RzDBCmbo.pas',
+  RzDBDTP          in 'RzDBDTP.pas',
+  RzDBEdit         in 'RzDBEdit.pas',
+  RzDBGrid         in 'RzDBGrid.pas',
+  RzDBLbl          in 'RzDBLbl.pas',
+  RzDBList         in 'RzDBList.pas',
+  RzDBLook         in 'RzDBLook.pas',
+  RzDBLookupForm   in 'RzDBLookupForm.pas',
+  RzDBNav          in 'RzDBNav.pas',
+  RzDBProg         in 'RzDBProg.pas',
+  RzDBRGrp         in 'RzDBRGrp.pas',
+  RzDBSpin         in 'RzDBSpin.pas',
+  RzDBStat         in 'RzDBStat.pas',
+  RzDBTrak         in 'RzDBTrak.pas';
+
+end.

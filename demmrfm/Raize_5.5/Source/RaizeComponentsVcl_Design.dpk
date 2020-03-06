@@ -1,0 +1,83 @@
+{$I RzComps.inc}
+
+package RaizeComponentsVcl_Design;
+
+{$R 'RaizeComponentsVcl_Design.res'}
+{$R 'RaizeComponentsVcl_24x24.dcr'}
+{$IFDEF VCL100_OR_HIGHER}
+  {$R 'RaizeComponentsVcl_16x16.dcr'}
+  {$R 'RaizeComponentsVcl_32x32.dcr'}
+{$ENDIF}
+
+{$ALIGN 8}
+{$ASSERTIONS OFF}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $50800000}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+{$I RaizeComponentsVcl_Description.inc}
+
+{$IFDEF VCL70}  {$I RaizeComponents_LibSuffix70.inc}  {$ENDIF}
+{$IFDEF VCL90}  {$I RaizeComponents_LibSuffix90.inc}  {$ENDIF}
+{$IFDEF VCL100} {$I RaizeComponents_LibSuffix100.inc} {$ENDIF}
+{$IFDEF VCL120} {$I RaizeComponents_LibSuffix120.inc} {$ENDIF}
+{$IFDEF VCL140} {$I RaizeComponents_LibSuffix140.inc} {$ENDIF}
+{$IFDEF VCL150} {$I RaizeComponents_LibSuffix150.inc} {$ENDIF}
+
+requires
+  Vcl,
+  DesignIDE,
+  DclStd,
+  {$IFDEF VCL120_OR_HIGHER}
+  VclImg,
+  {$ELSE}
+  VclJPG,
+  {$ENDIF}
+  RaizeComponentsVcl;
+
+contains
+  RaizeComponentsVcl_Reg   in 'RaizeComponentsVcl_Reg.pas',
+  RzDesignEditors          in 'RzDesignEditors.pas',
+  RzAboutEditor            in 'RzAboutEditor.pas',
+  RzButtonEditor           in 'RzButtonEditor.pas',
+  RzCaptionEditor          in 'RzCaptionEditor.pas',
+  RzCheckGroupEditor       in 'RzCheckGroupEditor.pas',
+  RzCheckListEditor        in 'RzCheckListEditor.pas',
+  RzCheckListItemForm      in 'RzCheckListItemForm.pas',
+  RzCheckListTabStopEditor in 'RzCheckListTabStopEditor.pas',
+  RzColorNamesEditor       in 'RzColorNamesEditor.pas',
+  RzComboBoxEditor         in 'RzComboBoxEditor.pas',
+  RzGroupBarEditor         in 'RzGroupBarEditor.pas',
+  RzImageListEditor        in 'RzImageListEditor.pas',
+  RzRadioGroupEditor       in 'RzRadioGroupEditor.pas',
+  RzLabelEditor            in 'RzLabelEditor.pas',
+  RzPanelEditor            in 'RzPanelEditor.pas',
+  RzPathBarEditor          in 'RzPathBarEditor.pas',
+  RzSelectImageEditor      in 'RzSelectImageEditor.pas',
+  RzShellDesignEditors     in 'RzShellDesignEditors.pas',
+  RzSplitterEditor         in 'RzSplitterEditor.pas',
+  RzStringListEditor       in 'RzStringListEditor.pas',
+  RzStringModule           in 'RzStringModule.pas',
+  RzTabStopEditor          in 'RzTabStopEditor.pas',
+  RzToolbarEditor          in 'RzToolbarEditor.pas',
+  RzToolbarPrefixForm      in 'RzToolbarPrefixForm.pas';
+
+
+end.
