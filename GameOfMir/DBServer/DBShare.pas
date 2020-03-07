@@ -7,7 +7,7 @@ uses
 
 const
   //g_sVersion = '程序版本: 1.00 Build 20080825';
-  g_sUpDateTime = '更新日期: 2018/10/05';
+  g_sUpDateTime = '程序版本: v2020.1.0';
 
   SIZEOFTHUMAN = 44032;
 
@@ -319,8 +319,8 @@ begin
     g_btSortMinute := Conf.ReadInteger(sConfClass, 'SortMinute', g_btSortMinute);
     g_SortMinLevel := Conf.ReadInteger(sConfClass, 'SortMinLevel', g_SortMinLevel);
     g_SortMaxLevel := Conf.ReadInteger(sConfClass, 'SortMaxLevel', g_SortMaxLevel);
-
-
+    
+    // fixme it can remove here?
     Conf.WriteString(sConfClass, 'ServerName', sServerName);
     Conf.WriteInteger(sConfClass, 'ServerPort', nServerPort);
     Conf.WriteString(sConfClass, 'ServerAddr', sServerAddr);

@@ -7,7 +7,7 @@ uses
   //GATEMAXSESSION = 2000;   //最大用户连接数
 
 resourcestring
-  g_sUpDateTime = '更新日期: 2012/05/01';
+  g_sUpDateTime = '程序版本: v2020.1.0';
   BlockIPListName = '.\BlockIPList.txt';
   TeledataBlockIPListName = '.\Config\SelGate_BlockIPList.txt';
   ConfigFileName = '.\Config.ini';

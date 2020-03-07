@@ -10,7 +10,7 @@ uses
 
 const
 
-  g_sUpDateTime = '更新日期: 2018/09/02';
+  g_sUpDateTime = '程序版本: v2020.1.0';
 
   TESTMODE = 0;
   nVersionType = 0;

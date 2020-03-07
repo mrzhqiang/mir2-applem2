@@ -8,7 +8,7 @@ const
   VAR_SQL = 1;
   RUNVAR = VAR_DB;
   
-  g_sUpDateTime = '更新日期: 2012/05/01';
+  g_sUpDateTime = '程序版本: v2020.1.0';
 
   {sConfFileName = '.\Config\Config.ini';
   sGateConfFileName = '.\Config\LoginSrv_GateInfo.txt';

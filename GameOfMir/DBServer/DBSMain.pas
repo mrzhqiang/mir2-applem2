@@ -1190,8 +1190,7 @@ begin
       Query.Next;
     end;
     Result := nRecordCount;
-    MainOutMessage(format('物品数据库加载完成(%d)...',
-      [nRecordCount]));
+    MainOutMessage(format('物品数据库加载完成(%d)...', [nRecordCount]));
   finally
     Query.Close;
   end;

@@ -11,7 +11,7 @@ const
   ActorNameLen = 32;
 
   // 这个常量是用来检测相关数据库文件版本的，一般不要轻易改它
-  sDBHeaderDesc = 'Randall数据库文件 2018/10/04';
+  sDBHeaderDesc = '兰达尔数据库文件v2020.1.0';
   sDBIdxHeaderDesc = sDBHeaderDesc;
   
 type

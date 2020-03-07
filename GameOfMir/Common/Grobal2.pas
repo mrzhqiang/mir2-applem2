@@ -37,7 +37,7 @@ $80000000  }
   
 
   g_sProgram = '程序制作: mrzhqiang';
-  g_sWebSite = '官方网站: http://randall.top';
+  g_sWebSite = '兰达尔引擎，永久免费';
 
   // 某种匹配符？
   GROBAL2VER = 20181001;
