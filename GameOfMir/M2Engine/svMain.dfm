@@ -28,7 +28,6 @@ object FrmMain: TFrmMain
     BorderShadow = clBtnFace
     Color = 16744448
     TabOrder = 0
-    ExplicitHeight = 84
     BarSize = (
       0
       55
@@ -48,7 +47,6 @@ object FrmMain: TFrmMain
       SplitterWidth = 0
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 27
       BarSize = (
         0
         0
@@ -94,7 +92,6 @@ object FrmMain: TFrmMain
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect]
     ParentCtl3D = False
     TabOrder = 2
-    ExplicitHeight = 84
     ColWidths = (
       28
       110
