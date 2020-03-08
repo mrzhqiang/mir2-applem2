@@ -586,6 +586,9 @@ begin
       ClientSockeMsgList.Delete(0);
       while (True) do begin
         if TagCount(sProcessMsg, MG_CodeEnd) < 1 then break;
+        // 先捕捉第一块内容，放到 sSocketMsg 里面，剩下的回归 sProcessMsg
+        // 如果只有 code head 没有 code end，那么会丢掉前面的内容，重新补 code head
+        // 通常不会出现这种情况，因为上面的标记检测已经排除了问题
         sProcessMsg := ArrestStringEx(sProcessMsg, MG_CodeHead, MG_CodeEnd, sSocketMsg);
         if Length(sSocketMsg) < 2 then Continue;
         if sSocketMsg[1] = '+' then begin

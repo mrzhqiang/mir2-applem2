@@ -282,7 +282,7 @@ object frmMain: TfrmMain
         Top = 0
         Width = 512
         Height = 332
-        ActivePage = TabSheet12
+        ActivePage = TabSheet5
         Align = alClient
         TabOrder = 0
         TabPosition = tpBottom
