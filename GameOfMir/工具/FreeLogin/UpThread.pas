@@ -340,7 +340,8 @@ begin
   FUnRar.OnOverride := UnRarOverride;
   FUnRar.OnError := UnRarError;
   FProgressTick := GetTickCount;
-  g_ListName := IDeCodeString(Trim(g_ListName));
+//  g_ListName := IDeCodeString(Trim(g_ListName));
+  g_ListName := Trim(g_ListName);
 end;
 
 destructor TUpdateThread.Destroy;
@@ -382,11 +383,11 @@ var
 begin
   List := TStringList.Create;
   try
-    sUrlData := HTTPGet('http://106.14.6.174/ServerInfo.txt');
+    sUrlData := HTTPGet('http://small.randall.top:8081/ServerInfo.txt');
     //http://hi.baidu.com/mir2k_1001/home
     //sUrlData := HtmlToText(HTTPGet(DecryptStr('bp=BL=+YrTXE0sIiMKemHuvTlP4bJhJBPlplBY9qP1TxvxabTia')));
 
-    if CompareText(LeftStr(g_ListName, 20), 'http://randall.top') = 0 then begin
+//    if CompareText(LeftStr(g_ListName, 24), 'http://small.randall.top:8081') = 0 then begin
       {sUrlData := HtmlToText(HTTPGet(g_ListName));
       nPos := Pos('$BEGIN', sUrlData);
       if nPos > 0 then begin
@@ -398,14 +399,14 @@ begin
           List.SaveToFile(g_SaveFileName);
         end;
       end;}
-    end else begin
-      sUrlData := HTTPGet(g_ListName);
+//    end else begin
+//      sUrlData := HTTPGet(g_ListName);
       {nPos := Pos('XMLSetup', sUrlData);
       if nPos > 0 then begin
         List.SetText(PChar(Trim(sUrlData)));
         List.SaveToFile(g_SaveFileName);
       end; }
-    end;
+//    end;
     nPos := Pos('$BEGIN', sUrlData);
     if nPos > 0 then begin
       sUrlData := Copy(sUrlData, nPos + 6, Length(sUrlData));

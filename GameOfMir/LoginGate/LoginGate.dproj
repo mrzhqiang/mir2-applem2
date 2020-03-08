@@ -3,10 +3,10 @@
   <PropertyGroup>
     <ProjectGuid>{83a3db0c-5f0a-4e79-881f-b8537154ed0e}</ProjectGuid>
     <MainSource>LoginGate.dpr</MainSource>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>D:\MirServer\LoginGate\LoginGate.exe</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>D:\Release\GameOfMir\LoginGate\LoginGate.exe</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>

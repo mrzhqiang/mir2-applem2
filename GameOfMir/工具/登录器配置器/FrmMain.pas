@@ -599,7 +599,7 @@ procedure TFormMain.SaveSetup(FileName: string; boEncode: Boolean);
   begin
     if boEncode then begin
       //Result := AnsiReplaceText(IEnCodeString(sMsg), '=', '-');
-      Result := IEnCodeString(sMsg, edcNone);
+      Result := IEnCodeString(sMsg);
     end
     else begin
       Result := sMsg;

@@ -186,6 +186,10 @@ object FormMain: TFormMain
         object ts4: TTabSheet
           Caption = #32593#39029#35774#32622
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grp4: TGroupBox
             Left = 0
             Top = 8
@@ -296,6 +300,10 @@ object FormMain: TFormMain
         object ts5: TTabSheet
           Caption = #25968#25454#26356#26032#35774#32622
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grp7: TGroupBox
             Left = 0
             Top = 8

@@ -140,8 +140,8 @@ begin
               Res.Free;
             end;
           end;
-          Hide;
-          FboHide := True;
+//          Hide;
+//          FboHide := True;
           //if g_boSQL then WinExec(PChar(g_ClientName + ' ' + IntToStr(Handle) + ' 1'), SW_SHOW)
           //else
           WinExec(PChar(g_ClientName + ' ' + IntToStr(Handle) + ' 0'), SW_SHOW);
@@ -400,7 +400,7 @@ begin
   end;
   //Application.OnMessage := MyMessage;
   //Application.OnException := MyException;
-  g_TitleName := '热血传奇       ';
+  g_TitleName := '兰达尔传奇';
   g_ListName := '111';
   g_MapName := '1234567890123456';
   //sStr := 'DBC';

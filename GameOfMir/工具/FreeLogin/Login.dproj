@@ -2,10 +2,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{5cbc5326-16b8-42ea-9118-aecc5fbc7c79}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>D:\Release\Client\Login.exe</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>D:\game\rxcq\Legend of mir\Login.exe</DCC_DependencyCheckOutputName>
     <MainSource>Login.dpr</MainSource>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +33,7 @@
     <DCC_IncludePath>..\..\MyDirect9;..\..\控件\unrar\src</DCC_IncludePath>
     <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
     <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
-    <DCC_ExeOutput>E:\网络游戏\热血传奇2</DCC_ExeOutput>
+    <DCC_ExeOutput>D:\game\rxcq\Legend of mir</DCC_ExeOutput>
   </PropertyGroup>
   <ProjectExtensions>
     <Borland.Personality>Delphi.Personality</Borland.Personality>
