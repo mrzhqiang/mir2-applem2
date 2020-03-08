@@ -6,12 +6,12 @@ uses
   Messages, Classes;
 
 const
-  MAPNAME = 'randall'; //给客户时要修改
-  CLIENTNAME = '.\RandallClient.dat';
-  SAVEFILENAME = '.\Resource\' + MAPNAME + '.xml';
-  UPDATADIR = '.\Down\' + MAPNAME + '\';
-  TITLENAME = '兰达尔传奇';
-  LISTURL1 = 'http://small.randall.top/ServerInfo.txt';
+//  MAPNAME = 'randall'; //给客户时要修改
+//  CLIENTNAME = '.\RandallClient.dat';
+//  SAVEFILENAME = '.\Resource\' + MAPNAME + '.xml';
+//  UPDATADIR = '.\Down\' + MAPNAME + '\';
+//  TITLENAME = '兰达尔传奇';
+//  LISTURL1 = 'http://small.randall.top/ServerInfo.txt';
 //  g_SaveFileName: string[255];
 //  g_UpDataDir: string[255];
 //  g_TitleName: string[255];

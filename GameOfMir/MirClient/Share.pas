@@ -89,7 +89,7 @@ const
   crSrepair = 10;
 
 var
-  g_FScreenMode: Byte = 0;
+  g_FScreenMode: Byte = 2;
   g_FScreenWidth: Integer = DEFSCREENWIDTH;
   g_FScreenHeight: Integer = DEFSCREENHEIGHT;
 

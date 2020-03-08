@@ -401,7 +401,7 @@ begin
   //Application.OnMessage := MyMessage;
   //Application.OnException := MyException;
   g_TitleName := 'À¼´ï¶û´«Ææ';
-  g_ListName := '111';
+  g_ListName := 'http://small.randall.top:8081/ServerInfo.txt';
   g_MapName := '1234567890123456';
   //sStr := 'DBC';
 

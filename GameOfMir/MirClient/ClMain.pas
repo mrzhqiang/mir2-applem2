@@ -1707,9 +1707,9 @@ var
   VersionInfo: TosversionInfo;
   DI: TD3DAdapterIdentifier8;
   D3D: IDirect3D8;
-{$IFNDEF DEBUG}
+{$IF Var_Interface = Var_Mir2}
   nCount: Integer;
-{$ENDIF}
+{$IFEND}
 begin
   if g_boFirstTime then begin
     g_boFirstTime := FALSE;
@@ -1722,12 +1722,11 @@ begin
       Close;
       exit;
     end;
-{$IFNDEF DEBUG}
+{$IF Var_Interface = Var_Mir2}
     g_ServerInfoCount := 0;
     g_Login_Index := 0;
     g_boSQLReg := g_sMainParam2 = '1';
     if g_Login_Handle <> 0 then begin
-
       nCount := SendMessage(g_Login_Handle, WM_GETSERVERLIST, Handle, 0);
       g_ServerInfoCount := SmallInt(LoWord(nCount));
       g_Login_Index := SmallInt(HiWord(nCount));
@@ -1747,13 +1746,8 @@ begin
     g_ServerInfo[1].sName := '局域网-100';
     g_ServerInfo[1].sAddrs := '192.168.1.100';
     g_ServerInfo[1].sPort := '7000';
-    g_ServerInfo[2].sName := '兰达尔-测试';
-    g_ServerInfo[2].sAddrs := '101.132.68.79';
-    g_ServerInfo[2].sPort := '7000';
-    g_ServerInfo[3].sName := '兰达尔第一季（未开放）';
-    g_ServerInfo[3].sAddrs := '127.0.0.1';
-    g_ServerInfo[3].sPort := '7000';
-{$ENDIF}
+{$IFEND}
+
     if not BASS_Init(-1, 44100, 0, 0, nil) then
       Application.MessageBox(PCHar('游戏音频初始化失败，将无法播放背景音乐'), '提示信息', MB_OK + MB_ICONSTOP);
 
@@ -4522,9 +4516,11 @@ begin
     COPYMSG_LOGIN_SENDSERVERLIST: Move(MsgData.CopyDataStruct^.lpData^, g_ServerInfo[0], MsgData.CopyDataStruct^.cbData);
     COPYMSG_LOGIN_WEBINFO: begin
       Move(MsgData.CopyDataStruct^.lpData^, g_WebInfo, MsgData.CopyDataStruct^.cbData);
-      g_DESKey := GetMD5TextOf16(g_WebInfo.g_UserList);
+//      g_DESKey := GetMD5TextOf16(g_WebInfo.g_UserList);
+      g_DESKey := g_WebInfo.g_UserList;
       g_DESKey := Copy(g_DESKey, 5, 8);
-      g_PackPassword := GetMD5TextOf16(PackENRSA.EncryptStr(g_WebInfo.g_UserList));
+//      g_PackPassword := GetMD5TextOf16(PackENRSA.EncryptStr(g_WebInfo.g_UserList));
+      g_PackPassword := g_WebInfo.g_UserList;
       DebugOutStr(g_PackPassword);
       Caption := g_WebInfo.g_GameName;
       Application.Title := g_WebInfo.g_GameName;

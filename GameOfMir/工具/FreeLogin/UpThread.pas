@@ -383,7 +383,7 @@ var
 begin
   List := TStringList.Create;
   try
-    sUrlData := HTTPGet('http://small.randall.top:8081/ServerInfo.txt');
+    sUrlData := HTTPGet(g_ListName);
     //http://hi.baidu.com/mir2k_1001/home
     //sUrlData := HtmlToText(HTTPGet(DecryptStr('bp=BL=+YrTXE0sIiMKemHuvTlP4bJhJBPlplBY9qP1TxvxabTia')));
 

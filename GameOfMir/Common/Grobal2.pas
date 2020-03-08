@@ -15,9 +15,9 @@ const
   Var_Default = 0;
   Var_Mir2 = 1;
 
-  Var_Interface = Var_Default;
+  Var_Interface = Var_Mir2;
 
-  CLIENT_VERSION_NUMBER = 20181001;
+  CLIENT_VERSION_NUMBER = 20200308;
   CLIENT_VERSION_MARK = $1FFFFFF;
 
   CLIENT_VERSIONEX_MIR2 = $2000000;
@@ -40,7 +40,7 @@ $80000000  }
   g_sWebSite = '兰达尔引擎，永久免费';
 
   // 某种匹配符？
-  GROBAL2VER = 20181001;
+  GROBAL2VER = CLIENT_VERSION_NUMBER;
   //最大用户连接数
   GATEMAXSESSION = 1000;
   //用户索引最大记录数,如果已创建人物数量大于这个值,整体系统可能会出错
