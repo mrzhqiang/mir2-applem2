@@ -3,7 +3,7 @@ object FormMain: TFormMain
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'AppleM2'#30331#24405#22120#37197#32622#24037#20855'(20120501)'
+  Caption = #20848#36798#23572#30331#24405#22120#37197#32622#22120
   ClientHeight = 354
   ClientWidth = 491
   Color = clBtnFace
@@ -22,17 +22,17 @@ object FormMain: TFormMain
     Top = 8
     Width = 473
     Height = 337
-    ActivePage = ts2
+    ActivePage = ts6
     TabOrder = 0
     object ts2: TTabSheet
-      Caption = #37197#32622#30331#24405#22120#21015#34920
+      Caption = #26381#21153#22120#21015#34920
       ImageIndex = 1
       object pgc2: TPageControl
         Left = 12
         Top = 10
         Width = 449
         Height = 297
-        ActivePage = ts3
+        ActivePage = ts4
         Style = tsFlatButtons
         TabOrder = 0
         object ts3: TTabSheet
@@ -387,8 +387,8 @@ object FormMain: TFormMain
         end
       end
       object btnServerInfoSave: TButton
-        Left = 109
-        Top = 279
+        Left = 83
+        Top = 280
         Width = 113
         Height = 25
         Hint = #24314#35758#20445#23384#65292#26041#20415#19979#27425#26356#26032#20351#29992#12290
@@ -399,8 +399,8 @@ object FormMain: TFormMain
         OnClick = btnServerInfoSaveClick
       end
       object btnServerInfoWrite: TButton
-        Left = 252
-        Top = 279
+        Left = 296
+        Top = 280
         Width = 113
         Height = 25
         Caption = #29983#25104#37197#32622#25991#20214'(&W)'
@@ -408,10 +408,80 @@ object FormMain: TFormMain
         OnClick = btnServerInfoWriteClick
       end
     end
+    object ts6: TTabSheet
+      Caption = #28216#25103#30331#24405#22120
+      ImageIndex = 3
+      object GroupBox1: TGroupBox
+        Left = 8
+        Top = 8
+        Width = 441
+        Height = 73
+        Caption = #22522#26412#20449#24687
+        TabOrder = 0
+        object Label1: TLabel
+          Left = 8
+          Top = 22
+          Width = 60
+          Height = 12
+          Caption = #28216#25103#21517#23383#65306
+        end
+        object Label5: TLabel
+          Left = 8
+          Top = 48
+          Width = 60
+          Height = 12
+          Caption = #21015#34920#22320#22336#65306
+        end
+        object GameNameEdit: TEdit
+          Left = 88
+          Top = 19
+          Width = 337
+          Height = 20
+          MaxLength = 255
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          Text = #20848#36798#23572#20256#22855
+        end
+        object ServerListEdit: TEdit
+          Left = 88
+          Top = 45
+          Width = 337
+          Height = 20
+          MaxLength = 255
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 1
+          Text = 'http://small.randall.top:8081/ServerInfo.txt'
+        end
+      end
+      object LoginVersionRadioGroup: TRadioGroup
+        Left = 8
+        Top = 87
+        Width = 441
+        Height = 42
+        Caption = #29256#26412#20449#24687
+        Columns = 2
+        ItemIndex = 0
+        Items.Strings = (
+          #30427#22823#29256#26412
+          #21073#20384#29256#26412)
+        TabOrder = 1
+      end
+      object GenerateLoginButton: TButton
+        Left = 193
+        Top = 281
+        Width = 75
+        Height = 25
+        Caption = #29983#25104#30331#24405#22120
+        TabOrder = 2
+        OnClick = GenerateLoginButtonClick
+      end
+    end
   end
   object xmldSetup: TXMLDocument
     Options = [doNodeAutoCreate, doNodeAutoIndent, doAttrNull, doAutoPrefix, doNamespaceDecl]
-    Left = 288
+    Left = 448
     Top = 32
     DOMVendorDesc = 'MSXML'
   end

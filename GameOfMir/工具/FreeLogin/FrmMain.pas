@@ -38,6 +38,7 @@ type
     EzRgnBtn4: TEzRgnBtn;
     RzLabel1: TRzLabel;
     DeleteTimer: TTimer;
+    JianXiaCheckBox: TCheckBox;
     procedure ImageBgMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure BtnMinClick(Sender: TObject);
     procedure BtnCloseClick(Sender: TObject);
@@ -61,6 +62,7 @@ type
     procedure EzRgnBtn4Click(Sender: TObject);
     procedure EzRgnBtn3Click(Sender: TObject);
     procedure DeleteTimerTimer(Sender: TObject);
+    procedure JianXiaCheckBoxClick(Sender: TObject);
   private
     FMapHandle: THandle;
     FMapDataInfo: pTMapDataInfo;
@@ -72,6 +74,7 @@ type
     FCheckCount: Integer;
     FboFrist: Boolean;
     FDeleteFile: string;
+    bJianXia : Boolean;
     function CheckIsRun(): THandle;
     procedure CloseMapInfo();
     procedure CreateMapInfo();
@@ -120,6 +123,8 @@ procedure TFormMain.BtnPlayClick(Sender: TObject);
 var
   I, nCount: Integer;
   Res: TResourceStream;
+  cName: string;
+  reName: string;
 begin
   if SelectServerInfo <> nil then begin
     //if FileExists(g_ClientName) then begin
@@ -131,11 +136,18 @@ begin
           end;
         end;
         if nCount > 0 then begin
-          if (not FileExists(g_ClientName)) or (nCount = 0) then
+          cName := g_ClientName;
+          reName := 'mir2Data2';
+          if bJianXia then
           begin
-            Res := TResourceStream.Create(Hinstance, 'mir2Data', 'Data');
+            cName := g_CurrentDir + 'jx-' + g_TitleName + '.dat';
+            reName := 'mir2Data'
+          end;
+          if (not FileExists(cName)) or (nCount = 0) then
+          begin
+            Res := TResourceStream.Create(Hinstance, reName, 'Data');
             try
-              Res.SaveToFile(g_ClientName);
+              Res.SaveToFile(cName);
             finally
               Res.Free;
             end;
@@ -144,7 +156,7 @@ begin
 //          FboHide := True;
           //if g_boSQL then WinExec(PChar(g_ClientName + ' ' + IntToStr(Handle) + ' 1'), SW_SHOW)
           //else
-          WinExec(PChar(g_ClientName + ' ' + IntToStr(Handle) + ' 0'), SW_SHOW);
+          WinExec(PChar(cName + ' ' + IntToStr(Handle) + ' 0'), SW_SHOW);
         end else
           Application.MessageBox(PChar('最多只能同时运行' + IntToStr(Length(FClientList)) + '个游戏客户端！'), '提示信息', MB_OK + MB_ICONSTOP);
       end else
@@ -409,7 +421,11 @@ begin
   g_TitleName := Trim(g_TitleName);
   g_SaveFileName := g_CurrentDir + 'Resource\' + g_MapName + '.xml';
   g_UpDataDir := g_CurrentDir + 'Down\' + g_MapName + '\';
-  g_ClientName := g_CurrentDir + 'mir2.dat';
+
+  g_ClientName := g_CurrentDir + g_TitleName + '.dat';
+  if FileExists(g_ClientName) then begin
+    DeleteFile(PChar(g_ClientName));
+  end;
 
   Application.Title := g_TitleName;
   FboLoad := False;
@@ -421,6 +437,8 @@ begin
   ChangePercent(0, False);
   ChangePercent(0, True);
   CreateDir(g_CurrentDir + 'Down\');
+  bJianXia := False;
+  JianXiaCheckBox.Checked := bJianXia;
 
   nRunHandle := CheckIsRun;
   SetLength(FClientList, 3);
@@ -531,6 +549,21 @@ begin
   ReleaseCapture; //释放鼠标的捕获状态；
   Perform(wm_SysCommand, {sc_DragMove} $F012, 0); //向窗体发送移动消息
 end;
+procedure TFormMain.JianXiaCheckBoxClick(Sender: TObject);
+var
+  cName : string;
+begin
+  cName := g_ClientName;
+  bJianXia := JianXiaCheckBox.Checked;
+  if bJianXia then
+  begin
+    cName := g_CurrentDir + 'jx-' + g_TitleName + '.dat';;
+  end;
+  if FileExists(cName) then begin
+    DeleteFile(PChar(cName));
+  end;
+end;
+
 (*
 procedure TFormMain.InitSetup(SkinInfo: pTLoginSkinInfo; Buffer: PChar);
 var

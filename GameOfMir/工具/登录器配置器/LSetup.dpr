@@ -16,6 +16,8 @@ uses
   MyCommon in '..\..\MyCommon\MyCommon.pas';
 
 {$R *.res}
+{$R Data.res}
+{$R DataMir2.res}
 
 begin
   Application.Initialize;

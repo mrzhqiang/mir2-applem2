@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, StrUtils, Variants, Classes, Graphics, Controls, Forms, Math, DES, MyCommon, 
-  Dialogs, ComCtrls, StdCtrls, Spin, xmldom, XMLIntf, msxmldom, XMLDoc, IEDCode, Buttons, DropGroupPas;
+  Dialogs, ComCtrls, StdCtrls, Spin, xmldom, XMLIntf, msxmldom, XMLDoc, IEDCode, Buttons, DropGroupPas,
+  ExtCtrls;
 
 const
   XMLFILENAME = '.\LSetup.xml';
@@ -52,6 +53,14 @@ type
     BtnMoveSrvDown: TButton;
     BtnGameUp: TButton;
     BtnGameDown: TButton;
+    ts6: TTabSheet;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label5: TLabel;
+    GameNameEdit: TEdit;
+    ServerListEdit: TEdit;
+    LoginVersionRadioGroup: TRadioGroup;
+    GenerateLoginButton: TButton;
     procedure btnAddGroupClick(Sender: TObject);
     procedure btnAddServerClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -64,6 +73,7 @@ type
     procedure BtnMoveSrvDownClick(Sender: TObject);
     procedure BtnGameDownClick(Sender: TObject);
     procedure BtnGameUpClick(Sender: TObject);
+    procedure GenerateLoginButtonClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -470,6 +480,56 @@ begin
   pgc2.TabIndex := 0;
   pgc1.TabIndex := 0;
   LoadSetup;
+end;
+
+procedure TFormMain.GenerateLoginButtonClick(Sender: TObject);
+var
+  Res: TResourceStream;
+  sFileName: string;
+  sGameName: string[20];
+  sUserList: string[200];
+  sIsMir2: Boolean;
+begin
+  sIsMir2 := True;
+  sGameName := Trim(GameNameEdit.Text);
+  sUserList := Trim(ServerListEdit.Text);
+  if sGameName = '' then begin
+    Application.MessageBox('游戏名字不能留空！', '错误提示', MB_OK + MB_ICONSTOP);
+    Exit;
+  end;
+  if sUserList = '' then begin
+    Application.MessageBox('列表地址不能留空！', '错误提示', MB_OK + MB_ICONSTOP);
+    Exit;
+  end;
+  sFileName := '.\' + sGameName + '-盛大版.exe';
+  if not LoginVersionRadioGroup.ItemIndex = 0 then
+  begin
+    sIsMir2 := False;
+    sFileName := '.\' + sGameName + '-剑侠版.exe';
+  end;
+  if FileExists(sFileName) then begin
+    if not DeleteFile(sFileName) then begin
+      Application.MessageBox('生成登录器失败(无法生成文件)！', '错误提示', MB_OK + MB_ICONSTOP);
+      Exit;
+    end;
+  end;
+  if sIsMir2 then
+  begin
+    Res := TResourceStream.Create(Hinstance, 'LoginDataMir2', 'Data');
+  end else begin
+    Res := TResourceStream.Create(Hinstance, 'LoginData', 'Data');
+  end;
+  try
+    Res.SaveToFile(sFileName);
+  finally
+    Res.Free;
+  end;
+  SetFileVersionInfoByNameW(sFileName, 'OriginalFilename', sFileName);
+  // 游戏名字
+  SetFileVersionInfoByNameW(sFileName, 'GameName', sGameName);
+  // 服务器列表地址
+  SetFileVersionInfoByNameW(sFileName, 'ServerList', sUserList);
+  Application.MessageBox('登录器生成成功！', '提示信息', MB_OK + MB_ICONINFORMATION);
 end;
 
 procedure TFormMain.LoadSetup;

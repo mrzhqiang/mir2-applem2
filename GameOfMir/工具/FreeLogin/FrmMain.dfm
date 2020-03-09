@@ -10175,6 +10175,23 @@ object FormMain: TFormMain
     PaintMode = pmNormal
     OnClick = EzRgnBtn4Click
   end
+  object JianXiaCheckBox: TCheckBox
+    Left = 219
+    Top = 432
+    Width = 97
+    Height = 17
+    Caption = #21073#20384#30028#38754
+    Ctl3D = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clYellow
+    Font.Height = -12
+    Font.Name = #23435#20307
+    Font.Style = [fsBold]
+    ParentCtl3D = False
+    ParentFont = False
+    TabOrder = 12
+    OnClick = JianXiaCheckBoxClick
+  end
   object tmrStart: TTimer
     Enabled = False
     Interval = 10

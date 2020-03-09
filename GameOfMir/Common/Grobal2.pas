@@ -15,7 +15,7 @@ const
   Var_Default = 0;
   Var_Mir2 = 1;
 
-  Var_Interface = Var_Mir2;
+  Var_Interface = Var_Default;
 
   CLIENT_VERSION_NUMBER = 20200308;
   CLIENT_VERSION_MARK = $1FFFFFF;
