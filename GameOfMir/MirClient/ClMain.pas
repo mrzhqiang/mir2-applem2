@@ -1707,9 +1707,9 @@ var
   VersionInfo: TosversionInfo;
   DI: TD3DAdapterIdentifier8;
   D3D: IDirect3D8;
-//{$IFNDEF RELEASE}
+{$IFNDEF DEBUG}
   nCount: Integer;
-//{$ENDIF}
+{$ENDIF}
 begin
   if g_boFirstTime then begin
     g_boFirstTime := FALSE;
@@ -1722,7 +1722,7 @@ begin
       Close;
       exit;
     end;
-//{$IFNDEF RELEASE}
+{$IFNDEF DEBUG}
     g_ServerInfoCount := 0;
     g_Login_Index := 0;
     g_boSQLReg := g_sMainParam2 = '1';
@@ -1736,18 +1736,18 @@ begin
       Close;
       exit;
     end;
-//{$ELSE}
-//    g_ServerInfoCount := 0;
-//    g_Login_Index := 0;
-//    g_boSQLReg := False;
-//    g_ServerInfoCount := 4;
-//    g_ServerInfo[0].sName := '单机-127';
-//    g_ServerInfo[0].sAddrs := '127.0.0.1';
-//    g_ServerInfo[0].sPort := '7000';
-//    g_ServerInfo[1].sName := '局域网-100';
-//    g_ServerInfo[1].sAddrs := '192.168.1.100';
-//    g_ServerInfo[1].sPort := '7000';
-//{$ENDIF}
+{$ELSE}
+    g_ServerInfoCount := 0;
+    g_Login_Index := 0;
+    g_boSQLReg := False;
+    g_ServerInfoCount := 4;
+    g_ServerInfo[0].sName := '单机-127';
+    g_ServerInfo[0].sAddrs := '127.0.0.1';
+    g_ServerInfo[0].sPort := '7000';
+    g_ServerInfo[1].sName := '局域网-100';
+    g_ServerInfo[1].sAddrs := '192.168.1.100';
+    g_ServerInfo[1].sPort := '7000';
+{$ENDIF}
 
     if not BASS_Init(-1, 44100, 0, 0, nil) then
       Application.MessageBox(PCHar('游戏音频初始化失败，将无法播放背景音乐'), '提示信息', MB_OK + MB_ICONSTOP);

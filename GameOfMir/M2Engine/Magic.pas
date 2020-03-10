@@ -148,7 +148,7 @@ begin
   Result := nInt + MMAXPow(UserMagic) * (UserMagic.btLevel + 1);
 end;
 
-{莫名其妙的方法，为什么要把 int 转换为 word，吃饱了么？}
+{取伤害中间值，实际上没必要把两个 Word 拼接为一个 Integer，因为 Word 是 0-65535}
 function GetRPow(wInt: Integer): Word;
 begin
   if HiWord(wInt) > LoWord(wInt) then begin
@@ -173,8 +173,8 @@ begin
     end;
   end;
 end;
-//nType 为指定类型 1 为护身符 2 为毒药
 
+//nType 为指定类型 1 为护身符 2 为毒药
 {检查指定类型是否为护身符，并且剩余持久需要大于将消耗的数值}
 function CheckAmulet(PlayObject: TBaseObject {修改 TBaseObject}; nCount: Integer; nType: Integer): Boolean;
 var
@@ -201,6 +201,7 @@ begin
     end;
   end;
 end;
+
 //nType 为指定类型 1 为护身符 2 为毒药
 {使用毒符}
 procedure UseAmulet(PlayObject: TBaseObject; nCount: Integer; nType: Integer);
@@ -229,7 +230,7 @@ begin
   for i := 0 to PlayObject.m_VisibleActors.Count - 1 do begin
     {取得基础对象}
     BaseObject := TBaseObject(pTVisibleBaseObject(PlayObject.m_VisibleActors[i]).BaseObject);
-    {如果坐标离得很近？或者在同一个屏幕内？}
+    {如果是贴身站着}
     if (abs(PlayObject.m_nCurrX - BaseObject.m_nCurrX) <= 1) and (abs(PlayObject.m_nCurrY - BaseObject.m_nCurrY) <= 1) then begin
       {对象没有死亡，并且不是自己}
       if (not BaseObject.m_boDeath) and (BaseObject <> PlayObject) then begin
@@ -237,8 +238,13 @@ begin
         if (PlayObject.m_Abil.Level > BaseObject.m_Abil.Level) and (not BaseObject.m_boStickMode) then begin
           levelgap := PlayObject.m_Abil.Level - BaseObject.m_Abil.Level;
           {如果 0 -- 20 之间的值，小于 推开技能等级}
+          // 技能等级每升 1 级，则几率提高 15%
+          // 人物等级差，每多 1 级，则几率提高 5%
+          // 在满级技能以及等级差 5 级的情况下，有 100 %几率推开附近的玩家
           if (Random(20) < 6 + nPushLevel * 3 + levelgap) then begin
+            // 是一个正确的目标（对方是玩家、怪物、非宝宝，没有在安全区，不是新手..）
             if PlayObject.IsProperTarget(BaseObject) then begin
+              // 推开距离：1 -- 4 格子
               push := 1 + _MAX(0, nPushLevel - 1) + Random(2);
               nDir := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, BaseObject.m_nCurrX, BaseObject.m_nCurrY);
               BaseObject.CharPushed(nDir, push);
@@ -272,6 +278,7 @@ begin
         BaseObject.MagicQuest(PlayObject, nMagID, mfs_TagEx);
         Result := True;
       end;
+      // 如果开启心灵启示，那么可以看到血量的变化
       if PlayObject.m_boAbilSeeHealGauge then
         PlayObject.SendDefMsg(PlayObject, SM_INSTANCEHEALGUAGE,
           Integer(BaseObject),
@@ -294,12 +301,14 @@ begin
   inherited;
 end;
 
+{双龙破、惊雷爆技能}
 function TMagicManager.MagMakeCBOBase(PlayObject: TPlayObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer; var TargeTBaseObject: TBaseObject): Boolean;
 begin
   Result := False;
   if TargeTBaseObject = nil then exit;
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 如果 魔法躲避 小于 0 -- 9 之间的某个值，那么触发技能；那么就意味着 1 = 10%，未来应该修改为 Random(100)
       if (TargeTBaseObject.m_nAntiMagic <= Random(10)) and (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
         (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
         PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
@@ -335,10 +344,12 @@ begin
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     { 检查是否可以攻击 }
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 重构魔法躲避
       if (TargeTBaseObject.m_nAntiMagic <= Random(10)) and
         (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
         (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
         with PlayObject do begin
+          // 技能总伤害 + 魔法下限 + [0, 上限-下限 + 1)
           nPower := GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(m_WAbil.MC),
             SmallInt(HiWord(m_WAbil.MC) - LoWord(m_WAbil.MC)) + 1);
         end;
@@ -347,6 +358,7 @@ begin
           400 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
         //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
         TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+        // 奇怪的判断
         if (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
           Result := True;
       end
@@ -367,16 +379,16 @@ function TMagicManager.MagTreatment(PlayObject: TPlayObject;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
   nPower: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
+//  end;
   function GetPower(nPower: Integer): Integer;
   begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
-      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
-      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+    // 基础 + 等级比 * [最小治疗量, 最大治疗量]
+    Result := ROUND(nPower +
+      (UserMagic.btLevel + 1) / (UserMagic.MagicInfo.btTrainLv + 1) *
+      (UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower)));
   end;
 begin
   Result := False;
@@ -413,23 +425,23 @@ var
   nPower: Integer;
   n1C: Integer;
   n14, n18: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer;
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
-      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
-      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
+//      - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer;
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
+//      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+//      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
 begin
   Result := False;
   n1C := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, nTargetX, nTargetY);
   if PlayObject.m_PEnvir.GetNextPosition(PlayObject.m_nCurrX, PlayObject.m_nCurrY, n1C, 1, n14, n18) then begin
     PlayObject.m_PEnvir.GetNextPosition(PlayObject.m_nCurrX, PlayObject.m_nCurrY, n1C, 5, nTargetX, nTargetY);
-    nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+    nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
       SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
     if PlayObject.MagPassThroughMagic(n14, n18, nTargetX, nTargetY, n1C, nPower, UserMagic.wMagIdx, False) > 0 then
       Result := True;
@@ -445,26 +457,26 @@ var
   nPower: Integer;
   n1C: Integer;
   n14, n18: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer;
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
-      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
-      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
+//      - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer;
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
+//      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+//      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
 begin
   Result := False;
   n1C := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, nTargetX, nTargetY);
   if PlayObject.m_PEnvir.GetNextPosition(PlayObject.m_nCurrX,
     PlayObject.m_nCurrY, n1C, 1, n14, n18) then begin
     PlayObject.m_PEnvir.GetNextPosition(PlayObject.m_nCurrX, PlayObject.m_nCurrY, n1C, 8, nTargetX, nTargetY);
-    nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+    nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
       SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
-    if PlayObject.MagPassThroughMagic(n14, n18, nTargetX, nTargetY, n1C, nPower, UserMagic.wMagIdx, 
+    if PlayObject.MagPassThroughMagic(n14, n18, nTargetX, nTargetY, n1C, nPower, UserMagic.wMagIdx,
       True) > 0 then
       Result := True;
   end;
@@ -477,24 +489,25 @@ function TMagicManager.MagMakeLighting(PlayObject: TPlayObject;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
   nPower: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer;
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
-      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
-      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
+//      - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer;
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
+//      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+//      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
 begin
   Result := False;
   if TargeTBaseObject = nil then
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+    // fixme 魔法躲避
     if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
-      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
         SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
       {if TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD then
         nPower := ROUND(nPower * 1.5); }
@@ -522,17 +535,17 @@ function TMagicManager.MagMakeFireCharm(PlayObject: TBaseObject;
   var TargeTBaseObject: TBaseObject; boMove: Boolean): Boolean;
 var
   nPower: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer;
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
-      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
-      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
+//      - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer;
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
+//      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+//      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
   function GetAroundObject(Targe: TBaseObject): TBaseObject;
   var
     BaseObjectList: TList;
@@ -565,10 +578,11 @@ begin
     exit;
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 魔法躲避
       if Random(10) >= TargeTBaseObject.m_nAntiMagic then begin
         if (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
           (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
-          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) +
+          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) +
             LoWord(PlayObject.m_WAbil.SC),
             SmallInt(HiWord(PlayObject.m_WAbil.SC) -
             LoWord(PlayObject.m_WAbil.SC)) + 1);
@@ -598,6 +612,7 @@ begin
     TargeTBaseObject := nil;
 end;
 
+// 升级版灵魂火符？
 function TMagicManager.MagMakeFireCharmEx(PlayObject: TBaseObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer;
   var TargeTBaseObject: TBaseObject): Boolean;
 begin
@@ -606,6 +621,7 @@ begin
     exit;
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 魔法躲避
       if Random(10) >= TargeTBaseObject.m_nAntiMagic then begin
         if (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
           PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2,
@@ -629,22 +645,23 @@ function TMagicManager.MagVampire(PlayObject: TPlayObject; UserMagic: pTUserMagi
 var
   nPower: Integer;
 
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer;
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1)) +
-      (UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer;
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1)) +
+//      (UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
 begin
   Result := False;
   if TargeTBaseObject = nil then
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+    // fixme 魔法躲避
     if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
-      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
+      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
         SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
       PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC2, nPower,
         MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 600);
@@ -664,24 +681,25 @@ function TMagicManager.MagMakeFireDay(PlayObject: TPlayObject;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
   nPower: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer;
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer;
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
-      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
-      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer;
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
+//      - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer;
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
+//      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+//      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
 begin
   Result := False;
   if TargeTBaseObject = nil then
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+    // fixme 魔法躲避
     if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
-      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
         SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
       {if TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD then
         nPower := ROUND(nPower * 1.5); }
@@ -816,15 +834,15 @@ var
 //  nPowerRate: Integer;
   nDelayTime: Integer;
 //  nDelayTimeRate: Integer;
-  function MPow(UserMagic: pTUserMagic): Integer; //004921C8
-  begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
-  end;
-  function GetPower(nPower: Integer): Integer; //00493314
-  begin
-    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1)) +
-      (UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;
+//  function MPow(UserMagic: pTUserMagic): Integer; //004921C8
+//  begin
+//    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
+//  end;
+//  function GetPower(nPower: Integer): Integer; //00493314
+//  begin
+//    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1)) +
+//      (UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+//  end;
   function GetPower13(nInt: Integer): Integer; //0049338C
   var
     d10: Double;
@@ -1050,9 +1068,9 @@ begin
           boTrain := True;
       end;
     SKILL_EARTHFIRE {22}: begin //火墙  00493B40
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1, False);
-        nDelayTime := GetPower(10) + (Word(GetRPow(PlayObject.m_WAbil.MC)) shr 1);
+        nDelayTime := GetPower(10, UserMagic) + (Word(GetRPow(PlayObject.m_WAbil.MC)) shr 1);
 
         //2006-11-12 火墙威力和时间的倍数
         nPower := ROUND(nPower * (g_Config.nFirePowerRate / 100));
@@ -1063,7 +1081,7 @@ begin
       end;
     SKILL_FIREBOOM {23}: begin //爆裂火焰
         if MagBigExplosion(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           nTargetX,
           nTargetY,
@@ -1072,7 +1090,7 @@ begin
       end;
     SKILL_LIGHTFLOWER {24}: begin //地狱雷光
         if MagElecBlizzard(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) +
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) +
           LoWord(PlayObject.m_WAbil.MC), SmallInt(HiWord(PlayObject.m_WAbil.MC) -
           LoWord(PlayObject.m_WAbil.MC)) + 1), UserMagic.wMagIdx) then
           boTrain := True;
@@ -1090,7 +1108,7 @@ begin
         end;
       end;
     SKILL_BIGHEALLING {29}: begin //群体治疗术
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC) * 2,
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC) * 2,
           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) * 2 + 1);
         if MagBigHealing(PlayObject, nPower, nTargetX, nTargetY, UserMagic.wMagIdx) then
           boTrain := True;
@@ -1110,7 +1128,7 @@ begin
         boSpellFail := True;
         if PlayObject.m_wStatusTimeArr[STATE_BUBBLEDEFENCEUPEX] = 0 then begin
           boSpellFail := False;
-          if PlayObject.MagBubbleDefenceUp(UserMagic.btLevel, GetPower(GetRPow(PlayObject.m_WAbil.MC) + 15), STATE_BUBBLEDEFENCEUP) then
+          if PlayObject.MagBubbleDefenceUp(UserMagic.btLevel, GetPower(GetRPow(PlayObject.m_WAbil.MC) + 15, UserMagic), STATE_BUBBLEDEFENCEUP) then
             boTrain := True;
         end;
       end;
@@ -1124,7 +1142,7 @@ begin
       end;
     SKILL_SNOWWIND {33}: begin //冰咆哮
         if MagBigExplosion(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           nTargetX,
           nTargetY,
@@ -1146,7 +1164,7 @@ begin
     //冰焰
     SKILL_MABE {36}: begin //火焰冰
         with PlayObject do begin
-          nPower := GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(m_WAbil.SC),
+          nPower := GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(m_WAbil.SC),
             SmallInt(HiWord(m_WAbil.SC) - LoWord(m_WAbil.SC)) + 1);
         end;
         if MabMabe(PlayObject, TargeTBaseObject, nPower, UserMagic.btLevel, nTargetX, nTargetY, UserMagic.wMagIdx) then
@@ -1193,7 +1211,7 @@ begin
     //法师
     SKILL_44: begin //结冰掌
         if MagHbFireBall(PlayObject, UserMagic, nTargetX, nTargetY,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           TargeTBaseObject) then
           boTrain := True;
@@ -1210,7 +1228,7 @@ begin
       end;
     SKILL_47: begin //火龙气焰
         if MagBigExplosion(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           nTargetX,
           nTargetY,
@@ -1253,7 +1271,7 @@ begin
       end;   }
     SKILL_57: begin
         if MagDoubleBigExplosionEx(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           nTargetX,
           nTargetY,
@@ -1266,7 +1284,7 @@ begin
         if PlayObject.m_wStatusTimeArr[STATE_BUBBLEDEFENCEUP] = 0 then begin
           boSpellFail := False;
           if PlayObject.MagShieldDefenceUp(UserMagic.btLevel,
-            GetPower(GetRPow(PlayObject.m_WAbil.MC) + 15), STATE_BUBBLEDEFENCEUPEX) then
+            GetPower(GetRPow(PlayObject.m_WAbil.MC) + 15, UserMagic), STATE_BUBBLEDEFENCEUPEX) then
             boTrain := True;
         end;
       end;
@@ -1326,7 +1344,7 @@ begin
       end;
     SKILL_66: begin
         if MagDoubleBigExplosionEx(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           nTargetX,
           nTargetY,
@@ -1335,7 +1353,7 @@ begin
       end;
     SKILL_70: begin
         if MagBigExplosionAndMakePoisonByWarr(PlayObject, UserMagic,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.DC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.DC),
           SmallInt(HiWord(PlayObject.m_WAbil.DC) - LoWord(PlayObject.m_WAbil.DC)) + 1),
           nTargetX,
           nTargetY,
@@ -1345,7 +1363,7 @@ begin
       end;
     SKILL_71: begin
         if MagBigExplosionAndMakePoisonEx(PlayObject, UserMagic,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
           nTargetX,
           nTargetY,
@@ -1354,7 +1372,7 @@ begin
       end;
     SKILL_72: begin
         if MagBigExplosionAndMakePoison(PlayObject, UserMagic,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
+          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1),
           nTargetX,
           nTargetY,
@@ -1362,7 +1380,7 @@ begin
           boTrain := True;
       end;
     SKILL_114: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill114PowerRate / 100));
@@ -1375,7 +1393,7 @@ begin
           boTrain := True;
       end;
     SKILL_115: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill115PowerRate / 100));
@@ -1385,7 +1403,7 @@ begin
           boTrain := True;
       end;
     SKILL_116: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill116PowerRate / 100));
@@ -1398,7 +1416,7 @@ begin
           boTrain := True;
       end;
     SKILL_117: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill117PowerRate / 100));
@@ -1410,7 +1428,7 @@ begin
           boTrain := True;
       end;
     SKILL_118: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill118PowerRate / 100));
@@ -1423,7 +1441,7 @@ begin
           boTrain := True;
       end;
     SKILL_119: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill119PowerRate / 100));
@@ -1433,7 +1451,7 @@ begin
           boTrain := True;
       end;
     SKILL_120: begin
-        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
 
         nPower := ROUND(nPower * (g_Config.nSkill120PowerRate / 100));
@@ -1447,7 +1465,7 @@ begin
       end;
     SKILL_121: begin
         if TargeTBaseObject <> nil then begin
-          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
+          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
             SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
 
           nPower := ROUND(nPower * (g_Config.nSkill121PowerRate / 100));
@@ -1467,11 +1485,11 @@ begin
         nTargetX := PlayObject.m_nCurrX;
         nTargetY := PlayObject.m_nCurrY;
         if PlayObject.m_btJob = 0 then
-          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.DC), SmallInt(HiWord(PlayObject.m_WAbil.DC) - LoWord(PlayObject.m_WAbil.DC)) + 1);
+          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.DC), SmallInt(HiWord(PlayObject.m_WAbil.DC) - LoWord(PlayObject.m_WAbil.DC)) + 1);
         if PlayObject.m_btJob = 1 then
-          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC), SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
+          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC), SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
         if PlayObject.m_btJob = 2 then
-          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC), SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
+          nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC), SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
 
         nPower := Round(g_Config.nEtenPowerRate / 100 * nPower);
         if MagBigExplosionTime(PlayObject,
@@ -1500,6 +1518,7 @@ begin
       Integer(TargeTBaseObject),
       '');
   end;
+  // 自定义技能不获取技能熟练度？
   if (UserMagic.btLevel < 3) and (boTrain) then begin
     if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] <= PlayObject.m_Abil.Level then begin
       PlayObject.TrainSkill(UserMagic, Random(3) + 1);
@@ -1934,7 +1953,7 @@ begin
   Result := False;
   boSpellFire := True;
   BaseObjectList := TList.Create;
-  nRate := _MAX(1, UserMagic.btLevel); 
+  nRate := _MAX(1, UserMagic.btLevel);
   PlayObject.GetMapBaseObjects(PlayObject.m_PEnvir, nTargetX, nTargetY, nRate, BaseObjectList);
   {PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
     MakeWord(UserMagic.MagicInfo.btEffectType, UserMagic.MagicInfo.btEffect),
@@ -2685,7 +2704,7 @@ begin
     end;
   end;
   //MainOutMessage('AttackCount' + IntToStr(n));
-  
+
   BaseObjectList.Free;
 end;
 

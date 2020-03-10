@@ -148,11 +148,12 @@ type
     m_boStartMaster: Boolean;
     m_boStartUnMarry: Boolean;
     m_boStartUnMaster: Boolean;
-    m_boFilterSendMsg: Boolean; //禁止发方字(发的文字只能自己看到)
-    m_nKillMonExpRate: Integer;
+    //禁止发方字(发的文字只能自己看到)
+    m_boFilterSendMsg: Boolean;
     //杀怪经验倍数(此数除以 100 为真正倍数)
-    m_nPowerRate: Integer;
+    m_nKillMonExpRate: Integer;
     //人物攻击力倍数(此数除以 100 为真正倍数)
+    m_nPowerRate: Integer;
     m_dwKillMonExpRateTime: LongWord;
     m_dwPowerRateTime: LongWord;
     m_dwRateTick: LongWord;
