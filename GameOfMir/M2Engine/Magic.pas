@@ -110,7 +110,6 @@ type
       nTargetY, nMagicLevel: Integer): Boolean;
   end;
 function MPow(UserMagic: pTUserMagic): Integer;
-function MMAXPow(UserMagic: pTUserMagic): Integer;
 function GetPower(nPower: Integer; UserMagic: pTUserMagic): Integer;
 function GetPower13(nInt: Integer; UserMagic: pTUserMagic): Integer;
 function GetRPow(wInt: Integer): Word;
@@ -128,27 +127,27 @@ begin
   Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
 end;
 
-{计算技能等级伤害：defPower 到 defMaxPower 之间的随机值 }
-function MMAXPow(UserMagic: pTUserMagic): Integer;
-begin
-  Result := UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower);
-end;
-
-{计算技能总伤害：power 加上 按等级提供的技能伤害 }
 function GetPower(nPower: Integer; UserMagic: pTUserMagic): Integer;
 begin
-  Result := nPower + MMAXPow(UserMagic) * (UserMagic.btLevel + 1);
+  Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+    Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
 end;
 
 {
 计算状态技能总加成：基础加成 + 按等级提供的加成
 }
 function GetPower13(nInt: Integer; UserMagic: pTUserMagic): Integer;
+var
+  d10: Double;
+  d18: Double;
 begin
-  Result := nInt + MMAXPow(UserMagic) * (UserMagic.btLevel + 1);
+  d10 := nInt / 3.0;
+  d18 := nInt - d10;
+  Result := ROUND(d18 / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1) + d10 +
+    (UserMagic.MagicInfo.btDefPower + Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower)));
 end;
 
-{莫名其妙的方法，为什么要把 int 转换为 word，吃饱了么？}
+{取伤害中间值，实际上没必要把两个 Word 拼接为一个 Integer，因为 Word 是 0-65535}
 function GetRPow(wInt: Integer): Word;
 begin
   if HiWord(wInt) > LoWord(wInt) then begin
@@ -173,8 +172,8 @@ begin
     end;
   end;
 end;
-//nType 为指定类型 1 为护身符 2 为毒药
 
+//nType 为指定类型 1 为护身符 2 为毒药
 {检查指定类型是否为护身符，并且剩余持久需要大于将消耗的数值}
 function CheckAmulet(PlayObject: TBaseObject {修改 TBaseObject}; nCount: Integer; nType: Integer): Boolean;
 var
@@ -201,6 +200,7 @@ begin
     end;
   end;
 end;
+
 //nType 为指定类型 1 为护身符 2 为毒药
 {使用毒符}
 procedure UseAmulet(PlayObject: TBaseObject; nCount: Integer; nType: Integer);
@@ -229,7 +229,7 @@ begin
   for i := 0 to PlayObject.m_VisibleActors.Count - 1 do begin
     {取得基础对象}
     BaseObject := TBaseObject(pTVisibleBaseObject(PlayObject.m_VisibleActors[i]).BaseObject);
-    {如果坐标离得很近？或者在同一个屏幕内？}
+    {如果是贴身站着}
     if (abs(PlayObject.m_nCurrX - BaseObject.m_nCurrX) <= 1) and (abs(PlayObject.m_nCurrY - BaseObject.m_nCurrY) <= 1) then begin
       {对象没有死亡，并且不是自己}
       if (not BaseObject.m_boDeath) and (BaseObject <> PlayObject) then begin
@@ -237,8 +237,13 @@ begin
         if (PlayObject.m_Abil.Level > BaseObject.m_Abil.Level) and (not BaseObject.m_boStickMode) then begin
           levelgap := PlayObject.m_Abil.Level - BaseObject.m_Abil.Level;
           {如果 0 -- 20 之间的值，小于 推开技能等级}
+          // 技能等级每升 1 级，则几率提高 15%
+          // 人物等级差，每多 1 级，则几率提高 5%
+          // 在满级技能以及等级差 5 级的情况下，有 100 %几率推开附近的玩家
           if (Random(20) < 6 + nPushLevel * 3 + levelgap) then begin
+            // 是一个正确的目标（对方是玩家、怪物、非宝宝，没有在安全区，不是新手..）
             if PlayObject.IsProperTarget(BaseObject) then begin
+              // 推开距离：1 -- 4 格子
               push := 1 + _MAX(0, nPushLevel - 1) + Random(2);
               nDir := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, BaseObject.m_nCurrX, BaseObject.m_nCurrY);
               BaseObject.CharPushed(nDir, push);
@@ -272,6 +277,7 @@ begin
         BaseObject.MagicQuest(PlayObject, nMagID, mfs_TagEx);
         Result := True;
       end;
+      // 如果开启心灵启示，那么可以看到血量的变化
       if PlayObject.m_boAbilSeeHealGauge then
         PlayObject.SendDefMsg(PlayObject, SM_INSTANCEHEALGUAGE,
           Integer(BaseObject),
@@ -294,12 +300,14 @@ begin
   inherited;
 end;
 
+{双龙破、惊雷爆技能}
 function TMagicManager.MagMakeCBOBase(PlayObject: TPlayObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer; var TargeTBaseObject: TBaseObject): Boolean;
 begin
   Result := False;
   if TargeTBaseObject = nil then exit;
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 如果 魔法躲避 小于 0 -- 9 之间的某个值，那么触发技能；那么就意味着 1 = 10%，未来应该修改为 Random(100)
       if (TargeTBaseObject.m_nAntiMagic <= Random(10)) and (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
         (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
         PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
@@ -327,6 +335,16 @@ function TMagicManager.MagMakeFireball(PlayObject: TPlayObject;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
   nPower: Integer;
+  function MPow(UserMagic: pTUserMagic): Integer;
+  begin
+    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
+  end;
+  function GetPower(nPower: Integer): Integer;
+  begin
+    Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
+      (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
+      Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
+  end;
 begin
   Result := False;
   if TargeTBaseObject = nil then
@@ -335,11 +353,12 @@ begin
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     { 检查是否可以攻击 }
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 重构魔法躲避
       if (TargeTBaseObject.m_nAntiMagic <= Random(10)) and
         (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
         (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
         with PlayObject do begin
-          nPower := GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(m_WAbil.MC),
+          nPower := GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(m_WAbil.MC),
             SmallInt(HiWord(m_WAbil.MC) - LoWord(m_WAbil.MC)) + 1);
         end;
         PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
@@ -347,6 +366,7 @@ begin
           400 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
         //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
         TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+        // 奇怪的判断
         if (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
           Result := True;
       end
@@ -464,7 +484,7 @@ begin
     PlayObject.m_PEnvir.GetNextPosition(PlayObject.m_nCurrX, PlayObject.m_nCurrY, n1C, 8, nTargetX, nTargetY);
     nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
       SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
-    if PlayObject.MagPassThroughMagic(n14, n18, nTargetX, nTargetY, n1C, nPower, UserMagic.wMagIdx, 
+    if PlayObject.MagPassThroughMagic(n14, n18, nTargetX, nTargetY, n1C, nPower, UserMagic.wMagIdx,
       True) > 0 then
       Result := True;
   end;
@@ -493,6 +513,7 @@ begin
   if TargeTBaseObject = nil then
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+    // fixme 魔法躲避
     if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
       nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
         SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
@@ -598,6 +619,7 @@ begin
     TargeTBaseObject := nil;
 end;
 
+// 升级版灵魂火符？
 function TMagicManager.MagMakeFireCharmEx(PlayObject: TBaseObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer;
   var TargeTBaseObject: TBaseObject): Boolean;
 begin
@@ -606,6 +628,7 @@ begin
     exit;
   if PlayObject.MagCanHitTarget(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject) then begin
     if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+      // fixme 魔法躲避
       if Random(10) >= TargeTBaseObject.m_nAntiMagic then begin
         if (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
           PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2,
@@ -643,6 +666,7 @@ begin
   if TargeTBaseObject = nil then
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+    // fixme 魔法躲避
     if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
       nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.SC),
         SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
@@ -680,6 +704,7 @@ begin
   if TargeTBaseObject = nil then
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
+    // fixme 魔法躲避
     if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
       nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) + LoWord(PlayObject.m_WAbil.MC),
         SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
@@ -1500,6 +1525,7 @@ begin
       Integer(TargeTBaseObject),
       '');
   end;
+  // 自定义技能不获取技能熟练度？
   if (UserMagic.btLevel < 3) and (boTrain) then begin
     if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] <= PlayObject.m_Abil.Level then begin
       PlayObject.TrainSkill(UserMagic, Random(3) + 1);
@@ -1934,7 +1960,7 @@ begin
   Result := False;
   boSpellFire := True;
   BaseObjectList := TList.Create;
-  nRate := _MAX(1, UserMagic.btLevel); 
+  nRate := _MAX(1, UserMagic.btLevel);
   PlayObject.GetMapBaseObjects(PlayObject.m_PEnvir, nTargetX, nTargetY, nRate, BaseObjectList);
   {PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
     MakeWord(UserMagic.MagicInfo.btEffectType, UserMagic.MagicInfo.btEffect),
@@ -2685,7 +2711,7 @@ begin
     end;
   end;
   //MainOutMessage('AttackCount' + IntToStr(n));
-  
+
   BaseObjectList.Free;
 end;
 

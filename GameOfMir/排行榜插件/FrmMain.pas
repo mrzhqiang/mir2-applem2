@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, MudUtil, PsAPI, MyCommon, 
-  Dialogs, StdCtrls, ComCtrls, Spin, Buttons, Grids, ExtCtrls, IniFiles, Grobal2;
+  Dialogs, StdCtrls, ComCtrls, Spin, Buttons, Grids, ExtCtrls, IniFiles, Grobal2, Common;
 
 type
   TDBHeader = packed record //Size 124
@@ -83,14 +83,22 @@ type
     m_boRun: Boolean;
     m_dwRunTick: LongWord;
     m_boSend: Boolean;
+    m_boRemoteClose: Boolean;
     m_TopList: array[0..13] of TQuickPointList;
   public
     procedure RefTopGrid();
     procedure BeginTop();
+    procedure MyMessage(var MsgData: TWmCopyData); message WM_COPYDATA;
   end;
+
+const
+  tTopPlug = 9;
+
+procedure SendGameCenterMsg(wIdent: Word; sSendMsg: string);
 
 var
   FormMain: TFormMain;
+  g_dwGameCenterHandle: THandle;
 
 implementation
 
@@ -317,6 +325,37 @@ begin
   end;
 end;
 
+procedure SendGameCenterMsg(wIdent: Word; sSendMsg: string);
+var
+  SendData: TCopyDataStruct;
+  nParam: Integer;
+begin
+  nParam := MakeLong(Word(tTopPlug), wIdent);
+  SendData.cbData := Length(sSendMsg) + 1;
+  GetMem(SendData.lpData, SendData.cbData);
+  StrCopy(SendData.lpData, PChar(sSendMsg));
+  SendMessage(g_dwGameCenterHandle, WM_COPYDATA, nParam, Cardinal(@SendData));
+  FreeMem(SendData.lpData);
+end;
+
+procedure TFormMain.MyMessage(var MsgData: TWmCopyData);
+var
+  sData: string;
+  wIdent: Word;
+begin
+  wIdent := HiWord(MsgData.From);
+  sData := StrPas(MsgData.CopyDataStruct^.lpData);
+  case wIdent of
+    GS_QUIT: begin
+        Timer1.Enabled := False;
+        Close();
+    end;
+    1: ;
+    2: ;
+    3: ;
+  end;
+end;
+
 procedure TFormMain.EditMinLevelChange(Sender: TObject);
 begin
   if not m_boRead then begin
@@ -343,8 +382,18 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 var
   I: Integer;
+  nX, nY: Integer;
 begin
   Randomize;
+  g_dwGameCenterHandle := StrToIntDef(ParamStr(1), 0);
+  nX := StrToIntDef(ParamStr(2), -1);
+  nY := StrToIntDef(ParamStr(3), -1);
+  if (nX >= 0) or (nY >= 0) then begin
+    Left := nX;
+    Top := nY;
+  end;
+  m_boRemoteClose := False;
+  SendGameCenterMsg(SG_FORMHANDLE, IntToStr(Self.Handle));
 
   m_boRead := True;
   m_boTimeRun := False;
@@ -365,6 +414,7 @@ begin
     Radio1.Checked := True
   else
     Radio2.Checked := True;
+  SendGameCenterMsg(SG_STARTNOW, '正在启动排行榜插件...');
   m_Config.ReadSectionValues('Names', ListBoxNames.Items);
   for I := 0 to ListBoxNames.Items.Count - 1 do
     ListBoxNames.Items[I] := Copy(ListBoxNames.Items[I], 1, Length(ListBoxNames.Items[I]) - 1);
@@ -374,6 +424,7 @@ begin
     m_TopList[I] := TQuickPointList.Create;
   Radio1Click(Radio1);
   RefTopGrid;
+  SendGameCenterMsg(SG_STARTOK, '排行榜插件启动完成...');
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);

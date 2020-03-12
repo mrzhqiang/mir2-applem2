@@ -4,7 +4,7 @@ object FormMain: TFormMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = '361M2'#26381#21153#31471#31649#29702#24037#20855' V2.5 (SQL'#29256')'
-  ClientHeight = 241
+  ClientHeight = 261
   ClientWidth = 440
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -47,7 +47,7 @@ object FormMain: TFormMain
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 222
+    Top = 242
     Width = 440
     Height = 19
     Panels = <
@@ -78,6 +78,7 @@ object FormMain: TFormMain
       item
         Width = 50
       end>
+    ExplicitTop = 222
   end
   object MainMenu1: TMainMenu
     Left = 24

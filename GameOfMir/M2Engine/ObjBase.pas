@@ -6245,11 +6245,13 @@ begin
   if m_btRaceServer = RC_PLAYOBJECT then begin
     with Self as TPlayObject do begin
       if boDeadliness and (m_btDeadliness > 0) and (Random(100) < m_btDeadliness) then begin       //致命一击
+        // todo 致命伤害增加一个百分比系数，而不是直接的 2 倍
         Result := Result * 2;
         SendRefMsg(RM_SHOWEFFECT, Effect_DEADLINESS, Integer(Self), m_nCurrX, m_nCurrY, '');
       end;
       if m_nPowerRate <> 100 then
         Result := ROUND(Result * (m_nPowerRate / 100));
+      // fixme 这种设定垃圾，不需要
       if m_boPowerItem then
         Result := ROUND(m_rPowerItem * Result);
     end;
@@ -6405,6 +6407,7 @@ begin
     BaseObject := TBaseObject(m_PEnvir.GetMovingObject(sX, sY, True));
     if BaseObject <> nil then begin
       if IsProperTarget(BaseObject) then begin
+        // fixme 魔法躲避
         if Random(10) >= BaseObject.m_nAntiMagic then begin
           if undeadattack then
             acpwr := ROUND(magpwr * 1.5)
