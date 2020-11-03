@@ -27,12 +27,20 @@ QQ:applem2@foxmail.com
 1.安装Raize控件
 
 2.依次安装以下控件
-C:\applem2\demmrfm\JSocket
-C:\applem2\demmrfm\VCLZip
-C:\applem2\demmrfm\RSA
-C:\applem2\demmrfm\WebBrowserUI
-C:\applem2\demmrfm\BitBtn
-C:\applem2\GameOfMir\控件\unrar\src
+.\mir2-applem2\demmrfm\JSocket
+.\mir2-applem2\demmrfm\VCLZip
+.\mir2-applem2\demmrfm\RSA
+.\mir2-applem2\demmrfm\WebBrowserUI
+.\mir2-applem2\demmrfm\BitBtn
+.\mir2-applem2\GameOfMir\控件\unrar\src
+
+.\mir2-applem2\demmrfm\Asphyre410
+.\mir2-applem2\demmrfm\bsftriald2006
+.\mir2-applem2\demmrfm\GraphicEx
+.\mir2-applem2\demmrfm\MyDirect9
+.\mir2-applem2\demmrfm\pngimage
+.\mir2-applem2\demmrfm\VCLSkin5.60
+.
 
 3.M2主程序报错修改
 IdUDPClientLog.Send(string(ABuffer));
