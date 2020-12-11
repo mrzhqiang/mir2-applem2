@@ -1217,6 +1217,7 @@ begin
   for i := 0 to nRecordCount - 1 do begin
     New(Magic);
     Magic.wMagicId := Query.FieldByName('MagId').AsInteger;
+    Magic.wCopy := Query.FieldByName('Copy').AsInteger;
     Magic.sMagicName := Query.FieldByName('MagName').AsString;
     Magic.btEffectType := Query.FieldByName('EffectType').AsInteger;
     Magic.btEffect := Query.FieldByName('Effect').AsInteger;
@@ -1231,18 +1232,47 @@ begin
     Magic.wMaxPower := Query.FieldByName('MaxPower').AsInteger;
     Magic.btDefPower := Query.FieldByName('DefPower').AsInteger;
     Magic.btDefMaxPower := Query.FieldByName('DefMaxPower').AsInteger;
-    // 原先是满级 3 级，现在改为 20 级。未来的转生技能，可能是 100 级。
-    Magic.btTrainLv := 20;
-    // 改为每级增加的百分比伤害
     Magic.TrainLevel[0] := Query.FieldByName('NeedL1').AsInteger;
     Magic.TrainLevel[1] := Query.FieldByName('NeedL2').AsInteger;
     Magic.TrainLevel[2] := Query.FieldByName('NeedL3').AsInteger;
-    Magic.TrainLevel[3] := Query.FieldByName('NeedL3').AsInteger;
-    // 改为基础百分比伤害
+    Magic.TrainLevel[3] := Query.FieldByName('NeedL4').AsInteger;
+    Magic.TrainLevel[4] := Query.FieldByName('NeedL5').AsInteger;
+    Magic.TrainLevel[5] := Query.FieldByName('NeedL6').AsInteger;
+    Magic.TrainLevel[6] := Query.FieldByName('NeedL7').AsInteger;
+    Magic.TrainLevel[7] := Query.FieldByName('NeedL8').AsInteger;
+    Magic.TrainLevel[8] := Query.FieldByName('NeedL9').AsInteger;
+    Magic.TrainLevel[9] := Query.FieldByName('NeedL10').AsInteger;
+    Magic.TrainLevel[10] := Query.FieldByName('NeedL11').AsInteger;
+    Magic.TrainLevel[11] := Query.FieldByName('NeedL12').AsInteger;
+    Magic.TrainLevel[12] := Query.FieldByName('NeedL13').AsInteger;
+    Magic.TrainLevel[13] := Query.FieldByName('NeedL14').AsInteger;
+    Magic.TrainLevel[14] := Query.FieldByName('NeedL15').AsInteger;
+    Magic.TrainLevel[15] := Query.FieldByName('NeedL16').AsInteger;
+    Magic.TrainLevel[16] := Query.FieldByName('NeedL17').AsInteger;
+    Magic.TrainLevel[17] := Query.FieldByName('NeedL18').AsInteger;
+    Magic.TrainLevel[18] := Query.FieldByName('NeedL19').AsInteger;
+    Magic.TrainLevel[19] := Query.FieldByName('NeedL19').AsInteger;
     Magic.MaxTrain[0] := Query.FieldByName('L1Train').AsInteger;
     Magic.MaxTrain[1] := Query.FieldByName('L2Train').AsInteger;
     Magic.MaxTrain[2] := Query.FieldByName('L3Train').AsInteger;
-    Magic.MaxTrain[3] := Magic.MaxTrain[2];
+    Magic.MaxTrain[3] := Query.FieldByName('L4Train').AsInteger;
+    Magic.MaxTrain[4] := Query.FieldByName('L5Train').AsInteger;
+    Magic.MaxTrain[5] := Query.FieldByName('L6Train').AsInteger;
+    Magic.MaxTrain[6] := Query.FieldByName('L7Train').AsInteger;
+    Magic.MaxTrain[7] := Query.FieldByName('L8Train').AsInteger;
+    Magic.MaxTrain[8] := Query.FieldByName('L9Train').AsInteger;
+    Magic.MaxTrain[9] := Query.FieldByName('L10Train').AsInteger;
+    Magic.MaxTrain[10] := Query.FieldByName('L11Train').AsInteger;
+    Magic.MaxTrain[11] := Query.FieldByName('L12Train').AsInteger;
+    Magic.MaxTrain[12] := Query.FieldByName('L13Train').AsInteger;
+    Magic.MaxTrain[13] := Query.FieldByName('L14Train').AsInteger;
+    Magic.MaxTrain[14] := Query.FieldByName('L15Train').AsInteger;
+    Magic.MaxTrain[15] := Query.FieldByName('L16Train').AsInteger;
+    Magic.MaxTrain[16] := Query.FieldByName('L17Train').AsInteger;
+    Magic.MaxTrain[17] := Query.FieldByName('L18Train').AsInteger;
+    Magic.MaxTrain[18] := Query.FieldByName('L19Train').AsInteger;
+    Magic.MaxTrain[19] := Query.FieldByName('L19Train').AsInteger;
+    Magic.btTrainLv := Query.FieldByName('NeedMax').AsInteger;
     if Magic.wMagicId > 0 then begin
       MagicList.Add(Magic);
     end

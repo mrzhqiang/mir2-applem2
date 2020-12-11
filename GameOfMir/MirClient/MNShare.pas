@@ -155,8 +155,8 @@ var
   g_Cmd_EndGuild: string = '@退出行会';
   g_Cmd_TakeOnHorse: string = '@骑马';
   g_Cmd_TakeOffHorse: string = '@下马';
-  g_Cmd_MemberFunction: string = '@会员'; 
-  g_Cmd_MemberFunctionEx: string = '@帮助'; 
+  g_Cmd_MemberFunction: string = '@会员';
+  g_Cmd_MemberFunctionEx: string = '@帮助';
 
 procedure ScriptGoto(sCmd: string);
 procedure GotoClickNpc(nX, nY: Integer);
@@ -337,7 +337,7 @@ var
   PackMakeItem:array of TPackMakeItem;
   nCount, I, K: Integer;
   pPackMakeItem: pTPackMakeItem;
-  
+
 begin
   for I := Low(g_MakeMagicList) to High(g_MakeMagicList) do begin
     for k := 0 to g_MakeMagicList[I].Count - 1 do begin
@@ -924,8 +924,15 @@ begin
 end;
 
 function GetDefMagicIcon(Mag: pTClientDefMagic): TDXTexture;
+var
+  skillType: Word;
 begin
-  case Mag.Magic.wMagicId of
+  skillType := Mag.Magic.wMagicId;
+  if Mag.Magic.wCopy > 0 then
+  begin
+    skillTYpe := Mag.Magic.wCopy;
+  end;
+  case skillTYpe of
     36: Result := g_WDefMagIconImages.Images[78];
     38: Result := g_WDefMagIconImages.Images[8];
     41: Result := g_WDefMagIconImages.Images[70];
@@ -968,7 +975,7 @@ begin
     122: Result := g_WDefMagIconImages.Images[94];
     123: Result := g_WDefMagIconImages.Images[90];
     124: Result := g_WDefMagIconImages.Images[110];
-    else Result := g_WDefMagIconImages.Images[Mag.Magic.btEffect * 2];
+  else Result := g_WDefMagIconImages.Images[Mag.Magic.btEffect * 2];
   end;
 end;
 

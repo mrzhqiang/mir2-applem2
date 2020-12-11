@@ -6,6 +6,8 @@ uses
   Dialogs, ComCtrls, StdCtrls, INIFiles, ExtCtrls, VCLUnZip, VCLZip, ShellApi,
     StrUtils;
 type
+  // 备份对象
+  // 表示一个目录，以及相关的参数：排序、模式、是否开启、小时、分钟等等
   TBackUpObject = class
     m_nIndex: Integer;
     m_sSourceDir: string;
@@ -36,7 +38,10 @@ type
     procedure Run();
   end;
 
+  // 备份管理器
+  // 用来管理备份逻辑
   TBackUpManager = class
+    // 临界区，就是一个并发锁
     m_CriticalSection: TRTLCriticalSection;
     m_BackUpList: TList;
     m_TimerStart: TTimer;
@@ -71,7 +76,6 @@ begin
   m_boZip := True;
   m_wStatus := 0;
   m_nBackUpCount := 0;
-  ;
   m_nErrorCount := 0;
   m_dwBackUpTick := GetTickCount;
   m_dwBackUpTime := 0;
@@ -98,10 +102,11 @@ end;
 
 procedure TBackUpObject.Initialize;
 begin
-
+  // no-op
 end;
 
 procedure TBackUpObject.Run;
+  // 判断日期是否为今天，通过年月日是否相等来决定返回值
   function IsToday(): Boolean;
   var
     wYear1, wMonth1, wDay1: Word;
@@ -111,7 +116,7 @@ procedure TBackUpObject.Run;
     DecodeDate(Now, wYear2, wMonth2, wDay2);
     Result := (wYear1 = wYear2) and (wMonth1 = wMonth2) and (wDay1 = wDay2);
   end;
-
+  // 是否可以备份？通过小时和分钟来判断
   function IsBackUp(): Boolean;
   var
     wHour, wMin, wSec, wMSec: Word;
@@ -119,7 +124,7 @@ procedure TBackUpObject.Run;
     DecodeTime(Time, wHour, wMin, wSec, wMSec);
     Result := (m_wHour = wHour) and (m_wMin = wMin);
   end;
-
+  // 时间格式化为字符串
   function DateTime_ToStr: string;
   var
     wYear, wMonth, wDay: Word;
@@ -129,7 +134,7 @@ procedure TBackUpObject.Run;
     DecodeTime(Time, wHour, wMin, wSec, wMSec);
     Result := format('%d-%d-%d.%d-%d', [wYear, wMonth, wDay, wHour, wMin]);
   end;
-
+  // 获取上一级目录名称
   function GetLastDirName: string;
   var
     TempList: TStringList;
@@ -142,7 +147,7 @@ procedure TBackUpObject.Run;
       Result := DateTime_ToStr;
     TempList.Free;
   end;
-
+  // 获取目录名称
   function GetDirName(sFileName: string): string;
   var
     s01: string;
@@ -175,7 +180,7 @@ begin
     if not m_boBackUp then
       Exit;
     case m_btBackUpMode of
-      0: begin
+      0: begin // 备份模式：每天中的固定时刻
           case m_wStatus of
             0: if IsBackUp then begin
                 m_wStatus := 1;
@@ -219,7 +224,7 @@ begin
               end;
           end;
         end;
-      1: begin
+      1: begin // 备份模式：每间隔一定的时间
           case m_wStatus of
             0: begin
                 if (GetTickCount - m_dwStartBackUpTick) > (m_wHour * 60 * 60 * 1000 + m_wMin * 1000) then begin

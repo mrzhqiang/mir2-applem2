@@ -25,7 +25,7 @@ object frmMain: TfrmMain
     Top = 8
     Width = 520
     Height = 360
-    ActivePage = ConfigTab
+    ActivePage = ControlTab
     HotTrack = True
     TabOrder = 0
     object ControlTab: TTabSheet

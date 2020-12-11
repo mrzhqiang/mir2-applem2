@@ -33,9 +33,9 @@ type
     m_sHomeMap: string[16]; //0x78  //回城地图
     m_nHomeX: Integer; //0x8C  //回城座标X
     m_nHomeY: Integer; //0x90  //回城座标Y
-    m_sDieMap: string[16]; //0x78  //回城地图
-    m_nDieX: Integer; //0x8C  //回城座标X
-    m_nDieY: Integer; //0x90  //回城座标Y
+    m_sDieMap: string[16]; //0x78  //死亡地图
+    m_nDieX: Integer; //0x8C  //死亡座标X
+    m_nDieY: Integer; //0x90  //死亡座标Y
     //bo94: Boolean; //0x94
     m_boOnHorse: Boolean; //0x95
     m_boCanOnHorse: Boolean;

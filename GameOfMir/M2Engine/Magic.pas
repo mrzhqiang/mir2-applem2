@@ -880,6 +880,7 @@ var
   end;
 var
   MapFlag: TWalkFlagArr;
+  skillType: Word;
 begin
   Result := False;
   boMove := False;
@@ -914,7 +915,12 @@ begin
   boSpellFire := True;
   //  nPower := 0;
     //if (PlayObject.m_nSoftVersionDateEx = 0) and (PlayObject.m_dwClientTick = 0) and (UserMagic.MagicInfo.wMagicId > 40) then Exit;
-  case UserMagic.MagicInfo.wMagicId of //
+  skillType := UserMagic.MagicInfo.wMagicId;
+  if UserMagic.MagicInfo.wCopy > 0 then
+  begin
+    skillType := UserMagic.MagicInfo.wCopy;
+  end
+  case skillType of //
     SKILL_FIREBALL {1}, //火球术
     SKILL_FIREBALL2 {5}: begin //大火球
         if MagMakeFireball(PlayObject,
@@ -1526,7 +1532,7 @@ begin
       '');
   end;
   // 自定义技能不获取技能熟练度？
-  if (UserMagic.btLevel < 3) and (boTrain) then begin
+  if (UserMagic.btLevel < 20) and (boTrain) then begin
     if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] <= PlayObject.m_Abil.Level then begin
       PlayObject.TrainSkill(UserMagic, Random(3) + 1);
       if not PlayObject.CheckMagicLevelup(UserMagic) then begin

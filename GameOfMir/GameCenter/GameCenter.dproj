@@ -50,8 +50,5 @@
       <Form>frmMain</Form>
     </DCCReference>
     <DCCReference Include="GShare.pas" />
-    <DCCReference Include="TextForm.pas">
-      <Form>FormText</Form>
-    </DCCReference>
   </ItemGroup>
 </Project>

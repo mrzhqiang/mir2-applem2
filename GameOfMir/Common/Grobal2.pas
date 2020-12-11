@@ -457,7 +457,7 @@ $80000000  }
   SKILL_123 = 123;
   SKILL_124 = 124;
 
-  SKILL_MAX = 125;
+  SKILL_MAX = 500;
 
 
   GMM_UPDATEITEM = 1;
@@ -1701,6 +1701,8 @@ type
   TMagic = packed record
     // 技能序号，每个 ID 对应一种技能，比如：火球术的 ID 是 1
     wMagicId: Word;
+    // 序号复制，代表复制指定技能的执行逻辑
+    wCopy: Word;
     // 技能名字
     sMagicName: string[24];
     // 技能效果类型
@@ -1725,16 +1727,16 @@ type
     wPower: Word;
     // 基础最大伤害
     wMaxPower: Word;
-    // 等级伤害
+    // 等级伤害： -1 表示百分比等级增长；>= 0 表示固定等级增长
     btDefPower: Word;
     // 等级最大伤害
     btDefMaxPower: Word;
     // 最高等级
-    btTrainLv: Byte;
+    btTrainLv: Word;
     // 升级需要人物等级
-    TrainLevel: array[0..3] of Byte;
+    TrainLevel: array[0..20] of Word;
     // 升级需要熟练度
-    MaxTrain: array[0..3] of Integer;
+    MaxTrain: array[0..20] of Integer;
     // 技能模式：
     // mm_Attack，攻击技能；
     // mm_Passiveness，被动技能：
@@ -2031,7 +2033,7 @@ type
     wHP: Word;
     wMP: Word;
     wMaxHP: Word;
-    wMaxMP: Word
+    wMaxMP: Word;
   end;
 
   TMerchantInfo = packed record
