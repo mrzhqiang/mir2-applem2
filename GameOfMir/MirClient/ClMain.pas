@@ -451,7 +451,7 @@ implementation
 
 uses
   HerbActor, GameSetup, Common, FState3, FState2, FState, FState4, FindMapPath, MudUtil, WMFile, HGEBase,
-  MD5Unit, Registry, FWeb, MNShare, CheckDLL, MyCommon, UrlMon, Logo, EncryptFile, FrmAD, ShellAPI, DlgConfig, GuaJi;
+  MD5Unit, Registry, FWeb, MNShare, CheckDLL, MyCommon, UrlMon, Logo, EncryptFile, FrmAD, ShellAPI, DlgConfig, GuaJi, IniFiles;
 
 {$R *.DFM}
 {$R NewCursor.RES}
@@ -583,6 +583,7 @@ var
   NewChangeDisplaySettings: TNewChangeDisplaySettings;
   REGPathStr: string;
   boBITDEPTH: Boolean;
+  ini: TIniFile;
 begin
   Res := TResourceStream.Create(Hinstance, '256RGB', 'RGB');
   try
@@ -596,6 +597,7 @@ begin
   
   MODULE := LoadLibrary('user32.dll');
   Reg := TRegistry.Create;
+  ini := TIniFile.Create('.\mir2.ini');
   Try
     NewEnumDisplayDevices := GetProcAddress(MODULE, 'EnumDisplayDevicesA');
     NewChangeDisplaySettings := GetProcAddress(MODULE, 'ChangeDisplaySettingsA');
@@ -607,29 +609,23 @@ begin
       REGPathStr := GetValidStr3(REGPathStr, flname, ['\']);
     end;
     Try
-      Reg.RootKey := HKEY_LOCAL_MACHINE;
-      if Reg.OpenKey(REG_SETUP_OPATH, True) then begin
-        boBITDEPTH := ReadBool(Reg, REG_SETUP_BITDEPTH, boBITDEPTH);
-        g_FScreenMode := ReadInteger(Reg, REG_SETUP_DISPLAY, g_FScreenMode);
-        g_boFullScreen := not ReadBool(Reg, REG_SETUP_WINDOWS, True);
-        g_btMP3Volume := ReadInteger(Reg, REG_SETUP_MP3VOLUME, g_btMP3Volume);
-        g_btSoundVolume := ReadInteger(Reg, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
-        g_boBGSound := ReadBool(Reg, REG_SETUP_MP3OPEN, g_boBGSound);
-        g_boSound := ReadBool(Reg, REG_SETUP_SOUNDOPEN, g_boSound);
-      end;
-      Reg.CloseKey;
+      if ini <> nil then begin
+        boBITDEPTH := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_BITDEPTH, boBITDEPTH);
+        g_FScreenMode := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_DISPLAY, g_FScreenMode);
+        g_boFullScreen := not ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_WINDOWS, True);
+        g_btMP3Volume := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
+        g_btSoundVolume := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
+        g_boBGSound := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_MP3OPEN, g_boBGSound);
+        g_boSound := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_SOUNDOPEN, g_boSound);
 
-      Reg.RootKey := HKEY_LOCAL_MACHINE;
-      if Reg.OpenKey(REG_SETUP_PATH, True) then begin
-        boBITDEPTH := ReadBool(Reg, REG_SETUP_BITDEPTH, boBITDEPTH);
-        g_FScreenMode := ReadInteger(Reg, REG_SETUP_DISPLAY, g_FScreenMode);
-        g_boFullScreen := not ReadBool(Reg, REG_SETUP_WINDOWS, not g_boFullScreen);
-        g_btMP3Volume := ReadInteger(Reg, REG_SETUP_MP3VOLUME, g_btMP3Volume);
-        g_btSoundVolume := ReadInteger(Reg, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
-        g_boBGSound := ReadBool(Reg, REG_SETUP_MP3OPEN, g_boBGSound);
-        g_boSound := ReadBool(Reg, REG_SETUP_SOUNDOPEN, g_boSound);
+        boBITDEPTH := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, boBITDEPTH);
+        g_FScreenMode := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, g_FScreenMode);
+        g_boFullScreen := not ini.ReadBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, not g_boFullScreen);
+        g_btMP3Volume := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
+        g_btSoundVolume := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
+        g_boBGSound := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, g_boBGSound);
+        g_boSound := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, g_boSound);
       end;
-      Reg.CloseKey;
 
       if (REGPathStr <> '') and (Assigned(NewChangeDisplaySettings)) then begin
         Reg.RootKey := HKEY_LOCAL_MACHINE;
@@ -639,6 +635,7 @@ begin
             NewChangeDisplaySettings(nil, $40);
           end;
         end;
+        Reg.CloseKey;
       end;
 
       Reg.RootKey := HKEY_LOCAL_MACHINE;
@@ -656,6 +653,9 @@ begin
     End;
   Finally
     Reg.Free;
+    if ini <> nil then begin
+      ini.Free;
+    end;
     FreeLibrary(MODULE);
   End;
 
@@ -3081,15 +3081,15 @@ begin
     Exit;
 
 {$IFDEF DEBUG}
-//  case byte(Key) of
-//    byte('G'), byte('g'): begin
-//        if not frmDlgConfig.Showing then
-//          frmDlgConfig.Open;
-//      end;
-//    byte('B'), byte('b'): begin
-//        GMManageShow;
-//      end;
-//  end;
+  case byte(Key) of
+    byte('G'), byte('g'): begin
+        if not frmDlgConfig.Showing then
+          frmDlgConfig.Open;
+      end;
+    byte('B'), byte('b'): begin
+        GMManageShow;
+      end;
+  end;
 {$ENDIF}
 
   if (DScreen.CurrentScene = PlayScene) and (g_MySelf <> nil) then begin

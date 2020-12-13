@@ -13,7 +13,7 @@ object FormSetup: TFormSetup
   Font.Name = #23435#20307
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   PixelsPerInch = 96
   TextHeight = 12
   object TabSet: TTabSet

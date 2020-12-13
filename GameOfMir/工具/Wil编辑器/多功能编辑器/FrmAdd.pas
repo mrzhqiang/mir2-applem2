@@ -630,7 +630,8 @@ begin
             else begin
               ImageInfo := WMImages.GetDataImageInfo(StartInt + I);
             end;
-            //WriteToFile(DataBuffer, DataBufferLen, Bitmap.Width, Bitmap.Height);
+            // fixme 只是用来生成 Logo 数组
+            WriteToFile(DataBuffer, DataBufferLen, Bitmap.Width, Bitmap.Height);
             ImageInfo.DXInfo.nWidth := Bitmap.Width;
             ImageInfo.DXInfo.nHeight := Bitmap.Height;
             ImageInfo.btFileType := FILETYPE_IMAGE;

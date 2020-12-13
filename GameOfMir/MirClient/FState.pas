@@ -882,7 +882,7 @@ implementation
 
 uses
   ClMain, Share, Actor, GameSetup, FState2, WMFile, cliUtil, Clipbrd, EDcodeEx, Jpeg, FState3, wil,
-  MNSHare, LShare, ShellAPI, MD5Unit, FState4, FWeb, Registry, Bass;
+  MNSHare, LShare, ShellAPI, MD5Unit, FState4, FWeb, Registry, Bass, IniFiles;
 
 const
   MDLGCLICKOX = 25;
@@ -7481,7 +7481,7 @@ end;
 
 procedure TFrmDlg.DMyStateClick(Sender: TObject; X, Y: Integer);
 var
-  Reg: TRegistry;
+  ini: TIniFile;
 begin
 
   if Sender = DOption then begin
@@ -7521,16 +7521,17 @@ begin
       end;
       DScreen.AddSysMsg('[ÓÎÏ·ÉùÒô ´ò¿ª]', clWhite);
     end;
-    Reg := TRegistry.Create;
+    
+    ini := TIniFile.Create('.\mir2.ini');
     Try
-      Reg.RootKey := HKEY_LOCAL_MACHINE;
-      if Reg.OpenKey(REG_SETUP_PATH, True) then begin
-        Reg.WriteBool(REG_SETUP_MP3OPEN, g_boBGSound);
-        Reg.WriteBool(REG_SETUP_SOUNDOPEN, g_boSound);
+      if ini <> nil then begin
+        ini.WriteBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, g_boBGSound);
+        ini.WriteBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, g_boSound);
       end;
-      Reg.CloseKey;
     Finally
-      Reg.Free;
+      if ini <> nil then begin
+        ini.Free();
+      end;
     End;
   end;
 

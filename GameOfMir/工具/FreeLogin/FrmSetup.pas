@@ -43,7 +43,7 @@ implementation
 
 {$R *.dfm}
 uses
-  Registry;
+  Registry, IniFiles;
 
 const
   REG_SETUP_OPATH = 'SOFTWARE\IEngine\Mir2\Setup';
@@ -58,26 +58,26 @@ const
 
 procedure TFormSetup.btOKClick(Sender: TObject);
 var
-  Reg: TRegistry;
+  ini: TIniFile;
 begin
-  Reg := TRegistry.Create;
   Try
+    ini := TIniFile.Create('.\mir2.ini');
     Try
-      Reg.RootKey := HKEY_LOCAL_MACHINE;
-      if Reg.OpenKey(REG_SETUP_PATH, True) then begin
-        Reg.WriteBool(REG_SETUP_BITDEPTH, Boolean(cbBitDepth.ItemIndex));
-        Reg.WriteInteger(REG_SETUP_DISPLAY, ComboBox2.ItemIndex);
-        Reg.WriteBool(REG_SETUP_WINDOWS, clbDisplay.Checked[0]);
-        Reg.WriteBool(REG_SETUP_MP3OPEN, clbMusic.Checked[0]);
-        Reg.WriteInteger(REG_SETUP_MP3VOLUME, tBarMusic.Position);
-        Reg.WriteBool(REG_SETUP_SOUNDOPEN, clbMusic.Checked[1]);
-        Reg.WriteInteger(REG_SETUP_SOUNDVOLUME, tBarSound.Position);
+      if ini <> nil then begin
+        ini.WriteBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, Boolean(cbBitDepth.ItemIndex));
+        ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, ComboBox2.ItemIndex);
+        ini.WriteBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, clbDisplay.Checked[0]);
+        ini.WriteBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, clbMusic.Checked[0]);
+        ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, tBarMusic.Position);
+        ini.WriteBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, clbMusic.Checked[1]);
+        ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_SOUNDVOLUME, tBarSound.Position);
       end;
     Except
     End;
-    Reg.CloseKey;
   Finally
-    Reg.Free;
+    if ini <> nil then begin
+      ini.Free();
+    end;
   End;
   Close;
 end;
@@ -101,7 +101,8 @@ procedure TFormSetup.Open;
     end;
   end;
 var
-  Reg: TRegistry;
+//  Reg: TRegistry;
+  ini: TIniFile;
 //  nCount: Integer;
   //di: D3DADAPTER_IDENTIFIER9;
 begin
@@ -123,47 +124,43 @@ begin
   end;
   Direct3D := nil;  }
 
-  Reg := TRegistry.Create;
   try
-    Reg.RootKey := HKEY_LOCAL_MACHINE;
-    if Reg.OpenKey(REG_SETUP_OPATH, True) then begin
-      if ReadBool(Reg, REG_SETUP_BITDEPTH, False) then
+    ini := TIniFile.Create('.\mir2.ini');
+    if ini <> nil then begin
+      if ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_BITDEPTH, False) then
         cbBitDepth.ItemIndex := 1
       else
         cbBitDepth.ItemIndex := 0;
-      ComboBox2.ItemIndex := ReadInteger(Reg, REG_SETUP_DISPLAY, ComboBox2.ItemIndex);
-      clbDisplay.Checked[0] := ReadBool(Reg, REG_SETUP_WINDOWS, True);
+      ComboBox2.ItemIndex := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_DISPLAY, ComboBox2.ItemIndex);
+      clbDisplay.Checked[0] := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_WINDOWS, True);
       clbDisplay.Checked[1] := True;
       clbDisplay.Checked[2] := True;
       clbDisplay.ItemEnabled[1] := False;
       clbDisplay.ItemEnabled[2] := False;
-      clbMusic.Checked[0] := ReadBool(Reg, REG_SETUP_MP3OPEN, True);
-      clbMusic.Checked[1] := ReadBool(Reg, REG_SETUP_SOUNDOPEN, True);
-      tBarMusic.Position := ReadInteger(Reg, REG_SETUP_MP3VOLUME, 70);
-      tBarSound.Position := ReadInteger(Reg, REG_SETUP_SOUNDVOLUME, 70);
-    end;
-    Reg.CloseKey;
+      clbMusic.Checked[0] := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_MP3OPEN, True);
+      clbMusic.Checked[1] := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_SOUNDOPEN, True);
+      tBarMusic.Position := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_MP3VOLUME, 70);
+      tBarSound.Position := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_SOUNDVOLUME, 70);
 
-    Reg.RootKey := HKEY_LOCAL_MACHINE;
-    if Reg.OpenKey(REG_SETUP_PATH, True) then begin
-      if ReadBool(Reg, REG_SETUP_BITDEPTH, False) then
+      if ini.ReadBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, False) then
         cbBitDepth.ItemIndex := 1
       else
         cbBitDepth.ItemIndex := 0;
-      ComboBox2.ItemIndex := ReadInteger(Reg, REG_SETUP_DISPLAY, ComboBox2.ItemIndex);
-      clbDisplay.Checked[0] := ReadBool(Reg, REG_SETUP_WINDOWS, True);
+      ComboBox2.ItemIndex := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, ComboBox2.ItemIndex);
+      clbDisplay.Checked[0] := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, True);
       clbDisplay.Checked[1] := True;
       clbDisplay.Checked[2] := True;
       clbDisplay.ItemEnabled[1] := False;
       clbDisplay.ItemEnabled[2] := False;
-      clbMusic.Checked[0] := ReadBool(Reg, REG_SETUP_MP3OPEN, True);
-      clbMusic.Checked[1] := ReadBool(Reg, REG_SETUP_SOUNDOPEN, True);
-      tBarMusic.Position := ReadInteger(Reg, REG_SETUP_MP3VOLUME, 70);
-      tBarSound.Position := ReadInteger(Reg, REG_SETUP_SOUNDVOLUME, 70);
+      clbMusic.Checked[0] := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, True);
+      clbMusic.Checked[1] := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, True);
+      tBarMusic.Position := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, 70);
+      tBarSound.Position := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_SOUNDVOLUME, 70);
     end;
-    Reg.CloseKey;
   finally
-    Reg.Free;
+    if ini <> nil then begin
+      ini.Free();
+    end;
   end;
   ShowModal;
 end;

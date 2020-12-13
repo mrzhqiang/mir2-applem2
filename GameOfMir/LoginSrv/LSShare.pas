@@ -95,6 +95,7 @@ type
   TRouteInfo = record
     nGateCount: Integer;
     sSelGateIP: string[15];
+    // 实际上是 7100 端口的选择网关--角色网关
     sGameGateIP: array[0..7] of string[15];
     nGameGatePort: array[0..7] of Integer;
   end;
@@ -215,6 +216,7 @@ begin
   I := 1;
   while (true) do begin
     if I > nLen then break;
+    // 账号必须是英文或者数字
     if not (sName[I] in [#48..#57, #65..#90, #95, #97..#122]) then begin
       Result := false;
       break;

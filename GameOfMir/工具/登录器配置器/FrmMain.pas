@@ -59,7 +59,6 @@ type
     Label5: TLabel;
     GameNameEdit: TEdit;
     ServerListEdit: TEdit;
-    LoginVersionRadioGroup: TRadioGroup;
     GenerateLoginButton: TButton;
     procedure btnAddGroupClick(Sender: TObject);
     procedure btnAddServerClick(Sender: TObject);
@@ -488,9 +487,7 @@ var
   sFileName: string;
   sGameName: string[20];
   sUserList: string[200];
-  sIsMir2: Boolean;
 begin
-  sIsMir2 := True;
   sGameName := Trim(GameNameEdit.Text);
   sUserList := Trim(ServerListEdit.Text);
   if sGameName = '' then begin
@@ -501,24 +498,14 @@ begin
     Application.MessageBox('列表地址不能留空！', '错误提示', MB_OK + MB_ICONSTOP);
     Exit;
   end;
-  sFileName := '.\' + sGameName + '-盛大版.exe';
-  if not LoginVersionRadioGroup.ItemIndex = 0 then
-  begin
-    sIsMir2 := False;
-    sFileName := '.\' + sGameName + '-剑侠版.exe';
-  end;
+  sFileName := '.\' + sGameName + '.exe';
   if FileExists(sFileName) then begin
     if not DeleteFile(sFileName) then begin
-      Application.MessageBox('生成登录器失败(无法生成文件)！', '错误提示', MB_OK + MB_ICONSTOP);
+      Application.MessageBox('生成登录器失败(无法删除旧文件)！', '错误提示', MB_OK + MB_ICONSTOP);
       Exit;
     end;
   end;
-  if sIsMir2 then
-  begin
-    Res := TResourceStream.Create(Hinstance, 'LoginDataMir2', 'Data');
-  end else begin
-    Res := TResourceStream.Create(Hinstance, 'LoginData', 'Data');
-  end;
+  Res := TResourceStream.Create(Hinstance, 'LoginData', 'Data');
   try
     Res.SaveToFile(sFileName);
   finally

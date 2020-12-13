@@ -12,12 +12,14 @@ const
 
   Var_Free = 0;
 
+  // 剑侠界面
   Var_Default = 0;
+  // 盛大界面
   Var_Mir2 = 1;
 
-  Var_Interface = Var_Default;
+  Var_Interface = Var_Mir2;
 
-  CLIENT_VERSION_NUMBER = 20200308;
+  CLIENT_VERSION_NUMBER = 20201212;
   CLIENT_VERSION_MARK = $1FFFFFF;
 
   CLIENT_VERSIONEX_MIR2 = $2000000;

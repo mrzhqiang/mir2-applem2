@@ -493,7 +493,7 @@ implementation
 
 uses
   SoundUtil, ClMain, DrawScrn, ClFunc, cliUtil, HUtil32, GameSetup, FState, EDcodeEx, HGEBase,
-  FState2, Registry, Bass;
+  FState2, Registry, Bass, IniFiles;
 {$R *.dfm}
 
 const
@@ -2807,7 +2807,7 @@ var
   i: integer;
   SetupFiltrate: pTSetupFiltrate;
   ClientStditem: pTClientStditem;
-  Reg: TRegistry;
+  ini: TIniFile;
 begin
   //基本设置
   if (DDGSWindow.Checked <> (not g_boFullScreen)) then begin
@@ -2835,22 +2835,24 @@ begin
     end;
   end
   else ClearBGM;
-
-  Reg := TRegistry.Create;
+ 
+  ini := TIniFile.Create('.\mir2.ini');
   Try
-    Reg.RootKey := HKEY_LOCAL_MACHINE;
-    if Reg.OpenKey(REG_SETUP_PATH, True) then begin
-      Reg.WriteBool(REG_SETUP_BITDEPTH, ClMain.HGE.System_GetState(HGE_SCREENBPP) = 32);
-      Reg.WriteInteger(REG_SETUP_DISPLAY, DDGSXY.ItemIndex);
-      Reg.WriteBool(REG_SETUP_WINDOWS, DDGSWindow.Checked);
-      Reg.WriteBool(REG_SETUP_MP3OPEN, g_boBGSound);
-      Reg.WriteInteger(REG_SETUP_MP3VOLUME, g_btMP3Volume);
-      Reg.WriteBool(REG_SETUP_SOUNDOPEN, g_boSound);
-      Reg.WriteInteger(REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
+    if ini <> nil then
+    begin
+      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, ClMain.HGE.System_GetState(HGE_SCREENBPP) = 32);
+      ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, DDGSXY.ItemIndex);
+      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, DDGSWindow.Checked);
+      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, g_boBGSound);
+      ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
+      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, g_boSound);
+      ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
     end;
-    Reg.CloseKey;
   Finally
-    Reg.Free;
+    if ini <> nil then
+    begin
+      ini.Free;
+    end;
   End;
   //选项设置
   g_SetupInfo.nExpFiltrateCount := DEFExp.Value;

@@ -287,7 +287,8 @@ begin
   if (I >= 0) and (i < MAXGATELIST) then begin
     EnterCriticalSection(g_Config.GateCriticalSection);
     try
-      //MainOutMessage(Socket.ReceiveText);
+      // fixme debug
+      //MainOutMessage('GSocketClientRead: '+Socket.ReceiveText);
       g_Config.GateList[i].sReceiveMsg := g_Config.GateList[i].sReceiveMsg + Socket.ReceiveText;
 
     finally
@@ -705,6 +706,8 @@ begin
         if (Config.GateList[I].sSendMsg <> '') then begin
           while (Config.GateList[I].sSendMsg <> '') do begin
             nSendLen := Length(Config.GateList[I].sSendMsg);
+            // fixme debug
+            MainOutMessage('Config.GateList'+IntToStr(I)+'.sSendMsg: '+Config.GateList[I].sSendMsg);
             if nSendLen > MAXSOCKETBUFFLEN then begin
               sData := Copy(Config.GateList[I].sSendMsg, 1, MAXSOCKETBUFFLEN);
               if Config.GateList[I].Socket.SendText(sData) <> -1 then begin
@@ -752,6 +755,8 @@ var
 begin
   try
     nCount := 0;
+    // fixme debug
+    //MainOutMessage('DecodeGateData: '+sReadData);
     while (true) do begin
       if pos(MG_CodeEnd, sReadData) <= 0 then
         break;
@@ -956,6 +961,9 @@ var
   I: Integer;
   sMsg: string;
 begin
+
+    // fixme debug
+    MainOutMessage('ReceiveSendUser: '+sData);
   try
     for I := UserList.Count - 1 downto 0 do begin
       UserInfo := UserList.Items[I];
@@ -1316,6 +1324,9 @@ begin
       UserInfo.nGameGold := 0;
       UserInfo.nCheckEMail := 0;
       sSelGateIP := GetSelGateInfo(@g_Config, g_Config.sGateIPaddr, nSelGatePort);
+
+    // fixme debug
+    MainOutMessage('sSelGateIP: '+sSelGateIP+', nSelGatePort: '+IntToStr(nSelGatePort));
       if (sSelGateIP <> '') and (nSelGatePort > 0) then begin
         if FrmMasSoc.IsNotUserFull() then begin
           UserInfo.boSelServer := True;
@@ -1357,6 +1368,8 @@ begin
     sData := Copy(sMsg, DEFBLOCKSIZE + 1, length(sMsg) - DEFBLOCKSIZE);
     DefMsg := DecodeMessage(sDefMsg);
 
+    // fixme debug
+    MainOutMessage('ProcessUserMsg: '+sData);
     case DefMsg.Ident of
 {$IF RUNVAR = VAR_DB}
       CM_IDPASSWORD: begin

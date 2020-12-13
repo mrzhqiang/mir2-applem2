@@ -667,7 +667,7 @@ begin
   g_CustomKey[DK_ONHORSE].DefKey.Shift := [ssAlt];
   g_CustomKey[DK_ONHORSE].DefKey.Key := Word('J');
   g_CustomKey[DK_ONHORSE].boLoginGame := True;
-  g_CustomKey[DK_ONHORSE].KeyHint := '删除队员';
+  g_CustomKey[DK_ONHORSE].KeyHint := '骑马下马';
 
 
 

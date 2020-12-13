@@ -449,12 +449,12 @@ object FormReg: TFormReg
       Height = 137
       BevelKind = bkTile
       BevelOuter = bvSpace
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clLime
       Font.Height = -12
       Font.Name = #23435#20307
       Font.Style = []
+      HideSelection = False
       ParentFont = False
       ReadOnly = True
       TabOrder = 14

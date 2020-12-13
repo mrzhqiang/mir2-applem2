@@ -32,7 +32,7 @@ object FormMain: TFormMain
         Top = 10
         Width = 449
         Height = 297
-        ActivePage = ts4
+        ActivePage = ts3
         Style = tsFlatButtons
         TabOrder = 0
         object ts3: TTabSheet
@@ -186,6 +186,10 @@ object FormMain: TFormMain
         object ts4: TTabSheet
           Caption = #32593#39029#35774#32622
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grp4: TGroupBox
             Left = 0
             Top = 8
@@ -223,7 +227,7 @@ object FormMain: TFormMain
               ParentShowHint = False
               ShowHint = True
               TabOrder = 0
-              Text = 'http://def.applem2.com/Login_frame/'
+              Text = 'http://www.baidu.com'
             end
             object edtPayUrl2: TEdit
               Left = 77
@@ -234,7 +238,7 @@ object FormMain: TFormMain
               ParentShowHint = False
               ShowHint = True
               TabOrder = 1
-              Text = 'http://def.applem2.com/'
+              Text = 'http://www.baidu.com'
             end
             object edtHomeUrl: TEdit
               Left = 77
@@ -245,7 +249,7 @@ object FormMain: TFormMain
               ParentShowHint = False
               ShowHint = True
               TabOrder = 2
-              Text = 'http://def.applem2.com/'
+              Text = 'http://www.baidu.com'
             end
           end
           object grp5: TGroupBox
@@ -278,7 +282,7 @@ object FormMain: TFormMain
               ParentShowHint = False
               ShowHint = True
               TabOrder = 0
-              Text = 'http://def.applem2.com/advise/'
+              Text = 'http://www.baidu.com'
             end
             object edtPayUrl: TEdit
               Left = 77
@@ -289,13 +293,17 @@ object FormMain: TFormMain
               ParentShowHint = False
               ShowHint = True
               TabOrder = 1
-              Text = 'http://def.applem2.com/payment/'
+              Text = 'http://www.baidu.com'
             end
           end
         end
         object ts5: TTabSheet
           Caption = #25968#25454#26356#26032#35774#32622
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grp7: TGroupBox
             Left = 0
             Top = 8
@@ -452,21 +460,8 @@ object FormMain: TFormMain
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
-          Text = 'http://small.randall.top:8081/ServerInfo.txt'
+          Text = 'http://small.randall.top:8888/ServerInfo.txt'
         end
-      end
-      object LoginVersionRadioGroup: TRadioGroup
-        Left = 8
-        Top = 87
-        Width = 441
-        Height = 42
-        Caption = #29256#26412#20449#24687
-        Columns = 2
-        ItemIndex = 0
-        Items.Strings = (
-          #30427#22823#29256#26412
-          #21073#20384#29256#26412)
-        TabOrder = 1
       end
       object GenerateLoginButton: TButton
         Left = 193
@@ -474,7 +469,7 @@ object FormMain: TFormMain
         Width = 75
         Height = 25
         Caption = #29983#25104#30331#24405#22120
-        TabOrder = 2
+        TabOrder = 1
         OnClick = GenerateLoginButtonClick
       end
     end

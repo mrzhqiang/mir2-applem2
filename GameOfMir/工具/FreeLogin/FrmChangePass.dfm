@@ -4,8 +4,8 @@ object FormChangePass: TFormChangePass
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #20462#25913#23494#30721
-  ClientHeight = 188
-  ClientWidth = 259
+  ClientHeight = 349
+  ClientWidth = 261
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -153,6 +153,15 @@ object FormChangePass: TFormChangePass
       TabOrder = 5
       OnClick = ButtonCloseClick
     end
+  end
+  object Memo1: TMemo
+    Left = 0
+    Top = 183
+    Width = 297
+    Height = 202
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 1
   end
   object ClientSocket: TClientSocket
     Active = False

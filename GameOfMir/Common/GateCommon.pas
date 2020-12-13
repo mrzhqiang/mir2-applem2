@@ -202,6 +202,7 @@ end;
 initialization
   begin
     boCreate := False;
+    // 创建一个可自动还原的事件，主要用来做进程间同步（猜测是多个网关的数据同步）
     EventHandle := CreateEvent(nil, False, True, EVENTGATENAME);
     FileHandle := OpenFileMapping(FILE_MAP_ALL_ACCESS, False, MAPGATENAME);
     if FileHandle = 0 then begin

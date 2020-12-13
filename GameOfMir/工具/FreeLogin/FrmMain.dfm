@@ -7214,7 +7214,7 @@ object FormMain: TFormMain
     OnClick = BtnUpdatingClick
   end
   object BtnPlay: TEzRgnBtn
-    Left = 328
+    Left = 330
     Top = 456
     Width = 104
     Height = 26
@@ -10175,22 +10175,28 @@ object FormMain: TFormMain
     PaintMode = pmNormal
     OnClick = EzRgnBtn4Click
   end
-  object JianXiaCheckBox: TCheckBox
-    Left = 219
-    Top = 432
+  object Mir2VersionCheckBox: TCheckBox
+    Left = 158
+    Top = 425
     Width = 97
     Height = 17
-    Caption = #21073#20384#30028#38754
+    BiDiMode = bdLeftToRight
+    Caption = #30427#22823#30028#38754
+    Checked = True
+    Color = clGradientActiveCaption
     Ctl3D = True
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clYellow
-    Font.Height = -12
+    Font.Color = clGradientActiveCaption
+    Font.Height = -13
     Font.Name = #23435#20307
     Font.Style = [fsBold]
+    ParentBiDiMode = False
+    ParentColor = False
     ParentCtl3D = False
     ParentFont = False
+    State = cbChecked
     TabOrder = 12
-    OnClick = JianXiaCheckBoxClick
+    OnClick = Mir2VersionCheckBoxClick
   end
   object tmrStart: TTimer
     Enabled = False

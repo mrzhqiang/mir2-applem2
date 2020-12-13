@@ -17,7 +17,6 @@ uses
 
 {$R *.res}
 {$R Data.res}
-{$R DataMir2.res}
 
 begin
   Application.Initialize;

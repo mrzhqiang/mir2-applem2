@@ -224,7 +224,7 @@ uses
   GameCommand, MonsterConfig, RunDB, CastleManage, EngineRegister,
   FrmShop, FrnEmail, CheckDll, MD5Unit, MyCommon{$IF Public_Ver = Public_Free}, CheckDllFile{$IFEND}
 {$IFDEF DEBUG}
-  , ObjPlay;
+  , ObjPlay, ViewCompoundInfo, OnlineEmail;
 {$ELSE}
   , RegDllFile, OnlineEmail, ViewCompoundInfo;
 {$ENDIF}

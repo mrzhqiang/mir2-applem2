@@ -38,7 +38,7 @@ type
     EzRgnBtn4: TEzRgnBtn;
     RzLabel1: TRzLabel;
     DeleteTimer: TTimer;
-    JianXiaCheckBox: TCheckBox;
+    Mir2VersionCheckBox: TCheckBox;
     procedure ImageBgMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure BtnMinClick(Sender: TObject);
     procedure BtnCloseClick(Sender: TObject);
@@ -62,7 +62,7 @@ type
     procedure EzRgnBtn4Click(Sender: TObject);
     procedure EzRgnBtn3Click(Sender: TObject);
     procedure DeleteTimerTimer(Sender: TObject);
-    procedure JianXiaCheckBoxClick(Sender: TObject);
+    procedure Mir2VersionCheckBoxClick(Sender: TObject);
   private
     FMapHandle: THandle;
     FMapDataInfo: pTMapDataInfo;
@@ -74,7 +74,7 @@ type
     FCheckCount: Integer;
     FboFrist: Boolean;
     FDeleteFile: string;
-    bJianXia : Boolean;
+    bMir2Version : Boolean;
     function CheckIsRun(): THandle;
     procedure CloseMapInfo();
     procedure CreateMapInfo();
@@ -137,10 +137,10 @@ begin
         end;
         if nCount > 0 then begin
           cName := g_ClientName;
-          reName := 'mir2Data2';
-          if bJianXia then
+          reName := 'defaultData';
+          if bMir2Version then
           begin
-            cName := g_CurrentDir + 'jx-' + g_TitleName + '.dat';
+            cName := g_CurrentDir + g_TitleName + '-盛大版.dat';
             reName := 'mir2Data'
           end;
           if (not FileExists(cName)) or (nCount = 0) then
@@ -413,7 +413,7 @@ begin
   //Application.OnMessage := MyMessage;
   //Application.OnException := MyException;
   g_TitleName := '兰达尔传奇';
-  g_ListName := 'http://small.randall.top:8081/ServerInfo.txt';
+  g_ListName := 'http://small.randall.top:8888/ServerInfo.txt';
   g_MapName := '1234567890123456';
   //sStr := 'DBC';
 
@@ -437,8 +437,7 @@ begin
   ChangePercent(0, False);
   ChangePercent(0, True);
   CreateDir(g_CurrentDir + 'Down\');
-  bJianXia := False;
-  JianXiaCheckBox.Checked := bJianXia;
+  bMir2Version := False;
 
   nRunHandle := CheckIsRun;
   SetLength(FClientList, 3);
@@ -549,15 +548,15 @@ begin
   ReleaseCapture; //释放鼠标的捕获状态；
   Perform(wm_SysCommand, {sc_DragMove} $F012, 0); //向窗体发送移动消息
 end;
-procedure TFormMain.JianXiaCheckBoxClick(Sender: TObject);
+procedure TFormMain.Mir2VersionCheckBoxClick(Sender: TObject);
 var
   cName : string;
 begin
   cName := g_ClientName;
-  bJianXia := JianXiaCheckBox.Checked;
-  if bJianXia then
+  bMir2Version := Mir2VersionCheckBox.Checked;
+  if bMir2Version then
   begin
-    cName := g_CurrentDir + 'jx-' + g_TitleName + '.dat';;
+    cName := g_CurrentDir + g_TitleName + '-盛大版.dat';;
   end;
   if FileExists(cName) then begin
     DeleteFile(PChar(cName));

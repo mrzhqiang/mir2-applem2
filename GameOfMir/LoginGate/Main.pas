@@ -456,6 +456,8 @@ begin
       sData +
       MG_CodeEnd);
 
+      // fixme debug
+      MainOutMessage('send data user: '+sData, 0);
     UserSession.dwUserTimeOutTick := GetTickCount;
   end;
 end;
@@ -603,12 +605,15 @@ begin
           end;
           Continue;
         end;
+        // FIXME DEBUG
+        MainOutMessage('DecodeTimerTimer: '+sSocketMsg, 0);
         sSocketMsg := GetValidStr3(sSocketMsg, sArryIndex, ['/']);
         sSocketMsg := GetValidStr3(sSocketMsg, sSocketHandle, ['/']);
         nSocketHandle := StrToIntDef(sSocketHandle, -1);
         nArryIndex := StrToIntDef(sArryIndex, -1);
         if (nSocketHandle < 0) or (nArryIndex < 0) or (nArryIndex >= GATEMAXSESSION) then Continue;
         if (g_SessionArray[nArryIndex].SocketHandle = nSocketHandle) and (g_SessionArray[nArryIndex].Socket <> nil) then begin
+          MainOutMessage('socket send text: '+sSocketMsg, 0);
           g_SessionArray[nArryIndex].Socket.SendText(sSocketMsg);
         end;
       end; //0x00452246
@@ -656,6 +661,8 @@ procedure TFrmMain.DecodeUserData(UserSession: pTUserSession; sData: string);
 var
   sMsg, sCode: string;
 begin
+  // fixme debug
+  MainOutMessage('DecodeUserData: '+sData, 0);
   sMsg := UserSession.sReadString + sData;
   UserSession.sReadString := '';
   if Length(sMsg) > 5000 then begin
@@ -1374,6 +1381,8 @@ var
   DefMsg: TDefaultMessage;
   boSend: Boolean;
 begin
+  // fixme debug
+  MainOutMessage('ProcessUserMsg:'+sData, 0);
   sCode := Copy(sData, 2, length(sData) - 1);
   sPos1 := Copy(sCode, 0, DEFBLOCKSIZE);
   sPos2 := Copy(sCode, DEFBLOCKSIZE + 1, Length(sCode) - DEFBLOCKSIZE);
@@ -1387,6 +1396,8 @@ begin
     CM_IDPASSWORD: begin
         if sPos2 <> '' then begin
           sCode := DecodeString(sPos2);
+          // fixme debug
+          MainOutMessage('CM_IDPASSWORD: '+sCode, 0);
           if TagCount(sCode, '/') = 1 then
             boSend := True;
         end;
@@ -1403,6 +1414,8 @@ begin
         //if (GetTickCount - UserSession.dwUserSendTick) > nChangePassword then
         if sPos2 <> '' then begin
           sCode := DecodeString(sPos2);
+          // fixme debug
+          MainOutMessage('CM_CHANGEPASSWORD: '+sCode, 0);
           if TagCount(sCode, #9) = 2 then
             boSend := True;
         end;
@@ -1410,6 +1423,8 @@ begin
     CM_GETBACKPASSWORD: begin
         if sPos2 <> '' then begin
           sCode := DecodeString(sPos2);
+          // fixme debug
+          MainOutMessage('CM_GETBACKPASSWORD:'+sCode, 0);
           if TagCount(sCode, #9) = 5 then
             boSend := True;
         end;
