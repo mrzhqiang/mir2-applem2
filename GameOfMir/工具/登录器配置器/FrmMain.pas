@@ -4,8 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, StrUtils, Variants, Classes, Graphics, Controls, Forms, Math, DES, MyCommon, 
-  Dialogs, ComCtrls, StdCtrls, Spin, xmldom, XMLIntf, msxmldom, XMLDoc, IEDCode, Buttons, DropGroupPas,
-  ExtCtrls;
+  Dialogs, ComCtrls, StdCtrls, Spin, xmldom, XMLIntf, msxmldom, XMLDoc, IEDCode, Buttons, DropGroupPas;
 
 const
   XMLFILENAME = '.\LSetup.xml';
