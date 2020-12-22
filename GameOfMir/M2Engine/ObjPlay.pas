@@ -24,7 +24,7 @@ type
     m_boInSafeArea: Boolean; //0x580
     m_sUserID: string[20]; //0x58C    登录帐号名
     m_sIPaddr: string[15]; //0x598    人物IP地址
-    m_sIPLocal: string;
+    m_sIPLocal: string;//IP所属地区
 
     m_Header: TRecordHeader;
     m_OldLoginAddr: string[15];
@@ -41,9 +41,9 @@ type
     m_dwLoadTick: LongWord; //0x5CC
     m_nServerIndex: Integer; //0x5D0  人物当前所在服务器序号
     m_boEmergencyClose: Boolean; //0x5D4  掉线标志
-    m_boSoftClose: Boolean; //0x5D5
+    m_boSoftClose: Boolean; //小退
     m_boKickFlag: Boolean; //0x5D6  断线标志(Byte)(@kick 命令)
-    m_boReconnection: Boolean; //0x5D7
+    m_boReconnection: Boolean; //重新连接标志
     //m_boRcdSaved: Boolean; //0x5D8
     m_dw5D4: LongWord; //0x5F4
     m_NakedAbil: TNakedAbil;
@@ -96,9 +96,9 @@ type
     m_nButchCount: Integer; //人物挖取容错数量
     //m_Script: pTScript; //0x62C
     m_NPC: TBaseObject; //0x630
-    m_nVal: array[0..99] of Integer; //0x634 - 658
-    m_nMval: array[0..99] of Integer;
-    m_DyVal: array[0..9] of Integer; //0x65C - 680
+    m_nVal: array[0..99] of Integer; //玩家的变量
+    m_nMval: array[0..99] of Integer;//玩家的变量
+    m_DyVal: array[0..9] of Integer; //玩家的变量
     m_sPlayDiceLabel: string;
     m_boTimeRecall: Boolean; //0x684
     m_dwTimeRecallTick: LongWord;
@@ -113,26 +113,26 @@ type
     m_boResetLabel: Boolean;
     //    m_boExpire: Boolean; //0x6AC  帐号过期
     m_dwShowLineNoticeTick: LongWord; //0x6B0
-    m_nShowLineNoticeIdx: Integer; //0x6B4
+    m_nShowLineNoticeIdx: Integer; //当前显示公告的ID
     //m_nSoftVersionDateEx: Integer;
     m_CanJmpScriptOldLableList: TStringList;
     m_CanJmpScriptNewLableList: TStringList;
-    m_CanJmpScriptLableList: TStringList;
-    m_nScriptGotoCount: Integer;
+    m_CanJmpScriptLableList: TStringList; //能跳转脚本标签列表
+    m_nScriptGotoCount: Integer; //脚本跳转GOTO数
     m_nScriptCurrLable: Integer; //用于处理 @back 脚本命令
     m_nScriptGoBackLable: Integer; //用于处理 @back 脚本命令
     //m_dwTurnTick: LongWord;
-    m_wOldIdent: Word;
-    m_btOldDir: Byte;
+    m_wOldIdent: Word;//旧的动作消息
+    m_btOldDir: Byte;//旧的方向
 
     m_boFirstAction: Boolean; //第一个操作
     m_dwActionTick: LongWord; //二次操作之间间隔时间
     m_sDearName: string[14]; //配偶名称
-    m_DearHuman: TPlayObject;
+    m_DearHuman: TPlayObject;//配偶类
     m_boCanDearRecall: Boolean; //是否允许夫妻传送
-    m_boCanMasterRecall: Boolean;
+    m_boCanMasterRecall: Boolean;//是否允许师徒传送
     m_dwDearRecallTick: LongWord; //夫妻传送时间
-    m_dwMasterRecallTick: LongWord;
+    m_dwMasterRecallTick: LongWord;//师徒传送间隔
     //m_MasterName: THumMasterName; //师徒名称
     //m_sMasterName: string[14];
     //m_MasterHuman: TPlayObject;
@@ -150,16 +150,16 @@ type
     m_nKillMonExpLiterary: Integer; //杀怪经验倍数
     m_dwGetMsgTick: LongWord; //处理消息循环时间控制
 
-    m_PoseBaseObject: TBaseObject;
+    m_PoseBaseObject: TBaseObject;//面对面的角色
     m_boStartMarry: Boolean;
-    m_boStartMaster: Boolean;
+    m_boStartMaster: Boolean;//开始收徒或拜师
     m_boStartUnMarry: Boolean;
-    m_boStartUnMaster: Boolean;
+    m_boStartUnMaster: Boolean;//开始出师
     m_boFilterSendMsg: Boolean; //禁止发方字(发的文字只能自己看到)
     m_nKillMonExpRate: Integer; //杀怪经验倍数(此数除以 100 为真正倍数)
     m_nPowerRate: Integer; //人物攻击力倍数(此数除以 100 为真正倍数)
     m_dwKillMonExpRateTime: LongWord;
-    m_dwPowerRateTime: LongWord;
+    m_dwPowerRateTime: LongWord;//人物攻击力倍数改变恢复正常的时间计数(秒)
     m_dwRateTick: LongWord;
 
     m_QuestFlag: TQuestFlag; //0x128 129
@@ -176,12 +176,12 @@ type
 
     //m_boDecGameGold: Boolean; //是否自动减游戏币
     //m_dwDecGameGoldTime: LongWord;
-    m_dwDecGameGoldTick: LongWord;
+    m_dwDecGameGoldTick: LongWord;//自动减游戏币间隔
     //m_nDecGameGold: Integer; //一次减点数
 
     //m_boIncGameGold: Boolean; //是否自动加游戏币
     //m_dwIncGameGoldTime: LongWord;
-    m_dwIncGameGoldTick: LongWord;
+    m_dwIncGameGoldTick: LongWord;//自动加游戏间隔
     //m_nIncGameGold: Integer; //一次减点数
 
     m_nGamePoint: Integer; //游戏点数
@@ -190,24 +190,24 @@ type
 
     m_nGameDiamond: Integer; //金刚石 改为 积分了
     m_nGameGird: Integer; //灵符
-    m_dwPayMentPointTick: LongWord;
+    m_dwPayMentPointTick: LongWord;//秒卡点间隔
 
-    m_dwDecHPTick: LongWord;
-    m_dwIncHPTick: LongWord;
+    m_dwDecHPTick: LongWord;//减HP间隔
+    m_dwIncHPTick: LongWord;//加HP间隔
 
-    m_GetWhisperHuman: TPlayObject;
-    m_dwClearObjTick: LongWord;
+    m_GetWhisperHuman: TPlayObject;//侦听私聊对象
+    m_dwClearObjTick: LongWord;//清除对像间隔
     m_wContribution: Word; //贡献度
     m_sRankLevelName: string; //显示名称格式串
-    m_boFilterAction: Boolean;
+    m_boFilterAction: Boolean;//动作过滤
     m_nClientFlagMode: Integer;
-    m_dwAutoGetExpTick: LongWord;
-    m_nAutoGetExpTime: Integer;
-    m_nAutoGetExpPoint: Integer;
-    m_AutoGetExpEnvir: TEnvirnoment;
+    m_dwAutoGetExpTick: LongWord;//自动泡点的时间间隔
+    m_nAutoGetExpTime: Integer;//自动泡点时间
+    m_nAutoGetExpPoint: Integer;//自动泡点数
+    m_AutoGetExpEnvir: TEnvirnoment;//自动泡点地图
     m_boAutoGetExpInSafeZone: Boolean;
-    m_DynamicVarList: TList;
-    m_dwClientTick: LongWord;
+    m_DynamicVarList: TList;//自定义变量列表
+    m_dwClientTick: LongWord;//客户端间隔
     m_boTestSpeedMode: Boolean; //进入速度测试模式
     m_nCheckEatCount: Byte;
     m_nCheckChangeMapCount: Byte;
@@ -222,7 +222,7 @@ type
     m_dwAutoAddExpPointTick: LongWord;
     m_dwAutoAddExpPointTimeTick: LongWord;
 
-    m_boStartAutoAddExpPoint: Boolean;
+    m_boStartAutoAddExpPoint: Boolean;//是否自动增加经验(挂机)
     m_nBindGold: Integer;
 
     {    m_boTimeGoto: Boolean;
@@ -233,7 +233,7 @@ type
     m_boAddSaveList: Boolean;
 
     m_nDealGoldPose: Integer;
-    m_dwDedingUseTick: LongWord;
+    m_dwDedingUseTick: LongWord;//地钉使用间隔
 
     m_boPlayOffLine: Boolean; //是否下线触发
     m_nInteger: array[0..999] of Integer; //人物变量
@@ -487,19 +487,19 @@ type
     procedure NextCboMagicInfo(BaseObject: TBaseObject);
 
     procedure ClearWarrSelectHit(pSelectVal: Pointer);
-    procedure SendDelDealItem(UserItem: pTUserItem);
-    procedure SendAddDealItem(UserItem: pTUserItem);
+    procedure SendDelDealItem(UserItem: pTUserItem);//发送删除交易栏里的物品
+    procedure SendAddDealItem(UserItem: pTUserItem);//发送放到交易栏里的物品
     procedure MapEventCheck(nEvent: Byte; sItemName: string);
     procedure EventCheck(nEvent: Byte; sItemName: string);
     procedure OpenDealDlg(BaseObject: TPlayObject);
-    function EatUseItems(nShape: Integer): Boolean;
+    function EatUseItems(nShape: Integer): Boolean;//吃使用物品
     procedure BaseObjectMove(sMAP, sX, sY: string);
-    function RepairWeapon(): Boolean;
-    function SuperRepairWeapon(): Boolean;
-    function WinLottery(): Boolean;
-    function WeaptonMakeLuck(): Boolean;
-    function PileStones(nX, nY: Integer): Boolean;
-    procedure MakeMine();
+    function RepairWeapon(): Boolean;//修理武器
+    function SuperRepairWeapon(): Boolean;//超级修理武器
+    function WinLottery(): Boolean;//赢彩票
+    function WeaptonMakeLuck(): Boolean;//武器加幸运
+    function PileStones(nX, nY: Integer): Boolean;//挖矿
+    procedure MakeMine();//挖矿,给玩家矿石
     function GetRangeHumanCount(): Integer;
     function GetSelectNpc(nIndex: Integer): TBaseObject;
     function GetHumLook: Word;
@@ -688,19 +688,19 @@ type
     function AddCheckMsg(sMsg: string; tClass: TCheckMsgClass; AddPointer: TPlayObject; AddTime: LongWord = 62): pTCheckMsg;
     function AbilityUp(UserMagic: pTUserMagic): Boolean;
     procedure SearchViewRange();
-    procedure PKDie(PlayObject: TPlayObject);
-    procedure GameTimeChanged();
+    procedure PKDie(PlayObject: TPlayObject);//PK死亡
+    procedure GameTimeChanged();//游戏时间改变
     procedure RunNotice();
     procedure SendActionGood();
     procedure SendActionFail();
-    function IncGold(tGold: Integer): Boolean;
+    function IncGold(tGold: Integer): Boolean;//增加金币
     procedure IncGameGold(nGameGold: Integer);
     procedure SendSocket(DefMsg: pTDefaultMessage; sMsg: string); virtual;
     procedure SendDefMessage(wIdent: Word; nRecog: Integer; nParam, nTag, nSeries: Word; sMsg: string);
-    function IsEnoughBag(): Boolean;
+    function IsEnoughBag(): Boolean;//包裹是否满
     procedure SendAddItem(UserItem: pTUserItem);
     procedure SendDelItems(UserItem: pTUserItem);
-    procedure Whisper(whostr, saystr: string);
+    procedure Whisper(whostr, saystr: string);//私聊
     function IsBlockWhisper(sName: string): Boolean;
     function QuestCheckItem(sItemName: string; var nCount: Integer; var nParam: Integer;
       var nDura: Integer): pTUserItem;
@@ -716,7 +716,7 @@ type
     procedure DecGameGold(nGameGold: Integer);
     procedure Run(); override;
     function Operate(ProcessMsg: pTProcessMessage): Boolean; override;
-    procedure RecalcAbilitys(); override;
+    procedure RecalcAbilitys(); override;//刷新能力
     procedure RecalcCboMagicList();
     procedure MakeSaveRcd(var HumanRcd: THumDataInfo);
     procedure DealCancel();
@@ -729,7 +729,7 @@ type
     procedure ProcessSayMsg(sData: string);
     function GetItemInfo(str: string): string;
     procedure ClearStatusTime();
-    procedure UserLogon();
+    procedure UserLogon();//人物登陆游戏
     procedure UserOffLineLogon();
     function OpenBox(nIndex: Integer; boGet: Boolean): Boolean;
     function GetBoxItem(var nBack: Integer): Boolean;
@@ -773,12 +773,12 @@ type
     procedure ChangeStatusMode(nStatus: Integer; boMode: Boolean); override;
     procedure Die(); override;
     function DieFunc: Boolean;
-    function LevelUpFunc: Boolean;
+    function LevelUpFunc: Boolean;//升级函数
     procedure LevelUpFuncEx(nLevel: Word);
-    function KillPlayFunc: Boolean;
+    function KillPlayFunc: Boolean;//杀死角色函数
     procedure SpeedCloseFunc;
-    function KillMonsterFunc(BaseObject: TBaseObject): Boolean;
-    function DieGotoLable(): Boolean;
+    function KillMonsterFunc(BaseObject: TBaseObject): Boolean;//杀死怪物函数
+    function DieGotoLable(): Boolean;//死亡触发
     procedure Initialize(); override;
     function IsTrainingSkill(nIndex: Integer): Boolean;
     procedure RecalcHitSpeed();
@@ -4172,7 +4172,7 @@ begin
               end;
               MagicQuest(nil, SKILL_MOOTEBO, mfs_Self);
               if DoMotaebo(m_btDirection, UserMagic.btLevel) then begin
-                if UserMagic.btLevel < 3 then begin
+                if (UserMagic.MagicInfo.btTrainLv <=9) and (UserMagic.btLevel < UserMagic.MagicInfo.btTrainLv) then begin
                   if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] < m_Abil.Level then begin
                     TrainSkill(UserMagic, Random(3) + 1);
                     if not CheckMagicLevelup(UserMagic) then begin
@@ -4205,7 +4205,7 @@ begin
               SendDefMessage(SM_MAGICFIRE_CBO, SKILL_111, 0, 0, 0, '');
               MagicQuest(nil, SKILL_111, mfs_Self);
               if DoMotagecbo(m_btDirection, UserMagic.btLevel) then begin
-                if UserMagic.btLevel < 3 then begin
+                if (UserMagic.MagicInfo.btTrainLv <=9) and (UserMagic.btLevel < UserMagic.MagicInfo.btTrainLv) then begin
                   if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] < m_Abil.Level then begin
                     TrainSkill(UserMagic, Random(3) + 1);
                     if not CheckMagicLevelup(UserMagic) then begin
@@ -13613,7 +13613,7 @@ end;
 function TPlayObject.GetMagicInfo(nMagicID: Integer): pTUserMagic;
 begin
   Result := nil;
-  if nMagicID in [Low(m_MagicArr)..High(m_MagicArr)] then
+  if (nMagicID > 0) and (nMagicID < SKILL_MAX) then
     Result := m_MagicArr[nMagicID];
 end;
 
@@ -15255,7 +15255,7 @@ begin
           m_boAliveing := True;
           SendDefMessage(SM_SHOWBAR, 4, 0, CM_ALIVE, 10, '正在接受治疗...');
           m_dwAliveTick := GetTickCount + 10 * 1000;
-          m_nAliveHP := Round(m_WAbil.MaxHP * (m_btDoctorAliveLevel / 6));
+          m_nAliveHP := Round(m_WAbil.MaxHP * (m_btDoctorAliveLevel/100));
           m_btAliveType := 1;
         end;
       end;
@@ -18472,7 +18472,8 @@ begin
       nCheckCode := 606;
 
       //基本剑术
-      if (m_MagicArr[SKILL_ONESWORD] <> nil) and (m_MagicArr[SKILL_ONESWORD].btLevel < 3) and
+      if (m_MagicArr[SKILL_ONESWORD] <> nil) and (m_MagicArr[SKILL_ONESWORD].MagicInfo.btTrainLv <=9) and
+      (m_MagicArr[SKILL_ONESWORD].btLevel < m_MagicArr[SKILL_ONESWORD].MagicInfo.btTrainLv) and
         (m_MagicArr[SKILL_ONESWORD].MagicInfo.TrainLevel[m_MagicArr[SKILL_ONESWORD].btLevel] <= m_Abil.Level) then begin
         nCheckCode := 607;
         TrainSkill(m_MagicArr[SKILL_ONESWORD], Random(3) + 1);
@@ -18487,7 +18488,8 @@ begin
       end;
 
       //精神力战法
-      if (m_MagicArr[SKILL_ILKWANG] <> nil) and (m_MagicArr[SKILL_ILKWANG].btLevel < 3) and
+      if (m_MagicArr[SKILL_ILKWANG] <> nil) and (m_MagicArr[SKILL_ILKWANG].MagicInfo.btTrainLv <=9) and
+      (m_MagicArr[SKILL_ILKWANG].btLevel < m_MagicArr[SKILL_ILKWANG].MagicInfo.btTrainLv) and
         (m_MagicArr[SKILL_ILKWANG].MagicInfo.TrainLevel[m_MagicArr[SKILL_ILKWANG].btLevel] <= m_Abil.Level) then begin
         nCheckCode := 607;
         TrainSkill(m_MagicArr[SKILL_ILKWANG], Random(3) + 1);
@@ -18501,7 +18503,8 @@ begin
         nCheckCode := 610;
       end;
 
-      if (m_MagicArr[nMagID] <> nil) and (m_MagicArr[nMagID].btLevel < 3) and
+      if (m_MagicArr[nMagID] <> nil) and (m_MagicArr[nMagID].MagicInfo.btTrainLv <=9) and
+      (m_MagicArr[nMagID].btLevel < m_MagicArr[nMagID].MagicInfo.btTrainLv) and
         (m_MagicArr[nMagID].MagicInfo.TrainLevel[m_MagicArr[nMagID].btLevel] <= m_Abil.Level) then begin
         TrainSkill(m_MagicArr[nMagID], 1);
         if not CheckMagicLevelup(m_MagicArr[nMagID]) then begin
@@ -18663,7 +18666,7 @@ begin
       m_MagicList.Delete(I);
       Continue;
     end;
-    if UserMagic.wMagIdx in [Low(m_MagicArr)..High(m_MagicArr)] then begin
+    if (UserMagic.wMagIdx > 0) and (UserMagic.wMagIdx < SKILL_MAX) then begin
       m_MagicArr[UserMagic.wMagIdx] := UserMagic;
       case UserMagic.wMagIdx of
         SKILL_ONESWORD: begin //精神力战法
@@ -18711,7 +18714,7 @@ end;
 function TPlayObject.IsTrainingSkill(nIndex: Integer): Boolean;
 begin
   Result := True;
-  if nIndex in [Low(m_MagicArr)..High(m_MagicArr)] then begin
+  if (nIndex > 0) and (nIndex < SKILL_MAX) then begin
     if m_MagicArr[nIndex] = nil then
       Result := False;
   end

@@ -5587,7 +5587,7 @@ begin
               HealthSpellChanged();
             end;
             if DoMotaebo(m_btDirection, UserMagic.btLevel) then begin
-              if UserMagic.btLevel < 3 then begin
+              if (UserMagic.MagicInfo.btTrainLv <=9) and (UserMagic.btLevel < UserMagic.MagicInfo.btTrainLv) then begin
                 if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] <
                   m_Abil.Level then begin
                   TrainSkill(UserMagic, Random(3) + 1);
@@ -12391,14 +12391,14 @@ begin
         //ClientMagic.Key := Chr(UserMagic.btKey);
         ClientMagic.Key := Chr(48 + I);
 
-        ClientMagic.Level := UserMagic.btLevel;
+        ClientMagic.Level< := UserMagic.btLevel;
         ClientMagic.CurTrain := UserMagic.nTranPoint;
         ClientMagic.Def := UserMagic.MagicInfo^;
         sSENDMSG := sSENDMSG + EncodeBuffer(@ClientMagic, SizeOf(TClientMagic))
           +
           '/';
       end;
-    end;
+    end;>
     if sSENDMSG <> '' then begin
       m_DefMsg := MakeDefaultMsg(SM_SENDMYMAGIC, 0, 0, 0, m_MagicList.Count);
       SendSocket(@m_DefMsg, sSENDMSG);

@@ -3933,7 +3933,7 @@ end;
 function TUserEngine.FindMagic(nMagIdx: Integer): pTMagic;
 begin
   Result := nil;
-  if (nMagidx in [Low(m_MagicArr)..High(m_MagicArr)]) and (m_MagicArr[nMagidx].sMagicName <> '') then
+  if (nMagIdx > 0) and (nMagIdx < SKILL_MAX) and (m_MagicArr[nMagidx].sMagicName <> '') then
     Result := @m_MagicArr[nMagidx];
 end;
 

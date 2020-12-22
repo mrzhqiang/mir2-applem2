@@ -4634,7 +4634,7 @@ var
   n10: Integer;
 begin
   Result := False;
-  if (UserMagic.btLevel < 4) and (UserMagic.MagicInfo.btTrainLv >= UserMagic.btLevel) then
+  if (UserMagic.MagicInfo.btTrainLv <= 9) and (UserMagic.btLevel <= UserMagic.MagicInfo.btTrainLv) then
     n10 := UserMagic.btLevel
   else
     n10 := 0;
@@ -4874,7 +4874,7 @@ begin
     begin
       PlayObject := TPlayObject(Self);
       UserMagic := PlayObject.GetMagicInfo(SKILL_GODSHIELD);
-      if Assigned(UserMagic) and (UserMagic.btLevel < 3) then begin
+      if Assigned(UserMagic) and (UserMagic.MagicInfo.btTrainLv <=9) and (UserMagic.btLevel < UserMagic.MagicInfo.btTrainLv) then begin
         if UserMagic.MagicInfo.TrainLevel[UserMagic.btLevel] <= PlayObject.m_Abil.Level then begin
           PlayObject.TrainSkill(UserMagic, Random(3) + 1);
           if not PlayObject.CheckMagicLevelup(UserMagic) then begin

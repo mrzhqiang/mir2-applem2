@@ -3518,14 +3518,14 @@ procedure TNormNpc.ActionOfChangeExp(PlayObject: TPlayObject;
   QuestActionInfo: pTQuestActionInfo);
 var
   //  boChgOK: Boolean;
-  nExp: Integer;
+  nExp: Int64;
   //  nLv: Integer;
   //  nOldLevel: Integer;
   cMethod: Char;
   //dwInt: LongWord;
 begin
   //  boChgOK := False;
-  nExp := StrToIntDef(QuestActionInfo.sParam2, -1);
+  nExp := StrToInt64Def(QuestActionInfo.sParam2, -1);
   if (nExp < 0) then begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CHANGEEXP);
     Exit;
@@ -3534,14 +3534,14 @@ begin
   case cMethod of
     '=': begin
         if nExp >= 0 then begin
-          PlayObject.m_Abil.Exp := LongWord(nExp);
+          PlayObject.m_Abil.Exp := Int64(nExp);
           //          dwInt := LongWord(nExp);
         end;
 
       end;
     '-': begin
-        if PlayObject.m_Abil.Exp > Integer(nExp) then begin
-          Dec(PlayObject.m_Abil.Exp, Integer(nExp));
+        if PlayObject.m_Abil.Exp > nExp then begin
+          Dec(PlayObject.m_Abil.Exp, nExp);
         end
         else begin
           PlayObject.m_Abil.Exp := 0;

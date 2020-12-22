@@ -27,7 +27,7 @@ const
 
   MAXSAYITEMCOUNT = 1000;
 
-  SIZEOFTHUMAN = 44032;
+  SIZEOFTHUMAN = 44040;
 
   MAXGMMAKEITEMNUM = 2000000000;
 
@@ -37,15 +37,15 @@ const
   PN_GETRGB = 'GETRGB';
   PN_GAMEDATALOG = 'GAMEDATALOG';
 
-  SLAVEMAXLEVEL = 9;
+  SLAVEMAXLEVEL = 9;//宝宝最大等级
   //DEBUG = 1;
-  CHECKNEWMSG = 0;
+  CHECKNEWMSG = 0; //是否显示未处理的客户端消息
 
-  NOEXCEPTION = 0;
-  TRYEXCEPTION = 1;
+  NOEXCEPTION = 0; //不显异常
+  TRYEXCEPTION = 1; //显示异常
   CATEXCEPTION = TRYEXCEPTION;
 
-  DEMOCLIENT = 0;
+  DEMOCLIENT = 0; //是否演示客户端
 
   VERDEMO = 0;
   VERFREE = 1;
@@ -53,18 +53,18 @@ const
   VEROEM = 3;
   VERPRO = 4;
   VERENT = 5;
-  SoftVersion = VERPRO;
+  SoftVersion = VERPRO; //程序版本类型
 
   BDE = 0;
   ADO = 1;
 
-  DBTYPE = BDE;
+  DBTYPE = BDE; //数据库连接方式，默认为BDE
 
-  USELOCALCODE = 0;
-  USEREMOTECODE = 1;
+  USELOCALCODE = 0; //使用本地代码
+  USEREMOTECODE = 1;  //使用远程代码
+  USECODE = USELOCALCODE;//USECode：使用的代码来自哪里
 
-  USECODE = USELOCALCODE;
-  RequestVersion = 5;
+  RequestVersion = 5;  //请求版本号
 
   LF = 0;
   LD = 1;
@@ -74,30 +74,31 @@ const
   WL = 5;
   TEST = 53;
 
-  VEROWNER = LF;
+  VEROWNER = LF{WL};//版本所有者  20080302  LF--管理员列表不能输入IP地址,WL--要输入IP地址才能增加记录
 
   OEM = 0;
   OEM775 = 1;
   OEMVER = OEM;
 
-  THREADENGINE = 0;
-  TIMERENGINE = 1;
-  DBSOCKETMODE = TIMERENGINE;
-  IDSOCKETMODE = TIMERENGINE;
-  USERENGINEMODE = TIMERENGINE;
+  THREADENGINE = 0; //DB数据库SOCKET连接使用线程
+  TIMERENGINE = 1; //DB数据库SOCKET连接使用控件
+  DBSOCKETMODE = TIMERENGINE;//DBServer.exe发送信息模式
+  IDSOCKETMODE = TIMERENGINE;//Loginsrv.exe发送信息模式
+  USERENGINEMODE = TIMERENGINE;//使用引擎方式
 
-  MAXUPLEVEL = High(Word);
-  MAXHUMPOWER = High(Word);
+  //最高可升级等级
+  MAXUPLEVEL = High(Word) {65535};
+  MAXHUMPOWER = High(Word) {65535};
 
   BODYLUCKUNIT = 5.0E3;
 
-  HAM_ALL = 0;
-  HAM_PEACE = 1;
-  HAM_DEAR = 2;
-  HAM_MASTER = 3;
-  HAM_GROUP = 4;
-  HAM_GUILD = 5;
-  HAM_PKATTACK = 6;
+  HAM_ALL = 0;    //[攻击模式: 全体攻击]
+  HAM_PEACE = 1;  //[攻击模式: 和平攻击]
+  HAM_DEAR = 2;   //[攻击模式: 夫妻攻击]
+  HAM_MASTER = 3; //[攻击模式: 师徒攻击]
+  HAM_GROUP = 4;  //[攻击模式: 编组攻击]
+  HAM_GUILD = 5;  //[攻击模式: 行会攻击]
+  HAM_PKATTACK = 6;  //[攻击模式: 红名攻击]
 
   DEFHIT = 5;
   DEFSPEED = 15;
@@ -420,7 +421,7 @@ const
   nSET = 1;
   sTAKE = 'TAKE';
   nTAKE = 2;
-  sSC_GIVE = 'GIVE';
+  sSC_GIVE = 'GIVE';//给物品
   nSC_GIVE = 3;
   sTAKEW = 'TAKEW';
   nTAKEW = 4;
@@ -536,11 +537,11 @@ const
   nSC_CLEARSKILL = 59;
   sSC_DELNOJOBSKILL = 'DELNOJOBSKILL';
   nSC_DELNOJOBSKILL = 60;
-  sSC_DELSKILL = 'DELSKILL';
+  sSC_DELSKILL = 'DELSKILL';//删除技能
   nSC_DELSKILL = 61;
-  sSC_ADDSKILL = 'ADDSKILL';
+  sSC_ADDSKILL = 'ADDSKILL';//增加技能 支持英雄
   nSC_ADDSKILL = 62;
-  sSC_SKILLLEVEL = 'SKILLLEVEL';
+  sSC_SKILLLEVEL = 'SKILLLEVEL';//调整技能等级
   nSC_SKILLLEVEL = 63;
   sSC_CHANGEPKPOINT = 'CHANGEPKPOINT';
   nSC_CHANGEPKPOINT = 64;
@@ -560,11 +561,11 @@ const
   nSC_CHANGENAMECOLOR = 71;
   sSC_RENEWLEVEL = 'RENEWLEVEL';
   nSC_RENEWLEVEL = 72;
-  sSC_KILLMONEXPRATE = 'KILLMONEXPRATE';
+  sSC_KILLMONEXPRATE = 'KILLMONEXPRATE'; //调整杀怪经验的倍数
   nSC_KILLMONEXPRATE = 73;
   sSC_POWERRATE = 'POWERRATE';
   nSC_POWERRATE = 74;
-  sSC_CHANGEMODE = 'CHANGEMODE';
+  sSC_CHANGEMODE = 'CHANGEMODE';//改变管理模式(不检查权限)
   nSC_CHANGEMODE = 75;
   sSC_CHANGEPERMISSION = 'CHANGEPERMISSION';
   nSC_CHANGEPERMISSION = 76;
@@ -813,12 +814,12 @@ const
   sREPAIR = '@repair';
   sSUPERREPAIR = '@s_repair';
 
-  sBUY = '@buy';
+  sBUY = '@buy';//买物品
   sBINDBUY = '@BindBuy';
-  sSELL = '@sell';
-  sMAKEDURG = '@makedrug';
+  sSELL = '@sell';//卖物品
+  sMAKEDURG = '@makedrug';//炼药
   sPRICES = '@prices';
-  sSTORAGE = '@storage';
+  sSTORAGE = '@storage';//存仓库
   sSTORAGEPASS = '@storagepass';
   //  sGETBACK = '@getback';
 
@@ -828,7 +829,7 @@ const
   sARMABILITYMOVE = '@ArmAbilityMove';
   sINPUTINTEGER = '@@InputInteger';
   sINPUTSTRING = '@@InputString';
-  sUPGRADENOW = '@upgradenow';
+  sUPGRADENOW = '@upgradenow';//升级物品
   sGETBACKUPGNOW = '@getbackupgnow';
 
   {sBIGSTORAGE = '@bigstorage';
@@ -848,9 +849,9 @@ const
   sSELLOFF = '@selloff';
   sBUYOFF = '@buyoff';
   sRMST = '@@rmst';
-  sofflinemsg = '@@offlinemsg';
+  sofflinemsg = '@@offlinemsg';//挂机自动回复
 
-  sstartdealgold = '@startdealgold';
+  sstartdealgold = '@startdealgold'; //元宝转帐
   sdealgold = '@@dealgold';
 
   sBUILDGUILDNOW = '@@buildguildnow';
@@ -858,15 +859,15 @@ const
   sDONATE = '@@donate';
   sREQUESTCASTLEWAR = '@requestcastlewarnow';
 
-  sCASTLENAME = '@@castlename';
-  sWITHDRAWAL = '@@withdrawal';
-  sRECEIPTS = '@@receipts';
-  sOPENMAINDOOR = '@openmaindoor';
-  sCLOSEMAINDOOR = '@closemaindoor';
-  sREPAIRDOORNOW = '@repairdoornow';
-  sREPAIRWALLNOW1 = '@repairwallnow1';
-  sREPAIRWALLNOW2 = '@repairwallnow2';
-  sREPAIRWALLNOW3 = '@repairwallnow3';
+  sCASTLENAME = '@@castlename';//城堡改名
+  sWITHDRAWAL = '@@withdrawal';//沙巴克取回资金
+  sRECEIPTS = '@@receipts';//沙巴克存资金
+  sOPENMAINDOOR = '@openmaindoor';//沙巴克开门
+  sCLOSEMAINDOOR = '@closemaindoor';//沙巴克关门
+  sREPAIRDOORNOW = '@repairdoornow';//马上修复城门
+  sREPAIRWALLNOW1 = '@repairwallnow1';//修城墙一
+  sREPAIRWALLNOW2 = '@repairwallnow2';//修城墙二
+  sREPAIRWALLNOW3 = '@repairwallnow3';//修城墙三
   sHIREARCHERNOW = '@hirearchernow';
   sHIREGUARDNOW = '@hireguardnow';
   sHIREGUARDOK = '@hireguardok';
@@ -1534,7 +1535,7 @@ const
 type
 
   TMakeWord = (tLo, tHi);
-  TLevelNeedExp = array[1..MAXCHANGELEVEL] of LongWord;
+  TLevelNeedExp = array[1..MAXCHANGELEVEL] of  LongWord;//等级所需经验
 
   TGuildLevelNeedExp = packed record
     nGold: Integer;
@@ -1547,10 +1548,10 @@ type
   TGuildLevelNeedExpArr = array[1..MAXGUILDLEVEL] of TGuildLevelNeedExp;
 
   TWuXinLevelNeedExp = array[1..MAXWUXINLEVEL] of LongWord;
-  TItemBind = record
+  TItemBind = record //物品绑定(绑定的玩家才能戴此物品)
     nMakeIdex: Integer;
-    nItemIdx: Integer;
-    sBindName: string[20];
+    nItemIdx: Integer;//物品分类
+    sBindName: string[20];//玩家名称
   end;
   pTItemBind = ^TItemBind;
   TConsoleData = packed record
@@ -1692,32 +1693,32 @@ type
     sBankAccount8: string;
     sBankAccount9: string;
     nServerNumber: Integer;
-    boVentureServer: Boolean;
-    boTestServer: Boolean;
+    boVentureServer: Boolean;//不刷怪模式
+    boTestServer: Boolean;//测试模式
     boServiceMode: Boolean;
     boNonPKServer: Boolean;
-    nTestLevel: Integer;
-    nTestGold: Integer;
-    nTestUserLimit: Integer;
-    nSendBlock: Integer;
+    nTestLevel: Integer;//20080503 测试模式开始等级
+    nTestGold: Integer;//测试模式开始金币
+    nTestUserLimit: Integer;//测试模式上线人数限制(2000) 20080503
+    nSendBlock: Integer;//网关数据传输数据块大小
     nCheckBlock: Integer;
     nAvailableBlock: Integer;
     nGateLoad: Integer;
-    nUserFull: Integer;
+    nUserFull: Integer;//最高上线人数
     nZenFastStep: Integer;
     boSafeOffLine: Boolean;
     boShopSafeOffLine: Boolean;
     nSafeOffLineLevel: Integer;
     sGateAddr: string;
-    nGatePort: Integer;
+    nGatePort: Integer;//网关端口(65535) 20080503
     sDBAddr: string;
-    nDBPort: Integer;
+    nDBPort: Integer;//DBServer端口 20080503
     sIDSAddr: string;
-    nIDSPort: Integer;
+    nIDSPort: Integer;//LoginSrv端口 20080503
     sMsgSrvAddr: string;
     nMsgSrvPort: Integer;
     sLogServerAddr: string;
-    nLogServerPort: Integer;
+    nLogServerPort: Integer;//日志程序端口 20080503
     boDiscountForNightTime: Boolean;
     nHalfFeeStart: Integer;
     nHalfFeeEnd: Integer;
@@ -1767,8 +1768,8 @@ type
     DBSocket: Integer;
     nHealthFillTime: Integer;
     nSpellFillTime: Integer;
-    nMonUpLvNeedKillBase: Integer;
-    nMonUpLvRate: Integer;
+    nMonUpLvNeedKillBase: Integer;//宝宝升级杀怪基数
+    nMonUpLvRate: Integer;//宝宝升级杀怪倍率
     MonUpLvNeedKillCount: array[0..SLAVEMAXLEVEL - 2] of Integer;
     SlaveColor: array[0..SLAVEMAXLEVEL - 1] of Byte;
     dwNeedExps: TLevelNeedExp;
@@ -1778,8 +1779,8 @@ type
     dwGetWuXinExpTime: LongWord;
     dwGetWuXinExpTick: LongWord;
     dwGetWuXinCount: LongWord;
-    WideAttack: array[0..2] of Byte;
-    CrsAttack: array[0..6] of Byte;
+    WideAttack: array[0..2] of Byte;//半月刀法的方向
+    CrsAttack: array[0..6] of Byte;//抱月刀法的方向
     SpitMap: array[0..7, 0..4, 0..4] of Byte;
     sHomeMap: string;
     nHomeX: Integer;
@@ -1793,13 +1794,13 @@ type
     dwDecPkPointTime: LongWord;
     nDecPkPointCount: Integer;
     dwPKFlagTime: LongWord;
-    nKillHumanAddPKPoint: Integer;
+    nKillHumanAddPKPoint: Integer;//杀人增加PK点数(2000) 20080503
     nKillHumanDecLuckPoint: Integer;
     dwDecLightItemDrugTime: LongWord;
-    nSafeZoneSize: Integer;
-    nStartPointSize: Integer;
+    nSafeZoneSize: Integer;//安全区范围(2000) 20080503
+    nStartPointSize: Integer;//新人出生点控制(2000) 20080503
     dwHumanGetMsgTime: LongWord;
-    nGroupMembersMax: Integer;
+    nGroupMembersMax: Integer;//组队成员数量(2000) 20080503
     sFireBallSkill: string;
     sHealSkill: string;
     ReNewNameColor: array[0..9] of Byte;
@@ -1808,62 +1809,62 @@ type
     boReNewChangeColor: Boolean;
     boReNewLevelClearExp: Boolean;
 
-    nUpgradeWeaponMaxPoint: Integer;
+    nUpgradeWeaponMaxPoint: Integer;//武器升级最高点数(1000) 20080504
     nUpgradeWeaponPrice: Integer;
     dwUPgradeWeaponGetBackTime: LongWord;
-    nClearExpireUpgradeWeaponDays: Integer;
-    nUpgradeWeaponDCRate: Integer;
-    nUpgradeWeaponDCTwoPointRate: Integer;
-    nUpgradeWeaponDCThreePointRate: Integer;
-    nUpgradeWeaponSCRate: Integer;
-    nUpgradeWeaponSCTwoPointRate: Integer;
-    nUpgradeWeaponSCThreePointRate: Integer;
-    nUpgradeWeaponMCRate: Integer;
-    nUpgradeWeaponMCTwoPointRate: Integer;
-    nUpgradeWeaponMCThreePointRate: Integer;
-    dwProcessMonstersTime: LongWord;
-    dwRegenMonstersTime: LongWord;
+    nClearExpireUpgradeWeaponDays: Integer;//武器升级过期天数(100) 20080504
+    nUpgradeWeaponDCRate: Integer;//武器攻击力升级成功机率(500) 20080504
+    nUpgradeWeaponDCTwoPointRate: Integer;//武器攻击力二点机率(100) 20080504
+    nUpgradeWeaponDCThreePointRate: Integer;//武器攻击力三点机率(500) 20080504
+    nUpgradeWeaponSCRate: Integer;//武器道术升级成功机率(500) 20080504
+    nUpgradeWeaponSCTwoPointRate: Integer;//武器道术二点机率(100) 20080504
+    nUpgradeWeaponSCThreePointRate: Integer;//武器道术三点机率(500) 20080504
+    nUpgradeWeaponMCRate: Integer;//武器魔法升级成功机率(500) 20080504
+    nUpgradeWeaponMCTwoPointRate: Integer;//武器魔法二点机率(100)  20080504
+    nUpgradeWeaponMCThreePointRate: Integer;//武器魔法三点机率(500)  20080504
+    dwProcessMonstersTime: LongWord;//刷怪处理间隔
+    dwRegenMonstersTime: LongWord;//刷怪间隔(1000) 20080503
     nPersonShopSellRate: Integer;
     nPersonShopBuyRate: Integer;
     nMagicAttackMonsteRate: Integer;
-    nMonGenRate: Integer;
+    nMonGenRate: Integer;//刷怪倍数(1000) 20080503
     nProcessMonRandRate: Integer;
     nProcessMonLimitCount: Integer;
     nSoftVersionDate: Integer;
     //    boCanOldClientLogon: Boolean;
     boCanNewCall: Boolean;
-    dwConsoleShowUserCountTime: LongWord;
-    dwShowLineNoticeTime: LongWord;
+    dwConsoleShowUserCountTime: LongWord;//控制台显示人数间隔
+    dwShowLineNoticeTime: LongWord;//公告显示间隔
     nLineNoticeColor: Integer;
-    nStartCastleWarDays: Integer;
-    nStartCastlewarTime: Integer;
+    nStartCastleWarDays: Integer;//申请攻城天数 20080504
+    nStartCastlewarTime: Integer;//攻城开始时间(24) 20080504
     dwShowCastleWarEndMsgTime: LongWord;
     dwCastleWarTime: LongWord;
-    dwGetCastleTime: LongWord;
-    dwGuildWarTime: LongWord;
+    dwGetCastleTime: LongWord;//禁止占领时间
+    dwGuildWarTime: LongWord; //行会战时间
     nBuildGuildPrice: Integer;
     nGuildWarPrice: Integer;
     nMakeDurgPrice: Integer;
-    nHumanMaxGold: Integer;
+    nHumanMaxGold: Integer;//人物最大金币数
     nHumanTryModeMaxGold: Integer;
-    nTryModeLevel: Integer;
+    nTryModeLevel: Integer;//试玩等级限制(100) 20080503
     boTryModeUseStorage: Boolean;
-    nCanShoutMsgLevel: Integer;
+    nCanShoutMsgLevel: Integer;//允许喊话等级(65535) 20080503
     boShowMakeItemMsg: Boolean;
     boShutRedMsgShowGMName: Boolean;
-    nSayMsgMaxLen: Integer;
+    nSayMsgMaxLen: Integer;//聊天信息长度(255) 20080503
     dwSayMsgTime: LongWord;
-    nSayMsgCount: Integer;
+    nSayMsgCount: Integer;//发送信息数量(255) 20080503
     dwDisableSayMsgTime: LongWord;
-    nSayRedMsgMaxLen: Integer;
+    nSayRedMsgMaxLen: Integer;//广播信息长度(255) 20080503
     boShowGuildName: Boolean;
     boShowRankLevelName: Boolean;
     boOpenArmStrengthen: Boolean;
     boOpenItemFlute: Boolean;
     boMonSayMsg: Boolean;
-    nStartPermission: Integer;
+    nStartPermission: Integer;//人物起始权限(10) 20080503
     vAbilityMoveSet: TAbilityMoveSet;
-    boKillHumanWinLevel: Boolean;
+    boKillHumanWinLevel: Boolean;//杀人增加等级
     boKilledLostLevel: Boolean;
     boKillHumanWinExp: Boolean;
     boKilledLostExp: Boolean;
@@ -1871,13 +1872,13 @@ type
     nKilledLostLevel: Integer;
     nKillHumanWinExp: Integer;
     nKillHumanLostExp: Integer;
-    nHumanLevelDiffer: Integer;
-    nMonsterPowerRate: Integer;
+    nHumanLevelDiffer: Integer;//PK等级(100)
+    nMonsterPowerRate: Integer;//怪物属性倍率(20000) 20080503
     nItemsPowerRate: Integer;
-    nItemsACPowerRate: Integer;
+    nItemsACPowerRate: Integer;//物品属性倍率(AC、MAC二个)(2000) 20080503
     boSendOnlineCount: Boolean;
-    nSendOnlineCountRate: Integer;
-    dwSendOnlineTime: LongWord;
+    nSendOnlineCountRate: Integer;//广播倍率(10) 20080503
+    dwSendOnlineTime: LongWord;//广播间隔
     dwSaveHumanRcdTime: LongWord;
     dwHumanFreeDelayTime: LongWord;
     dwHumDieMaxTime: LongWord;
@@ -1901,49 +1902,49 @@ type
     boHungerDecHP: Boolean;
     boHungerDecPower: Boolean;
     boDiableHumanRun: Boolean;
-    boRUNHUMAN: Boolean;
-    boRUNMON: Boolean;
-    boRunNpc: Boolean;
+    boRUNHUMAN: Boolean;//是否可穿人物
+    boRUNMON: Boolean;//是否可穿怪
+    boRunNpc: Boolean;//是否可穿NPC
     boRunGuard: Boolean;
     boWarDisHumRun: Boolean;
-    boGMRunAll: Boolean;
-    boSafeAreaLimited: Boolean;
+    boGMRunAll: Boolean;//管理员可以穿一切
+    boSafeAreaLimited: Boolean;//安全区是否穿
     dwTryDealTime: LongWord;
     dwDealOKTime: LongWord;
     boCanNotGetBackDeal: Boolean;
     boDisableDeal: Boolean;
-    nMasterOKLevel: Integer;
-    nMasterOKCreditPoint: Integer;
-    nMasterOKBonusPoint: Integer;
+    nMasterOKLevel: Integer;//出师等级(65535) 20080504
+    nMasterOKCreditPoint: Integer;//出师后师傅得的声望点(100) 20080504
+    nMasterOKBonusPoint: Integer;//徒弟出师后，师父得到的分配点数(1000) 20080504
     boPKLevelProtect: Boolean;
-    nPKProtectLevel: Integer;
-    nRedPKProtectLevel: Integer;
-    nItemPowerRate: Integer;
-    nItemExpRate: Integer;
-    nScriptGotoCountLimit: Integer;
+    nPKProtectLevel: Integer;//PK保护等级 20080503
+    nRedPKProtectLevel: Integer;//红名PK保护等级 20080503
+    nItemPowerRate: Integer;//攻击翻倍倍率(60000) 20080503
+    nItemExpRate: Integer;//经验翻倍倍率(60000) 20080503
+    nScriptGotoCountLimit: Integer;//20080912 修改
 
-    btHearMsgFColor: Byte;
-    btHearMsgBColor: Byte;
-    btRedMsgFColor: Byte;
-    btRedMsgBColor: Byte;
-    btCryMsgFColor: Byte;
-    btCryMsgBColor: Byte;
+    btHearMsgFColor: Byte; //前景  听到
+    btHearMsgBColor: Byte; //背景  听到
+    btRedMsgFColor: Byte;//前景  悄悄话
+    btRedMsgBColor: Byte;//背景  悄悄话
+    btCryMsgFColor: Byte; //前景  哭
+    btCryMsgBColor: Byte; //背景  哭
     btCustMsgFColor: Byte;
     btCustMsgBColor: Byte;
     btWhisperMsgFColor: Byte;
     btWhisperMsgBColor: Byte;
-    btGreenMsgFColor: Byte;
-    btGreenMsgBColor: Byte;
+    btGreenMsgFColor: Byte; //前景
+    btGreenMsgBColor: Byte; //背景
     btGuildMsgFColor: Byte;
     btGuildMsgBColor: Byte;
     btCudtMsgFColor: Byte;
     btCudtMsgBColor: Byte;
     btGMWhisperMsgFColor: Byte;
     btGMWhisperMsgBColor: Byte;
-    btBlueMsgFColor: Byte;
-    btBlueMsgBColor: Byte;
-    btGroupMsgFColor: Byte;
-    btGroupMsgBColor: Byte;
+    btBlueMsgFColor: Byte; //前景
+    btBlueMsgBColor: Byte; //背景
+    btGroupMsgFColor: Byte; //前景
+    btGroupMsgBColor: Byte; //背景
 
     nHearMsgFColor: Word;
     nHearMsgBColor: Word;
@@ -1963,8 +1964,8 @@ type
     nGuildMsgBColor: Word;
     nGroupMsgFColor: Word;
     nGroupMsgBColor: Word;
-    nCustMsgFColor: Word;
-    nCustMsgBColor: Word;
+    nCustMsgFColor: Word;//前景
+    nCustMsgBColor: Word;//前景
     nCudtMsgFColor: Word;
     nCudtMsgBColor: Word;
     nWorldMsgFColor: Word;
@@ -1975,8 +1976,8 @@ type
     nHintMsgGColor: Integer;
     nHintMsgWColor: Integer;
 
-    nMonRandomAddValue: Integer;
-    nMakeRandomAddValue: Integer;
+    nMonRandomAddValue: Integer;//怪物掉极品的几率
+    nMakeRandomAddValue: Integer;//制造物品出现极品的几率
     nNpcMakeRandomAddValue: Integer;
     boMonRandomIsOpenShow: Boolean;
     boMakeRandomIsOpenShow: Boolean;
@@ -2002,22 +2003,22 @@ type
       INail: TGameItemUpgradeRate;
 
     nMonOneDropGoldCount: Integer;
-    nMakeMineHitRate: Integer;
-    nMakeMineRate: Integer;
-    nStoneTypeRate: Integer;
+    nMakeMineHitRate: Integer;//挖矿命中率(500) 20080504
+    nMakeMineRate: Integer;//挖矿机率(500) 20080504
+    nStoneTypeRate: Integer;//矿石因子(500) 20080504
     nStoneTypeRateMin: Integer;
     nGoldStoneMin: Integer;
-    nGoldStoneMax: Integer;
+    nGoldStoneMax: Integer;//金矿率(500) 20080504
     nSilverStoneMin: Integer;
-    nSilverStoneMax: Integer;
+    nSilverStoneMax: Integer;//银矿率(500) 20080504
     nSteelStoneMin: Integer;
-    nSteelStoneMax: Integer;
+    nSteelStoneMax: Integer;//铁矿率(500) 20080504
     nBlackStoneMin: Integer;
-    nBlackStoneMax: Integer;
-    nStoneMinDura: Integer;
-    nStoneGeneralDuraRate: Integer;
-    nStoneAddDuraRate: Integer;
-    nStoneAddDuraMax: Integer;
+    nBlackStoneMax: Integer;//黑铁矿率(500) 20080504
+    nStoneMinDura: Integer;//矿石最小品质(1000) 20080504
+    nStoneGeneralDuraRate: Integer;//普通品质范围(1000) 20080504
+    nStoneAddDuraRate: Integer;//高品质机率(1000) 20080504
+    nStoneAddDuraMax: Integer;//高品质范围(1000) 20080504
     nWinLottery6Min: Integer;
     nWinLottery6Max: Integer;
     nWinLottery5Min: Integer;
@@ -2045,13 +2046,13 @@ type
     nWinLotteryLevel4: Integer;
     nWinLotteryLevel5: Integer;
     nWinLotteryLevel6: Integer;
-    GlobalVal: array[0..999] of Integer;
-    GlobaDyMval: array[0..999] of Integer;
-    GlobalAVal: array[0..999] of string;
+    GlobalVal: array[0..999] of Integer;//G 变量可保存 20080903
+    GlobaDyMval: array[0..999] of Integer;//不可保存的变量
+    GlobalAVal: array[0..999] of string;// A 变量可保存 20080903
     GlobalUVal: array[0..999] of string;
-    nItemNumber: Integer;
+    nItemNumber: Integer;//制造物品最后一个的制造ID号
     nItemNumberEx: Integer;
-    nGuildRecallTime: Integer;
+    nGuildRecallTime: Integer;//传行传送间隔
     nGroupRecallTime: Integer;
     boControlDropItem: Boolean;
     boInSafeDisableDrop: Boolean;
@@ -2059,8 +2060,8 @@ type
     nCanDropPrice: Integer;
     boSendCustemMsg: Boolean;
     boSubkMasterSendMsg: Boolean;
-    nSuperRepairPriceRate: Integer;
-    nRepairItemDecDura: Integer;
+    nSuperRepairPriceRate: Integer;//特修价格倍数(100) 20080503
+    nRepairItemDecDura: Integer;//普通修理掉持久数(持久上限减下限再除以此数为减的数值)(100) 20080503
 
     boDieScatterBag: Boolean;
     nDieScatterBagRate: Integer;
@@ -2072,26 +2073,26 @@ type
     boKillByMonstDropUseItem: Boolean;
     boKickExpireHuman: Boolean;
     nGuildRankNameLen: Integer;
-    nGuildMemberMaxLimit: Integer;
+    nGuildMemberMaxLimit: Integer;//行会成员上限
     nDefGuildMemberLimit: Integer;
     nGuildMemberLevelInc: Integer;
     nGuildNameLen: Integer;
-    nAttackPosionRate: Integer;
-    nAttackPosionTime: Integer;
-    dwRevivalTime: LongWord;
+    nAttackPosionRate: Integer;//麻痹成功机率(100) 20080503
+    nAttackPosionTime: Integer;//麻痹时间(100) 20080503
+    dwRevivalTime: LongWord;//复活间隔时间
     boUserMoveCanDupObj: Boolean;
     boUserMoveCanOnItem: Boolean;
-    dwUserMoveTime: LongWord;
+    dwUserMoveTime: LongWord;//传送使用间隔(100) 20080503
     dwPKDieLostExpRate: LongWord;
     nPKDieLostLevelRate: Integer;
     btPKFlagNameColor: Byte;
     btPKLevel1NameColor: Byte;
-    btPKLevel2NameColor: Byte;
+    btPKLevel2NameColor: Byte;//红名状态 名字的颜色
     btAllyAndGuildNameColor: Byte;
     btWarGuildNameColor: Byte;
     btInFreePKAreaNameColor: Byte;
     boSpiritMutiny: Boolean;
-    dwSpiritMutinyTime: LongWord;
+    dwSpiritMutinyTime: LongWord;//祈祷生效时长
     nSpiritPowerRate: Integer;
     boMasterDieMutiny: Boolean;
     nMasterDieMutinyRate: Integer;
@@ -2112,30 +2113,30 @@ type
     nMakeMagicBeginLevel: Integer;
     MakeMagicConfine: array[Low(TMakeMagic)..High(TMakeMagic)] of array[0..10] of TMakeMagicConfine;
     LiteraryConfine: array[0..29] of TLiteraryConfine;
-    nMagicAttackRage: Integer;
+    nMagicAttackRage: Integer;//魔法攻击有效距离(20) 20080504
     sBoneFamm: string;
-    nBoneFammCount: Integer;
+    nBoneFammCount: Integer;//召唤骷髅数量(255) 20080504
     sDogz: string;
-    nDogzCount: Integer;
+    nDogzCount: Integer;//召唤神兽数量(255) 20080504
     sMoonSpirit: string;
     nMoonSpiritCount: Integer;
     sBoneDog: string;
 
-    nAmyOunsulPoint: Integer;
+    nAmyOunsulPoint: Integer;//施毒术中毒减的点数 20080504
     boDisableInSafeZoneFireCross: Boolean;
-    boGroupMbAttackPlayObject: Boolean;
+    boGroupMbAttackPlayObject: Boolean;//狮子吼是否对人物有效
     dwPosionDecHealthTime: LongWord;
-    nPosionDamagarmor: Integer;
+    nPosionDamagarmor: Integer;//中红毒着持久及减防量（实际大小为 12 / 10）20080503
     nSetupInfo: LongWord;
     boExpIsCumulative: Boolean;
     boExpOffLienSave: Boolean;
     boExpOffLineRunTime: Boolean;
 
-    boLimitSwordLong: Boolean;
-    nSwordLongPowerRate: Integer;
-    nFireBoomRage: Integer;
-    nSnowWindRange: Integer;
-    nElecBlizzardRange: Integer;
+    boLimitSwordLong: Boolean;//禁止无限刺杀
+    nSwordLongPowerRate: Integer;//刺杀攻击力倍数 20080504
+    nFireBoomRage: Integer;//爆裂火焰攻击范围 20080504
+    nSnowWindRange: Integer;//冰咆哮攻击范围 20080504
+    nElecBlizzardRange: Integer;//流星火雨攻击范围 20080510
     nMagTurnUndeadLevel: Integer;
     nMagTammingLevel: Integer;
     nMagTammingTargetLevel: Integer;
@@ -2207,18 +2208,18 @@ type
     nProtectShieldDelDamage3: Integer;
     nMagTammingHPRate: Integer;
 
-    nMagTammingCount: Integer;
-    nMabMabeHitRandRate: Integer;
-    nMabMabeHitMinLvLimit: Integer;
-    nMabMabeHitSucessRate: Integer;
-    nMabMabeHitMabeTimeRate: Integer;
+    nMagTammingCount: Integer;//诱惑数量 20080504
+    nMabMabeHitRandRate: Integer;//火焰冰角色等级相差机率  20080504
+    nMabMabeHitMinLvLimit: Integer;//火焰冰角色等级相差限制  20080504
+    nMabMabeHitSucessRate: Integer;//麻痹命中机率 20080504
+    nMabMabeHitMabeTimeRate: Integer;//麻痹时间参数倍率 20080504
     sCASTLENAME: string;
     sCastleHomeMap: string;
     nCastleHomeX: Integer;
     nCastleHomeY: Integer;
     nCastleWarRangeX: Integer;
     nCastleWarRangeY: Integer;
-    nCastleTaxRate: Integer;
+    nCastleTaxRate: Integer;//税收率(1000) 20080503
     boGetAllNpcTax: Boolean;
     nHireGuardPrice: Integer;
     nHireArcherPrice: Integer;
@@ -2226,7 +2227,7 @@ type
     nCastleOneDayGold: Integer;
     nRepairDoorPrice: Integer;
     nRepairWallPrice: Integer;
-    nCastleMemberPriceRate: Integer;
+    nCastleMemberPriceRate: Integer;//折扣率(200) 20080503
     nMaxHitMsgCount: Integer;
     nMaxSpellMsgCount: Integer;
     nMaxRunMsgCount: Integer;
@@ -2243,29 +2244,29 @@ type
     dwDropOverSpeed: LongWord;
     dwHitFrameTime: LongWord;
     dwMagicHitFrameTime: LongWord;
-    dwHitIntervalTime: LongWord;
-    dwMagicHitIntervalTime: LongWord;
-    dwRunIntervalTime: LongWord;
-    dwWalkIntervalTime: LongWord;
-    dwTurnIntervalTime: LongWord;
+    dwHitIntervalTime: LongWord; //攻击间隔
+    dwMagicHitIntervalTime: LongWord; //魔法间隔
+    dwRunIntervalTime: LongWord; //跑步间隔
+    dwWalkIntervalTime: LongWord; //走路间隔
+    dwTurnIntervalTime: LongWord; //换方向间隔
     dwButchIntervalTime: LongWord;
-    boControlActionInterval: Boolean;
+    boControlActionInterval: Boolean;//启用组合操作控制
     boControlWalkHit: Boolean;
     boControlRunLongHit: Boolean;
     boControlRunHit: Boolean;
     boControlRunMagic: Boolean;
-    dwActionIntervalTime: LongWord;
-    dwRunLongHitIntervalTime: LongWord;
-    dwRunHitIntervalTime: LongWord;
-    dwWalkHitIntervalTime: LongWord;
-    dwRunMagicIntervalTime: LongWord;
-    boDisableStruck: Boolean;
-    boDisableSelfStruck: Boolean;
-    dwStruckTime: LongWord;
+    dwActionIntervalTime: LongWord; //组合操作间隔
+    dwRunLongHitIntervalTime: LongWord; //跑位刺杀间隔
+    dwRunHitIntervalTime: LongWord; //跑位攻击间隔
+    dwWalkHitIntervalTime: LongWord; //走位攻击间隔
+    dwRunMagicIntervalTime: LongWord; //跑位魔法间隔
+    boDisableStruck: Boolean; //不显示人物弯腰动作
+    boDisableSelfStruck: Boolean; //自己不显示人物弯腰动作
+    dwStruckTime: LongWord; //人物弯腰停留时间
     dwKillMonExpMultiple: LongWord;
     dwRequestVersion: LongWord;
     boHighLevelKillMonFixExp: Boolean;
-    boAddUserItemNewValue: Boolean;
+    boAddUserItemNewValue: Boolean;//物品增加新属性
     boLowLevelKillMonContainExp: Boolean;
     nLowLevelKillMonLevel: Integer;
     nLowLevelKillMonGetExpRate: Integer;
@@ -2288,13 +2289,13 @@ type
     sGuildChief: string;
     boKickAllUser: Boolean;
     boTestSpeedMode: Boolean;
-    ClientConf: TServerConf;
-    nWeaponMakeUnLuckRate: Integer;
-    nWeaponMakeLuckPoint1: Integer;
-    nWeaponMakeLuckPoint2: Integer;
-    nWeaponMakeLuckPoint3: Integer;
-    nWeaponMakeLuckPoint2Rate: Integer;
-    nWeaponMakeLuckPoint3Rate: Integer;
+    ClientConf: TServerConf;//客户端配置信息
+    nWeaponMakeUnLuckRate: Integer;//祝福油诅咒机率(500) 20080504
+    nWeaponMakeLuckPoint1: Integer;//祝福油武器一级点数(500) 20080504
+    nWeaponMakeLuckPoint2: Integer;//祝福油武器二级点数(500) 20080504
+    nWeaponMakeLuckPoint3: Integer;//祝福油武器三级点数(500) 20080504
+    nWeaponMakeLuckPoint2Rate: Integer;//祝福油武器二级机率(500) 20080504
+    nWeaponMakeLuckPoint3Rate: Integer;//祝福油武器三级机率(500) 20080504
     nWeaponMakeUnLuckMaxCount: Integer;
     boCheckUserItemPlace: Boolean;
     nClientKey: Integer;
@@ -2360,23 +2361,23 @@ type
     boPullPlayObject: Boolean;
     nMagDelayTimeDoubly: Integer;
     nMagPowerDoubly: Integer;
-    boPlayObjectReduceMP: Boolean;
+    boPlayObjectReduceMP: Boolean;//打中目标，目标是否掉蓝
     boGroupMbAttackSlave: Boolean;
-    nBigStorageLimitCount: Integer;
-    boDropGoldToPlayBag: Boolean;
+    nBigStorageLimitCount: Integer;//无限仓库物品上限
+    boDropGoldToPlayBag: Boolean; //金币入包
     boChangeUseItemNameByPlayName: Boolean;
     sChangeUseItemName: string;
-    boUseFixExp: Boolean;
+    boUseFixExp: Boolean;//达到1000后是否使用引擎经验
     nBaseExp: Integer;
     nAddExp: Integer;
-    nDedingUseTime: Integer;
+    nDedingUseTime: Integer;//彻地钉使用间隔(100) 20080504
     boDedingAllowPK: Boolean;
     boRegenMonsters: Boolean;
     boShowMonLevel: Boolean;
     sShowMonLevelFormat: string;
     boSkill66ReduceMP: Boolean;
 
-    dwGetDBSockMsgTime: LongWord;
+    dwGetDBSockMsgTime: LongWord;//等待DBS返回消息的时间
     boPullCrossInSafeZone: Boolean;
     boHighLevelGroupFixExp: Boolean;
     boStartDropItemMapEvent: Boolean;
@@ -2385,12 +2386,12 @@ type
     boStartWalkMapEvent: Boolean;
     boStartRunMapEvent: Boolean;
 
-    nLimitExpLevel: Integer;
+    nLimitExpLevel: Integer;//限制等级 20080503
     nLimitExpValue: Integer;
 
     boChangeMapFireExtinguish: Boolean;
-    nFireDelayTimeRate: Integer;
-    nFirePowerRate: Integer;
+    nFireDelayTimeRate: Integer;//火墙有效时间倍数 20080504
+    nFirePowerRate: Integer;//火墙威力倍数 20080504
     nFirePlayDamageTimeRate: LongWord;
     nFireMonDamageTimeRate: LongWord;
     nDidingPowerRate: Integer;
@@ -2431,7 +2432,7 @@ type
       MEMBERFUNCTIONEX,
       DEAR,
       ALLOWDEARRCALL,
-      DEARRECALL,
+      DEARRECALL,//夫妻传送
       MASTER,
       ALLOWMASTERRECALL,
       MASTERECALL,
@@ -2523,9 +2524,9 @@ type
       TESTSTATUS,
       DELGOLD,
       ADDGOLD,
-      DELGAMEGOLD,
-      ADDGAMEGOLD,
-      GAMEGOLD,
+      DELGAMEGOLD,//删除游戏币
+      ADDGAMEGOLD,//增加游戏币
+      GAMEGOLD,//调整游戏币
       GAMEPOINT,
       CREDITPOINT,
       TESTGOLDCHANGE,
@@ -2542,7 +2543,7 @@ type
       RELOADMONSTERDB,
       RELOADMINMAP,
       ReAlive,
-      ADJUESTLEVEL,
+      ADJUESTLEVEL,//调整人物等级
       ADJUESTEXP,
       AddGuild,
       DELGUILD,
@@ -2597,15 +2598,15 @@ type
       COLORSAY,
       SETCOLORSAY,
       AllowReAlive,
-      USERITEM,
+      USERITEM,//取玩家物品
       LOCKLOGON,
-      SHOWEFFECT,
+      SHOWEFFECT,//烟花
       OPENBOX,
 
     AllSysMsg: TGameCmd;
   end;
 
-  TGateObj = record
+  TGateObj = record//地图连接点
     boRandom: Boolean;
     DEnvir: TEnvirnoment;
     nDMapX: Integer;
@@ -2633,12 +2634,12 @@ type
   end;
 
   pTMapQuestInfo = ^TMapQuestInfo;
-  TMapQuestInfo = record
+  TMapQuestInfo = record//任务地图
     nFlag: Integer;
     nValue: Integer;
     nFlag2: Integer;
     nValue2: Integer;
-    sMonName: string[14];
+    sMonName: string[14];//怪物名称
     boGroup: Boolean;
     NPC: TMerchant;
     Envir: TEnvirnoment;
@@ -2691,7 +2692,7 @@ function GetMultiServerAddrPort(btServerIndex: Byte; var sIPaddr: string; var nP
 procedure MainOutMessage(Msg: string);
 
 function AddDateTimeOfDay(DateTime: TDateTime; nDay: Integer): TDateTime;
-function GetGoldShape(nGold: Integer): Word;
+function GetGoldShape(nGold: Integer): Word; //金币在地上显示的外形ID
 function GetRandomLook(nBaseLook, nRage: Integer): Integer;
 function FilterShowName(sName: string): string;
 function CheckGuildName(sGuildName: string): Boolean;
@@ -2820,36 +2821,36 @@ var
   zPlugOfEngine: TPlugOfEnginge;
 {$ENDIF}
   RunSocket: TRunSocket;
-  MainLogMsgList: TStringList;
+  MainLogMsgList: TStringList;//程序的提示列表
   LogStringList: TStringList;
   LogonCostLogList: TStringList;
-  g_MapManager: TMapManager;
+  g_MapManager: TMapManager;//地图管理类
   g_FBMapManager: TGStringList;
   ItemUnit: TItemUnit;
   MagicManager: TMagicManager;
   //NoticeManager: TNoticeManager;
 
-  g_GuildManager: TGuildManager;
+  g_GuildManager: TGuildManager;//行会管理类
   g_EventManager: TEventManager;
-  g_CastleManager: TCastleManager;
+  g_CastleManager: TCastleManager;//城堡管理类
 
   FrontEngine: TFrontEngine;
   UserEngine: TUserEngine;
   RobotManage: TRobotManage;
   SystemObject: TRobotObject;
-  g_MakeItemList: TList;
+  g_MakeItemList: TList;//制造物品列表
   g_BoxsList: TList;
   g_StartPointList: TGStringList;
   ServerTableList: TList;
   g_DenySayMsgList: TQuickList;
-  MiniMapList: TStringList;
-  g_UnbindList: TStringList;
-  LineNoticeList: TStringList;
+  MiniMapList: TStringList;//小地图列表
+  g_UnbindList: TStringList;//解包列表
+  LineNoticeList: TStringList;//公告信息列表
   g_MapQuestList: TList;
   //QuestDiaryList: TList;
   ItemEventList: TStringList;
   //  AbuseTextList: TStringList;
-  g_MonSayMsgList: TStringList;
+  g_MonSayMsgList: TStringList; //怪物说明信息列表
   g_FilterSay: TGStringList;
   g_FilterMD5: string = '0';
   g_FilterData: string;
@@ -2858,7 +2859,7 @@ var
   g_FilterShop: TGStringList;
   //g_SetItems: TGList;
 
-  g_DisableSendMsgList: TGStringList;
+  g_DisableSendMsgList: TGStringList; //禁止发信息名称列表
 
   g_MapEventList: TGList;
 
@@ -2871,23 +2872,23 @@ var
 
   g_CompoundInfoList: TGStringList;
 
-  g_UnMasterList: TGStringList;
+  g_UnMasterList: TGStringList; //出师记录表
   g_UnMarryList: TGStringList;
   g_UserCmdList: TGStringList;
   g_MonDropLimitList: TGList;
-  g_UnForceMasterList: TGStringList;
-  g_GameLogItemNameList: TGStringList;
-  g_boGameLogGold: Boolean;
+  g_UnForceMasterList: TGStringList; //强行出师记录表
+  g_GameLogItemNameList: TGStringList; //游戏日志物品名
+  g_boGameLogGold: Boolean;//是否写入日志(金币)
   g_boGameLogBindGold: Boolean;
-  g_boGameLogGameGold: Boolean;
+  g_boGameLogGameGold: Boolean;//是否写入日志(调整游戏币)
   g_boGameLogGamePoint: Boolean;
   g_boGameLogHumanDie: Boolean;
   g_boGameLogGameDiamond: Boolean;
   g_boGameLogCreditPoint: Boolean;
   g_boGameLogCustomVariable: Boolean;
-  g_DenyIPAddrList: TGStringList;
-  g_DenyChrNameList: TGStringList;
-  g_DenyAccountList: TGStringList;
+  g_DenyIPAddrList: TGStringList; //IP过滤列表
+  g_DenyChrNameList: TGStringList; //角色过滤列表
+  g_DenyAccountList: TGStringList; //登录帐号过滤列表
   g_UnFriendList: TStringList;
   g_SetItemsList: TList;
   g_SetItemsArr: array of Boolean;
@@ -2905,10 +2906,10 @@ var
 
   g_nTotalHumCount: Integer;
 
-  g_boMission: Boolean;
-  g_sMissionMap: string;
-  g_nMissionX: Integer;
-  g_nMissionY: Integer;
+  g_boMission: Boolean;//是否设置怪物集中点
+  g_sMissionMap: string;//怪物集中点 地图
+  g_nMissionX: Integer;//怪物集中点X
+  g_nMissionY: Integer;//怪物集中点Y
 
   boStartReady: Boolean;
   g_boExitServer: Boolean;
@@ -2940,7 +2941,7 @@ var
   dwUsrRotCountMax: Integer;
 
   g_dwUsrRotCountTick: LongWord;
-  g_nProcessHumanLoopTime: Integer;
+  g_nProcessHumanLoopTime: Integer;//处理人物列表循环次数
 
   g_dwHumLimit: LongWord = 30;
   g_dwMonLimit: LongWord = 30;
@@ -2960,9 +2961,9 @@ var
   sStringFileName: string = '.\String.ini';
   sGlobalFileName: string = '.\Global.ini';
   dwRunDBTimeMax: LongWord;
-  g_dwStartTick: LongWord;
+  g_dwStartTick: LongWord; //启动间隔
 
-  g_dwRunTick: LongWord;
+  g_dwRunTick: LongWord; //运行间隔
   n4EBD1C: Integer;
 
   g_nGameTime: Integer;
@@ -2979,7 +2980,7 @@ var
   g_sOldProcessName: string;
   g_ManageNPC: TNormNpc;
   g_RobotNPC: TNormNpc;
-  g_FunctionNPC: TFunMerchant;
+  g_FunctionNPC: TFunMerchant;//脚本触发NPC
   g_MapEventNpc: TMerchant;
   g_DynamicVarList: TList;
   nCurrentMonthly: Integer;
@@ -3373,7 +3374,7 @@ var
     dwPKFlagTime: 60 * 1000;
     nKillHumanAddPKPoint: 100;
     nKillHumanDecLuckPoint: 500;
-    dwDecLightItemDrugTime: 500;
+    dwDecLightItemDrugTime: 500;//照明物使用间隔 20080329
     nSafeZoneSize: 10;
     nStartPointSize: 2;
     dwHumanGetMsgTime: 200;
@@ -3496,28 +3497,28 @@ var
     nItemPowerRate: 10000;
     nItemExpRate: 10000;
     nScriptGotoCountLimit: 30;
-    btHearMsgFColor: $00;
-    btHearMsgBColor: $FF;
+    btHearMsgFColor: $00; //前景
+    btHearMsgBColor: $FF; //背景
     btRedMsgFColor: $FF;
     btRedMsgBColor: $38;
     btCryMsgFColor: $00;
     btCryMsgBColor: $97;
     btCustMsgFColor: $FC;
     btCustMsgBColor: $FF;
-    btWhisperMsgFColor: $FC;
-    btWhisperMsgBColor: $FF;
+    btWhisperMsgFColor: $FC; //前景
+    btWhisperMsgBColor: $FF; //背景
     btGreenMsgFColor: $DB;
     btGreenMsgBColor: $FF;
     btGuildMsgFColor: $DB;
     btGuildMsgBColor: $FF;
     btCudtMsgFColor: $FF;
     btCudtMsgBColor: $FD;
-    btGMWhisperMsgFColor: $FF;
-    btGMWhisperMsgBColor: $38;
-    btBlueMsgFColor: $FF;
-    btBlueMsgBColor: $FC;
-    btGroupMsgFColor: $C4;
-    btGroupMsgBColor: $FF;
+    btGMWhisperMsgFColor: $FF; //前景
+    btGMWhisperMsgBColor: $38; //背景
+    btBlueMsgFColor: $FF; //前景
+    btBlueMsgBColor: $FC; //背景
+    btGroupMsgFColor: $C4; //前景
+    btGroupMsgBColor: $FF; //背景
 
     nHearMsgFColor: $FFFF;
     nHearMsgBColor: $800;
@@ -3537,8 +3538,8 @@ var
     nGuildMsgBColor: $160;
     nGroupMsgFColor: $8D1F;
     nGroupMsgBColor: $13;
-    nCustMsgFColor: $FC;
-    nCustMsgBColor: $FF;
+    nCustMsgFColor: $FC;//前景
+    nCustMsgBColor: $FF;//前景
     nCudtMsgFColor: $FF;
     nCudtMsgBColor: $FD;
     nWorldMsgFColor: $9E7F;
@@ -3823,8 +3824,8 @@ var
     );
 
     nMonOneDropGoldCount: 2000;
-    nMakeMineHitRate: 4;
-    nMakeMineRate: 12;
+    nMakeMineHitRate: 4; //挖矿命中率
+    nMakeMineRate: 12; //挖矿率
     nStoneTypeRate: 100;
     nStoneTypeRateMin: 50;
     nGoldStoneMin: 0;
@@ -3881,8 +3882,8 @@ var
     nCanDropPrice: 500;
     boSendCustemMsg: True;
     boSubkMasterSendMsg: True;
-    nSuperRepairPriceRate: 3;
-    nRepairItemDecDura: 30;
+    nSuperRepairPriceRate: 3;//特修价格倍数
+    nRepairItemDecDura: 30;//普通修理掉持久数*100,为每次修理掉的持久值
 
     boDieScatterBag: True;
     nDieScatterBagRate: 3;
@@ -3900,7 +3901,7 @@ var
     nGuildNameLen: 16;
     nAttackPosionRate: 5;
     nAttackPosionTime: 5;
-    dwRevivalTime: 60 * 1000;
+    dwRevivalTime: 60 * 1000;//复活间隔时间
     boUserMoveCanDupObj: False;
     boUserMoveCanOnItem: True;
     dwUserMoveTime: 10;
@@ -3925,14 +3926,14 @@ var
     boShowScriptActionMsg: True;
     nRunSocketDieLoopLimit: 100;
     boThreadRun: False;
-    boShowExceptionMsg: False;
+    boShowExceptionMsg: False;//异常错误信息 默认关闭
     boShowPreFixMsg: True;
     btMakeMagicAddPoint: 5;
     btMakeMagicUsePoint: 1;
     btMakeMagicAddRate: 10;
     btMakeMagicMaxLevel: 50;
     nMakeMagicBeginLevel: 40;
-    nMagicAttackRage: 8;
+    nMagicAttackRage: 8; //魔法锁定范围
     sBoneFamm: '变异骷髅';
     nBoneFammCount: 1;
 
@@ -3947,7 +3948,7 @@ var
     boDisableInSafeZoneFireCross: False;
     boGroupMbAttackPlayObject: True;
     dwPosionDecHealthTime: 2500;
-    nPosionDamagarmor: 12;
+    nPosionDamagarmor: 12; //中红毒着持久及减防量（实际大小为 12 / 10）
     nSetupInfo: 0;
     boExpIsCumulative: True;
     boExpOffLienSave: True;
@@ -3957,10 +3958,10 @@ var
     nSwordLongPowerRate: 100;
     nFireBoomRage: 1;
     nSnowWindRange: 1;
-    nElecBlizzardRange: 2;
-    nMagTurnUndeadLevel: 50;
-    nMagTammingLevel: 50;
-    nMagTammingTargetLevel: 10;
+    nElecBlizzardRange: 2;//地狱雷光攻击范围
+    nMagTurnUndeadLevel: 50; //圣言怪物等级限制
+    nMagTammingLevel: 50; //诱惑之光怪物等级限制
+    nMagTammingTargetLevel: 10; //诱惑怪物相差等级机率，此数字越小机率越大；
     nSkill110PowerRate: 100;
     nSkill111PowerRate: 100;
     nSkill112PowerRate: 100;
@@ -4026,7 +4027,7 @@ var
     nProtectShieldDelDamage1: 20;
     nProtectShieldDelDamage2: 30;
     nProtectShieldDelDamage3: 40;
-    nMagTammingHPRate: 100;
+    nMagTammingHPRate: 100; //成功机率=怪物最高HP 除以 此倍率，此倍率越大诱惑机率越高
 
     nMagTammingCount: 5;
     nMabMabeHitRandRate: 100;
@@ -4064,26 +4065,26 @@ var
     dwDropOverSpeed: 10;
     dwHitFrameTime: 450;
     dwMagicHitFrameTime: 450;
-    dwHitIntervalTime: 1100;
-    dwMagicHitIntervalTime: 1200;
-    dwRunIntervalTime: 550;
-    dwWalkIntervalTime: 550;
-    dwTurnIntervalTime: 750;
+    dwHitIntervalTime: 1100;//攻击间隔
+    dwMagicHitIntervalTime: 1200;//魔法间隔
+    dwRunIntervalTime: 550;//跑步间隔
+    dwWalkIntervalTime: 550;//走路间隔
+    dwTurnIntervalTime: 750;//换方向间隔
     dwButchIntervalTime: 550;
     boControlActionInterval: True;
     boControlWalkHit: True;
     boControlRunLongHit: True;
     boControlRunHit: True;
     boControlRunMagic: True;
-    dwActionIntervalTime: 350;
-    dwRunLongHitIntervalTime: 800;
-    dwRunHitIntervalTime: 800;
-    dwWalkHitIntervalTime: 800;
-    dwRunMagicIntervalTime: 900;
-    boDisableStruck: False;
-    boDisableSelfStruck: False;
-    dwStruckTime: 100;
-    dwKillMonExpMultiple: 1;
+    dwActionIntervalTime: 350; //组合操作间隔
+    dwRunLongHitIntervalTime: 800; //跑位刺杀间隔
+    dwRunHitIntervalTime: 800; //跑位攻击间隔
+    dwWalkHitIntervalTime: 800; //走位攻击间隔
+    dwRunMagicIntervalTime: 900; //跑位魔法间隔
+    boDisableStruck: False; //不显示人物弯腰动作
+    boDisableSelfStruck: False; //自己不显示人物弯腰动作
+    dwStruckTime: 100; //人物弯腰停留时间
+    dwKillMonExpMultiple: 1; //杀怪经验倍数
 {$IF SoftVersion = VERENT}
     dwRequestVersion: 98;
 {$ELSE}
@@ -4202,7 +4203,7 @@ var
 
     );
 
-  sDBName: string = 'HeroDB';
+  sDBName: string = 'HeroDB'; //BDE 数据源名称
 
 {$IF OEMVER = OEM775}
   g_LevelInfo: array[0..MAXLEVEL] of TLevelInfo;
@@ -5110,6 +5111,7 @@ begin
   end;
 end;
 
+//读取公告内容
 function LoadLineNotice(FileName: string): Boolean;
 var
   i: Integer;
@@ -5211,7 +5213,7 @@ begin
   if (flagx = -1) and (flagy = -1) then
     Result := DR_UPLEFT;
 end;
-
+//检查是否可以穿上装备
 function CheckUserItems(nIdx: Integer; StdItem: pTStdItem): Boolean;
 begin
   Result := False;
@@ -5335,7 +5337,7 @@ begin
     end;
   end;
 end;
-
+//取物品制造ID
 function GetItemNumber(): Integer;
 begin
   Inc(g_Config.nItemNumber);
@@ -5356,7 +5358,7 @@ begin
   end;
   Result := g_Config.nItemNumberEx;
 end;
-
+//过滤客户端显示的名字,去除数字及-符号
 function FilterShowName(sName: string): string;
 var
   i: Integer;
@@ -5382,7 +5384,7 @@ function sub_4B2F80(nDir, nRage: Integer): Byte;
 begin
   Result := (nDir + nRage) mod 8;
 end;
-
+//服务器变量 20080124
 function GetValNameNo(sText: string): Integer;
 var
   nValNo: Integer;
@@ -6503,7 +6505,7 @@ begin
   SaveList.Free;
   Result := True;
 end;
-
+//读取禁止登录人物列表
 function LoadDenyChrNameList(): Boolean;
 var
   i: Integer;
@@ -6549,7 +6551,7 @@ begin
     g_DenyChrNameList.UnLock;
   end;
 end;
-
+//保存禁止登录人物列表
 function SaveDenyChrNameList(): Boolean;
 var
   i: Integer;
