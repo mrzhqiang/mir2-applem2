@@ -10182,7 +10182,6 @@ object FormMain: TFormMain
     Height = 17
     BiDiMode = bdLeftToRight
     Caption = #30427#22823#30028#38754
-    Checked = True
     Color = clGradientActiveCaption
     Ctl3D = True
     Font.Charset = DEFAULT_CHARSET
@@ -10194,7 +10193,6 @@ object FormMain: TFormMain
     ParentColor = False
     ParentCtl3D = False
     ParentFont = False
-    State = cbChecked
     TabOrder = 12
     OnClick = Mir2VersionCheckBoxClick
   end
