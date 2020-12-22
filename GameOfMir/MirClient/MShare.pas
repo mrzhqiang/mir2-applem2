@@ -90,7 +90,7 @@ type
     CurTrain: Integer;
     dwInterval: LongWord;
     boUse: Boolean;
-    btEffIdx: Byte;
+    btEffIdx: Word;
     btKey: Byte;
     dwTime: LongWord;
     Def: TClientDefMagic;
@@ -783,7 +783,7 @@ var
   g_boCanLongHit: Boolean;
   g_boCanWideHit: Boolean;
   g_boCanCrsHit: Boolean;
-  g_boCanTwnHit: Boolean;
+  g_boCanTwnHit: Boolean; //重击开天斩
   g_boCanStnHit: Boolean;
   g_boCan110Hit: Boolean;
   g_boCan111Hit: Boolean;
@@ -936,7 +936,7 @@ uses FState, ClMain, Math, HUtil32, EDcodeEx, ClFunc, Clipbrd, Registry, jpeg, G
 
 procedure SetMagicUse(nMagId: Word);
 begin
-  if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+  if (nMagId > 0) and (nMagId < SKILL_MAX) then begin
     g_MyMagicArry[nMagId].dwInterval := GetTickCount + g_MyMagicArry[nMagId].Def.Magic.nInterval;
     g_MyMagicArry[nMagId].boUse := True;
     g_MyMagicArry[nMagId].btEffidx := 0;
@@ -1623,7 +1623,7 @@ end;
 function GetMagicInfo(wMagID: Word): TClientDefMagic;
 begin
   SafeFillChar(Result, SizeOf(TClientDefMagic), #0);
-  if wMagID in [Low(g_MagicArry)..High(g_MagicArry)] then
+  if (wMagID > 0) and (wMagID < SKILL_MAX) then
     Result := g_MagicArry[wMagID];
 end;
 
@@ -1663,7 +1663,7 @@ begin
         FreeMem(StrBuff);
       end;
       ClientMagic.Magic.MagicMode := GetMagicType(ClientMagic.Magic.wMagicId);
-      if ClientMagic.Magic.wMagicId in [Low(g_MagicArry)..High(g_MagicArry)] then
+      if (ClientMagic.Magic.wMagicId > 0) and (ClientMagic.Magic.wMagicId < SKILL_MAX) then
         g_MagicArry[ClientMagic.Magic.wMagicId] := ClientMagic^;
       SafeFillChar(Buff^, ReadLen + 1, #0);
     end;
@@ -4502,7 +4502,7 @@ begin
 end;
    {
 
-   nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) +
+   nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) +
       LoWord(PlayObject.m_WAbil.MC),
       SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) +
         1);
@@ -4520,7 +4520,7 @@ end;}
 
 function GetSpellPower(Magic: pTNewClientMagic): string;
 var
-  nMinPower, nMaxPower: Integer;
+  nMinPower, nMaxPower, nRate: Integer;
 begin
   nMinPower := Round(Magic.Def.Magic.wPower / (Magic.Def.Magic.btTrainLv + 1) * (Magic.Level + 1)) +
     Magic.Def.Magic.btDefPower;
@@ -4528,6 +4528,26 @@ begin
     (Magic.Def.Magic.btTrainLv + 1) * (Magic.Level + 1)) +
     (Magic.Def.Magic.btDefPower + (Magic.Def.Magic.btDefMaxPower - Magic.Def.Magic.btDefPower));
   Result := IntToStr(nMinPower) + '-' + IntToStr(nMaxPower);
+  if Magic.Def.Magic.btTrainLv = 9 then
+  begin
+    nRate := Round(Magic.Def.Magic.wPower / (Magic.Def.Magic.btTrainLv + 1) * (Magic.Level + 1));
+    Result := IntToStr(Round(Magic.Def.Magic.btDefPower * (1+nRate/100))) + '-'
+              + IntToStr(Round(Magic.Def.Magic.btDefMaxPower * (1+nRate/100)))
+              + ' <[+' + IntToStr(nRate)+'%]/FCOLOR=$00FF00>';
+  end;
+  if Magic.Def.Magic.btTrainLv = 20 then
+  begin
+    if Magic.Def.Magic.btDefPower = 0 then
+    begin
+      nRate := ROUND(Magic.Def.Magic.btDefMaxPower * (Magic.Level));
+      Result := IntToStr(Round(Magic.Def.Magic.wPower * (1+nRate/100))) + '-'
+                + IntToStr(Round(Magic.Def.Magic.wMaxPower * (1+nRate/100)))
+                + ' <[+' + IntToStr(nRate)+'%]/FCOLOR=$00FF00>';
+    end
+    else begin
+      Result := '人物伤害 <+' + IntToStr(Max(0, Magic.Def.Magic.btDefMaxPower * (Magic.Level+1))) + '%/FCOLOR=$00FF00>';
+    end;
+  end;
 end;
 
 function ShowMagicInfo(PMagic: pTNewClientMagic): string;
@@ -4548,8 +4568,8 @@ begin
   CMagic := PMagic^;
   DMagic := CMagic.Def;
   Magic := DMagic.Magic;
-  nMagID := Magic.wMagicId;
-  if CMagic.Level > 3 then CMagic.Level := 3;
+  nMagID := Magic.wMagicId mod 1000;
+  if CMagic.Level > Magic.btTrainLv then CMagic.Level := Magic.btTrainLv;
   ShowString := '<' + Magic.sMagicName + '/FCOLOR=' + ITEMNAMECOLOR + '>\ \';
   if nMagID = 100 then begin
       if Magic.nInterval > 0 then begin
@@ -4566,7 +4586,7 @@ begin
     ShowString := ShowString + '当前技能等级: ';
     if CMagic.boStudy then begin
       ShowString := ShowString + IntToStr(CMagic.Level) + '\';
-      if CMagic.Level < 3 then
+      if (Magic.btTrainLv <=9) and (CMagic.Level < Magic.btTrainLv) then
         ShowString := ShowString + '当前技能修为: ' + IntToStr(CMagic.CurTrain) + '\';
     end else begin
       ShowString := ShowString + '未修练\';
@@ -4632,7 +4652,7 @@ begin
           ShowString := ShowString + '<消耗魔法: /FCOLOR=' + ADDVALUECOLOR + '>' + IntToStr(GetSpellPoint(@CMagic)) + '\';
           ShowString := ShowString + '<技能伤害: /FCOLOR=' + ADDVALUECOLOR + '>' + GetSpellPower(@CMagic) +'\';
         end;
-        if CMagic.Level < 3 then begin
+        if CMagic.Level < Magic.btTrainLv then begin
           Inc(CMagic.Level);
           ShowString := ShowString + ' \<下一等级属性/FCOLOR=' + ADDVALUECOLOR2 + '>\';
           ShowString := ShowString + '<消耗魔法: /FCOLOR=' + ADDVALUECOLOR + '>' + IntToStr(GetSpellPoint(@CMagic)) + '\';
@@ -4645,7 +4665,7 @@ begin
           ShowString := ShowString + ' \<当前等级属性/FCOLOR=' + ADDVALUECOLOR2 + '>\';
           ShowString := ShowString + '<消耗魔法: /FCOLOR=' + ADDVALUECOLOR + '>' + IntToStr(GetSpellPoint(@CMagic)) + '\';
         end;
-        if CMagic.Level < 3 then begin
+        if CMagic.Level < Magic.btTrainLv then begin
           Inc(CMagic.Level);
           ShowString := ShowString + ' \<下一等级属性/FCOLOR=' + ADDVALUECOLOR2 + '>\';
           ShowString := ShowString + '<消耗魔法: /FCOLOR=' + ADDVALUECOLOR + '>' + IntToStr(GetSpellPoint(@CMagic)) + '\';
@@ -4654,7 +4674,7 @@ begin
       end;
     end;
 
-    if CMagic.Level < 3 then begin
+    if (Magic.btTrainLv <= 9) and (CMagic.Level < Magic.btTrainLv) then begin
       if CMagic.boStudy then begin
         ShowString := ShowString + ' \<升级技能要求/FCOLOR=' + ADDVALUECOLOR2 + '>\';
         ShowString := ShowString + '<需要人物等级: /FCOLOR=' + ADDVALUECOLOR + '>' +

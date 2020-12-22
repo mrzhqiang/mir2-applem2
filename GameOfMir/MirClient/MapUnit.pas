@@ -1,5 +1,19 @@
 unit MapUnit;
-
+//地图单元
+{ MAP文件结构
+    文件头：52字节
+    第一行第一列定义
+    第二行第一列定义
+    第三行第一列定义
+    。
+    。
+    。
+    第Width行第一列定义
+    第一行第二列定义
+    。
+    。
+    。
+}
 interface
 
 uses
@@ -66,15 +80,15 @@ begin
   m_ClientRect := Rect(0, 0, 0, 0);
   m_boChange := FALSE;
   //m_sMapBase := '.\Map\';
-  m_sCurrentMap := '';
+  m_sCurrentMap := '';//当前地图文件名（不含.MAP）
   m_boSegmented := FALSE;
   m_nSegXCount := 0;
   m_nSegYCount := 0;
-  m_nCurUnitX := -1;
+  m_nCurUnitX := -1;//当前单元位置X、Y
   m_nCurUnitY := -1;
-  m_nBlockLeft := -1;
+  m_nBlockLeft := -1;//当前块X,Y左上角
   m_nBlockTop := -1;
-  m_sOldMap := '';
+  m_sOldMap := '';//前一个地图文件名（在换地图的时候用）
   m_boNewMap := False;
 end;
 
@@ -82,7 +96,7 @@ destructor TMap.Destroy;
 begin
   inherited Destroy;
 end;
-
+//读MAP文件的宽度和高度
 {function TMap.LoadMapInfo(sMapFile: string; var nWidth, nHeight: Integer): Boolean;
 var
   sFileName: string;
@@ -188,7 +202,7 @@ begin
   m_nCurUnitY := -1;
 end;
 
-//cx, cy: 吝居, Counted by unit..
+//cx, cy: 位置, 以LOGICALMAPUNIT为单位
 
 procedure TMap.UpdateMapSquare(cx, cy: Integer);
 begin
@@ -204,13 +218,13 @@ end;
 
 //林某腐捞 捞悼矫 后锅捞 龋免..
 
-procedure TMap.UpdateMapPos(mx, my: Integer);
+procedure TMap.UpdateMapPos(mx, my: Integer);//mx,my象素坐标
 var
-  cx, cy: Integer;
+  cx, cy: Integer; //地图的逻辑坐标
 begin
-  cx := mx div LOGICALMAPUNIT;
+  cx := mx div LOGICALMAPUNIT; //折算成逻辑坐标
   cy := my div LOGICALMAPUNIT;
-  m_nBlockLeft := _MAX(0, (cx - 1) * LOGICALMAPUNIT);
+  m_nBlockLeft := _MAX(0, (cx - 1) * LOGICALMAPUNIT);//象素坐标
   m_nBlockTop := _MAX(0, (cy - 1) * LOGICALMAPUNIT);
 
   UpdateMapSquare(cx, cy);
@@ -230,7 +244,7 @@ begin
   UpdateMapPos(nMx, nMy);
   m_sOldMap := m_sCurrentMap;
 end;
-
+//置前景是否可以行走
 procedure TMap.MarkCanWalk(mx, my: Integer; bowalk: Boolean);
 var
   cx, cy: Integer;
@@ -238,12 +252,13 @@ begin
   cx := mx - m_nBlockLeft;
   cy := my - m_nBlockTop;
   if (cx < 0) or (cy < 0) or (cx > MAXX * 3) or (cy > MAXY * 3) then Exit;
-  if bowalk then
+  if bowalk then//该坐标可以行走，则MArr[cx,cy]的值最高位为0
     Map.m_MArr[cx, cy].wFrImg := Map.m_MArr[cx, cy].wFrImg and $7FFF
-  else
+  else //不可以行走的，最高位为1
     Map.m_MArr[cx, cy].wFrImg := Map.m_MArr[cx, cy].wFrImg or $8000;
 end;
 
+//若前景和背景都可以走，则返回真
 function TMap.CanMove(mx, my: Integer): Boolean;
 var
   cx, cy: Integer;
@@ -252,7 +267,7 @@ begin
   cx := mx - m_nBlockLeft;
   cy := my - m_nBlockTop;
   if (cx < 0) or (cy < 0) or (cx > MAXX * 3) or (cy > MAXY * 3) then
-    Exit;
+    Exit;//前景和背景都可以走（最高位为0）
   Result := ((Map.m_MArr[cx, cy].wBkImg and $8000) + (Map.m_MArr[cx, cy].wFrImg and $8000)) = 0;
   if Result then begin //巩八荤
     if Map.m_MArr[cx, cy].btDoorIndex and $80 > 0 then begin //巩娄捞 乐澜
@@ -262,6 +277,7 @@ begin
   end;
 end;
 
+//若前景可以走，则返回真。
 function TMap.CanFly(mx, my: Integer): Boolean;
 var
   cx, cy: Integer;
@@ -280,6 +296,7 @@ begin
   end;
 end;
 
+//获得指定坐标的门的索引号
 function TMap.GetDoor(mx, my: Integer): Integer;
 var
   cx, cy: Integer;
@@ -289,11 +306,12 @@ begin
   cy := my - m_nBlockTop;
   if (cx < 0) or (cy < 0) or (cx > MAXX * 3) or (cy > MAXY * 3) then
     Exit;
-  if Map.m_MArr[cx, cy].btDoorIndex and $80 > 0 then begin
-    Result := Map.m_MArr[cx, cy].btDoorIndex and $7F;
+  if Map.m_MArr[cx, cy].btDoorIndex and $80 > 0 then begin//是门
+    Result := Map.m_MArr[cx, cy].btDoorIndex and $7F;  //门的索引在低7位
   end;
 end;
 
+//判断门是否打开
 function TMap.IsDoorOpen(mx, my: Integer): Boolean;
 var
   cx, cy: Integer;
@@ -303,11 +321,12 @@ begin
   cy := my - m_nBlockTop;
   if (cx < 0) or (cy < 0) or (cx > MAXX * 3) or (cy > MAXY * 3) then
     Exit;
-  if Map.m_MArr[cx, cy].btDoorIndex and $80 > 0 then begin
+  if Map.m_MArr[cx, cy].btDoorIndex and $80 > 0 then begin//是门
     Result := (Map.m_MArr[cx, cy].btDoorOffset and $80 <> 0);
   end;
 end;
 
+//打开门
 function TMap.OpenDoor(mx, my: Integer): Boolean;
 var
   i, j, cx, cy, idx: Integer;

@@ -6,12 +6,14 @@ uses
   Windows, Classes, HGETextures, Grobal2, CliUtil, MShare;
 
 const
-  ZOMBIDIGUPDUSTBASE = 420;
-  STONEFRAGMENTBASE = 64;
-  HOLYCURTAINBASE = 1390;
+   ZOMBIDIGUPDUSTBASE = 420;//石墓尸王从土中钻出来(的事件event),,这里是图片帧，存在于
+   //mon6.wil中从第420开始的地图效果
+   STONEFRAGMENTBASE = 64;//Effect.wil中,,,挖矿时会有二个地图效果，1，尘土飞扬，不在地面堆积
+   //2,,碎石坠落，，在地面产生变化就像ZOMBIDIGUPDUSTBASE,,
+   HOLYCURTAINBASE = 1390; //Magic.wil,,困魔咒的地面效果
   SHOPBASE = 328;
-  FIREBURNBASE = 1630;
-  SCULPTUREFRAGMENT = 1349;
+   FIREBURNBASE = 1630;//火墙的地面效果
+   SCULPTUREFRAGMENT = 1349;//mon7.wil中祖玛教主被激活
 type
   TClEvent = class
     m_nX: Integer;

@@ -24,7 +24,7 @@ const
   FLYFORSEC = 500;
   FIREGUNFRAME = 6;
 
-  MAXEFFECT = 59;
+  MAXEFFECT = 59;//最大效果魔法效果图数
   {
   EffectBase: array[0..MAXEFFECT-1] of integer = (
      0,             //0  拳堪厘
@@ -134,8 +134,8 @@ const
   );
   }
   HitEffectBase: array[0..MAXHITEFFECT - 1] of integer = (
-    800,
-    1410,
+    800,{1} //好攻杀
+    1410,{2} //刺杀
     40,
     0,
     3390,
@@ -147,11 +147,11 @@ const
   MAXMAGICTYPE = 16;
 
 type
-  TMagicType = (mtReady, mtFly, mtExplosion,
-    mtFlyAxe, mtFireWind, mtFireGun,
-    mtLightingThunder, mtThunder, mtExploBujauk,
+  TMagicType {魔法类型} = (mtReady{准备}, mtFly{飞} , mtExplosion{爆发},
+    mtFlyAxe{飞斧}, mtFireWind{火风}, mtFireGun{火炮},
+    mtLightingThunder{照明雷}, mtThunder{雷1}, mtExploBujauk,
     mtBujaukGroundEffect, mtKyulKai, mtFlyArrow,
-    mt12, mt13, mt14,
+    mt12, mt13{怪物魔法}, mt14,
     mt15, mt16
     );
 
@@ -170,11 +170,11 @@ type
   PTUseMagicInfo = ^TUseMagicInfo;
 
   TMagicEff = class //Size 0xC8
-    m_boActive: Boolean; //0x04
+      m_boActive: Boolean;           //0x04 活动的
     ServerMagicId: integer; //0x08
     MagicId: Integer;
     MagOwner: TObject; //0x0C
-    TargetActor: TObject; //0x10
+      TargetActor: TObject;      //0x10 目标
     ImgLib: TWMImages; //0x14
     EffectBase: integer; //0x18
     MagExplosionBase: integer; //0x1C
@@ -186,8 +186,8 @@ type
     TargetRx, TargetRy: integer; //0x3C 0x40
     FlyX, FlyY, OldFlyX, OldFlyY: integer; //0x44 0x48 0x4C 0x50
     FlyXf, FlyYf: Real; //0x54 0x5C
-    Repetition: Boolean; //0x64
-    FixedEffect: Boolean; //0x65
+      Repetition: Boolean;       //0x64 //重复
+      FixedEffect: Boolean;      //0x65//固定结果
     NotFixed: Boolean;
     MagicType: integer; //0x68
     NextEffect: TMagicEff; //0x6C
@@ -197,9 +197,9 @@ type
     n7C: integer;
     bt80: byte;
     bt81: byte;
-    start: integer; //0x84
+      start: integer;        //0x84 //开始浈
     curframe: integer; //0x88
-    frame: integer; //0x8C
+      frame: integer;        //0x8C //有效帧
     m_nFlyParameter: Integer;
     m_boFlyBlend: Boolean;
     m_boExplosionBlend: Boolean;
@@ -367,16 +367,23 @@ implementation
 
 uses
   ClMain, Actor, SoundUtil, MShare, WMFile, HGEBase;
-
-//取得魔法效果所在图库
-
+{------------------------------------------------------------------------------}
+//取得魔法效果所在图库(20071028)
+//GetEffectBase(mag, mtype,wimg,idx)
+//参数：mag--即技能数据表中的Effect字段(魔法效果)，如劈星斩此处为61-1
+//      mtype--无实际意思的参数，此处 取值
+//      wimg--TWMImages类，即图片显示的地方
+//      idx---在对应的WIL文件 里，图片所处的位置
+//
+//***{EffectBase类：保存对应IDX的值对应WIL文件 图片的数值}***  例： idx := EffectBase[mag];
+{------------------------------------------------------------------------------}
 procedure GetEffectBase(mag, mtype: integer; var wimg: TWMImages; var idx:
   integer);
 begin
   wimg := nil;
   idx := 0;
   case mtype of
-    0: begin
+    0: begin //魔法效果
         case mag of
           27, 34..35, 37..39, 41..42, 43, 44, 45 {46}, 47, 54, 55, 56: begin
               wimg := g_WMagic2Images;
@@ -521,7 +528,7 @@ begin
           end;
         end;
       end;
-    1: begin
+    1: begin//攻击效果
         if mag in [0..MAXHITEFFECT - 1] then begin
           idx := HitEffectBase[mag];
         end;
@@ -594,7 +601,7 @@ begin
   MagicId := 0;
 
   case mtype of
-    mtFly, mtBujaukGroundEffect, mtExploBujauk: begin
+    mtFly, mtBujaukGroundEffect, mtExploBujauk: begin//里面有火球术
         start := 0;
         frame := 6;
         curframe := start;
@@ -854,7 +861,7 @@ function TMagicEff.Shift: Boolean;
 var
   ms, stepx, stepy: integer;
   tax, tay, shx, shy, passdir16: integer;
-  crash: Boolean;
+  crash: Boolean;//碰撞
   stepxf, stepyf: Real;
 begin
   Result := True;
@@ -878,7 +885,7 @@ begin
     end;
   end;
 
-  if (not FixedEffect) then begin
+  if (not FixedEffect) then begin//如果为不固定的结果
 
     crash := False;
     if TargetActor <> nil then begin
@@ -985,7 +992,7 @@ begin
     //if not Map.CanFly (Rx, Ry) then
     //   Result := FALSE;
   end;
-  if FixedEffect then begin
+  if FixedEffect then begin//固定结果
     if frame = -1 then
       frame := ExplosionFrame;
     if TargetActor = nil then begin
@@ -1025,7 +1032,12 @@ begin
     else
       Result := True;
 end;
-
+{------------------------------------------------------------------------------}
+//此过程显示魔法技能飘移过程(20071031)
+//DrawEff (surface: TDirectDrawSurface);
+//
+//***EffectBase：为EffectBase数组里的数***
+{------------------------------------------------------------------------------}
 procedure TMagicEff.DrawEff(surface: TDirectDrawSurface);
 var
   img: integer;
@@ -1038,7 +1050,7 @@ begin
     shy := (g_Myself.m_nRy * UNITY + g_Myself.m_nShiftY) - FireMyselfY;
 
     if not FixedEffect then begin
-      //朝酒啊绰芭
+      //与方向有关的魔法效果
       if NotFixed then img := EffectBase
       else img := EffectBase + FLYBASE + Dir16 * 10;
       d := ImgLib.GetCachedImage(img + curframe, px, py);
@@ -1048,7 +1060,7 @@ begin
       end;
     end
     else begin
-      //磐瘤绰芭
+     //与方向无关的魔法效果（例如爆炸）
       if MagExplosionDir then img := MagExplosionBase + curframe + Dir16 * 10
       else img := MagExplosionBase + curframe; //EXPLOSIONBASE;
       d := ImgLib.GetCachedImage(img, px, py);
@@ -1528,7 +1540,7 @@ begin
     if ((abs(TargetX - FlyX) <= 15) and (abs(TargetY - FlyY) <= 15)) or
       ((abs(TargetX - FlyX) >= prevdisx) and (abs(TargetY - FlyY) >= prevdisy))
         then begin
-      FixedEffect := True; //气惯
+      FixedEffect := True;  //固定结果
       start := 0;
       frame := ExplosionFrame;
       curframe := start;

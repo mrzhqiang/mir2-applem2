@@ -511,7 +511,7 @@ begin
   begin
     if (FrmDlg3.DDAPMagicList.ItemIndex >= 0) and (FrmDlg3.DDAPMagicList.ItemIndex < FrmDlg3.DDAPMagicList.Item.Count) then
       nMagicID := Integer(FrmDlg3.DDAPMagicList.Item.Objects[FrmDlg3.DDAPMagicList.ItemIndex]);
-    Result := (nMagicID >= Low(g_MyMagicArry)) and (nMagicID <= High(g_MyMagicArry));
+    Result := (nMagicID > 0) and (nMagicID < SKILL_MAX);
   end;
 end;
 
@@ -547,7 +547,7 @@ begin
         if {(GetRangeTargetCount(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 4) > 1) and }(FrmDlg3.DDAPMagicList.ItemIndex >= 0) and (FrmDlg3.DDAPMagicList.ItemIndex < FrmDlg3.DDAPMagicList.Item.Count) then
           nMagicID := Integer(FrmDlg3.DDAPMagicList.Item.Objects[FrmDlg3.DDAPMagicList.ItemIndex]);
 
-        if (nMagicID >= Low(g_MyMagicArry)) and (nMagicID <= High(g_MyMagicArry)) and g_MyMagicArry[nMagicID].boStudy then
+        if (nMagicID > 0) and (nMagicID < SKILL_MAX) and g_MyMagicArry[nMagicID].boStudy then
         begin
           g_TargetCret := nil;
           g_FocusCret := m_TargetCret;

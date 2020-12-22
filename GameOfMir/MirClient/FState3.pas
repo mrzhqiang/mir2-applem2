@@ -2178,7 +2178,7 @@ end;
 procedure TFrmDlg3.DDMCXChange(Sender: TObject);
 begin
   with Sender as TDCheckBox do begin
-    if (Tag in [Low(g_MyMagicArry)..High(g_MyMagicArry)]) and g_MyMagicArry[Tag].boStudy then begin
+    if (Tag > 0) and (Tag < SKILL_MAX) and (g_MyMagicArry[Tag].boStudy) then begin
     end else
       Checked := False;
   end;
@@ -2389,7 +2389,7 @@ begin
       end;
       if g_SetupInfo.nAutoMagicIndex = g_MyMagicArry[I].Def.Magic.wMagicId then
         DDMMagicList.ItemIndex := DDMMagicList.Item.Count - 1;
-      if (nMagicID >= Low(g_MyMagicArry)) and (nMagicID = g_MyMagicArry[I].Def.Magic.wMagicId) then
+      if (nMagicID > 0) and (nMagicID < SKILL_MAX) and (nMagicID = g_MyMagicArry[I].Def.Magic.wMagicId) then
         DDAPMagicList.ItemIndex := DDAPMagicList.Item.Count - 1;
     end;
 

@@ -99,7 +99,7 @@ uses
 
 var
   ChrBuff: PChar;
-
+//格式化字符串为指定长度（后面添空格）
 function fmStr(str: string; len: integer): string;
 var
   i: integer;
@@ -112,7 +112,8 @@ begin
     Result := str + ' ';
   end;
 end;
-
+//整数转换为千位带逗号的字符串，例如1234567转换为“1,234,567”
+//这里用于显示金钱数量
 function GetGoldStr(gold: integer): string;
 var
   i, n: integer;
@@ -133,6 +134,7 @@ begin
   end;
 end;
 
+//清除物品
 procedure ClearBag;
 begin
   SafeFillChar(g_ItemArr, SizeOf(g_ItemArr), #0);
@@ -690,7 +692,7 @@ procedure ArrangeItemBag;
 var
   i, k: integer;
 begin
-  //吝汗等 酒捞袍捞 乐栏搁 绝矩促.
+   //整理背包物品
   for i := Low(g_ItemArr) to High(g_ItemArr) do begin
     if g_ItemArr[i].S.Name <> '' then begin
       for k := i + 1 to High(g_ItemArr) do begin
@@ -710,7 +712,7 @@ begin
 end;
 
 {----------------------------------------------------------}
-
+//添加跌落物品
 procedure AddDropItem(ci: TNewClientItem);
 var
   pc: PTNewClientItem;
@@ -719,7 +721,7 @@ begin
   pc^ := ci;
   DropItems.Add(pc);
 end;
-
+//获取跌落物品
 function GetDropItem(MakeIndex: integer): PTNewClientItem;
 var
   i: integer;
@@ -733,7 +735,7 @@ begin
     end;
   end;
 end;
-
+//删除跌落物品
 procedure DelDropItem(MakeIndex: integer);
 var
   i: integer;
@@ -811,12 +813,12 @@ begin
 end;
 
 {----------------------------------------------------------}
-
+//计算两点间的距离（X或Y方向）
 function GetDistance(sx, sy, dx, dy: integer): integer;
 begin
   Result := _MAX(abs(sx - dx), abs(sy - dy));
 end;
-
+//根据方向和当前位置确定下一个位置坐标(位移量=1）
 //检查是否在同一直线上
 
 function CheckBeeline(nX, nY, sX, sY: Integer): Boolean;
@@ -868,6 +870,7 @@ begin
   end;
 end;
 
+//根据方向和当前位置确定下一个位置坐标(位移量=2）
 procedure GetNextRunXY(dir: byte; var x, y: Integer);
 begin
   case dir of
@@ -944,6 +947,7 @@ begin
   end;
 end;
 
+//根据两点计算移动的方向
 function GetNextDirection(sx, sy, dx, dy: Integer): byte;
 var
   flagx, flagy: integer;
@@ -986,7 +990,7 @@ begin
   if (flagx = -1) and (flagy = -1) then
     Result := DR_UPLEFT;
 end;
-
+//根据当前方向获得转身后的方向
 function GetBack(dir: integer): integer;
 begin
   Result := DR_UP;
@@ -1001,7 +1005,7 @@ begin
     DR_DOWNRIGHT: Result := DR_UPLEFT;
   end;
 end;
-
+//根据当前坐标和方向获得后退的坐标
 procedure GetBackPosition(sx, sy, dir: integer; var newx, newy: integer);
 begin
   newx := sx;
@@ -1029,7 +1033,7 @@ begin
       end;
   end;
 end;
-
+//根据当前位置和方向获得前进一步的坐标
 procedure GetFrontPosition(sx, sy, dir: integer; var newx, newy: integer);
 begin
   newx := sx;
@@ -1057,7 +1061,7 @@ begin
       end;
   end;
 end;
-
+//根据两点位置获得飞行方向（8个方向）
 function GetFlyDirection(sx, sy, ttx, tty: integer): Integer;
 var
   fx, fy: Real;
@@ -1067,14 +1071,14 @@ begin
   //   sx := 0;
   //   sy := 0;
   Result := DR_DOWN;
-  if fx = 0 then begin
+  if fx = 0 then begin//两点的X坐标相等
     if fy < 0 then
       Result := DR_UP
     else
       Result := DR_DOWN;
     exit;
   end;
-  if fy = 0 then begin
+  if fy = 0 then begin  //两点的Y坐标相等
     if fx < 0 then
       Result := DR_LEFT
     else
@@ -1114,7 +1118,7 @@ begin
       Result := DR_UPLEFT;
   end;
 end;
-
+//根据两点位置获得飞行方向(16个方向)
 function GetFlyDirection16(sx, sy, ttx, tty: integer): Integer;
 var
   fx, fy: Real;
@@ -1183,7 +1187,7 @@ begin
       Result := 0;
   end;
 end;
-
+//按逆时针转动一个方向后的方向
 function PrivDir(ndir: integer): integer;
 begin
   if ndir - 1 < 0 then
@@ -1191,7 +1195,7 @@ begin
   else
     Result := ndir - 1;
 end;
-
+//按顺时针转动一个方向后的方向
 function NextDir(ndir: integer): integer;
 begin
   if ndir + 1 > 7 then
@@ -1242,6 +1246,7 @@ begin
   end;
 end;     }
 
+//判断某个键是否按下
 function IsKeyPressed(key: byte): Boolean;
 var
   keyvalue: TKeyBoardState;

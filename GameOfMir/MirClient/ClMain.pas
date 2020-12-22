@@ -4,16 +4,16 @@ interface
 
 uses
   Windows, Messages, SysUtils, StrUtils, Classes, Graphics, Controls, Forms, Dialogs, GMManage,
-  JSocket, ExtCtrls, DrawScrn, HGEGUI, HGETextures, Imm, DES, HGE, HGESounds, DirectX,   
+  JSocket, ExtCtrls, DrawScrn, HGEGUI, HGETextures, Imm, DES, HGE, HGESounds, DirectX,
   IntroScn, PlayScn, MapUnit, WIL, Grobal2, HGEFonts, DirectXGraphics, D3DX81mo,
   Actor, CliUtil, HUtil32, EDcodeEx, LShare,
-  ClFunc, magiceff, SoundUtil, clEvent, Bass, DateUtils, 
+  ClFunc, magiceff, SoundUtil, clEvent, Bass, DateUtils,
   MShare, Share, jpeg, HGECanvas, RSA, SDK;
 
 const
   //  BO_FOR_TEST = FALSE;
 //  EnglishVersion = True; //TRUE;
-  
+
   BoNeedPatch = True;
 
   //NEARESTPALETTEINDEXFILE = 'Data\npal.idx';
@@ -594,7 +594,7 @@ begin
 
   boBITDEPTH := False;
   REGPathStr := '';
-  
+
   MODULE := LoadLibrary('user32.dll');
   Reg := TRegistry.Create;
   ini := TIniFile.Create('.\mir2.ini');
@@ -708,7 +708,7 @@ begin
   FboShowLogo := False;
   FnShowLogoIndex := 0;
   FdwShowLogoTick := GetTickCount;
-  
+
   FrmWeb := TFrmWeb.Create(Self);
   FrmWeb.Left := 5;
   FrmWeb.Top := 39;
@@ -772,7 +772,7 @@ begin
   g_dwDefTime := GetTickCount;
   g_EMailList := TQuickStringPointerList.Create;
 
-  
+
   //g_GetSayItemList := TList.Create;
   {ini := TIniFile.Create('.\mir2.ini');
   if ini <> nil then begin
@@ -1307,7 +1307,7 @@ begin
   g_MapEffectList.Free;
   for I := 0 to g_SetItemsList.Count - 1 do
     Dispose(pTSetItems(g_SetItemsList[I]));
-    
+
   for i := 0 to g_CompoundInfoList.Count - 1 do
     Dispose(pTCompoundInfos(g_CompoundInfoList.Objects[i]));
   FreeAndNil(g_CompoundInfoList);
@@ -1436,7 +1436,7 @@ begin
     g_boFullScreen := boFull;
     if g_boFullScreen then begin
       DisplayChange(False);
-      
+
       BorderStyle := bsNone;
       BorderIcons := [];
 
@@ -1510,7 +1510,7 @@ begin
         //DebugOutStr('DeviceRecovered');
       end;
     msgDeviceRestoreSize: begin
-        ClientWidth := HGE.System_GetState(HGE_FScreenWidth); 
+        ClientWidth := HGE.System_GetState(HGE_FScreenWidth);
         ClientHeight := HGE.System_GetState(HGE_FScreenHeight);
         if g_boFullScreen then begin
           if FIDDraw <> nil then begin
@@ -1763,7 +1763,7 @@ begin
         Reg.RootKey := HKEY_LOCAL_MACHINE;
         case VersionInfo.dwPlatformId of
           VER_PLATFORM_WIN32s: begin
-          
+
           end;
           VER_PLATFORM_WIN32_WINDOWS: begin
             if Reg.OpenKey('SOFTWARE\Microsoft\Windows\CurrentVersion', False) then begin
@@ -1826,7 +1826,7 @@ begin
       ErrorMsg := ErrorMsg + '请使用 Ctrl + V 粘贴以上信息发送给游戏管理员        ';
       //Visible := False;
       Application.MessageBox(PCHar(ErrorMsg), '游戏初始化失败', MB_OK + MB_ICONSTOP);
-      close;     
+      close;
       HGE.System_Shutdown;
       Exit;
     end;
@@ -2052,7 +2052,7 @@ begin
     end;
   end
   else
-    RefInitialize(LOGINBAGIMGINDEX, 60, g_nInitializePer);       
+    RefInitialize(LOGINBAGIMGINDEX, 60, g_nInitializePer);
 end;
 
 procedure TfrmMain.AppOnIdle(boInitialize: Boolean = False);
@@ -2154,7 +2154,7 @@ begin
   g_boQueryExit := True;
   try
     if mrOk = FrmDlg.DMessageDlg('你是否要退出游戏，切换到选择人物界面?', [mbOk, mbCancel]) then begin
-      
+
       //SendGameSetupInfo;
       SendClientMessage(CM_SOFTCLOSE, 0, 0, 0, 0);
       ResetGameVariables;
@@ -2447,7 +2447,7 @@ begin
     if (g_UserKeySetup[nKey].btType = UKTYPE_MAGIC) and (g_MySelf.m_btHorse = 0) then begin
       if ((GetTickCount - g_dwLatestSpellTick) > g_dwMagicDelayTime) then begin
         nMagID := g_UserKeySetup[nKey].wIndex;
-        if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+        if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
           if g_MyMagicArry[nMagID].boStudy and (not g_MyMagicArry[nMagID].boNotUse) then begin
             if (GetTickCount > g_MyMagicArry[nMagID].dwInterval) then begin
               UseMagic(g_nMouseX, g_nMouseY, @g_MyMagicArry[nMagID]); //胶农赴 谅钎
@@ -2483,7 +2483,7 @@ begin
     nKey := -ActionKey;
     if (nKey > 0) and ((GetTickCount - g_dwLatestSpellTick) > g_dwMagicDelayTime) then begin
       nMagID := GetMagIDByKey(nKey);
-      if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+      if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
         if g_MyMagicArry[nMagID].boStudy and (not g_MyMagicArry[nMagID].boNotUse) then begin
           if (GetTickCount > g_MyMagicArry[nMagID].dwInterval) then begin
             UseMagic(g_nMouseX, g_nMouseY, @g_MyMagicArry[nMagID]); //胶农赴 谅钎
@@ -2758,6 +2758,7 @@ begin
     if not CanNextAction then exit;
     DScreen.AddSysMsg('2 ' + IntToStr(GetTickCount - g_dwLastAttackTick), clWhite);  }
     if CanNextAction and ServerAcceptNextAction then begin
+      //需要更新坐标位置
       if (g_nTargetX <> g_MySelf.m_nCurrX) or (g_nTargetY <> g_MySelf.m_nCurrY) then begin
         //   TTTT:
         mx := g_MySelf.m_nCurrX;
@@ -2765,6 +2766,7 @@ begin
         dx := g_nTargetX;
         dy := g_nTargetY;
         ndir := GetNextDirection(mx, my, dx, dy);
+         //当前动作
         case g_ChrAction of
           caWalk: begin
               LB_WALK:
@@ -2852,7 +2854,7 @@ begin
                       g_MySelf.UpdateMsg(CM_RUN, mx, my, ndir, 0, 0, '', 0);
                       g_dwLastMoveTick := GetTickCount;
                     end
-                    else begin
+                    else begin//如果跑失败则跳回去走
                       goto LB_WALK;
                     end;
                   end
@@ -2912,7 +2914,7 @@ begin
         g_MySelf.RealActionMsg.dir);
     g_MySelf.RealActionMsg.ident := 0;
 
-    //皋春甫 罐篮饶 10惯磊惫 捞惑 吧栏搁 磊悼栏肺 荤扼咙
+      //玩家离NPC远了 关闭NPC窗口
     if g_nMDlgX <> -1 then
       if (abs(g_nMDlgX - g_MySelf.m_nCurrX) >= 8) or (abs(g_nMDlgY - g_MySelf.m_nCurrY) >= 8) then begin
         //if FrmDlg.DMerchantDlg.Visible then
@@ -3074,6 +3076,7 @@ begin
 
   if (g_TopDWindow <> nil) and (g_TopDWindow.Visible) then begin
     g_TopDWindow.KeyPress(Key);
+         //若聊天信息输入框可见，则不处理，而由系统自动处理(作为输入信息)
     Exit;
   end;
   //ShowMessage(IntToStr(Byte(key)));
@@ -3201,7 +3204,7 @@ begin
           //if ((GetTickCount - g_dwLatestSpellTick) > g_dwMagicDelayTime) then begin
           ActionKey := 12;
           //end;
-        end;  
+        end;
 {$IFEND}
 
     end;
@@ -3496,7 +3499,7 @@ begin
 {$IF Var_Interface = Var_Mir2}
       tdir := GetFlyDirection(364 + ((g_FScreenWidth - DEFSCREENWIDTH) div 2), 224 + ((g_FScreenHeight - DEFSCREENHEIGHT) div 2 + 12), tx, ty);
 {$ELSE}
-      tdir := GetFlyDirection(364 + ((g_FScreenWidth - DEFSCREENWIDTH) div 2), 288 + ((g_FScreenHeight - DEFSCREENHEIGHT) div 2 + 12), tx, ty);  
+      tdir := GetFlyDirection(364 + ((g_FScreenWidth - DEFSCREENWIDTH) div 2), 288 + ((g_FScreenHeight - DEFSCREENHEIGHT) div 2 + 12), tx, ty);
 {$IFEND}
 
       //     MagicTarget := FocusCret;
@@ -3624,7 +3627,7 @@ begin
         pmag.ServerMagicCode := 0;
         //pmag.nFrame := pcm.def.magic.nSpellFrame;
 
-        g_dwMagicDelayTime := 500 + pcm.Def.Magic.dwDelayTime;
+        g_dwMagicDelayTime := 500 + pcm.Def.Magic.dwDelayTime;//魔法延迟时间
         //g_dwMagicDelayTime := 0;
 
         case pmag.MagicSerial of
@@ -3633,12 +3636,12 @@ begin
           g_dwLatestMagicTick := GetTickCount;
         end;
 
-        //荤恩阑 傍拜窍绰 版快狼 掉饭捞
+            //PK时使用魔法
         g_dwMagicPKDelayTime := 0;
         if g_MagicTarget <> nil then
           if g_MagicTarget.m_btRace = 0 then
             g_dwMagicPKDelayTime := 300 + Random(1100);
-        //(600+200 + MagicDelayTime div 5);
+            // 特别注意：Integer(pmag),该值将保存到 msg.feature,仅当actor=myself时
         if pmag.MagicSerial = 123 then
           tdir := g_MySelf.m_btDir;
 
@@ -4252,7 +4255,7 @@ begin
       end;
     end;
     //摆摊不允许操作左键
-    if (ssLeft in Shift) {Button = mbLeft} and (not g_MySelf.m_boShop) then begin
+    if (ssLeft in Shift) {Button = mbLeft} and (not g_MySelf.m_boShop) then begin//鼠标左键
       target := PlayScene.GetAttackFocusCharacter(X, Y, g_nDupSelection, sel, True); //混酒乐绰 仇父..
       if g_CursorMode = cr_Deal then begin
         if target <> nil then begin
@@ -4301,11 +4304,11 @@ begin
         g_nTargetX := -1;
       end
       else begin
-        if (target <> nil) or (ssShift in Shift) then begin
+        if (target <> nil) or (ssShift in Shift) then begin //对象不为nil 或 Shift+左键
           g_nTargetX := -1;
           if target <> nil then begin
             if GetTickCount - g_dwLastMoveTick > 1000 then begin
-              if (target.m_btRaceServer = RC_NPC) and (GetTickCount - g_dwClickNpcTick > 500) then begin
+              if (target.m_btRaceServer = RC_NPC) and (GetTickCount - g_dwClickNpcTick > 500) then begin//点的目标商人
                 g_dwClickNpcTick := GetTickCount;
                 SendClientMessage(CM_CLICKNPC, target.m_nRecogId, 0, 0, 0);
                 target.Click;
@@ -4337,7 +4340,7 @@ begin
               tdir := GetNextDirection(g_MySelf.m_nCurrX, g_MySelf.m_nCurrY, g_nMouseCurrX, g_nMouseCurrY);
               if CanNextAction and ServerAcceptNextAction and CanNextHit then begin
                 nHitMsg := CM_HIT + Random(3);
-                
+
                 //是否可以使用刺杀
                 if g_SetupInfo.boAutoLongHit or (g_boCanLongHit and (TargetInSwordLongAttackRange(tdir))) then begin
                   nHitMsg := CM_LONGHIT;
@@ -4445,6 +4448,7 @@ begin
     Exit;
 end;
 
+//鼠标事件:当选择了魔法等攻击前，显示一个选择被攻击对象的鼠标
 procedure TfrmMain.MouseTimerTimer(Sender: TObject);
 var
   pt: TPoint;
@@ -4475,7 +4479,7 @@ begin
             if ((g_TargetCret.m_btRace <> RCC_USERHUMAN) and
               (g_TargetCret.m_btRaceServer <> RC_GUARD) and
               (g_TargetCret.m_btRaceServer <> RC_NPC) and
-              (pos('(', g_TargetCret.m_UserName) = 0))
+              (pos('(', g_TargetCret.m_UserName) = 0))//宝宝
               or (g_TargetCret.m_OldNameColor = ENEMYCOLOR)
               or (((ssShift in Shift) or g_boShiftOpen) and (not FrmDlg.DEditChat.Visible)) then begin
               AttackTarget(g_TargetCret);
@@ -4487,7 +4491,7 @@ begin
         g_TargetCret := nil;
     end;
   end;
-  if g_boAutoDig and (g_MySelf.m_btHorse = 0) then begin
+  if g_boAutoDig and (g_MySelf.m_btHorse = 0) then begin//自动挖矿
     if CanNextAction and ServerAcceptNextAction and CanNextHit then begin
       g_MySelf.SendMsg(CM_HIT + 1, g_MySelf.m_nCurrX, g_MySelf.m_nCurrY, g_MySelf.m_btDir, 0, 0, '', 0);
     end;
@@ -4536,7 +4540,7 @@ begin
   g_DXCanvas := nil;
   UnLoadWMImagesLibEx();
   UnLoadColorLevels();
-  //g_DXFont.Finalize; 
+  //g_DXFont.Finalize;
   DScreen.Finalize;
   PlayScene.Finalize;
 end;
@@ -4691,7 +4695,7 @@ begin
   Except
     Success := False;
   End;
-  //end;       
+  //end;
 end;
 
 procedure TfrmMain.AutoPickUpItem(boFlag: Boolean);
@@ -4884,7 +4888,7 @@ begin
       end;
     end;
     //特殊金创药保护
-    if g_SetupInfo.boHpProtect2 and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and 
+    if g_SetupInfo.boHpProtect2 and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and
       (g_MySelf.m_Abil.HP <= g_SetupInfo.nHpProtectCount2) and (GetTickCount > g_dwHpProtectTime2) then begin
       g_dwHpProtectTime2 := GetTickCount + g_SetupInfo.dwHpProtectTime2 * 1000;
       if not EatItembyType(3) then begin
@@ -4896,7 +4900,7 @@ begin
     end;
 
     //HP保护
-    if g_SetupInfo.boHpProtect and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and 
+    if g_SetupInfo.boHpProtect and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and
       (g_MySelf.m_Abil.HP <= g_SetupInfo.nHpProtectCount) and (GetTickCount > g_dwHpProtectTime) then begin
       g_dwHpProtectTime := GetTickCount + g_SetupInfo.dwHpProtectTime * 1000;
       if not EatItembyType(1) then begin
@@ -4908,7 +4912,7 @@ begin
     end;
 
     //特殊魔法药保护
-    if g_SetupInfo.boMpProtect2 and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and 
+    if g_SetupInfo.boMpProtect2 and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and
       (g_MySelf.m_Abil.MP <= g_SetupInfo.nMpProtectCount2) and (GetTickCount > g_dwMpProtectTime2) then begin
       g_dwMpProtectTime2 := GetTickCount + g_SetupInfo.dwMpProtectTime2 * 1000;
       if not EatItembyType(4) then begin
@@ -4920,7 +4924,7 @@ begin
     end;
 
     //MP保护
-    if g_SetupInfo.boMpProtect and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and 
+    if g_SetupInfo.boMpProtect and (g_EatingItem.Item.S.name = '') and (GetTickCount > g_dwEatTick) and
       (g_MySelf.m_Abil.MP <= g_SetupInfo.nMpProtectCount) and (GetTickCount > g_dwMpProtectTime) then begin
       g_dwMpProtectTime := GetTickCount + g_SetupInfo.dwMpProtectTime * 1000;
       if not EatItembyType(2) then begin
@@ -4932,12 +4936,12 @@ begin
     end;
 
     //自动捡取
-    
+
     if (GetTickCount() - g_dwAutoPickupTick) > g_dwAutoPickupTime then begin
       g_dwAutoPickupTick := GetTickCount();
       AutoPickUpItem(True);
     end;
-    
+
     //持久警告
     if g_SetupInfo.boDuraHint and ((GetTickCount() - g_dwDuraAlertTick) > g_dwDuraAlertTime) then begin
       g_dwDuraAlertTick := GetTickCount();
@@ -4953,7 +4957,7 @@ begin
     if g_boCanDraw then begin
       //自动练功
       if g_SetupInfo.boAutoMagic and (g_MySelf.m_btHorse = 0) and (not (g_SetupInfo.nAutoMagicIndex in [3, 4, 7])) and
-        (g_SetupInfo.nAutoMagicIndex in [Low(g_MyMagicArry)..High(g_MyMagicArry)]) and
+        (g_SetupInfo.nAutoMagicIndex > 0) and (g_SetupInfo.nAutoMagicIndex < SKILL_MAX) and
         ((GetTickCount() - g_dwAutoMagicTime) > g_SetupInfo.dwAutoMagicTick) and
         (not FrmDlg.DDealDlg.Visible) and
         (g_MyMagicArry[g_SetupInfo.nAutoMagicIndex].boStudy) then begin
@@ -5025,7 +5029,7 @@ begin
         end;
         if boChange and (ClientMission.NPC <> nil) then
           PlayScene.SetMissionInfo(ClientMission.NPC);
-          
+
         if boChange and (FrmDlg3.DTrvwMission.Select <> nil) and
           (FrmDlg3.DTrvwMission.Select.Item = ClientMissionInfo) then
           FrmDlg3.MDlgChange := True;
@@ -5059,7 +5063,7 @@ begin
 end;
 
 {----------------------- Socket -----------------------}
-
+//在选择服务器后开启，等待一段时间后进入选择角色状态（等待“开门”的动画完成）
 procedure TfrmMain.SelChrWaitTimerTimer(Sender: TObject);
 begin
   if g_boChangeWindow then
@@ -5082,7 +5086,7 @@ begin
   sMsg := AnsiReplaceText(sMsg, '#7', #7);
   DScreen.AddSayMsg(sMsg, MsgColor, clBlack, True, us_Sys);
 end;
-
+//处理跟网络连接有关的几个事件
 procedure TfrmMain.CmdTimerTimer(Sender: TObject);
 begin
   if g_boChangeWindow then exit;
@@ -5094,8 +5098,8 @@ begin
         CSocket.Socket.Close;
       end;
     tcReSelConnect: begin
-        ResetGameVariables;
-        g_ConnectionStep := cnsReSelChr;
+        ResetGameVariables;  //清除所有对象
+        g_ConnectionStep := cnsReSelChr;   //重新连接服务器
         with CSocket do begin
           Active := FALSE;
           Address := g_sSelChrAddr;
@@ -5103,7 +5107,7 @@ begin
           Active := True;
         end;
       end;
-    tcFastQueryChr: begin
+      tcFastQueryChr: begin//查询角色
         ResetGameVariables;
         SendQueryChr;
       end;
@@ -5175,7 +5179,7 @@ begin
     DItemBag.Visible := FALSE;
     DWndFace.Visible := False;
     DWudItemShow.Visible := False;
-    DStateWin.Visible := False;
+    DStateWin.Visible := False; //人物信息栏
     DUserState.Visible := False;
     DMerchantDlg.Visible := False;
     DDealDlg.Visible := FALSE;
@@ -5279,7 +5283,7 @@ begin
     end;
     for I := Low(g_StatusInfoArr) to High(g_StatusInfoArr) do
       g_StatusInfoArr[I].dwTime := 0;
-    g_StatusInfoList.Clear;  
+    g_StatusInfoList.Clear;
     g_ShopBuyItem := nil;
     g_boShiftOpen := False;
     {for i := Low(g_MyMagic) to High(g_MyMagic) do
@@ -5398,7 +5402,7 @@ begin
     g_boCanLongHit := FALSE;
     g_boCanWideHit := FALSE;
     g_boCanCrsHit := FALSE;
-    g_boCanTwnHit := FALSE;
+    g_boCanTwnHit := FALSE;//关闭开天斩重击
     g_boCan110Hit := FALSE;
     g_boCan111Hit := FALSE;
     g_boCan112Hit := FALSE;
@@ -5406,7 +5410,7 @@ begin
     g_boCan122Hit := False;
     g_boCan56Hit := False;
 
-    g_boNextTimeFireHit := FALSE;
+    g_boNextTimeFireHit := FALSE;//关闭烈火
 
     SafeFillChar(g_UseItems, sizeof(g_UseItems), #0);
 
@@ -5474,7 +5478,7 @@ begin
     ClearBGM;
     FrmDlg.DBTHintClose.Visible := False;
     FrmDlg.sHintStr := '正在进入游戏，请稍候。。。';
-    DScreen.ClearChatBoard;
+    DScreen.ClearChatBoard;//清理聊天信息
     //ChangeServerClearGameVariables;
     SetDefaultSetupInfo;
     SendRunLogin;
@@ -5534,7 +5538,7 @@ begin
   //if pos('GOOD', data) > 0 then DScreen.AddSysMsg (data);
 
   n := pos(g_ClientCheck, data);
-  if n > 0 then begin
+  if n > 0 then begin//*号
     data2 := Copy(data, 1, n - 1);
     data := data2 + Copy(data, n + 1, Length(data));
     CheckSpeedTick := GetTickCount + 60 * 1000;
@@ -6787,7 +6791,7 @@ begin
     if CanNextActionEx and ServerAcceptNextAction then begin
       nMagID := g_CboMagicID;
       g_CboMagicID := -1;
-      if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+      if (nMagID >= 0) and (nMagID < SKILL_MAX) then begin
         if g_MyMagicArry[nMagID].boStudy and (GetTickCount > g_MyMagicArry[nMagID].dwInterval) then begin
           if nMagID = SKILL_111 then begin
             if GetTickCount < g_MyMagicArry[nMagID].dwInterval then begin
@@ -6865,7 +6869,7 @@ end;
 procedure TfrmMain.TimerInitializeTimer(Sender: TObject);
 begin
   TimerInitialize.Enabled := False;
-  
+
 end;
 
 procedure TfrmMain.TimerRunTimer(Sender: TObject);
@@ -6928,7 +6932,7 @@ begin
         end;
       end;
       if boChangeForm then FrmDlg.RefStatusInfoForm;
-      
+
       //g_sFBExitTime: string;
     end;
     if nTick > FMissionTick then begin
@@ -6960,7 +6964,7 @@ begin
         DScreen.AddSysMsg('[离开安全区]', clWhite)
       else if UserState = OT_SAFEAREA then
         DScreen.AddSysMsg('[进入安全区]', clWhite);
-        
+
       if g_nAreaStateValue = OT_FREEPKAREA then begin
         DScreen.AddSysMsg('[离开攻城区域]', clWhite);
         g_nAreaStateValue := UserState;
@@ -7182,7 +7186,7 @@ begin
       g_MyMagicArry[43].boNotUse := True;
     end
     else if tagstr = 'UICE' then begin
-      g_boCanLongIceHit := FALSE; //关闭开天斩 
+      g_boCanLongIceHit := FALSE; //关闭开天斩
       DScreen.AddSysmsg ('[' + g_MagicArry[43].Magic.sMagicName + '已关闭]', clRed);
       g_MyMagicArry[43].boNotUse := False;
     end
@@ -7420,7 +7424,7 @@ begin
         SM_CLIENTDATAFILE,
         SM_SENDNOTICE: ; //酒贰俊辑 贸府
     else
-      Exit;
+      Exit;//当人物还没有创建时，只允许上面这些消息。
     end;
   end;
   { if g_boMapMoving then begin
@@ -7839,7 +7843,7 @@ begin
     SM_LONGHIT, //19
     SM_WIDEHIT, //24
     SM_BIGHIT, //16
-    SM_FIREHIT, //8
+    SM_FIREHIT, //8{烈火}
     SM_CRSHIT,
       SM_110,
       SM_111,
@@ -8055,7 +8059,7 @@ begin
           Msg.series {damage}, desc.Feature, desc.Status, '', desc.btStrengthenIdx, desc.btWuXin);
 
       end;
-    SM_SETITEMS: ClientGetSetItems(@msg, body); 
+    SM_SETITEMS: ClientGetSetItems(@msg, body);
     SM_ABILITY: begin
         if g_MySelf <> nil then begin
           g_MySelf.m_nGold := Msg.Recog;
@@ -8266,7 +8270,7 @@ begin
         end;
       end;
 
-    SM_BREAKWEAPON: begin
+    SM_BREAKWEAPON: begin //武器破碎
         Actor := PlayScene.FindActor(Msg.Recog);
         if Actor <> nil then begin
           if Actor is THumActor then
@@ -9717,7 +9721,7 @@ begin
         nWidth := DEFMAXSCREENWIDTH;
         nHeight := DEFMAXSCREENHEIGHT;
       end;
-      
+
       FIDDraw := nil;
       if FDDrawHandle > 0 then
         FreeLibrary(FDDrawHandle);
@@ -10259,7 +10263,7 @@ begin
     FrmDlg2.DShopGetGamePoint.Caption := '对换' + g_sGameGoldName;
     FrmDlg2.DShopGamePoint.Caption := g_sGameGoldName + '区';
   end;
-  
+
   if g_MySelf = nil then exit;
 
   g_MySelf.m_nGameGold := Msg.Recog;
@@ -10721,13 +10725,13 @@ begin
             g_ShopList[1].Add(cu);
             if ClientShopItem.nGoldPrict > 0 then
               g_ShopGoldList[1].Add(cu);
-          end; 
+          end;
 {$ELSE}
           if ClientShopItem.btAgio > 0 then begin
             g_ShopList[1].Add(cu);
             if ClientShopItem.nGoldPrict > 0 then
               g_ShopGoldList[1].Add(cu);
-          end;  
+          end;
 {$IFEND}
 
           if ClientShopItem.nSellCount > 0 then begin
@@ -11012,7 +11016,7 @@ begin
       case OpenBoxItems[I].ItemType of
         bit_Item: begin
             OpenBoxItems[I].Item.s := GetStditem(ClientBoxInfo.Normal[I].Item.wIndex);
-          end; 
+          end;
       end;
     end;
     for I := Low(ClientBoxInfo.Peculiar) to High(ClientBoxInfo.Peculiar) do begin
@@ -11021,7 +11025,7 @@ begin
       case OpenBoxItems[I + 9].ItemType of
         bit_Item: begin
             OpenBoxItems[I + 9].Item.s := GetStditem(ClientBoxInfo.Peculiar[I].Item.wIndex);
-          end; 
+          end;
       end;
     end;
     dwndBox.Visible := True;
@@ -11055,7 +11059,7 @@ var
 begin
   SafeFillChar(ClientMagic, Sizeof(ClientMagic), #0);
   DecodeBuffer(body, @ClientMagic, sizeof(ClientMagic));
-  if ClientMagic.btMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+  if (ClientMagic.btMagID > 0) and (ClientMagic.btMagID < SKILL_MAX) then begin
     g_MyMagicArry[ClientMagic.btMagID].boStudy := True;
     g_MyMagicArry[ClientMagic.btMagID].Level := ClientMagic.Level;
     g_MyMagicArry[ClientMagic.btMagID].CurTrain := ClientMagic.CurTrain;
@@ -11080,7 +11084,7 @@ var
   I: integer;
 {$IFEND}
 begin
-  if magid in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+  if (magid > 0) and (magid < SKILL_MAX) then begin
     SafeFillChar(g_MyMagicArry[magid], SizeOf(g_MyMagicArry[magid]), #0);
   end;
 {$IF Var_Interface = Var_Mir2}
@@ -11116,7 +11120,7 @@ begin
     if data <> '' then begin
       SafeFillChar(ClientMagic, Sizeof(ClientMagic), #0);
       DecodeBuffer(data, @ClientMagic, sizeof(ClientMagic));
-      if ClientMagic.btMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+      if (ClientMagic.btMagID > 0) and (ClientMagic.btMagID < SKILL_MAX) then begin
         g_MyMagicArry[ClientMagic.btMagID].boStudy := True;
         g_MyMagicArry[ClientMagic.btMagID].Level := ClientMagic.Level;
         g_MyMagicArry[ClientMagic.btMagID].CurTrain := ClientMagic.CurTrain;
@@ -11150,7 +11154,7 @@ end;
 
 procedure TfrmMain.ClientGetMagicLvExp(magid, maglv, magtrain: Integer);
 begin
-  if magid in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+  if (magid > 0) and (magid < SKILL_MAX) then begin
     g_MyMagicArry[magid].Level := maglv;
     g_MyMagicArry[magid].CurTrain := magtrain;
   end;
@@ -11825,7 +11829,7 @@ begin
         g_CenterMsgList.Delete(i);
         Break;
       end;
-  end;  
+  end;
 end;
 
 procedure TfrmMain.ClientGetGroupInfo(Msg: TDefaultMessage; bodystr: string);

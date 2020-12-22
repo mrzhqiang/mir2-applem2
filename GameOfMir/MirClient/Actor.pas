@@ -25,8 +25,8 @@ const
   //   MON1_FRAME =
   //   MON2_FRAME =
 
-  RUN_MINHEALTH = 10;
-  DEFSPELLFRAME = 10;
+   RUN_MINHEALTH = 10;//低于这个血量只能走动
+   DEFSPELLFRAME = 10; //魔法最大浈
   FIREHIT_READYFRAME = 6; //堪拳搬 矫傈 橇贰烙
   MAGBUBBLEBASE = 30; //魔法盾效果图位置
   MAGBUBBLESTRUCKBASE = 33; //被攻击时魔法盾效果图位置
@@ -38,14 +38,15 @@ type
   TNPCMissionStatus = (NPCMS_Accept, NPCMS_Complete, NPCMS_Atelic, NPCMS_None);
 
   TActionInfo = packed record
-    start: Word; //0x14              // 矫累 橇贰烙
-    frame: Word; //0x16              // 橇贰烙 肮荐
-    skip: Word; //0x18
-    ftime: Word; //0x1A              // 橇贰烙 肮荐
-    usetick: Word;
-    //0x1C              // 荤侩平, 捞悼 悼累俊父 荤侩凳
+    start   :Word;//0x14              // 开始帧
+    frame   :Word;//0x16              // 帧数
+    skip    :Word;//0x18              // 跳过的帧数
+    ftime   :Word;//0x1A              // 每帧的延迟时间（毫秒）
+    usetick :Word;//0x1C              // 荤侩平, 捞悼 悼累俊父 荤侩凳
   end;
   pTActionInfo = ^TActionInfo;
+
+//玩家的动作定义
   THumanAction = packed record
     ActStand: TActionInfo; //1
     ActWalk: TActionInfo; //8
@@ -96,7 +97,14 @@ type
   end;
   pTMonsterAction = ^TMonsterAction;
 const
-  HA: THumanAction = (
+   //人类动作定义
+   //每个人物每个级别每个性别共600幅图
+   //设级别=L，性别=S，则开始帧=L*600+600*S
+
+   //Start:该动作在这组外观下的开始帧
+   //frame:该动作需要的帧数
+   //skip:跳过的帧数
+   HA: THumanAction = (//开始帧       有效帧     跳过帧    每帧延迟
     ActStand: (start: 0; frame: 4; skip: 4; ftime: 200; usetick: 0);
     ActWalk: (start: 64; frame: 6; skip: 2; ftime: 90; usetick: 2);
     ActRun: (start: 128; frame: 6; skip: 2; ftime: 120; usetick: 3);
@@ -141,6 +149,7 @@ const
     ActDeath: (start: 0; frame: 1; skip: 7; ftime: 0; usetick: 0);
     );
   MA10: TMonsterAction = (//(8Frame) 带刀卫士
+           //每个动作8帧    //从这里可以推测出怪物有几种？//这里是280的
     ActStand: (start: 0; frame: 4; skip: 4; ftime: 200; usetick: 0);
     ActWalk: (start: 64; frame: 6; skip: 2; ftime: 120; usetick: 3);
     ActAttack: (start: 128; frame: 4; skip: 4; ftime: 150; usetick: 0);
@@ -149,7 +158,7 @@ const
     ActDie: (start: 208; frame: 4; skip: 4; ftime: 140; usetick: 0);
     ActDeath: (start: 272; frame: 1; skip: 0; ftime: 0; usetick: 0);
     );
-  MA11: TMonsterAction = (//荤娇(10Frame楼府)
+  MA11: TMonsterAction = (//荤娇(10Frame楼府)//每个动作10帧 //280,(360的),440,430,,
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 120; usetick: 3);
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
@@ -158,7 +167,7 @@ const
     ActDie: (start: 260; frame: 10; skip: 0; ftime: 140; usetick: 0);
     ActDeath: (start: 340; frame: 1; skip: 0; ftime: 0; usetick: 0);
     );
-  MA12: TMonsterAction = (//版厚捍, 锭府绰 加档 狐福促.
+  MA12: TMonsterAction = (//版厚捍, 锭府绰 加档 狐福促.//每个动作8帧，每个动作8个方向，共7种动作
     ActStand: (start: 0; frame: 4; skip: 4; ftime: 200; usetick: 0);
     ActWalk: (start: 64; frame: 6; skip: 2; ftime: 120; usetick: 3);
     ActAttack: (start: 128; frame: 6; skip: 2; ftime: 150; usetick: 0);
@@ -167,16 +176,24 @@ const
     ActDie: (start: 208; frame: 4; skip: 4; ftime: 160; usetick: 0);
     ActDeath: (start: 272; frame: 1; skip: 0; ftime: 0; usetick: 0);
     );
-  MA13: TMonsterAction = (//侥牢檬
+  MA13: TMonsterAction = (// mon2.wil中的食人花
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
+        //打开mon2.wil可以看到食人花,actstand是食人花站立状态
     ActWalk: (start: 10; frame: 8; skip: 2; ftime: 160; usetick: 0); //殿厘...
+        //actwalk实际上是食人花站出来或消隐的效果注意到花尾的泥土实际一些objects.wil里面也有泥土tiles
+         //石墓尸王钻出来时的地图效果，，食人花的效果跟暗龙相似，不知道暗龙的动作类型是不是也属于ma13
     ActAttack: (start: 30; frame: 6; skip: 4; ftime: 120; usetick: 0);
+        //actattack从30开始是从各个方位攻击的效果
     ActCritical: (start: 0; frame: 0; skip: 0; ftime: 0; usetick: 0);
+        //actcritical这个动作略去
     ActStruck: (start: 110; frame: 2; skip: 0; ftime: 100; usetick: 0);
+        //受伤110开始，，
     ActDie: (start: 130; frame: 10; skip: 0; ftime: 120; usetick: 0);
+        //130开始死亡效果
     ActDeath: (start: 20; frame: 9; skip: 0; ftime: 150; usetick: 0); //见澜..
+        //20开始是食人花消隐的效果也是它死亡效果所以在这重用，，只有9帧最后一帧略去
     );
-  MA14: TMonsterAction = (//秦榜 坷付
+   MA14: TMonsterAction = (  //秦榜 坷付 mon3里面的骷髅战士,,分析方法同ma13
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
@@ -186,16 +203,18 @@ const
     ActDeath: (start: 340; frame: 10; skip: 0; ftime: 100; usetick: 0);
     //归榜牢版快(家券)
     );
-  MA15: TMonsterAction = (//档尝带瘤绰 坷付
+   MA15: TMonsterAction = (  //沃玛战土??新问题：源程序中对怪物的分类逻辑是不是就是mon*.wil的分类逻辑
+        //又注意到沃玛战士的五器没有,它带的可是海魂，，难道它也跟hum.wil一样要跟weapon.wil挂钩才能钩成完整的形象?
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
     ActCritical: (start: 0; frame: 0; skip: 0; ftime: 0; usetick: 0);
     ActStruck: (start: 240; frame: 2; skip: 0; ftime: 100; usetick: 0);
     ActDie: (start: 260; frame: 10; skip: 0; ftime: 120; usetick: 0);
+        //die跟death有什么区别啊???一个是死亡开始，，一个是在地面上的残骸??但是按这样说下面的逻辑不对啊!!
     ActDeath: (start: 1; frame: 1; skip: 0; ftime: 100; usetick: 0);
     );
-  MA16: TMonsterAction = (//啊胶筋绰 备单扁
+   MA16: TMonsterAction = (  //啊胶筋绰 备单扁  mon5里面的电僵尸？？代表可移动的魔法攻击动作的怪物一类??
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 160; usetick: 0);
@@ -204,7 +223,7 @@ const
     ActDie: (start: 260; frame: 4; skip: 6; ftime: 160; usetick: 0);
     ActDeath: (start: 0; frame: 1; skip: 0; ftime: 160; usetick: 0);
     );
-  MA17: TMonsterAction = (//官迭波府绰 各
+   MA17: TMonsterAction = (  //官迭波府绰 各  mon6中的和尚僵王（和石墓尸王共用一形象）
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 60; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
@@ -262,7 +281,7 @@ const
     ActDeath: (start: 0; frame: 20; skip: 0; ftime: 100; usetick: 0);
     //籍惑踌澜
     );
-  MA24: TMonsterAction = (//傈哎, 傍拜 2啊瘤
+   MA24: TMonsterAction = (  // (攻击) mon14中的蝎蛇??通过以下的分析好像又不是?
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
@@ -358,9 +377,12 @@ MA25: TMonsterAction = (  //瘤匙空
     );
 
   MA33: TMonsterAction = (//4C0A4C
+             //开始帧    有效帧    跳过帧   每帧延迟
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
+    //actstand是站立状态
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 200; usetick: 3);
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 120; usetick: 0);
+    //actattack从30开始是从各个方位攻击的效果
     ActCritical: (start: 340; frame: 6; skip: 4; ftime: 120; usetick: 0);
     ActStruck: (start: 240; frame: 2; skip: 0; ftime: 100; usetick: 0);
     ActDie: (start: 260; frame: 10; skip: 0; ftime: 200; usetick: 0);
@@ -943,7 +965,7 @@ MA25: TMonsterAction = (  //瘤匙空
     ActDie: (start: 260; frame: 10; skip: 0; ftime: 140; usetick: 0);
     ActDeath: (start: 340; frame: 1; skip: 0; ftime: 140; usetick: 0); //
     );
-  MA93: TMonsterAction = (//快搁蓖 (磷绰芭 弧府磷澜)
+  MA93: TMonsterAction = ( //雷炎蛛王 200808012
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
@@ -953,7 +975,7 @@ MA25: TMonsterAction = (  //瘤匙空
     ActDeath: (start: 340; frame: 1; skip: 0; ftime: 140; usetick: 0); //
     ActAttack2: (start: 420; frame: 8; skip: 2; ftime: 100; usetick: 0);
     );
-  MA94: TMonsterAction = (//快搁蓖 (磷绰芭 弧府磷澜)
+  MA94: TMonsterAction = ( //雪域寒冰魔、雪域灭天魔、雪域五毒魔
     ActStand: (start: 0; frame: 4; skip: 6; ftime: 200; usetick: 0);
     ActWalk: (start: 80; frame: 6; skip: 4; ftime: 160; usetick: 3); //
     ActAttack: (start: 160; frame: 6; skip: 4; ftime: 100; usetick: 0);
@@ -1192,31 +1214,36 @@ MA25: TMonsterAction = (  //瘤匙空
     ActDeath: (start: 340; frame: 6; skip: 4; ftime: 100; usetick: 0);
     //归榜牢版快(家券)
     );
-  WORDER: array[0..1, 0..599] of byte = (//1: 漠捞 菊栏肺,  0: 漠捞 第肺
-    (//巢磊
-    //沥瘤
+{------------------------------------------------------------------------------}
+// 武器绘制顺序 (是否先于身体绘制: 0是/1否)
+// WEAPONORDERS: array [Sex, FrameIndex] of Byte
+{------------------------------------------------------------------------------}
+   WORDER: Array[0..1, 0..599] of byte = (  //1: 女,  0: 男
+                                            //第一维是性别，第二维是动作图片索引
+      (       //男
+      //站
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
     0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1,
-    //叭扁
+      //走
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-    //顿扁
+      //跑
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1,
     0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
     //war葛靛
     0, 1, 1, 1, 0, 0, 0, 0,
-    //傍拜
+      //击
     1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1,
-    //傍拜 2
+      //击 2
     0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
     1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
     0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1,
-    //傍拜3
+      //击3
     1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0,
     1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0,
@@ -1298,7 +1325,7 @@ type
     m_btHorse: byte; //马类型
     m_btEffect: byte; //天使类型
     m_btJob: byte; //职业 0:武士  1:法师  2:道士
-    m_wAppearance: Word; //0x14
+    m_wAppearance: Word; //0x14 DIV 10=种族（外貌）， Mod 10=外貌图片在图片库中的位置（第几种）
     m_btDeathState: byte;
     m_nFeature: Integer; //0x18
     m_nFeatureEx: Integer; //0x18
@@ -1309,14 +1336,14 @@ type
     m_boDelActor: Boolean; //0x22
     m_boDelActionAfterFinished: Boolean; //0x23
     m_sDescUserName: string; //人物名称，后缀
-    m_UserName: string;
+    m_UserName: string;  //名字
     m_NameWidth: Integer;
     m_DescNameWidth: Integer;
     m_sGuildName: string;
     m_sGuildRankName: string;
-    m_NameColor: LongWord; //0x2C
+    m_NameColor: LongWord; //名字颜色
     m_OldNameColor: Byte;
-    m_Abil: TAbility; //0x30
+    m_Abil: TAbility; //基本属性
     m_nGold: Integer; //金币数量0x58
     m_nGameGold: Integer; //游戏币数量
     m_nGamePoint: Integer; //游戏点数量
@@ -1369,9 +1396,9 @@ type
     m_boThrow: Boolean;
     m_boShowHealthBar: Boolean;
 
-    m_nBodyOffset: Integer; //0x0E8   //0x0D0
-    m_nHairOffset: Integer; //0x0EC
-    m_nWeaponOffset: Integer; //0x0F4
+    m_nBodyOffset             :Integer;     //0x0E8   //0x0D0 // 身体图片索引的主偏移
+    m_nHairOffset             :Integer;     //0x0EC           // 头发图片索引的主偏移
+    m_nWeaponOffset           :Integer;   //0x0F4             // 武器图片索引的主偏移
     m_boUseMagic: Boolean; //0x0F8   //0xE0
     m_boHitEffect: Boolean; //0x0F9    //0xE1
     m_boUseEffect: Boolean; //0x0FA    //0xE2
@@ -1463,8 +1490,8 @@ type
   private
     function GetMessage(ChrMsg: pTChrMsg): Boolean;
   protected
-    m_nStartFrame: Integer; //0x1BC        //0x1A8
-    m_nEndFrame: Integer; //0x1C0      //0x1AC
+    m_nStartFrame             :Integer;      //0x1BC        //0x1A8  // 当前动作的开始帧索引
+    m_nEndFrame               :Integer;        //0x1C0      //0x1AC  // 当前动作的结束帧索引
     m_nCurrentFrame: Integer; //0x1C4          //0x1B0
     m_nEffectStart: Integer; //0x1C8         //0x1B4
     m_nEffectFrame: Integer; //0x1CC         //0x1B8
@@ -1561,7 +1588,7 @@ type
   protected
     m_nEffX: Integer; //0x240
     m_nEffY: Integer; //0x244
-    m_EffSurface: TDirectDrawSurface; //0x250
+    m_EffSurface: TDirectDrawSurface; //0x250//画NPC 魔法动画效果
     m_boCanAnimation: Boolean;
     m_boCanChangeDir: Boolean;
     m_boCanModDir: Boolean;
@@ -1580,10 +1607,10 @@ type
 
   THumActor = class(TActor) //Size: 0x27C Address: 0x00475BB8
   private
-    m_HairSurface: TDirectDrawSurface; //0x250  //0x240
-    m_WeaponSurface: TDirectDrawSurface; //0x254  //0x244
+    m_HairSurface: TDirectDrawSurface; //0x250  //0x240         //头发外观
+    m_WeaponSurface: TDirectDrawSurface; //0x254  //0x244       //武器外观
     m_WeaponEffectSurface: TDirectDrawSurface; //0x254  //0x244
-    m_HumWinSurface: TDirectDrawSurface; //0x258  //0x248
+    m_HumWinSurface: TDirectDrawSurface; //0x258  //0x248       //人物外观
     m_HoresSurface: TDirectDrawSurface;
 
     m_boWeaponEffect: Boolean; //0x25C  //0x24C
@@ -1639,14 +1666,14 @@ begin
           Result := @MA10; //475D7C
         end;
       end;
-    11 {03}: Result := @MA11; //475D88
-    12 {04}: Result := @MA12; //475D94
-    13 {05}: Result := @MA13; //475DA0
-    14 {06}: Result := @MA14; //475DAC
-    15 {07}: Result := @MA15; //475DB8
-    16 {08}: Result := @MA16; //475DC4
-    17 {06}: Result := @MA14; //475DAC
-    18 {06}: Result := @MA14; //475DAC
+    11 {03}: Result := @MA11; //鸡和鹿
+    12 {04}: Result := @MA12; //大刀卫士
+    13 {05}: Result := @MA13; //食人花
+    14 {06}: Result := @MA14; //骷髅系列怪
+    15 {07}: Result := @MA15; //掷斧骷髅
+    16 {08}: Result := @MA16; //洞蛆
+    17 {06}: Result := @MA14; //多钩猫
+    18 {06}: Result := @MA14; //稻草人
     19 {0A}: begin
         case Appr of
           258: Result := @MA64; //475DDC
@@ -1657,28 +1684,28 @@ begin
           522: Result := @MA86;
           540..541: Result := @MA91;
         else
-          Result := @MA19; //475DDC
+          Result := @MA19; //半兽人、蛤蟆、毒蜘蛛之类的
         end;
 
       end;
-    20 {0A}: Result := @MA19; //475DDC
-    21 {0A}: Result := @MA19; //475DDC
-    22 {07}: Result := @MA15; //475DB8
+    20 {0A}: Result := @MA19; //火焰沃玛
+    21 {0A}: Result := @MA19; //沃玛教主
+    22 {07}: Result := @MA15; //暗黑战士、暴牙蜘蛛
     23 {06}: begin
         case Appr of
           810..819: Result := @MA119;
         else
-          Result := @MA14; //475DAC
+          Result := @MA14; //变异骷髅
         end;
       end;
-    24 {04}: Result := @MA12; //475D94
+    24 {04}: Result := @MA12; //带刀护卫
     25: Result := @MA67;
     26: Result := @MA70;
     30 {09}: Result := @MA17; //475DD0
-    31 {09}: Result := @MA17; //475DD0
-    32 {0F}: Result := @MA24; //475E18
-    33 {10}: Result := @MA25; //475E24
-    34 {11}: Result := @MA30; //475E30  赤月恶魔
+    31 {09}: Result := @MA17; //蜜蜂
+    32 {0F}: Result := @MA24; //蝎子
+    33 {10}: Result := @MA25; //触龙神
+    34 {11}: Result := @MA30; //赤月恶魔、宝箱、千年树妖
     35 {12}: Result := @MA31; //475E3C
     36 {13}: Result := @MA32; //475E48
     37 {0A}: Result := @MA19; //475DDC
@@ -1701,13 +1728,13 @@ begin
           263: Result := @MA62; //475E00
           330, 334: Result := @MA115;
         else
-          Result := @MA22; //475E00
+          Result := @MA22; //祖玛雕像
         end;
 
       end;
     48 {0E}: Result := @MA23; //475E0C
-    49 {0E}: Result := @MA23; //475E0C
-    50 {27}: begin //475F32
+    49 {0E}: Result := @MA23; //祖玛教主
+    50 {27}: begin //NPC
         case Appr of
           23 {01}: Result := @MA36; //475F77
           24 {02}: Result := @MA37; //475F80
@@ -1782,7 +1809,7 @@ begin
     79 {20}: Result := @MA19; //475EE4
     80 {21}: Result := @MA42; //475EF0
     81 {22}: Result := @MA43; //475EFC
-    83 {23}: Result := @MA44; //475F08
+    83 {23}: Result := @MA44; //火龙教主
     84 {24}: Result := @MA45; //475F14
     85 {24}: begin
         case Appr of
@@ -1855,13 +1882,14 @@ begin
   end
 end;
 
+//根据种族和外貌确定在图片库中的开始位置
 function GetOffset(Appr: Integer): Integer;
 var
   nrace, npos: Integer;
 begin
   Result := 0;
-  nrace := Appr div 10;
-  npos := Appr mod 10;
+   nrace := appr div 10;         //图片库
+   npos := appr mod 10;          //图片库中的形象序号
   case nrace of
     0: Result := npos * 280; //8橇贰烙
     1: Result := npos * 230;
@@ -1890,7 +1918,7 @@ begin
       else
         Result := npos * 350;
       end;
-    18: case npos of
+    18: case npos of  //魔龙系列怪
         0: Result := 0; //己巩
         1: Result := 520;
         2: Result := 950;
@@ -2398,6 +2426,7 @@ begin
   inherited Destroy;
 end;
 
+//角色接收到的消息
 procedure TActor.SendMsg(wIdent: Word; nX, nY, ndir, nFeature, nState: Integer;
   sStr: string; nSound: Integer);
 var
@@ -2420,6 +2449,7 @@ begin
   end;
 end;
 
+//用新消息更新（若已经存在）消息列表
 procedure TActor.UpdateMsg(wIdent: Word; nX, nY, ndir, nFeature, nState:
   Integer; sStr: string; nSound: Integer);
 var
@@ -2430,11 +2460,12 @@ begin
   try
     I := 0;
     while TRUE do begin
+      //从当前消息列表中寻找,若找到,则删除,同时清除当前玩家控制的角色的走、跑等消息，因为这些消息已经处理了。
       if I >= m_MsgList.Count then
         break;
-      msg := m_MsgList.Items[I];
+      msg := m_MsgList.Items[I];//原代码
       if ((Self = g_MySelf) and (msg.Ident >= 0) and (msg.Ident <= 19)) or (msg.Ident = wIdent) then begin
-        Dispose(msg);
+        Dispose(msg);//删除已经存在的相同消息
         m_MsgList.Delete(I);
         Continue;
       end;
@@ -2443,9 +2474,10 @@ begin
   finally
     m_MsgList.UnLock;
   end;
-  SendMsg(wIdent, nX, nY, ndir, nFeature, nState, sStr, nSound);
+  SendMsg(wIdent, nX, nY, ndir, nFeature, nState, sStr, nSound);//添加消息
 end;
 
+//清除消息号在[3000,3099]之间的消息
 procedure TActor.CleanUserMsgs;
 var
   I: Integer;
@@ -2458,7 +2490,7 @@ begin
       if I >= m_MsgList.Count then
         break;
       msg := m_MsgList.Items[I];
-      if (msg.Ident >= 3000) and //努扼捞攫飘俊辑 焊辰 皋技瘤绰
+      if (msg.Ident >= 3000) and //基本运动消息：走、跑等
       (msg.Ident <= 3099) then begin
         Dispose(msg);
         m_MsgList.Delete(I);
@@ -2488,20 +2520,22 @@ begin
   end;
   m_SayList.Clear;
 end;
-
+//角色动作动画
 procedure TActor.CalcActorFrame;
 //var
 //  haircount: Integer;
 begin
   m_boUseMagic := FALSE;
   m_nCurrentFrame := -1;
+  //根据appr计算本角色在图片库中的开始图片索引
   m_nBodyOffset := GetOffset(m_wAppearance);
+  //动作对应的图片序列定义
   m_Action := GetRaceByPM(m_btRace, m_wAppearance);
   if m_Action = nil then
     Exit;
 
   case m_nCurrentAction of
-    SM_TURN: begin
+    SM_TURN: begin//转身=站立动作的开始帧 + 方向 X 站立动作的图片数
         m_nStartFrame := m_Action.ActStand.start + m_btDir * (m_Action.ActStand.frame + m_Action.ActStand.skip);
         m_nEndFrame := m_nStartFrame + m_Action.ActStand.frame - 1;
         m_dwFrameTime := m_Action.ActStand.ftime;
@@ -2509,7 +2543,7 @@ begin
         m_nDefFrameCount := m_Action.ActStand.frame;
         Shift(m_btDir, 0, 0, 1);
       end;
-    SM_WALK, SM_RUSH, SM_RUSHKUNG, SM_BACKSTEP: begin
+    SM_WALK{走}, SM_RUSH, SM_RUSHKUNG, SM_BACKSTEP: begin//走动=走动动作的开始帧 + 方向 X 每方向走动动作的图片数
         m_nStartFrame := m_Action.ActWalk.start + m_btDir * (m_Action.ActWalk.frame + m_Action.ActWalk.skip);
         m_nEndFrame := m_nStartFrame + m_Action.ActWalk.frame - 1;
         m_dwFrameTime := m_Action.ActWalk.ftime;
@@ -2517,12 +2551,12 @@ begin
         m_nMaxTick := m_Action.ActWalk.usetick;
         m_nCurTick := 0;
         m_nMoveStep := 1;
-        if m_nCurrentAction = SM_BACKSTEP then
+            if m_nCurrentAction = SM_BACKSTEP then    //转身
           Shift(GetBack(m_btDir), m_nMoveStep, 0, m_nEndFrame - m_nStartFrame + 1)
         else
           Shift(m_btDir, m_nMoveStep, 0, m_nEndFrame - m_nStartFrame + 1);
       end;
-    SM_HIT: begin
+    SM_HIT{普通攻击}: begin
         m_nStartFrame := m_Action.ActAttack.start + m_btDir * (m_Action.ActAttack.frame + m_Action.ActAttack.skip);
         m_nEndFrame := m_nStartFrame + m_Action.ActAttack.frame - 1;
         m_dwFrameTime := m_Action.ActAttack.ftime;
@@ -2531,27 +2565,27 @@ begin
         m_dwWarModeTime := GetTickCount;
         Shift(m_btDir, 0, 0, 1);
       end;
-    SM_STRUCK: begin
+    SM_STRUCK{受攻击}: begin
         m_nStartFrame := m_Action.ActStruck.start + m_btDir * (m_Action.ActStruck.frame + m_Action.ActStruck.skip);
         m_nEndFrame := m_nStartFrame + m_Action.ActStruck.frame - 1;
         m_dwFrameTime := m_dwStruckFrameTime; //pm.ActStruck.ftime;
         m_dwStartTime := GetTickCount;
         Shift(m_btDir, 0, 0, 1);
       end;
-    SM_DEATH: begin
+    SM_DEATH{被打死}: begin
         m_nStartFrame := m_Action.ActDie.start + m_btDir * (m_Action.ActDie.frame + m_Action.ActDie.skip);
         m_nEndFrame := m_nStartFrame + m_Action.ActDie.frame - 1;
         m_nStartFrame := m_nEndFrame; //
         m_dwFrameTime := m_Action.ActDie.ftime;
         m_dwStartTime := GetTickCount;
       end;
-    SM_NOWDEATH: begin
+    SM_NOWDEATH: begin//死了
         m_nStartFrame := m_Action.ActDie.start + m_btDir * (m_Action.ActDie.frame + m_Action.ActDie.skip);
         m_nEndFrame := m_nStartFrame + m_Action.ActDie.frame - 1;
         m_dwFrameTime := m_Action.ActDie.ftime;
         m_dwStartTime := GetTickCount;
       end;
-    SM_SKELETON: begin
+    SM_SKELETON: begin//彻底死了（不再动作）
         m_nStartFrame := m_Action.ActDeath.start + m_btDir;
         m_nEndFrame := m_nStartFrame + m_Action.ActDeath.frame - 1;
         m_dwFrameTime := m_Action.ActDeath.ftime;
@@ -2565,10 +2599,10 @@ var
   n: Integer;
   UseMagic: PTUseMagicInfo;
 begin
-  m_nActBeforeX := m_nCurrX;
-  m_nActBeforeY := m_nCurrY;
+   m_nActBeforeX := m_nCurrX;        //动作之前的位置（当服务器不认可时可以回去)
+   m_nActBeforeY := m_nCurrY;
 
-  if msg.Ident = SM_ALIVE then begin
+   if msg.Ident = SM_ALIVE then begin      //复活
     m_boDeath := FALSE;
     m_boSkeleton := FALSE;
   end;
@@ -2577,8 +2611,7 @@ begin
       SM_TURN, SM_WALK, SM_BACKSTEP, SM_RUSH, SM_MAGICMOVE, SM_MAGICFIR, SM_RUSHCBO, SM_RUSHKUNG, SM_RUN, SM_LEAP, SM_HORSERUN, SM_DIGUP, SM_ALIVE: begin
           m_nFeature := msg.feature;
           m_nState := msg.state;
-          {if Self.m_btRace <> 0 then
-          PlayScene.MemoLog.Lines.Add(IntToStr(msg.state));}
+          //是否可以查看角色生命值
           if m_nState and STATE_OPENHEATH <> 0 then
             m_boOpenHealth := TRUE
           else
@@ -2589,10 +2622,10 @@ begin
     if g_MySelf = Self then begin
       if (msg.Ident = CM_WALK) then
         if not PlayScene.CanWalk(msg.x, msg.y) then
-          Exit; //捞悼 阂啊
+          Exit; //不可行走
       if (msg.Ident = CM_RUN) then
         if not PlayScene.CanRun(g_MySelf.m_nCurrX, g_MySelf.m_nCurrY, msg.x, msg.y) then
-          Exit; //捞悼 阂啊
+          Exit; //不能跑
       if (msg.Ident = CM_HORSERUN) then
         if not PlayScene.CanHorseRun(g_MySelf.m_nCurrX, g_MySelf.m_nCurrY, msg.x, msg.y) then
           Exit; //捞悼 阂啊
@@ -2644,7 +2677,7 @@ begin
             msg.Ident := SM_WIDEHIT;
           end;
         CM_LONGICEHIT: begin
-            RealActionMsg := msg;
+            RealActionMsg := msg;//保存当前动作
             if g_boLongIceHitIsLong then
               msg.Ident := SM_LONGICEHIT_L
             else
@@ -2663,7 +2696,7 @@ begin
             RealActionMsg := msg;
             msg.Ident := SM_THROW;
           end;
-        CM_FIREHIT: begin
+        CM_FIREHIT: begin//烈火
             RealActionMsg := msg;
             msg.Ident := SM_FIREHIT;
           end;
@@ -2705,7 +2738,7 @@ begin
           end;      }
         CM_SPELL: begin
             RealActionMsg := msg;
-            UseMagic := PTUseMagicInfo(msg.feature);
+            UseMagic := PTUseMagicInfo(msg.feature); //根据msg.feature获得pmag指针
             RealActionMsg.dir := UseMagic.MagicSerial;
             msg.Ident := SM_SPELL {msg.Ident - 3000 5012}; //
           end;
@@ -2835,7 +2868,7 @@ begin
         SM_ACTION_MIN..SM_ACTION_MAX, //26
       SM_ACTION2_MIN..SM_ACTION2_MAX, //35   2293    293
       3000..3099: ReadyAction(msg);  }
-      SM_SPACEMOVE_HIDE: begin
+      SM_SPACEMOVE_HIDE: begin//修改传送地图不显示动画
           Meff := TScrollHideEffect.Create(250, 10, m_nCurrX, m_nCurrY, Self);
           PlayScene.m_EffectList.Add(Meff);
           PlaySound(s_spacemove_out);
@@ -2858,7 +2891,7 @@ begin
           end;
           PlaySound(s_spacemove_out);
         end;
-      SM_SPACEMOVE_SHOW: begin
+      SM_SPACEMOVE_SHOW: begin//修改传送地图不显示动画
           Meff := TCharEffect.Create(260, 10, Self);
           PlayScene.m_EffectList.Add(Meff);
           msg.Ident := SM_TURN;
@@ -2894,7 +2927,7 @@ begin
   end;
 end;
 
-procedure TActor.ProcHurryMsg; //弧府 贸府秦具 登绰 皋技瘤 贸府窃..
+procedure TActor.ProcHurryMsg; //紧急消息处理：使用魔法、魔法失败
 var
   n: Integer;
   msg: TChrMsg;
@@ -2904,7 +2937,7 @@ begin
   while TRUE do begin
     if m_MsgList.Count <= n then
       break;
-    msg := pTChrMsg(m_MsgList[n])^;
+    msg := pTChrMsg(m_MsgList[n])^;//取出消息
     fin := FALSE;
     case msg.Ident of
       SM_MAGICFIRE:
@@ -2918,7 +2951,8 @@ begin
           m_CurMagic.TargY := msg.state;
           m_CurMagic.Recusion := TRUE;
           fin := TRUE;
-          //               DScreen.AddSysMsg ('SM_MAGICFIRE GOOD');
+               //这里可以显示使用魔法的名称，但是客户端不知道魔法的名称，
+               //应该在本地保留一个魔法名称列表，根据ServerMaigicCode获得名称
         end;
       SM_MAGICFIRE_FAIL:
         if m_CurMagic.ServerMagicCode <> 0 then begin
@@ -2934,7 +2968,7 @@ begin
       Inc(n);
   end;
 end;
-
+//当前是否没有可执行的动作
 function TActor.IsIdle: Boolean;
 begin
   if (m_nCurrentAction = 0) and (m_MsgList.Count = 0) then
@@ -2942,7 +2976,7 @@ begin
   else
     Result := FALSE;
 end;
-
+//当前动作是否已经完成
 function TActor.ActionFinished: Boolean;
 begin
   if (m_nCurrentAction = 0) or (m_nCurrentFrame >= m_nEndFrame) then
@@ -2950,16 +2984,15 @@ begin
   else
     Result := FALSE;
 end;
-
+//可否行走
 function TActor.CanWalk: Integer;
 begin
-  //掘绢 嘎篮 促澜俊 吧阑 荐 绝促. or 付过 掉贰捞
   if (GetTickCount - g_dwLatestSpellTick < g_dwMagicPKDelayTime) then
     Result := -1 //掉饭捞
   else
     Result := 1;
 end;
-
+//可否跑
 function TActor.CanRun: Integer;
 begin
   Result := 1;
@@ -2986,10 +3019,10 @@ begin
   end;
 end;
 
-//dir : 规氢
-//step : 捞悼 沫
-//cur : 泅犁 胶跑
-//max : 弥措 胶跑
+//dir : 方向
+//step : 步长  (走是1，跑是2）
+//cur : 当前帧(全部帧中的第几帧）
+//max : 全部帧
 
 procedure TActor.Shift(dir, step, cur, max: Integer);
 var
@@ -3191,21 +3224,20 @@ begin
   if Meff <> nil then
     PlayScene.m_EffectList.Add(Meff);
 end;
-
+//人物外貌特征改变
 procedure TActor.FeatureChanged;
 //var
 //  haircount: Integer;
 begin
   case m_btRace of
-    //human
-    0: begin
-        m_btHair := HAIRfeature(m_nFeature); //函版等促.
+    0: begin//人物
+        m_btHair := HAIRfeature(m_nFeature); // 得到M2发来对应的发型 , 女=7 男=6 主体,英雄 女=3 男=4
         m_btDress := DRESSfeature(m_nFeature);
         m_btWeapon := WEAPONfeature(m_nFeature);
 
         m_btHorse := Horsefeature(m_nFeatureEx);
         m_btEffect := Effectfeature(m_nFeatureEx);
-        m_nBodyOffset := HUMANFRAME * m_btDress; //巢磊0, 咯磊1
+        m_nBodyOffset := HUMANFRAME * m_btDress; //男0, 女1
         m_nHairOffset := HUMHAIRANFRAME * m_btHair;
         m_nWeaponOffset := HUMANFRAME * m_btWeapon; //(weapon*2 + m_btSex);
 
@@ -3226,7 +3258,7 @@ begin
 Result := m_nChrLight;
 end;
      }
-
+//装载当前动作对应的图片
 procedure TActor.LoadSurface;
 var
   mimg: TWMImages;
@@ -3240,6 +3272,7 @@ begin
   end;
 end;
 
+//取角色的宽度
 function TActor.CharWidth: Integer;
 begin
   if m_BodySurface <> nil then
@@ -3247,7 +3280,7 @@ begin
   else
     Result := 48;
 end;
-
+//取角色的高度
 function TActor.CharHeight: Integer;
 begin
   if m_BodySurface <> nil then
@@ -3255,7 +3288,7 @@ begin
   else
     Result := 70;
 end;
-
+//判断某一点是否是角色的身体
 function TActor.CheckSelect(dx, dy: Integer): Boolean;
 var
   c: Integer;
@@ -3302,6 +3335,7 @@ begin
   end;
 end;
 
+//画武器闪烁光
 procedure TActor.DrawWeaponGlimmer(dsurface: TDirectDrawSurface; ddx, ddy:
   Integer);
 //var
@@ -3325,19 +3359,19 @@ begin
   end;*)
 end;
 //人物显示颜色，中毒
-
+//根据当前状态state获得颜色效果（比如中毒状态等，人物显示的颜色就可能不同）
 function TActor.GetDrawEffectValue: TColorEffect;
 var
   ceff: TColorEffect;
 begin
   ceff := ceNone;
 
-  //急琶等 某腐 灌霸.
+   //高亮
   if ((g_FocusCret = Self) or (g_MagicTarget = Self)) and (m_nState and $00800000 = 0) then begin
     ceff := ceBright;
   end;
 
-  //吝刀
+   //中了绿毒
   if m_nState and $80000000 <> 0 then begin
     ceff := ceGreen;
   end;
@@ -3362,6 +3396,7 @@ end;
 
 procedure TActor.DrawChr(dsurface: TDirectDrawSurface; dx, dy: Integer; blend:
   Boolean; boFlag: Boolean);
+//显示角色
 var
   idx, ax, ay: Integer;
   d: TDirectDrawSurface;
@@ -3373,7 +3408,7 @@ begin
     Exit;
   if GetTickCount - m_dwLoadSurfaceTime > 60 * 1000 then begin
     m_dwLoadSurfaceTime := GetTickCount;
-    LoadSurface; //bodysurface殿捞 loadsurface甫 促矫 何福瘤 臼酒 皋葛府啊 橇府登绰 巴阑 阜澜
+    LoadSurface; //由于图片每60秒会释放一次（60秒内未使用的话），所以每60秒要检查一下是否已经被释放了.
   end;
 
   ceff := GetDrawEffectValue;
@@ -3465,7 +3500,7 @@ begin
     end;
   end;
 end;
-
+//缺省帧
 function TActor.GetDefaultFrame(wmode: Boolean): Integer;
 var
   cf: Integer;
@@ -3476,8 +3511,8 @@ begin
   if pm = nil then
     Exit;
   m_dwDefFrameTick := pm.ActStand.ftime;
-  if m_boDeath then begin
-    if m_boSkeleton then
+   if m_boDeath then begin            //死亡
+      if m_boSkeleton then            //地上尸体骷髅
       Result := pm.ActDeath.start
     else
       Result := pm.ActDie.start + m_btDir * (pm.ActDie.frame + pm.ActDie.skip) + (pm.ActDie.frame - 1);
@@ -3493,8 +3528,8 @@ begin
     Result := pm.ActStand.start + m_btDir * (pm.ActStand.frame + pm.ActStand.skip) + cf;
   end;
 end;
-
-procedure TActor.DefaultMotion; //悼累 绝澜,  扁夯 磊技..
+//默认运动
+procedure TActor.DefaultMotion;   //缺省动作
 begin
   m_boReverseFrame := FALSE;
   if m_boWarMode then begin
@@ -3513,8 +3548,8 @@ var
   cx, cy, bidx, wunit, attackweapon: Integer;
   hiter: TActor;
 begin
-  if m_btRace = 0 then begin
-    if (Self = g_MySelf) and
+  if m_btRace = 0 then begin{人类}
+    if (Self = g_MySelf) and//基本动作
       ((m_nCurrentAction = SM_WALK) or
       (m_nCurrentAction = SM_BACKSTEP) or
       (m_nCurrentAction = SM_RUN) or
@@ -3532,33 +3567,25 @@ begin
         wunit := Map.m_MArr[cx, cy].btArea;
         bidx := wunit * 10000 + bidx - 1;
         case bidx of
-          //陋篮 钱
           330..349, 450..454, 550..554, 750..754,
             950..954, 1250..1254, 1400..1424, 1455..1474,
             1500..1524, 1550..1574:
-            m_nFootStepSound := s_walk_lawn_l;
+               m_nFootStepSound := s_walk_lawn_l;  //草地上行走
 
-          //吝埃钱
-
-          //变 钱
           250..254, 1005..1009, 1050..1054, 1060..1064, 1450..1454,
             1650..1654:
-            m_nFootStepSound := s_walk_rough_l;
+               m_nFootStepSound := s_walk_rough_l; //粗糙的地面
 
-          //倒 辨
-          //措府籍 官蹿
           605..609, 650..654, 660..664, 2000..2049,
             3025..3049, 2400..2424, 4625..4649, 4675..4678:
-            m_nFootStepSound := s_walk_stone_l;
+               m_nFootStepSound := s_walk_stone_l;  //石头地面上行走
 
-          //悼奔救
           1825..1924, 2150..2174, 3075..3099, 3325..3349,
             3375..3399:
-            m_nFootStepSound := s_walk_cave_l;
+               m_nFootStepSound := s_walk_cave_l;  //洞穴里行走
 
-          //唱公官蹿
           3230, 3231, 3246, 3277:
-            m_nFootStepSound := s_walk_wood_l;
+               m_nFootStepSound := s_walk_wood_l;  //木头地面行走
 
           //带傈..
           3780..3799:
@@ -3570,13 +3597,11 @@ begin
             else
               m_nFootStepSound := s_walk_ground_l;
 
-          //笼救(家府 喊风 救巢)
           2075..2099, 2125..2149:
-            m_nFootStepSound := s_walk_room_l;
+               m_nFootStepSound := s_walk_room_l;   //房间里
 
-          //俺匡
           1800..1824:
-            m_nFootStepSound := s_walk_water_l;
+               m_nFootStepSound := s_walk_water_l;  //水中
 
         else
           m_nFootStepSound := s_walk_ground_l;
@@ -3596,7 +3621,7 @@ begin
             m_nFootStepSound := s_walk_wood_l;
         end;
 
-        bidx := Map.m_MArr[cx, cy].wMidImg and $7FFF;
+         bidx := Map.m_MArr[cx, cy].wMidImg and $7FFF;   //检查地图属性
         bidx := bidx - 1;
         case bidx of
           0..115:
@@ -3629,16 +3654,16 @@ begin
 
     end;
 
-    if m_btSex = 0 then begin //巢磊
+      if m_btSex = 0 then begin //男
       m_nScreamSound := s_man_struck;
       m_nDieSound := s_man_die;
     end
-    else begin //咯磊
+    else begin //女
       m_nScreamSound := s_wom_struck;
       m_nDieSound := s_wom_die;
     end;
 
-    case m_nCurrentAction of
+      case m_nCurrentAction of      //攻击动作
       SM_THROW, SM_HIT, SM_HIT + 1, SM_HIT + 2, SM_POWERHIT, SM_LONGHIT, SM_LONGICEHIT_L, SM_LONGICEHIT_S,
         SM_WIDEHIT, SM_FIREHIT, SM_CRSHIT, SM_TWINHIT, SM_110, SM_111, SM_112, SM_113, SM_122, SM_56: begin
           case (m_btWeapon div 2) of
@@ -3653,7 +3678,7 @@ begin
             m_nWeaponSound := s_hit_fist;
           end;
         end;
-      SM_STRUCK: begin
+      SM_STRUCK: begin//受攻击
           if m_nMagicStruckSound >= 1 then begin //付过栏肺 嘎澜
             //strucksound := s_struck_magic;  //烙矫..
           end
@@ -3705,7 +3730,7 @@ begin
 
   end
   else begin
-    if m_nCurrentAction = SM_STRUCK then begin
+    if m_nCurrentAction = SM_STRUCK then begin//受攻击
       if m_nMagicStruckSound >= 1 then begin //付过栏肺 嘎澜
         //strucksound := s_struck_magic;  //烙矫..
       end
@@ -3742,12 +3767,12 @@ begin
   end;
 
   //漠 嘎绰 家府
-  if m_nCurrentAction = SM_STRUCK then begin
+  if m_nCurrentAction = SM_STRUCK then begin//受攻击
     hiter := PlayScene.FindActor(m_nHiterCode);
     //    attackweapon := 0;
     if hiter <> nil then begin //锭赴仇捞 公均栏肺 锭啡绰瘤 八荤
       attackweapon := hiter.m_btWeapon div 2;
-      if hiter.m_btRace = 0 then
+      if hiter.m_btRace = 0 then//人类
         case (attackweapon div 2) of
           6, 20: m_nStruckWeaponSound := s_struck_short;
           1: m_nStruckWeaponSound := s_struck_wooden;
@@ -3808,19 +3833,19 @@ begin
     m_NameWidth := g_DXCanvas.TextWidth(m_UserName);
   end;
 end;
-
+//播放动作声效
 procedure TActor.RunSound;
 begin
   m_boRunSound := TRUE;
   SetSound;
   case m_nCurrentAction of
-    SM_STRUCK: begin
+    SM_STRUCK: begin//被攻击
         if (m_nStruckWeaponSound >= 0) then
-          PlaySound(m_nStruckWeaponSound);
+          PlaySound(m_nStruckWeaponSound);//攻击的武器的声效
         if (m_nStruckSound >= 0) then
-          PlaySound(m_nStruckSound);
+          PlaySound(m_nStruckSound); //被攻击的声效
         if (m_nScreamSound >= 0) then
-          PlaySound(m_nScreamSound);
+          PlaySound(m_nScreamSound);//尖叫
       end;
     SM_NOWDEATH: begin
         if (m_nDieSound >= 0) then begin
@@ -3884,18 +3909,18 @@ end;
 
 procedure TActor.RunActSound(frame: Integer);
 begin
-  if m_boRunSound then begin
-    if m_btRace = 0 then begin
+  if m_boRunSound then begin//需要播放声效
+    if m_btRace = 0 then begin//人类
       case m_nCurrentAction of
-        SM_THROW, SM_HIT, SM_HIT + 1, SM_HIT + 2:
+        SM_THROW, SM_HIT, SM_HIT + 1, SM_HIT + 2://扔、击
           if frame = 2 then begin
             PlaySound(m_nWeaponSound);
-            m_boRunSound := FALSE; //茄锅父 家府晨
+            m_boRunSound := FALSE; //声效已经播放
           end;
         SM_POWERHIT:
           if frame = 2 then begin
             PlaySound(m_nWeaponSound);
-            if m_btSex = 0 then
+            if m_btSex = 0 then//播放人物的声音
               PlaySound(s_yedo_man)
             else
               PlaySound(s_yedo_woman);
@@ -4052,12 +4077,12 @@ begin
       m_boMsgMuch := TRUE;
   end;
 
-  //荤款靛 瓤苞
+   //声音效果
   RunActSound(m_nCurrentFrame - m_nStartFrame);
   RunFrameAction(m_nCurrentFrame - m_nStartFrame);
 
   prv := m_nCurrentFrame;
-  if m_nCurrentAction <> 0 then begin
+   if m_nCurrentAction <> 0 then begin  //动作不为空
     if (m_nCurrentFrame < m_nStartFrame) or (m_nCurrentFrame > m_nEndFrame) then
       m_nCurrentFrame := m_nStartFrame;
 
@@ -4168,6 +4193,7 @@ begin
   end;
 end;
 
+//根据当前动作和状态计算下一个动作对应的帧
 function TActor.Move(step: Integer; out boChange: Boolean): Boolean;
 var
   prv, curstep, maxstep: Integer;
@@ -4205,6 +4231,7 @@ begin
     if m_Abil.HandWeight > m_Abil.MaxHandWeight then begin
       g_boAttackSlow := TRUE;
     end;   }
+      //免负重
     if g_boMoveSlow and (m_nSkipTick < g_nMoveSlowLevel) then begin
       Inc(m_nSkipTick); //茄锅 疆促.
       Exit;
@@ -4212,7 +4239,7 @@ begin
     else begin
       m_nSkipTick := 0;
     end;
-    //荤款靛 瓤苞
+      //走动的声音
     if (m_nCurrentAction = SM_WALK) or
       (m_nCurrentAction = SM_BACKSTEP) or
       (m_nCurrentAction = SM_RUN) or
@@ -4234,7 +4261,7 @@ begin
       m_boMsgMuch := TRUE;
   end;
   prv := m_nCurrentFrame;
-  //叭扁 顿扁
+   //移动
   if (m_nCurrentAction = SM_WALK) or
     (m_nCurrentAction = SM_RUN) or
     (m_nCurrentAction = SM_LEAP) or
@@ -4244,25 +4271,26 @@ begin
     (m_nCurrentAction = SM_MAGICMOVE) or
     (m_nCurrentAction = SM_MAGICFIR) or
     (m_nCurrentAction = SM_RUSHKUNG) then begin
+     //调整当前帧
     if (m_nCurrentFrame < m_nStartFrame) or (m_nCurrentFrame > m_nEndFrame) then begin
       m_nCurrentFrame := m_nStartFrame - 1;
     end;
     if m_nCurrentFrame < m_nEndFrame then begin
       Inc(m_nCurrentFrame);
-      if m_boMsgMuch and (not normmove) then //or fastmove then
+      if m_boMsgMuch and (not normmove) then //加快步伐
         if m_nCurrentFrame < m_nEndFrame then
           Inc(m_nCurrentFrame);
 
       //何靛反霸 捞悼窍霸 窍妨绊
       curstep := m_nCurrentFrame - m_nStartFrame + 1;
       maxstep := m_nEndFrame - m_nStartFrame + 1;
-      Shift(m_btDir, m_nMoveStep, curstep, maxstep);
+      Shift(m_btDir, m_nMoveStep, curstep, maxstep);//变速
       //Result := Self = g_MySelf;
     end;
     if m_nCurrentFrame >= m_nEndFrame then begin
       if Self = g_MySelf then begin
         if FrmMain.ServerAcceptNextAction then begin
-          m_nCurrentAction := 0;
+          m_nCurrentAction := 0;//当前动作：无
           m_boLockEndFrame := TRUE;
           m_dwSmoothMoveTime := GetTickCount;
         end;
@@ -4280,7 +4308,7 @@ begin
         g_dwDizzyDelayTime := 300; //掉饭捞
       end;
     end;
-    if m_nCurrentAction = SM_RUSHKUNG then begin
+    if m_nCurrentAction = SM_RUSHKUNG then begin//野蛮冲撞
       if m_nCurrentFrame >= m_nEndFrame - 3 then begin
         m_nCurrX := m_nActBeforeX;
         m_nCurrY := m_nActBeforeY;
@@ -4300,7 +4328,7 @@ begin
     Result := TRUE;
   end;
   //缔吧澜龙
-  if (m_nCurrentAction = SM_BACKSTEP) then begin
+  if (m_nCurrentAction = SM_BACKSTEP) then begin//后退
     if (m_nCurrentFrame > m_nEndFrame) or (m_nCurrentFrame < m_nStartFrame) then begin
       m_nCurrentFrame := m_nEndFrame + 1;
     end;
@@ -4319,9 +4347,8 @@ begin
     if m_nCurrentFrame <= m_nStartFrame then begin
       if Self = g_MySelf then begin
         //if FrmMain.ServerAcceptNextAction then begin
-        m_nCurrentAction := 0; //辑滚狼 脚龋甫 罐栏搁 促澜 悼累
-        m_boLockEndFrame := TRUE;
-        //辑滚狼脚龋啊 绝绢辑 付瘤阜橇贰烙俊辑 肛勉
+        m_nCurrentAction := 0; //消息为空
+        m_boLockEndFrame := TRUE;//锁定当前操作
         m_dwSmoothMoveTime := GetTickCount;
 
         //第肺 剐赴 促澜 茄悼救 给 框流牢促.
@@ -4360,6 +4387,7 @@ begin
     end;
     Result := TRUE;
   end;
+   //若当前动作和上一个动作帧不同，则装载当前动作画面
   if prv <> m_nCurrentFrame then begin
     m_dwLoadSurfaceTime := GetTickCount;
     LoadSurface;
@@ -4367,6 +4395,7 @@ begin
   end;
 end;
 
+//移动失败（服务器不接受移动命令）时，退回到上次的位置
 procedure TActor.MoveFail;
 begin
   m_nCurrentAction := 0; //悼累 肯丰
@@ -4404,6 +4433,7 @@ begin
   CleanUserMsgs;
 end;
 
+//实现分行显示说话内容到Saying
 procedure TActor.Say(str: string; boFirst: Boolean);
 const
   MAXWIDTH = 150;
@@ -4620,7 +4650,7 @@ begin
   if m_boCanModDir then
     m_btDir := m_btDir mod 3; //规氢篮 0, 1, 2 观俊 绝澜..
   case m_nCurrentAction of
-    SM_TURN: begin
+    SM_TURN: begin//转向
         m_nStartFrame := pm.ActStand.start + m_btDir * (pm.ActStand.frame + pm.ActStand.skip);
         m_nEndFrame := m_nStartFrame + pm.ActStand.frame - 1;
         m_dwFrameTime := pm.ActStand.ftime;
@@ -4658,7 +4688,7 @@ begin
           end;
         end;
       end;
-    SM_HIT: begin
+    SM_HIT: begin//攻击
         case m_wAppearance of
           125: ;
           33, 34 {, 52}: begin
@@ -4725,7 +4755,7 @@ begin
   if m_MissionList <> nil then
     m_MissionList.Free;
 end;
-
+// 画NPC 人物自身图
 procedure TNpcActor.DrawChr(dsurface: TDirectDrawSurface; dx, dy: Integer; blend, boFlag: Boolean);
 var
   ceff: TColorEffect;
@@ -4754,7 +4784,7 @@ begin
         ceff);
     end
     else begin
-      DrawEffSurface(dsurface,
+        DrawEffSurface (dsurface,      //此处为画
         m_BodySurface,
         dx + m_nPx + m_nShiftX,
         dy + m_nPy + m_nShiftY,
@@ -4795,7 +4825,7 @@ begin
   if pm = nil then
     Exit;
   if m_boCanModDir then
-    m_btDir := m_btDir mod 3; //规氢篮 0, 1, 2 观俊 绝澜..
+    m_btDir := m_btDir mod 3; //NPC只有3个方向（如商人）
   m_dwDefFrameTick := pm.ActStand.ftime;
   if m_nCurrentDefFrame < 0 then
     cf := 0
@@ -4895,7 +4925,7 @@ var
 begin
   Result := inherited Run;
   nEffectFrame := m_nEffectFrame;
-  if m_boUseEffect then begin
+  if m_boUseEffect then begin    //NPC是否使用了魔法类
     if m_boUseMagic then begin
       dwEffectFrameTime := Round(m_dwEffectFrameTime / 3);
     end
@@ -4922,7 +4952,7 @@ begin
       end;
     end;
   end;
-  if nEffectFrame <> m_nEffectFrame then begin
+  if nEffectFrame <> m_nEffectFrame then begin     //魔法桢
     m_dwLoadSurfaceTime := GetTickCount();
     LoadSurface();
     Result := True;
@@ -4978,12 +5008,12 @@ begin
   m_nCurEffFrame := 0;
   m_nCurCboFrame := 0;
   m_nHitEffectNumber := -1;
-  m_btHair := HAIRfeature(m_nFeature); //函版等促.
-  m_btDress := DRESSfeature(m_nFeature);
+  m_btHair := HAIRfeature(m_nFeature); //发型
+  m_btDress := DRESSfeature(m_nFeature);//武器//服装
   m_btWeapon := WEAPONfeature(m_nFeature);
   m_btHorse := Horsefeature(m_nFeatureEx);
   m_btEffect := Effectfeature(m_nFeatureEx);
-  m_nBodyOffset := HUMANFRAME * (m_btDress); //m_btSex; //巢磊0, 咯磊1
+  m_nBodyOffset := HUMANFRAME * (m_btDress); //m_btSex; //男0, 女1
 
   m_nHairOffset := HUMHAIRANFRAME * m_btHair;
 
@@ -4992,7 +5022,7 @@ begin
   if m_btEffect > 0 then
     m_nHumWinOffset := (m_btEffect - 1) * HUMANFRAME;
   case m_nCurrentAction of
-    SM_TURN: begin
+    SM_TURN: begin//转
         m_nStartFrame := HA.ActStand.start + m_btDir * (HA.ActStand.frame + HA.ActStand.skip);
         m_nEndFrame := m_nStartFrame + HA.ActStand.frame - 1;
         m_dwFrameTime := HA.ActStand.ftime;
@@ -5000,8 +5030,8 @@ begin
         m_nDefFrameCount := HA.ActStand.frame;
         Shift(m_btDir, 0, 0, m_nEndFrame - m_nStartFrame + 1);
       end;
-    SM_WALK,
-      SM_BACKSTEP: begin
+    SM_WALK,//走
+      SM_BACKSTEP: begin//后退
         m_nStartFrame := HA.ActWalk.start + m_btDir * (HA.ActWalk.frame + HA.ActWalk.skip);
         m_nEndFrame := m_nStartFrame + HA.ActWalk.frame - 1;
         m_dwFrameTime := HA.ActWalk.ftime;
@@ -5017,7 +5047,7 @@ begin
         else
           Shift(m_btDir, m_nMoveStep, 0, m_nEndFrame - m_nStartFrame + 1);
       end;
-    SM_RUSHCBO: begin
+    SM_RUSHCBO: begin//跑动中改变方向
         m_nRushDir := 0;
         m_nSpellCboSkip := 10;
         m_nHitEffectNumber := 2;
@@ -5089,7 +5119,7 @@ begin
           Shift(m_btDir, 1, 0, m_nEndFrame - m_nStartFrame + 1);
         end;
       end;
-    SM_RUSHKUNG: begin
+    SM_RUSHKUNG: begin//野蛮冲撞
         m_nStartFrame := HA.ActRun.start + m_btDir * (HA.ActRun.frame + HA.ActRun.skip);
         m_nEndFrame := m_nStartFrame + HA.ActRun.frame - 1;
         m_dwFrameTime := HA.ActRun.ftime;
@@ -5165,23 +5195,23 @@ begin
         m_dwStartTime := GetTickCount;
         m_boWarMode := TRUE;
         m_dwWarModeTime := GetTickCount;
-        if (m_nCurrentAction = SM_POWERHIT) then begin
+        if (m_nCurrentAction = SM_POWERHIT) then begin//攻杀
           m_boHitEffect := TRUE;
           m_nHitEffectNumber := 1;
         end;
-        if (m_nCurrentAction = SM_LONGHIT) then begin
+        if (m_nCurrentAction = SM_LONGHIT) then begin //刺杀
           m_boHitEffect := TRUE;
           m_nHitEffectNumber := 2;
         end;
-        if (m_nCurrentAction = SM_WIDEHIT) then begin
+        if (m_nCurrentAction = SM_WIDEHIT) then begin//半月
           m_boHitEffect := TRUE;
           m_nHitEffectNumber := 3;
         end;
-        if (m_nCurrentAction = SM_FIREHIT) then begin
+        if (m_nCurrentAction = SM_FIREHIT) then begin //烈火
           m_boHitEffect := TRUE;
           m_nHitEffectNumber := 4;
         end;
-        if (m_nCurrentAction = SM_CRSHIT) then begin
+        if (m_nCurrentAction = SM_CRSHIT) then begin//抱月
           m_boHitEffect := TRUE;
           m_nHitEffectNumber := 6;
           nx := m_nCurrX;
@@ -5567,7 +5597,7 @@ begin
   end;
 end;
 
-function THumActor.GetDefaultFrame(wmode: Boolean): Integer;
+function THumActor.GetDefaultFrame(wmode: Boolean): Integer;//动态函数
 var
   cf: Integer;
   //  pm: pTMonsterAction;
@@ -5576,13 +5606,13 @@ begin
   //dr := Dress div 2;            //HUMANFRAME * (dr)
   m_boShowCbo := False;
   m_boNoCheckSpeed := False;
-  if m_boDeath then
+  if m_boDeath then//死亡
     Result := HA.ActDie.start + m_btDir * (HA.ActDie.frame + HA.ActDie.skip) + (HA.ActDie.frame - 1)
-  else if wmode then begin
+  else if wmode then begin//战斗状态
     //GlimmingMode := TRUE;
     Result := HA.ActWarMode.start + m_btDir * (HA.ActWarMode.frame + HA.ActWarMode.skip);
   end
-  else begin
+  else begin  //站立状态
     m_nDefFrameCount := HA.ActStand.frame;
     m_dwDefFrameTick := HA.ActStand.ftime;
     if m_nCurrentDefFrame < 0 then
@@ -5644,6 +5674,7 @@ begin
 end;
 
 function THumActor.Run: Boolean;
+  //判断魔法是否已经完成（人类：3秒，其他：2秒）
   function MagicTimeOut: Boolean;
   begin
     if Self = g_MySelf then begin
@@ -5670,7 +5701,7 @@ begin
       m_nGenAniCount := 0;
     Inc(m_nCurBubbleStruck);
   end;
-  if m_boWeaponEffect then begin //公扁 氢惑/何辑咙 瓤苞
+   if m_boWeaponEffect then begin  //武器效果，每120秒变化一帧，共5帧
     if GetTickCount - m_dwWeaponpEffectTime > 120 then begin
       m_dwWeaponpEffectTime := GetTickCount;
       Inc(m_nCurWeaponEffect);
@@ -5696,8 +5727,7 @@ begin
     if (m_MsgList.Count >= 2) {or m_boShowCbo} then
       m_boMsgMuch := TRUE;
   end;
-
-  //荤款靛 瓤苞
+   //动作声效
   RunActSound(m_nCurrentFrame - m_nStartFrame);
   RunFrameAction(m_nCurrentFrame - m_nStartFrame);
 
@@ -5724,7 +5754,7 @@ begin
         {m_nCurCboFrame := 17;
         m_boShowCbo := True;}
         if m_boUseMagic then begin
-          if (m_nCurEffFrame = m_nSpellFrame - m_nNewMagicFrame) or (MagicTimeOut) then begin
+          if (m_nCurEffFrame = m_nSpellFrame - m_nNewMagicFrame) or (MagicTimeOut) then begin//魔法执行完
             if (m_CurMagic.ServerMagicCode >= 0) or (MagicTimeOut) then begin
               Inc(m_nCurrentFrame);
               Inc(m_nCurEffFrame);
@@ -5759,21 +5789,21 @@ begin
       end
       else begin
         if Self = g_MySelf then begin
-          if FrmMain.ServerAcceptNextAction then begin
+          if FrmMain.ServerAcceptNextAction then begin//锁定人物本身 服务器返回结果 则释放
             m_nCurrentAction := 0;
             m_boReverse := False;
             m_boUseMagic := FALSE;
           end;
         end
-        else begin
-          m_nCurrentAction := 0; //悼累 肯丰
+        else begin//不是人物
+          m_nCurrentAction := 0;  //动作为空
           m_boUseMagic := FALSE;
           m_boReverse := False;
         end;
         m_boHitEffect := FALSE;
       end;
       if m_boUseMagic then begin
-        if m_nCurEffFrame = m_nSpellFrame - (m_nNewMagicFrame - 1) then begin //付过 惯荤 矫痢
+        if m_nCurEffFrame = m_nSpellFrame - (m_nNewMagicFrame - 1) then begin //魔法过程 先放自身魔法 的-1图
           //付过 惯荤
           if m_CurMagic.ServerMagicCode > 0 then begin
             with m_CurMagic do
@@ -5949,7 +5979,7 @@ begin
     if (m_btEffect <> 0) then begin
       if CurrentFrame < 64 then begin
         if (GetTickCount - m_dwFrameTick) > m_dwFrameTime then begin
-          if m_nFrame < 7 then
+          if m_nFrame < 7 then//8个动作
             Inc(m_nFrame)
           else
             m_nFrame := 0;
@@ -5973,6 +6003,9 @@ begin
   end;
 end;
 
+{-----------------------------------------------------------------}
+//绘制人物
+{-----------------------------------------------------------------}
 procedure THumActor.DrawChr(dsurface: TDirectDrawSurface; dx, dy: Integer;
   blend: Boolean; boFlag: Boolean);
 var
@@ -5982,14 +6015,14 @@ var
   wimg: TWMImages;
 begin
   d := nil; //Jacky
-  if not (m_btDir in [0..7]) then
+  if not (m_btDir in [0..7]) then//当前站立方向 不属于0..7
     Exit;
-  if GetTickCount - m_dwLoadSurfaceTime > 60 * 1000 then begin
+  if GetTickCount - m_dwLoadSurfaceTime > 60 * 1000 then begin//60秒释放一次未使用的图片，所以每隔60秒要重新装载一次
     m_dwLoadSurfaceTime := GetTickCount;
-    LoadSurface; //bodysurface loadsurface
+    LoadSurface; //重新装载图片到bodysurface
   end;
-  ceff := GetDrawEffectValue;
-  if m_btRace = 0 then begin
+  ceff := GetDrawEffectValue;//人物显示颜色
+  if m_btRace = 0 then begin//人类
     if (m_nCurrentFrame >= 0) and (m_nCurrentFrame <= 599) then
       m_nWpord := WORDER[m_btSex, m_nCurrentFrame];
 
@@ -6006,6 +6039,7 @@ begin
     if m_HoresSurface <> nil then
       DrawEffSurface(dsurface, m_HoresSurface, dx + m_nhsx + m_nShiftX, dy + m_nhsy + m_nShiftY, blend, ceff);
 
+      //先画武器
     if (m_nWpord = 0) and (not blend) and (m_btWeapon >= 2) and (m_WeaponSurface <> nil) and (not m_boHideWeapon) then begin
       DrawEffSurface(dsurface, m_WeaponSurface, dx + m_nWpx + m_nShiftX, dy + m_nWpy + m_nShiftY, blend, ceNone);
       if m_WeaponEffectSurface <> nil then
@@ -6015,13 +6049,14 @@ begin
           m_WeaponEffectSurface,
           1);
     end;
-    //个烹 弊府绊
+      //画人物
     if m_BodySurface <> nil then
       DrawEffSurface(dsurface, m_BodySurface, dx + m_nPx + m_nShiftX, dy + m_nPy + m_nShiftY, blend, ceff);
+      //画头发
     if m_HairSurface <> nil then
       DrawEffSurface(dsurface, m_HairSurface, dx + m_nHpx + m_nShiftX, dy + m_nHpy + m_nShiftY, blend, ceff);
 
-    //
+      //后画武器
     if (m_nWpord = 1) and {(not blend) and}(m_btWeapon >= 2) and (m_WeaponSurface <> nil) and (not m_boHideWeapon) then begin
       DrawEffSurface(dsurface, m_WeaponSurface, dx + m_nWpx + m_nShiftX, dy + m_nWpy + m_nShiftY, blend, ceNone);
       if m_WeaponEffectSurface <> nil then
@@ -6085,13 +6120,13 @@ begin
   end else   }
   if m_boUseMagic and (m_CurMagic.EffectNumber > 0) then begin
     if m_nCurEffFrame in [0..m_nSpellFrame - 1] then begin
-      GetEffectBase(m_CurMagic.EffectNumber - 1, 0, wimg, idx);
+      GetEffectBase(m_CurMagic.EffectNumber - 1, 0, wimg, idx);//取得魔法效果所在图库
       if m_CurMagic.EffectNumber in [114, 119..121, 123] then
         idx := idx + m_nCurEffFrame + m_btDir * m_nSpellCboSkip
       else if m_CurMagic.EffectNumber = 56 then
         idx := idx + m_nCurEffFrame + m_btDir * 20
       else
-        idx := idx + m_nCurEffFrame;
+        idx := idx + m_nCurEffFrame;//IDx对应WIL文件 里的图片位置，即用技能时显示的动画
       if wimg <> nil then
         d := wimg.GetCachedImage(idx, ax, ay);
       if d <> nil then
@@ -6112,7 +6147,13 @@ begin
     end;
   end;
 
-  //显示攻击效果
+{----------------------------------------------------------------------------}
+//显示攻击效果              2007.10.31 updata
+//m_boHitEffect 是否是攻击类型
+//m_nHitEffectNumber  使用攻击的数组 取出图的号
+//m_btDir  方向
+//m_nCurrentFrame 当前的桢数   m_nStartFrame开始的桢数
+{----------------------------------------------------------------------------}
   if m_boShowCbo and (m_nHitEffectNumber > 0) then begin
     GetEffectBase(m_nHitEffectNumber - 1, 2, wimg, idx);
     if (m_nHitEffectNumber = 3) and (m_nCurCboFrame < 4) then
@@ -6132,7 +6173,7 @@ begin
     if m_nHitEffectNumber <> 7 then
       idx := idx + m_btDir * 10 + (m_nCurrentFrame - m_nStartFrame)
     else
-      idx := idx + (m_nCurrentFrame - m_nStartFrame);
+      idx := idx{开始的号} + (m_nCurrentFrame - m_nStartFrame);
     if wimg <> nil then
       d := wimg.GetCachedImage(idx, ax, ay);
     if d <> nil then

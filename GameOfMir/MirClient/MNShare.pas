@@ -924,15 +924,8 @@ begin
 end;
 
 function GetDefMagicIcon(Mag: pTClientDefMagic): TDXTexture;
-var
-  skillType: Word;
 begin
-  skillType := Mag.Magic.wMagicId;
-  if Mag.Magic.wCopy > 0 then
-  begin
-    skillTYpe := Mag.Magic.wCopy;
-  end;
-  case skillTYpe of
+  case Mag.Magic.wMagicId of
     36: Result := g_WDefMagIconImages.Images[78];
     38: Result := g_WDefMagIconImages.Images[8];
     41: Result := g_WDefMagIconImages.Images[70];
@@ -975,7 +968,7 @@ begin
     122: Result := g_WDefMagIconImages.Images[94];
     123: Result := g_WDefMagIconImages.Images[90];
     124: Result := g_WDefMagIconImages.Images[110];
-  else Result := g_WDefMagIconImages.Images[Mag.Magic.btEffect * 2];
+    else Result := g_WDefMagIconImages.Images[Mag.Magic.btEffect * 2];
   end;
 end;
 

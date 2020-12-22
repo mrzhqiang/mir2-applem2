@@ -2217,13 +2217,13 @@ begin
 end;
 
 procedure TFrmDlg.DStateGridGridMouseMove(Sender: TObject; X, Y, ACol, ARow: Integer; Shift: TShiftState);
-{$IF Var_Interface = Var_Default}
+//{$IF Var_Interface = Var_Default}
 var
   idx, nMagID: Integer;
   MagicList: TStringList;
-{$IFEND}
+//{$IFEND}
 begin
-{$IF Var_Interface = Var_Default}
+//{$IF Var_Interface = Var_Default}
   case DMagicIndex of
     0: MagicList := MagicList1;
     1: MagicList := MagicList2;
@@ -2234,7 +2234,7 @@ begin
     idx := ACol + ARow * ColCount + MagicPage * 10;
     if (Idx >= 0) and (idx < MagicList.Count) then begin
       nMagID := Integer(MagicList.Objects[idx]);
-      if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+      if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
         if not g_MyMagicArry[nMagID].boStudy then begin
           g_MyMagicArry[nMagID].Level := 0;
           g_MyMagicArry[nMagID].CurTrain := 0;
@@ -2247,7 +2247,7 @@ begin
       end;
     end;
   end;
-{$IFEND}
+//{$IFEND}
 end;
 
 procedure TFrmDlg.DStateGridGridPaint(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState;
@@ -2303,7 +2303,8 @@ begin
         d := g_WMain99Images.Images[1808];
         if d <> nil then begin
           rc := d.ClientRect;
-          if g_MyMagicArry[nMagID].Level < 3 then
+          // 九重技能才有熟练度的进度条
+          if Magic.Magic.btTrainLv <= 9 then
             rc.Right := _MIN(Round(rc.Right / (nMaxTrain / g_MyMagicArry[nMagID].CurTrain)), rc.Right);
           dsurface.Draw(SurfaceX(Rect.Left + 46), SurfaceY(Rect.Top + 22), rc, d, FALSE);
         end;
@@ -2317,17 +2318,46 @@ begin
         with g_DXCanvas do begin
           TextOut(SurfaceX(Rect.Left + 43), SurfaceY(Rect.Top + 3), $8CC6EF, Magic.Magic.sMagicName);
 
-          if g_MyMagicArry[nMagID].Level < 3 then
+          if not (Magic.Magic.btTrainLv = 9) then
           begin
-            sStr := IntToStr(g_MyMagicArry[nMagID].CurTrain) + '/' + IntToStr(nMaxTrain);
-            TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
-            TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, 'Lv.' + IntToStr(g_MyMagicArry[nMagID].Level));
+            if (Magic.Magic.btTrainLv <= 3) then
+            begin
+              if (g_MyMagicArry[nMagID].Level < High(Magic.Magic.MaxTrain)) then
+              begin
+                sStr := IntToStr(g_MyMagicArry[nMagID].CurTrain) + '/' + IntToStr(nMaxTrain);
+                TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
+                TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, 'Lv.' + IntToStr(g_MyMagicArry[nMagID].Level));
+              end
+              else begin
+                //sStr := '-';
+                //TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
+                TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, 'Lv.Max');
+              end;
+            end
+            else begin
+              if (g_MyMagicArry[nMagID].Level < Magic.Magic.btTrainLv) then
+              begin
+//                sStr := IntToStr(g_MyMagicArry[nMagID].CurTrain) + '/' + IntToStr(nMaxTrain);
+//                TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
+                TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, 'Lv.' + IntToStr(g_MyMagicArry[nMagID].Level));
+              end
+              else begin
+                //sStr := '-';
+                //TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
+                TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, 'Lv.Max');
+              end;
+            end;
           end
-          else
-          begin
-            //sStr := '-';
-            //TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
-            TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, 'Lv.Max');
+          else begin
+            if (g_MyMagicArry[nMagID].Level < High(Magic.Magic.MaxTrain)) then
+            begin
+              sStr := IntToStr(g_MyMagicArry[nMagID].CurTrain) + '/' + IntToStr(nMaxTrain);
+              TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
+              TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, '第' + IntToStr(g_MyMagicArry[nMagID].Level) + '重');
+            end
+            else begin
+              TextOut(SurfaceX(Rect.Left + 155), SurfaceY(Rect.Top + 19), clWhite, '满重');
+            end;
           end;
         end;
       end;
@@ -9226,7 +9256,7 @@ procedure TFrmDlg.DStateWinMagicCboGridGridSelect(Sender: TObject; X, Y, ACol, A
   function CheckMagic(nMagID: Integer; out nIndex: Integer): Boolean;
   begin
     Result := False;
-    if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+    if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
       if g_MyMagicArry[nMagID].boStudy then begin
         Result := True;
         nIndex := g_MyMagicArry[nMagID].Def.Magic.wMagicIcon;
@@ -10145,7 +10175,7 @@ begin
       end
       else if g_UserKeySetup[idx].btType = UKTYPE_MAGIC then begin
         nMagID := g_UserKeySetup[idx].wIndex;
-        if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+        if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
           if g_MyMagicArry[nMagID].boStudy then begin
             DScreen.ShowHint(SurfaceX(X), SurfaceY(Y),
               ShowMagicInfo(@g_MyMagicArry[nMagID]), clwhite, True, idx, True);
@@ -10197,7 +10227,7 @@ begin
       end
       else if g_UserKeySetup[idx].btType = UKTYPE_MAGIC then begin
         nMagID := g_UserKeySetup[idx].wIndex;
-        if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+        if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
           if g_MyMagicArry[nMagID].boStudy then begin
             d := g_WMagIconImages.Images[g_MyMagicArry[nMagID].Def.Magic.wMagicIcon];
             if d <> nil then begin
@@ -10389,7 +10419,7 @@ begin
   end
   else if g_UserKeySetup[nIdx].btType = UKTYPE_MAGIC then begin
     nMagID := g_UserKeySetup[nIdx].wIndex;
-    if nMagID in [Low(g_MyMagicArry)..High(g_MyMagicArry)] then begin
+    if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
       if g_MyMagicArry[nMagID].boStudy then begin
         Result := True;
         nIndex := g_MyMagicArry[nMagID].Def.Magic.wMagicIcon;

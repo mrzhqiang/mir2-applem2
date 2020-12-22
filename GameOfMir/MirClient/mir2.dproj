@@ -3,10 +3,10 @@
   <PropertyGroup>
     <ProjectGuid>{3b758b49-f9ba-4c46-94e9-9d210265236f}</ProjectGuid>
     <MainSource>mir2.dpr</MainSource>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>D:\Release\Client\mir2.exe</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>E:\play\热血传奇10周年\mir2.exe</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>
@@ -41,16 +41,17 @@
     <DCC_IncludePath>..\Common\;..\WIL;..\HGEDelphi\Source;..\HGEDelphi\Source\DirectX;..\HGEDelphi\Source\Sound</DCC_IncludePath>
     <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
     <DCC_HIDDEN_VIRTUAL>False</DCC_HIDDEN_VIRTUAL>
+    <DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE</DCC_UnitAlias>
     <DCC_Define>DEBUG;MIRWIND</DCC_Define>
     <DCC_MapFile>3</DCC_MapFile>
     <DCC_Alignment>4</DCC_Alignment>
-    <DCC_ExeOutput>D:\game\rxcq\mir2</DCC_ExeOutput>
+    <DCC_ExeOutput>E:\play\热血传奇10周年</DCC_ExeOutput>
   </PropertyGroup>
   <ProjectExtensions>
     <Borland.Personality>Delphi.Personality</Borland.Personality>
     <Borland.ProjectType>VCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">2020</VersionInfo><VersionInfo Name="MinorVer">1</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">31</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">2052</VersionInfo><VersionInfo Name="CodePage">936</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">兰达尔引擎</VersionInfoKeys><VersionInfoKeys Name="FileDescription">游戏客户端</VersionInfoKeys><VersionInfoKeys Name="FileVersion">2020.1.0.31</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename">mir2.exe</VersionInfoKeys><VersionInfoKeys Name="ProductName">游戏客户端</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">2020.1.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys><VersionInfoKeys Name="LastCompiledTime">2009-12-22 17:57:40</VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">mir2.dpr</Source></Source><Excluded_Packages></Excluded_Packages></Delphi.Personality><ModelSupport>False</ModelSupport></BorlandProject></BorlandProject>
+<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">2020</VersionInfo><VersionInfo Name="MinorVer">1</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">61</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">2052</VersionInfo><VersionInfo Name="CodePage">936</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">兰达尔引擎</VersionInfoKeys><VersionInfoKeys Name="FileDescription">游戏客户端</VersionInfoKeys><VersionInfoKeys Name="FileVersion">2020.1.0.61</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename">mir2.exe</VersionInfoKeys><VersionInfoKeys Name="ProductName">游戏客户端</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">2020.1.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys><VersionInfoKeys Name="LastCompiledTime">2009-12-22 17:57:40</VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">mir2.dpr</Source></Source><Excluded_Packages></Excluded_Packages></Delphi.Personality><ModelSupport>False</ModelSupport></BorlandProject></BorlandProject>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
   <ItemGroup>

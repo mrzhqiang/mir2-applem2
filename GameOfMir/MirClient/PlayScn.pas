@@ -1,5 +1,5 @@
 unit PlayScn;
-
+//游戏主场景
 interface
 
 uses
@@ -195,7 +195,7 @@ begin
   //m_boCanShowMissionHint := False;
   //m_boShowMissionChange := False;
   //m_MsgList := TList.Create;
-  m_ActorList := TList.Create;
+   m_ActorList := TList.Create; //角色列表
   //m_GroundEffectList := TList.Create;
   m_EffectList := TList.Create;
   m_FlyList := TList.Create;
@@ -260,7 +260,7 @@ begin
   m_DrawOutsideList.Free;
   inherited Destroy;
 end;
-
+//游戏主场景的背景音乐（长度：43秒）
 procedure TPlayScene.SoundOnTimer(Sender: TObject);
 begin
   PlaySound(s_main_theme);
@@ -350,7 +350,7 @@ begin
 
   m_HealthBarSurface := nil;
 end;
-
+//场景开始
 procedure TPlayScene.OpenScene;
 begin
   //g_WMainImages.ClearCache;
@@ -368,7 +368,7 @@ begin
   FrmDlg2.DWndHint.Visible := True;
 
 end;
-
+//关闭场景
 procedure TPlayScene.CloseScene;
 begin
   FrmDlg.DBottom.Visible := False;
@@ -432,6 +432,7 @@ procedure TPlayScene.CleanObjects;
 var
   i: Integer;
 begin
+       //删除所有非当前玩家角色
   for i := m_ActorList.count - 1 downto 0 do begin
     if TActor(m_ActorList[i]) <> g_MySelf then begin
       if TActor(m_ActorList[i]).m_Group <> nil then begin
@@ -463,7 +464,7 @@ begin
 end;
 
 {---------------------- Draw Map -----------------------}
-
+//画地图
 procedure TPlayScene.DrawTileMap(Sender: TObject);
 var
   i, j, nY, nX, nImgNumber: Integer;
@@ -486,10 +487,10 @@ begin
     if g_FScreenHeight = 768 then nY := -UNITY * 1
     else nY := -UNITY * 4;
 
-    for j := (Top - Map.m_nBlockTop - 1) to (Bottom - Map.m_nBlockTop + 1) do begin
+    for j := (Top - Map.m_nBlockTop - 1) to (Bottom - Map.m_nBlockTop + 1) do begin//从地图顶部到下部
       if g_FScreenWidth = 1024 then nX := AAX + 28 - UNITX * 2
       else nX := AAX + 14 - UNITX * 4;
-      for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do begin
+      for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do begin//从左边到右边
         if (i >= 0) and (i < LOGICALMAPUNIT * 3) and (j >= 0) and (j < LOGICALMAPUNIT * 3) then begin
           nImgNumber := (Map.m_MArr[i, j].wBkImg and $7FFF);
           if nImgNumber > 0 then begin
@@ -514,6 +515,7 @@ begin
   end;
 
   //地图中间层
+   //显示地上的草   比如比齐安全区的草
   with Map.m_ClientRect do begin
     if g_FScreenHeight = 768 then nY := -UNITY * 1
     else nY := -UNITY * 4;
@@ -540,6 +542,7 @@ end;
 
 {----------------------- 器弊, 扼捞飘 贸府 -----------------------}
 (*
+//从文件中装载雾
 procedure TPlayScene.LoadFog; //扼捞飘 单捞鸥 佬扁
 var
   i, fhandle, w, h, prevsize: Integer;
@@ -1074,6 +1077,7 @@ begin
 //end
 end;
 
+//画游戏正式场景
 procedure TPlayScene.PlayScene(MSurface: TDirectDrawSurface);
 begin
 end;
@@ -1268,6 +1272,7 @@ begin
         continue;
       end;
       n := defx - UNITX * 2;
+      //*** 48*32 是一个物体小图片的大小
       for i := (Map.m_ClientRect.Left - Map.m_nBlockLeft - 2) to (Map.m_ClientRect.Right - Map.m_nBlockLeft + 2) do
         begin
         if (i >= 0) and (i < LOGICALMAPUNIT * 3) and (j >= 0) and (j < LOGICALMAPUNIT * 3) then begin
@@ -1291,7 +1296,7 @@ begin
               //凯赴 巩
             end;
             fridx := fridx - 1;
-            // 拱眉 弊覆
+               // 取图片
             DSurface := GetObjsEx(wunit, fridx, ax, ay);
             if DSurface <> nil then begin
               if blend then begin
@@ -1596,14 +1601,14 @@ begin
   end;
   if not g_boServerChanging then begin
     try
-      //**** 林牢傍 某腐磐 弊府扁
+      //**** 画隐身状态
       if not g_boCheckBadMapMode then
         if g_MySelf.m_nState and $00800000 = 0 then //捧疙捞 酒聪搁
           g_MySelf.DrawChr(m_ObjSurface, (g_MySelf.m_nRx - Map.m_ClientRect.Left)
             * UNITX + defx, (g_MySelf.m_nRy - Map.m_ClientRect.Top - 1) * UNITY +
             defy, True, FALSE);
 
-      //****
+      //**** 当前鼠标指向的角色
       if (g_FocusCret <> nil) then begin
         if IsValidActor(g_FocusCret) and (g_FocusCret <> g_MySelf) then
           //            if (actor.m_btRace <> 81) or (FocusCret.State and $00800000 = 0) then //Jacky
@@ -1613,6 +1618,7 @@ begin
               (g_FocusCret.m_nRy - Map.m_ClientRect.Top - 1) * UNITY + defy,
               True, FALSE);
       end;
+      //**** 放魔法的时候怪物高亮显示
       if (g_MagicTarget <> nil) then begin
         if IsValidActor(g_MagicTarget) and (g_MagicTarget <> g_MySelf) then
           if g_MagicTarget.m_nState and $00800000 = 0 then //捧疙捞 酒聪搁
@@ -1626,7 +1632,7 @@ begin
     end;
   end;
   try
-    //**** 付过 瓤苞
+   //**** 画角色效果
     for k := 0 to m_ActorList.count - 1 do begin
       Actor := m_ActorList[k];
       if (abs(g_MySelf.m_nCurrX - actor.m_nCurrX) > MAXLEFT2) or
@@ -1688,8 +1694,16 @@ begin
   end;
 end;
 
-{-------------------------------------------------------}
-
+{------------------------------------------------------------------------------}
+//实现在指定目标播放某个魔法效果(20071029 清清)
+//NewMagic(aowner, magid,magnumb,cx,cy,tx,ty,targetcode,mtype,Recusion,anitime,bofly)
+//
+//
+//        其他以后添上
+//
+//
+//
+{------------------------------------------------------------------------------}
 //cx, cy, tx, ty : 甘狼 谅钎
 
 procedure TPlayScene.NewMagic(aowner: TActor;
@@ -1715,7 +1729,7 @@ begin
     GetEffectBase(magnumb - 1, 0, wimg, effnum) //magnumb{Effect}
   else
     effnum := -magnumb;
-  target := FindActor(targetcode);
+  target := FindActor(targetcode);//目标
 
   meff := nil;
   case mtype of //EffectType
@@ -2135,7 +2149,7 @@ begin
           end;
         end;
       end;
-    mtLightingThunder: begin
+    mtLightingThunder: begin//激光电影 魔法
 
         meff := TLightingThunder.Create(970, scx, scy, sctx, scty, target);
       end;
@@ -2155,7 +2169,7 @@ begin
               meff.MagExplosionBase := 1640;
               meff.frame := 6;
             end;
-          17: begin //
+          17: begin ////集体隐身术
               meff := TExploBujaukEffect.Create(140, scx, scy, sctx, scty, target);
               TExploBujaukEffect(meff).MagicNumber := 17;
               meff.ImgLib := g_WMagic6Images;
@@ -2168,9 +2182,9 @@ begin
         meff := TBujaukGroundEffect.Create(140, magnumb, scx, scy, sctx, scty);
         meff.ImgLib := g_WMagic6Images;
         case magnumb of
-          11: meff.ExplosionFrame := 20; //
-          12: meff.ExplosionFrame := 20; //
-          46: meff.ExplosionFrame := 24;
+          11: meff.ExplosionFrame := 20; ////幽灵盾
+          12: meff.ExplosionFrame := 20; ////神圣战甲术
+          46: meff.ExplosionFrame := 24;//诅咒术
         end;
         bofly := True;
       end;
@@ -2402,6 +2416,8 @@ end;
 //取得指定座标地面物品
 // x,y 为屏幕座标
 
+//取得指定座标地面物品
+// x,y 为屏幕座标
 function TPlayScene.GetDropItems(X, Y: Integer; var inames: string; var MaxWidth: Integer): pTDropItem;
 //拳搁谅钎肺 酒捞袍
 var
@@ -2420,7 +2436,7 @@ begin
   for i := 0 to g_DropedItemList.count - 1 do begin
     DropItem := pTDropItem(g_DropedItemList[i]);
     if (DropItem.X = ccx) and (DropItem.Y = ccy) then begin
-      {S := GetDnItemImg(DropItem.looks);
+      {S := GetDnItemImg(DropItem.looks); // 不检查物品是否有外观图片
       if S = nil then
         continue;     }
       if Result = nil then
@@ -2553,7 +2569,7 @@ function TPlayScene.CanWalkEx(mx, my: Integer): Boolean;
 begin
   Result := FALSE;
   if Map.CanMove(mx, my) then
-    Result := not CrashManEx(mx, my);
+    Result := not CrashManEx(mx, my);//穿人
 end;
 
 function TPlayScene.CanWalkEx2(mx, my: Integer): Boolean;
@@ -2679,7 +2695,7 @@ begin
     end;
   end;
 end;
-
+//通过ID 来找这个角色
 function TPlayScene.FindActor(id: Integer): TActor;
 var
   i: Integer;
@@ -2692,7 +2708,7 @@ begin
     end;
   end;
 end;
-
+//通过名字找这个角色
 function TPlayScene.FindActor(sname: string): TActor;
 var
   i: Integer;
@@ -2707,9 +2723,8 @@ begin
     end;
   end;
 end;
-
+//从X，Y坐标找这个角色
 function TPlayScene.FindActorXY(X, Y: Integer): TActor;
-//甘 谅钎肺 actor 掘澜
 var
   i: Integer;
 begin
@@ -2723,7 +2738,7 @@ begin
     end;
   end;
 end;
-
+//列表里是否有这个角色
 function TPlayScene.IsValidActor(Actor: TActor): Boolean;
 var
   i: Integer;
@@ -2903,14 +2918,15 @@ var
   Actor: TActor;
 begin
   Result := nil; //jacky
+   //检查这个角色是否已经存在角色列表中，若存在，则不用创建
   for i := 0 to m_ActorList.count - 1 do
     if TActor(m_ActorList[i]).m_nRecogId = chrid then begin
       Result := TActor(m_ActorList[i]);
       Exit; //捞固 乐澜
     end;
   if IsChangingFace(chrid) then
-    Exit; //函脚吝...
-
+    Exit; //变脸中...
+//根据Race创建对应的角色对象
   case RACEfeature(cfeature) of //m_btRaceImg
     0: Actor := THumActor.Create; //人物
     9: Actor := TSoccerBall.Create; //足球
@@ -2989,9 +3005,9 @@ begin
     67: Actor := TSkeletonSoldierMon.Create;
     68: Actor := TSkeletonSoldierMon.Create;
     69: Actor := TSkeletonArcherMon.Create;
-    70: Actor := TBanyaGuardMon.Create;
-    71: Actor := TBanyaGuardMon.Create;
-    72: Actor := TBanyaGuardMon.Create;
+    70: Actor := TBanyaGuardMon.Create;//牛魔法师
+    71: Actor := TBanyaGuardMon.Create;//牛魔祭司
+    72: Actor := TBanyaGuardMon.Create;//暗之牛魔王
     73: Actor := TPBOMA1Mon.Create;
     74: Actor := TCatMon.Create;
     75: Actor := TStoneMonster.Create;
@@ -3026,23 +3042,23 @@ begin
     m_nRy := m_nCurrY;
     m_btDir := cdir;
     m_nFeature := cfeature;
-    m_btRace := RACEfeature(cfeature); //changefeature啊 乐阑锭父
-    m_btHair := HAIRfeature(cfeature); //函版等促.
-    m_btDress := DRESSfeature(cfeature);
-    m_btWeapon := WEAPONfeature(cfeature);
+    m_btRace := RACEfeature(cfeature); //种族
+    m_btHair := HAIRfeature(cfeature); //头发
+    m_btDress := DRESSfeature(cfeature);//服装
+    m_btWeapon := WEAPONfeature(cfeature);//武器
     m_btRaceServer := 0;
     if m_btRace <> 0 then begin
       m_btRaceServer := m_btWeapon;
       m_btWeapon := 0;
     end;
 
-    m_wAppearance := APPRfeature(cfeature);
+    m_wAppearance := APPRfeature(cfeature);//外貌
     m_WMImages := GetMonImg(m_wAppearance);
     //      Horse:=Horsefeature(cfeature);
     //      Effect:=Effectfeature(cfeature);
     m_Action := nil;
-    if m_btRace = 0 then begin
-      m_btSex := m_btDress mod 2; //0:巢磊 1:咯磊
+    if m_btRace = 0 then begin//人类
+      m_btSex := m_btDress mod 2; //0:男 1:女
     end else
     if m_btRace = 50 then begin
       SetMissionList(TNPCActor(Actor));
@@ -3087,7 +3103,7 @@ begin
   end;
 {$IFEND}
 end;
-
+//角色死亡：把该角色删除，然后重新放到角色列表中的第一个未死亡角色前面
 procedure TPlayScene.ActorDied(Actor: TObject);
 //var
 //  i: Integer;
@@ -3110,6 +3126,8 @@ begin
     m_ActorList.Add(Actor); }
 end;
 
+//设置角色的显示层级（角色列表的顺序）
+//当Level=0时，将把指定的角色置于角色列表的最前面
 procedure TPlayScene.SetActorDrawLevel(Actor: TObject; Level: Integer);
 var
   i: Integer;
@@ -3147,7 +3165,7 @@ begin
     end;
   end;
 end;
-
+//清除所有角色
 procedure TPlayScene.SetMembersGroup(GroupMembers: TList);
 var
   i, ii: Integer;
@@ -3216,7 +3234,7 @@ begin
     TActor(m_ActorList[i]).m_Group := nil;
   end;
 end;
-
+//根据角色ID删除一个角色
 function TPlayScene.DeleteActor(id: Integer): TActor;
 var
   i: Integer;
@@ -3261,7 +3279,7 @@ begin
     //FrmDlg.DEditChatChange(FrmDlg.DEditChat);
   end;
 end;
-
+//从角色列表中删除一个角色
 procedure TPlayScene.DelActor(Actor: TObject);
 var
   i: Integer;
@@ -3280,6 +3298,7 @@ begin
     end;
 end;
 
+//返回坐标(X,Y)处的角色，这个角色已经死亡，且不是人类
 function TPlayScene.ButchAnimal(X, Y: Integer): TActor;
 var
   i: Integer;
@@ -3344,7 +3363,7 @@ begin
           Actor := NewActor(chrid, X, Y, cdir, Feature, State);
           //Actor.m_btWuXin := Hibyte(cdir);
           //cdir := Lobyte(cdir);
-          Actor.SendMsg(SM_TURN, X, Y, cdir, Feature, State, '', 0);
+          Actor.SendMsg(SM_TURN, X, Y, cdir, Feature, State, '', 0);//转向
         end;
         if g_MySelf <> nil then begin
           g_MySelf := nil;

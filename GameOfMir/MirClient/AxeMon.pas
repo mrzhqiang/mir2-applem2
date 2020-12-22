@@ -6,25 +6,26 @@ uses
   Windows, Classes,
   Grobal2, HGETextures, CliUtil, ClFunc, magiceff, Actor, ClEvent;
 
+
 const
-  DEATHEFFECTBASE = 340;
-  DEATHFIREEFFECTBASE = 2860;
-  AXEMONATTACKFRAME = 6;
-  KUDEGIGASBASE = 1445;
-  COWMONFIREBASE = 1800;
-  COWMONLIGHTBASE = 1900;
-  ZOMBILIGHTINGBASE = 350;
-  ZOMBIDIEBASE = 340;
+   DEATHEFFECTBASE = 340;//骷髅洞里的骷髅死亡效果
+   DEATHFIREEFFECTBASE = 2860;//道草人死亡效果
+   AXEMONATTACKFRAME = 6;//mon3中掷斧哭路520-525,,530-535,,540-545,,
+   KUDEGIGASBASE = 1445;//mon3中洞蛆喷毒汁效果,,在传奇服务器文件中,kudegigas,,表洞蛆?
+   COWMONFIREBASE = 1800;//mon4中火焰沃玛火焰攻击效果,,,,传奇服务器的mon中,,cowmon 表火焰沃玛还是它所属的一个大类?
+   //火焰沃玛属于cowmon?
+   COWMONLIGHTBASE = 1900;//mon4中沃玛教主的魔法攻击效果，light??电光攻击??
+   ZOMBILIGHTINGBASE = 350;//mon5中电僵尸的极光攻击效果
+   ZOMBIDIEBASE = 340; //mon5中电僵尸死亡的光影效果
   ZOMBILIGHTINGEXPBASE = 520;
-  SCULPTUREFIREBASE = 1680;
-  MOTHPOISONGASBASE = 3590;
-  DUNGPOISONGASBASE = 3590;
-  WARRIORELFFIREBASE = 820;
-  //Jacky
-  SUPERIORGUARDBASE = 760;
+   SCULPTUREFIREBASE = 1680;//mon7中祖玛教主手中那团火的攻击效果
+   MOTHPOISONGASBASE = 3590;//mon4中锲蛾喷毒汁效果,,锲蛾在传奇服务端的名字叫
+   DUNGPOISONGASBASE = 3590;//mon3中虹魔蝎卫攻击效果
+   WARRIORELFFIREBASE = 820;//warrior elf fire mon18中神兽吹火的魔法攻击效果
+   SUPERIORGUARDBASE = 760;  //带刀护卫
 
 type
-  TSkeletonOma = class(TActor) //Size:25C
+   TSkeletonOma = class (TActor) //Size:25C   //哭路和半兽族
   private
   protected
     EffectSurface: TDirectDrawSurface; //0x240
@@ -47,7 +48,7 @@ type
     procedure DrawChr(dsurface: TDirectDrawSurface; dx, dy: integer; blend: Boolean; boFlag: Boolean); override;
   end;
 
-  TDualAxeOma = class(TSkeletonOma) //档尝带瘤绰 各
+   TDualAxeOma = class (TSkeletonOma)  //档尝带瘤绰 各 //双斧怪，，掷斧哭路??
   private
   public
     function Run: Boolean; override;
@@ -67,12 +68,12 @@ type
       Boolean; boFlag: Boolean); override;
   end;
 
-  TArcherMon = class(TCatMon) //Size: 0x25C Address: 0x00461A90
+   TArcherMon = class (TCatMon)//Size: 0x25C Address: 0x00461A90   //弓箭手怪物
   public
     function Run: Boolean; override;
   end;
 
-  TScorpionMon = class(TCatMon)
+   TScorpionMon = class (TCatMon) //蝎子怪物
   public
   end;
 
@@ -81,7 +82,7 @@ type
     procedure LoadSurface; override;
   end;
 
-  TZombiDigOut = class(TSkeletonOma)
+   TZombiDigOut = class (TSkeletonOma) //石墓尸王爬出来  ,,从tskeletonoma派生,,石墓尸王(僵尸Zombi类的一种)也属于半兽哭路族?
   public
     procedure RunFrameAction(frame: integer); override;
   end;
@@ -90,7 +91,7 @@ type
   public
   end;
 
-  TWhiteSkeleton = class(TSkeletonOma)
+   TWhiteSkeleton = class (TSkeletonOma) //白色哭路??
   public
   end;
 
@@ -146,7 +147,7 @@ type
     procedure CalcActorFrame; override;
     procedure LoadSurface; override;
   end;
-  TSculptureMon = class(TSkeletonOma)
+   TSculptureMon = class (TSkeletonOma) //雕像类怪物?
   private
     AttackEffectSurface: TDirectDrawSurface;
     ax, ay, firedir: integer;
@@ -159,15 +160,15 @@ type
     function Run: Boolean; override;
   end;
 
-  TSculptureKingMon = class(TSculptureMon)
+   TSculptureKingMon = class (TSculptureMon)//祖玛教主
   public
   end;
 
-  TSmallElfMonster = class(TSkeletonOma)
+   TSmallElfMonster = class (TSkeletonOma)//elf,,小精灵，，矮人, 淘气鬼, 恶作剧的人，，
   public
   end;
 
-  TWarriorElfMonster = class(TSkeletonOma)
+   TWarriorElfMonster = class (TSkeletonOma)//warrior,,勇士 ,,,勇士精灵=神兽(看来从字面上真难理解,必须靠玩CQ的实践+读下面具体的源程序来猜解它的意思)
   private
     oldframe: integer;
   public
@@ -550,6 +551,7 @@ begin
   end;
 
   if m_boUseEffect then
+      //染黑
     if EffectSurface <> nil then begin
       DrawBlend(dsurface, dx + ax + m_nShiftX, dy + ay + m_nShiftY, EffectSurface, 1);
     end;
@@ -1233,14 +1235,14 @@ var
 begin
   m_nCurrentFrame := -1;
 
-  m_nBodyOffset := GetOffset(m_wAppearance);
-  pm := GetRaceByPM(m_btRace, m_wAppearance);
+   m_nBodyOffset := GetOffset (m_wAppearance);   //取图
+   pm := GetRaceByPM (m_btRace,m_wAppearance);   //取动作相关步数
   if pm = nil then
     exit;
   m_boUseEffect := FALSE;
 
   case m_nCurrentAction of
-    SM_TURN: begin
+    SM_TURN: begin//转身
         if (m_nState and STATE_STONE_MODE) <> 0 then begin
           if m_wAppearance = 263 then begin
             m_nStartFrame := (pm.ActDeath.start + 80) + m_btDir * 10;
@@ -1252,7 +1254,7 @@ begin
             if (m_btRace = 48) or (m_btRace = 49) then
               m_nStartFrame := pm.ActDeath.start
                 // + Dir * (pm.ActDeath.frame + pm.ActDeath.skip)
-            else
+            else//此为雕象
               m_nStartFrame := pm.ActDeath.start + m_btDir * (pm.ActDeath.frame + pm.ActDeath.skip);
           end;
           m_nEndFrame := m_nStartFrame;
@@ -1269,7 +1271,7 @@ begin
         end;
         Shift(m_btDir, 0, 0, 1);
       end;
-    SM_WALK, SM_BACKSTEP: begin
+    SM_WALK, SM_BACKSTEP: begin//走路，后退
         m_nStartFrame := pm.ActWalk.start + m_btDir * (pm.ActWalk.frame + pm.ActWalk.skip);
         m_nEndFrame := m_nStartFrame + pm.ActWalk.frame - 1;
         m_dwFrameTime := pm.ActWalk.ftime;

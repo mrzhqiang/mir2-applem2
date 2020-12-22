@@ -1,5 +1,5 @@
-unit IntroScn;
-
+unit IntroScn;//游戏的引导场景，，比如选人,注册，，登录等,,与游戏的主场景构成游戏的整个场景
+//一般场景定义
 interface
 
 uses
@@ -10,8 +10,9 @@ uses
 const
 
 {$IF Var_Interface = Var_Mir2}
-  SELECTEDFRAME = 16;
-  FREEZEFRAME = 13;
+   SELECTEDFRAME = 16;//selected frame 选人时点了左边或右边的角色此时会有人物动画，有16帧
+   //打开ChrSel.wil,,可以看到男54是40-55,,
+   FREEZEFRAME = 13;//freeze frame 男54,,60-72,,共13帧
   EFFECTFRAME = 14;
   LOGINBAGIMGINDEX = 22;
 {$ELSE}
@@ -121,8 +122,8 @@ type
     procedure NewAccountClose;
     procedure ChgpwOk;
     procedure ChgpwCancel;
-    procedure HideLoginBox;
-    procedure OpenLoginDoor;
+      procedure HideLoginBox; //验证通过，，隐藏登录对话框
+      procedure OpenLoginDoor;//开门
     procedure PassWdFail;
   end;
 

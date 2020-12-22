@@ -1,5 +1,5 @@
-unit DrawScrn;
-
+unit DrawScrn;//DrawScrn,其实更准确地说是DrawScrn-txt,,,,整个场景的实际绘图工作已经在introscrn.pas和playscrn.pas中完成了
+//场景管理器
 interface
 
 uses
@@ -11,8 +11,8 @@ const
   MAXSYSLINE = 8;
 
   BOTTOMBOARD = 1;
-  VIEWCHATLINE = 9;
-  AREASTATEICONBASE = 150;
+   VIEWCHATLINE = 9;//9行文本输入框
+   AREASTATEICONBASE = 150;//area state icon base Prguse.wil中150战斗151安全
   
 
 type
@@ -32,7 +32,7 @@ type
     DefColor: TColor;
     boFirst: Boolean;
   end;
-
+//走马灯
 
   TDrawScreen = class
   private
@@ -41,7 +41,7 @@ type
     //m_dwDrawFrameCount: LongWord;
 
   public
-    CurrentScene: TScene;
+      CurrentScene: TScene;       //当前场景
     //ChatStrs: TStringList;
     //    ChatBks: TList;
     //ChatBoardTop: Integer;
@@ -240,7 +240,7 @@ begin
   if CurrentScene <> nil then
     CurrentScene.OpenScene;
 end;
-
+//添加系统信息
 procedure TDrawScreen.AddSysMsg(str: string; Color: TColor; boFirst: Boolean = True; DefColor: TColor = 0);
 var
   AddSysInfo: pTAddSysInfo; 
@@ -789,7 +789,7 @@ procedure TDrawScreen.ShowHintEx(X, Y: Integer; str: string);
 begin
   ClearHint;
 end;
-
+//鼠标放在某个物品上显示的信息   清清 2007.10.21
 Function TDrawScreen.ShowHint(X, Y: Integer; str: string; Color: TColor;
   drawup: Boolean; ShowIndex: Integer; boItemHint: Boolean; HintSurface:TDirectDrawSurface;
   HintList: TList; boLeft: Boolean): TPoint;
@@ -1078,7 +1078,7 @@ begin
   //HintX := 20;
   //HintY := (g_FScreenHeight - HintHeight) div 2;
 end;
-
+//清除鼠标放在某个物品上显示的信息   清清 2007.10.21
 procedure TDrawScreen.ClearHint(boClear: Boolean);
 var
   i: integer;
@@ -1422,6 +1422,7 @@ begin
   end;
 end;
 
+//显示提示信息
 procedure TDrawScreen.DrawHint(MSurface: TDirectDrawSurface);
 begin
   if boShowSurface then
