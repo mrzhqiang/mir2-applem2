@@ -151,28 +151,28 @@ $80000000  }
   GSP_HIDEHELMET = 12;      //隐藏头盔显示
   GSP_OLDCHANGEMAP = 13;    //旧的切换地图模式
 
-  DR_UP = 0;
-  DR_UPRIGHT = 1;
-  DR_RIGHT = 2;
-  DR_DOWNRIGHT = 3;
-  DR_DOWN = 4;
-  DR_DOWNLEFT = 5;
-  DR_LEFT = 6;
-  DR_UPLEFT = 7;
+  DR_UP = 0;//正北
+  DR_UPRIGHT = 1;//东北向
+  DR_RIGHT = 2; //东
+  DR_DOWNRIGHT = 3;//东南向
+  DR_DOWN = 4;//南
+  DR_DOWNLEFT = 5;//西南向
+  DR_LEFT = 6;//西
+  DR_UPLEFT = 7;//西北向
 
-  U_DRESS = 0;
-  U_WEAPON = 1;
-  U_HELMET = 2;
-  U_NECKLACE = 3;
-  U_RIGHTHAND = 4;
-  U_ARMRINGL = 5;
-  U_ARMRINGR = 6;
-  U_RINGL = 7;
-  U_RINGR = 8;
-  U_BUJUK = 9;
-  U_BELT = 10;
-  U_BOOTS = 11;
-  U_CHARM = 12;
+  U_DRESS = 0; //衣服
+  U_WEAPON = 1; //武器
+  U_HELMET = 2;//头盔
+  U_NECKLACE = 3;//项链
+  U_RIGHTHAND = 4;//右手
+  U_ARMRINGL = 5;//左手手镯,符
+  U_ARMRINGR = 6;//右手手镯
+  U_RINGL = 7;  //左戒指
+  U_RINGR = 8;//右戒指
+  U_BUJUK = 9; //物品
+  U_BELT = 10; //腰带
+  U_BOOTS = 11; //鞋
+  U_CHARM = 12; //宝石
   U_HOUSE = 13;
   U_CIMELIA = 14;
   U_REIN = 16;
@@ -255,16 +255,16 @@ $80000000  }
   OT_FREEPKAREA = 4;
 
   RC_PLAYOBJECT = 0;
-
-  //RC_HEROOBJECT = 66;
-  RC_GUARD = 11;
+  RC_PLAYMOSTER = 150; //人形怪物
+  RC_HEROOBJECT = 66;
+  RC_GUARD = 11;//大刀守卫
   RC_BOX = 30;
   RC_PEACENPC = 15;
   RC_ANIMAL = 50;
   RC_CAMION = 31;
   RC_MONSTER = 80;
-  RC_NPC = 10;
-  RC_ARCHERGUARD = 112;
+  RC_NPC = 10;//NPC
+  RC_ARCHERGUARD = 112;//NPC 弓箭手
 
   RCC_USERHUMAN = 0;
   RCC_GUARD = 12;
@@ -457,65 +457,66 @@ $80000000  }
   SKILL_123 = 123;
   SKILL_124 = 124;
 
-  SKILL_MAX = 500;
+  SKILL_MAX = 2000;
 
 
   GMM_UPDATEITEM = 1;
 
   SM_CLOSESESSION = 5000;
-  SM_RUSH = 5001;
-  SM_RUSHKUNG = 5002;
-  SM_FIREHIT = 5003;
-  SM_BACKSTEP = 5004;
+  SM_RUSH = 5001;//跑动中改变方向
+  SM_RUSHKUNG = 5002;//野蛮冲撞
+  SM_FIREHIT = 5003;//烈火
+  SM_BACKSTEP = 5004;//后退,野蛮效果? //半兽统领公箭手攻击玩家的后退
 
-  SM_TURN = 5005;
-  SM_WALK = 5006;
+  SM_TURN = 5005;//转向
+  SM_WALK = 5006;//走
   SM_SITDOWN = 5007;
-  SM_RUN = 5008;
-  SM_HIT = 5009;
+  SM_RUN = 5008;//跑
+  SM_HIT = 5009;//砍
   SM_HEAVYHIT = 5010;
   SM_BIGHIT = 5011;
-  SM_SPELL = 5012;
-  SM_POWERHIT = 5013;
-  SM_LONGHIT = 5014;
-  SM_DIGUP = 5015;
-  SM_DIGDOWN = 5016;
-  SM_FLYAXE = 5017;
-  SM_LIGHTING = 5018;
-  SM_WIDEHIT = 5019;
+  SM_SPELL = 5012;//使用魔法
+  SM_POWERHIT = 5013;//攻杀
+  SM_LONGHIT = 5014;//刺杀
+  SM_DIGUP = 5015;//挖是一"起"一"坐",这里是挖动作的"起"
+  SM_DIGDOWN = 5016;//挖动作的"坐"
+  SM_FLYAXE = 5017;//飞斧,半兽统领的攻击方式?
+  SM_LIGHTING = 5018;//免蜡开关
+  SM_WIDEHIT = 5019;//半月
 
-  SM_CRSHIT = 5020;
-  SM_TWINHIT = 5021;
+  SM_CRSHIT = 5020;//抱月刀
+  SM_TWINHIT = 5021;//开天斩重击
 
-  SM_ALIVE = 5022;
-  SM_MOVEFAIL = 5023;
-  SM_HIDE = 5024;
-  SM_DISAPPEAR = 5025;
-  SM_STRUCK = 5026;
-  SM_DEATH = 5027;
-  SM_SKELETON = 5028;
-  SM_NOWDEATH = 5029;
+  SM_ALIVE = 5022;//复活??复活戒指
+  SM_MOVEFAIL = 5023;//移动失败,走动或跑动
+  SM_HIDE = 5024;//隐身?
+  SM_DISAPPEAR = 5025;//地上物品消失
+  SM_STRUCK = 5026; //受攻击
+  SM_DEATH = 5027;//正常死亡
+  SM_SKELETON = 5028;//尸体
+  SM_NOWDEATH = 5029;//秒杀?
   SM_ACTION_MIN = 5030;
   SM_ACTION_MAX = 5031;
   SM_ACTION2_MIN = 5032;
   SM_ACTION2_MAX = 5033;
-  SM_HEAR = 5034;
+  SM_HEAR = 5034;//有人回你的话
   SM_FEATURECHANGED = 5035;
   SM_USERNAME = 5036;
-  SM_WINEXP = 5037;
-  SM_LEVELUP = 5038;
-  SM_DAYCHANGING = 5039;
-  SM_LOGON = 5040;
-  SM_NEWMAP = 5041;
-  SM_ABILITY = 5042;
-  SM_HEALTHSPELLCHANGED = 5043;
-  SM_MAPDESCRIPTION = 5044;
+  SM_WINEXP = 5037;//获得经验
+  SM_LEVELUP = 5038;//升级,左上角出现墨绿的升级字样
+  SM_DAYCHANGING = 5039;//传奇界面右下角的太阳星星月亮
+  SM_LOGON = 5040;//logon
+  SM_NEWMAP = 5041;//新地图??
+  SM_ABILITY = 5042;//打开属性对话框,F11
+  SM_HEALTHSPELLCHANGED = 5043;//治愈术使你的体力增加
+  SM_MAPDESCRIPTION = 5044;//地图描述,行会战地图?攻城区域?安全区域?
   SM_SPELL2 = 5045;
-  SM_SYSMESSAGE = 5046;
-  SM_GROUPMESSAGE = 5047;
-  SM_CRY = 5048;
-  SM_WHISPER = 5049;
-  SM_GUILDMESSAGE = 5050;
+//对话消息
+  SM_SYSMESSAGE = 5046;//系统消息,盛大一般红字,私服蓝字
+  SM_GROUPMESSAGE = 5047;//组内聊天!!
+  SM_CRY = 5048;//喊话
+  SM_WHISPER = 5049;//私聊
+  SM_GUILDMESSAGE = 5050;//行会聊天!~
   SM_ADDITEM = 5051;
   SM_BAGITEMS = 5052;
   SM_DELITEM = 5053;
@@ -524,49 +525,52 @@ $80000000  }
   SM_ADDMAGIC = 5056;
   SM_SENDMYMAGIC = 5057;
   SM_DELMAGIC = 5058;
+ //服务器端发送的命令 SM:server msg,服务端向客户端发送的消息
+
+//登录、新帐号、新角色、查询角色等
   SM_CERTIFICATION_FAIL = 5059;
   SM_ID_NOTFOUND = 5060;
-  SM_PASSWD_FAIL = 5061;
-  SM_NEWID_SUCCESS = 5062;
-  SM_NEWID_FAIL = 5063;
-  SM_CHGPASSWD_SUCCESS = 5064;
-  SM_CHGPASSWD_FAIL = 5065;
-  SM_GETBACKPASSWD_SUCCESS = 5066;
-  SM_GETBACKPASSWD_FAIL = 5067;
+  SM_PASSWD_FAIL = 5061;//验证失败,"服务器验证失败,需要重新登录"??
+  SM_NEWID_SUCCESS = 5062;//创建新账号成功
+  SM_NEWID_FAIL = 5063;//创建新账号失败
+  SM_CHGPASSWD_SUCCESS = 5064;//修改密码成功
+  SM_CHGPASSWD_FAIL = 5065; //修改密码失败
+  SM_GETBACKPASSWD_SUCCESS = 5066; //密码找回成功
+  SM_GETBACKPASSWD_FAIL = 5067;//密码找回失败
   SM_DELHUM = 5068;
   SM_RENEWHUM = 5069;
-  SM_QUERYCHR = 5070;
-  SM_NEWCHR_SUCCESS = 5071;
-  SM_NEWCHR_FAIL = 5072;
-  SM_DELCHR_SUCCESS = 5073;
-  SM_DELCHR_FAIL = 5074;
-  SM_STARTPLAY = 5075;
-  SM_STARTFAIL = 5076;
-  SM_QUERYCHR_FAIL = 5077;
-  SM_OUTOFCONNECTION = 5078;
-  SM_PASSOK_SELECTSERVER = 5079;
-  SM_SELECTSERVER_OK = 5080;
-  SM_NEEDUPDATE_ACCOUNT = 5081;
-  SM_UPDATEID_SUCCESS = 5082;
-  SM_UPDATEID_FAIL = 5083;
+  SM_QUERYCHR = 5070;//返回角色信息到客户端
+  SM_NEWCHR_SUCCESS = 5071; //新建角色成功
+  SM_NEWCHR_FAIL = 5072;//新建角色失败
+  SM_DELCHR_SUCCESS = 5073;//删除角色成功
+  SM_DELCHR_FAIL = 5074;//删除角色失败
+  SM_STARTPLAY = 5075;//开始进入游戏世界(点了健康游戏忠告后进入游戏画面)
+  SM_STARTFAIL = 5076;//开始失败,玩传奇深有体会,有时选择角色,点健康游戏忠告后黑屏
+  SM_QUERYCHR_FAIL = 5077;//返回角色信息到客户端失败
+  SM_OUTOFCONNECTION = 5078;//超过最大连接数,强迫用户下线
+  SM_PASSOK_SELECTSERVER = 5079;//密码验证完成且密码正确,开始选服
+  SM_SELECTSERVER_OK = 5080;//选服成功
+  SM_NEEDUPDATE_ACCOUNT = 5081;//需要更新,注册后的ID会发生什么变化?私服中的普通ID经过充值??或者由普通ID变为会员ID,GM?
+  SM_UPDATEID_SUCCESS = 5082; //更新成功
+  SM_UPDATEID_FAIL = 5083;//更新失败
   SM_DROPITEM_SUCCESS = 5084;
   SM_DROPITEM_FAIL = 5085;
   SM_ITEMSHOW = 5086;
   SM_ITEMHIDE = 5087;
-  SM_OPENDOOR_OK = 5088;
-  SM_OPENDOOR_LOCK = 5089;
-  SM_CLOSEDOOR = 5090;
+  SM_OPENDOOR_OK = 5088;//通过过门点成功
+  SM_OPENDOOR_LOCK = 5089;//发现过门口是封锁的,以前盛大秘密通道去赤月的门要5分钟开一次
+  SM_CLOSEDOOR = 5090;//用户过门,门自行关闭
   SM_TAKEON_OK = 5091;
   SM_TAKEON_FAIL = 5092;
   SM_TAKEOFF_OK = 5093;
   SM_TAKEOFF_FAIL = 5094;
   SM_SENDUSEITEMS = 5095;
   SM_WEIGHTCHANGED = 5096;
-  SM_CHANGEMAP = 5098;
+  SM_CHANGEMAP = 5098;//地图改变,进入新地图
   SM_EAT_OK = 5099;
   SM_EAT_FAIL = 5100;
-  SM_BUTCH = 5101;
-  SM_MAGICFIRE = 5102;
+  SM_BUTCH = 5101;//野蛮?
+  SM_MAGICFIRE = 5102;//地狱火,火墙??
   SM_MAGICFIRE_FAIL = 5103;
   SM_MAGIC_LVEXP = 5104;
   SM_BAG_DURACHANGE = 5105;
@@ -584,10 +588,10 @@ $80000000  }
   SM_GOLDCHANGED = 5117;
   SM_ITEMSTRENGTHEN = 5118;
   SM_USERKEYSETUP = 5119;
-  SM_CHANGENAMECOLOR = 5120;
+  SM_CHANGENAMECOLOR = 5120;//名字颜色改变,白名,灰名,红名,黄名
   SM_CHARSTATUSCHANGED = 5121;
-  SM_SENDNOTICE = 5122;
-  SM_GROUPMODECHANGED = 5123;
+  SM_SENDNOTICE = 5122;//发送健康游戏忠告(公告)
+  SM_GROUPMODECHANGED = 5123;//组队模式改变
   SM_CREATEGROUP_OK = 5124;
   SM_CREATEGROUP_FAIL = 5125;
   SM_GROUPADDMEM_OK = 5126;
@@ -621,8 +625,8 @@ $80000000  }
   SM_TAKEBACKSTORAGEITEM_FAIL = 5155;
   SM_BUYRETURNITEM_OK = 5151;
   SM_BUYRETURNITEM_FAIL = 5156;
-  SM_AREASTATE = 5157;
-  SM_MYSTATUS = 5158;
+  SM_AREASTATE = 5157; //周围状态
+  SM_MYSTATUS = 5158;//我的状态,最近一次下线状态,如是否被毒,挂了就强制回城
   SM_DELITEMS = 5159;
   SM_READMINIMAP_OK = 5160;
   SM_READMINIMAP_FAIL = 5161;
@@ -631,7 +635,7 @@ $80000000  }
   SM_GOLDPOINTCHANGED = 5164;
   SM_GUILDCHANGE = 5165;
   SM_SENDUSERSTATE = 5166;
-  SM_SUBABILITY = 5167;
+  SM_SUBABILITY = 5167;//打开输助属性对话框
   SM_OPENGUILDDLG = 5168;
   SM_OPENGUILDDLG_FAIL = 5169;
   SM_SENDGUILDMEMBERLIST = 5170;
@@ -650,12 +654,12 @@ $80000000  }
   SM_GUILDBREAKALLY_OK = 5183;
   SM_GUILDBREAKALLY_FAIL = 5184;
   SM_DLGMSG = 5185;
-  SM_SPACEMOVE_HIDE = 5186;
-  SM_SPACEMOVE_SHOW = 5187;
-  SM_RECONNECT = 5188;
-  SM_GHOST = 5189;
-  SM_SHOWEVENT = 5190;
-  SM_HIDEEVENT = 5191;
+  SM_SPACEMOVE_HIDE = 5186;//道士走一下隐身
+  SM_SPACEMOVE_SHOW = 5187;//道士走一下由隐身变为现身
+  SM_RECONNECT = 5188;//与服务器重连
+  SM_GHOST = 5189;//尸体清除,虹魔教主死的效果?
+  SM_SHOWEVENT = 5190;//显示事件
+  SM_HIDEEVENT = 5191;//隐藏事件
   SM_SPACEMOVE_HIDE2 = 5192;
   SM_SPACEMOVE_SHOW2 = 5193;
   SM_ADJUST_BONUS = 5195;
@@ -665,10 +669,10 @@ $80000000  }
   SM_TAXISLIST_FAIL = 5231;
   SM_OPENHEALTH = 5232;
   SM_CLOSEHEALTH = 5233;
-  SM_BREAKWEAPON = 5234;
-  SM_INSTANCEHEALGUAGE = 5235;
-  SM_CHANGEFACE = 5236;
-  SM_VERSION_FAIL = 5237;
+  SM_BREAKWEAPON = 5234;//武器破碎
+  SM_INSTANCEHEALGUAGE = 5235;//实时治愈
+  SM_CHANGEFACE = 5236;//变脸,发型改变?
+  SM_VERSION_FAIL = 5237;//客户端版本验证失败
   SM_ITEMUPDATE = 5238;
   SM_MONSTERSAY = 5239;
   SM_EXCHGTAKEON_OK = 5240;
@@ -832,47 +836,48 @@ $80000000  }
   //以上项不要更改
 
   CM_BUTCH = 23;
-  CM_SPELL = 24;
-  CM_QUERYUSERNAME = 25;
-  CM_DROPITEM = 26;
-  CM_PICKUP = 27;
-  CM_TAKEONITEM = 28;
-  CM_TAKEOFFITEM = 29;
-  CM_EAT = 30;
+  CM_SPELL = 24; //施魔法
+  CM_QUERYUSERNAME = 25;//进入游戏,服务器返回角色名到客户端
+  CM_DROPITEM = 26;//从包裹里扔出物品到地图,此时人物如果在安全区可能会提示安全区不允许扔东西
+  CM_PICKUP = 27;//捡东西
+  CM_TAKEONITEM = 28;//装配装备到身上的装备位置
+  CM_TAKEOFFITEM = 29;//从身上某个装备位置取下某个装备
+  CM_EAT = 30;//吃药
   CM_USERKEYSETUP = 31;
   CM_1005 = 32;
-  CM_CLICKNPC = 33;
-  CM_MERCHANTDLGSELECT = 34;
+//与商店NPC交易相关
+  CM_CLICKNPC = 33;//用户点击了某个NPC进行交互
+  CM_MERCHANTDLGSELECT = 34;//商品选择,大类
   CM_ITEMSTRENGTHEN = 35;
-  CM_USERSELLITEM = 36;
-  CM_USERBUYITEM = 37;
-  CM_DROPGOLD = 38;
-  CM_LOGINNOTICEOK = 39;
-  CM_GROUPMODE = 40;
-  CM_CREATEGROUP = 41;
-  CM_ADDGROUPMEMBER = 42;
-  CM_DELGROUPMEMBER = 43;
-  CM_USERREPAIRITEM = 44;
+  CM_USERSELLITEM = 36;//用户卖东西
+  CM_USERBUYITEM = 37;//用户买入东西
+  CM_DROPGOLD = 38;//用户放下金钱到地上
+  CM_LOGINNOTICEOK = 39;//健康游戏忠告点了确实,进入游戏
+  CM_GROUPMODE = 40;//关组还是开组
+  CM_CREATEGROUP = 41;//新建组队
+  CM_ADDGROUPMEMBER = 42;//组内添人
+  CM_DELGROUPMEMBER = 43;//组内删人
+  CM_USERREPAIRITEM = 44;//用户修理东西
   CM_MAPAPOISE = 45;
-  CM_DEALTRY = 46;
-  CM_DEALADDITEM = 47;
-  CM_DEALDELITEM = 48;
-  CM_DEALCANCEL = 49;
-  CM_DEALCHGGOLD = 50;
-  CM_DEALEND = 51;
-  CM_USERSTORAGEITEM = 52;
-  CM_USERTAKEBACKSTORAGEITEM = 53;
-  CM_WANTMINIMAP = 54;
-  CM_USERMAKEDRUGITEM = 55;
-  CM_OPENGUILDDLG = 56;
-  CM_GUILDHOME = 57;
-  CM_GUILDMEMBERLIST = 58;
-  CM_GUILDADDMEMBER = 59;
-  CM_GUILDDELMEMBER = 60;
-  CM_GUILDUPDATENOTICE = 61;
-  CM_GUILDUPDATERANKINFO = 62;
+  CM_DEALTRY = 46; //开始交易,交易开始
+  CM_DEALADDITEM = 47;//加东东到交易物品栏上
+  CM_DEALDELITEM = 48;//从交易物品栏上撤回东东???好像不允许哦
+  CM_DEALCANCEL = 49;//取消交易
+  CM_DEALCHGGOLD = 50;//本来交易栏上金钱为0,,如有金钱交易,交易双方都会有这个消息
+  CM_DEALEND = 51;//交易成功,完成交易
+  CM_USERSTORAGEITEM = 52; //用户寄存东西
+  CM_USERTAKEBACKSTORAGEITEM = 53;//用户向保管员取回东西
+  CM_WANTMINIMAP = 54; //用户点击了"小地图"按钮
+  CM_USERMAKEDRUGITEM = 55;//用户制造毒药(其它物品)
+  CM_OPENGUILDDLG = 56;//用户点击了"行会"按钮
+  CM_GUILDHOME = 57;//点击"行会主页"
+  CM_GUILDMEMBERLIST = 58;//点击"成员列表"
+  CM_GUILDADDMEMBER = 59; //增加成员
+  CM_GUILDDELMEMBER = 60;//踢人出行会
+  CM_GUILDUPDATENOTICE = 61;//修改行会公告
+  CM_GUILDUPDATERANKINFO = 62;//更新联盟信息(取消或建立联盟)
   CM_STORAGEGOLDCHANGE = 63;
-  CM_SPEEDHACKUSER = 64;
+  CM_SPEEDHACKUSER = 64;//用户加速作弊检测
   CM_SHOPGETLIST = 65;
   CM_SHOPBUYITEMBACK = 66;
   CM_SHOPGETGAMEPOINT = 67;
@@ -881,16 +886,17 @@ $80000000  }
   CM_BUYUSERSHOP = 70;
   CM_QUERYCHR = 71;
   CM_THROW = 72;
-  CM_SAY = 73;
+  CM_SAY = 73;//角色发言
   CM_40HIT = 74;
   CM_41HIT = 75;
   CM_42HIT = 76;
   CM_43HIT = 77;
-  CM_QUERYUSERSTATE = 78;
-  CM_QUERYBAGITEMS = 79;
+  CM_QUERYUSERSTATE = 78;//查询用户状态(用户登录进去,实际上是客户端向服务器索取查询最近一次,退出服务器前的状态的过程,
+                         //服务器自动把用户最近一次下线以让游戏继续的一些信息返回到客户端)
+  CM_QUERYBAGITEMS = 79;//查询包裹物品
   CM_QUERYUSERSET = 80;
-  CM_OPENDOOR = 81;
-  CM_SOFTCLOSE = 82;
+  CM_OPENDOOR = 81;//开门,人物走到地图的某个过门点时
+  CM_SOFTCLOSE = 82;//退出传奇(游戏程序,可能是游戏中大退,也可能时选人时退出)
   CM_GUILDALLY = 83;
   CM_GUILDBREAKALLY = 84;
   CM_UPDATESERVER = 85;
@@ -1204,10 +1210,10 @@ type
 
   TMonStatus = (s_KillHuman, s_UnderFire, s_Die, s_MonGen);
   TMsgColor = (c_Red, c_Green, c_Blue, c_White);
-  TMsgType = (t_Notice, t_Hint, t_System, t_Say, t_Mon, t_GM, t_Cust, t_Castle, t_Cudt);
+  TMsgType = (t_Notice{公告}, t_Hint{暗示}, t_System{系统}, t_Say, t_Mon, t_GM, t_Cust, t_Castle, t_Cudt);
 
   TDefaultMessage = packed record
-    Recog: Integer;
+    Recog: Integer;//识别码
     Ident: Word;
     Param: Word;
     tag: Word;
@@ -1331,7 +1337,7 @@ type
     btWuXin: Byte;
   end;
 
-  TSessInfo = packed record
+  TSessInfo = packed record//全局会话
     sAccount: string[16];
     sIPaddr: string[15];
     nSessionID: Integer;
@@ -1615,14 +1621,14 @@ type
     StdMode2: Byte;
     StdMode: TStdMode;
     StdModeEx: TStdModeEx;
-    Shape: Byte;
-    Weight: Byte;
+    Shape: Byte;//装配外观
+    Weight: Byte;//重量
     AniCount: Byte;
-    Source: Word;
-    Reserved: Word;
-    Looks: Word;
+    Source: Word;//源动力
+    Reserved: Word; //保留
+    Looks: Word;//外观，即Items.WIL中的图片索引
     Effect: Word;
-    DuraMax: Word;
+    DuraMax: Word;//最大持久
     nAC: Word;
     nAC2: Word;
     nMAC: Word;
@@ -1666,15 +1672,15 @@ type
   pTStdItem = ^TStdItem;
 
   TMonInfo = packed record
-    sName: string[14];
-    btRace: Byte;
-    btRaceImg: Byte;
-    wAppr: Word;
+    sName: string[14];//怪物名
+    btRace: Byte;//种族
+    btRaceImg: Byte;//种族图像
+    wAppr: Word;//形像代码
     wLevel: Word;
-    btLifeAttrib: Byte;
+    btLifeAttrib: Byte;//不死系
     boUndead: Boolean;
     boNotInSafe: Boolean;
-    wCoolEye: Word;
+    wCoolEye: Word;//视线范围
     dwExp: LongWord;
     wMP: Word;
     wHP: Word;
@@ -1685,11 +1691,11 @@ type
     wMC: Word;
     wSC: Word;
     wSpeed: Word;
-    wHitPoint: Word;
-    nWalkSpeed: Integer;
-    wWalkStep: Word;
-    wWalkWait: Word;
-    wAttackSpeed: Word;
+    wHitPoint: Word;//命中率
+    nWalkSpeed: Integer;//行走速度
+    wWalkStep: Word;//行走步伐
+    wWalkWait: Word;//行走等待
+    wAttackSpeed: Word;//攻击速度
     btColor: Byte;
     ItemList: TList;
     MapQuestList: TList;
@@ -1701,8 +1707,6 @@ type
   TMagic = packed record
     // 技能序号，每个 ID 对应一种技能，比如：火球术的 ID 是 1
     wMagicId: Word;
-    // 序号复制，代表复制指定技能的执行逻辑
-    wCopy: Word;
     // 技能名字
     sMagicName: string[24];
     // 技能效果类型
@@ -1719,24 +1723,24 @@ type
     nInterval: LongWord;
     // 技能帧
     nSpellFrame: Word;
-    // 基础消耗
+    // 满级时的技能消耗
     wSpell: Word;
-    // 等级消耗
+    // 定义基础技能消耗
     btDefSpell: Word;
-    // 基础伤害
+    // 最小伤害数值
     wPower: Word;
-    // 基础最大伤害
+    // 最大伤害数值
     wMaxPower: Word;
-    // 等级伤害： -1 表示百分比等级增长；>= 0 表示固定等级增长
+    // 定义最小伤害（或伤害类型）
     btDefPower: Word;
-    // 等级最大伤害
+    // 定义最大伤害（或伤害数值）
     btDefMaxPower: Word;
-    // 最高等级
-    btTrainLv: Word;
+    // 技能最高等级
+    btTrainLv: Byte;
     // 升级需要人物等级
-    TrainLevel: array[0..20] of Word;
+    TrainLevel: array[0..9] of Byte;
     // 升级需要熟练度
-    MaxTrain: array[0..20] of Integer;
+    MaxTrain: array[0..9] of Integer;
     // 技能模式：
     // mm_Attack，攻击技能；
     // mm_Passiveness，被动技能：
@@ -1788,11 +1792,11 @@ type
   {用户技能}
   TUserMagic = packed record
     MagicInfo: pTMagic;
-    wMagIdx: Word;
-    btLevel: Byte;
-    nTranPoint: Integer;
+    wMagIdx: Word;//技能ID
+    btLevel: Byte;//等级
+    nTranPoint: Integer;//当前修练值
     dwInterval: LongWord;
-    btKey: Byte;
+    btKey: Byte;//技能快捷键
   end;
   pTUserMagic = ^TUserMagic;
 
@@ -1848,17 +1852,17 @@ type
   end;
   pTQuestDiaryInfo = ^TQuestDiaryInfo;
 
-  TAdminInfo = packed record
+  TAdminInfo = packed record//管理员表
     nLv: Integer;
     sChrName: string[ActorNameLen];
     sIPaddr: string[15];
   end;
   pTAdminInfo = ^TAdminInfo;
 
-  THumMagic = packed record
-    wMagIdx: Word;
-    btLevel: Byte;
-    nTranPoint: LongWord;
+  THumMagic = packed record//人物技能
+    wMagIdx: Word;//技能ID
+    btLevel: Byte;//等级
+    nTranPoint: LongWord;//当前修练值
     nInterval: LongWord;
   end;
   pTHumMagic = ^THumMagic;
@@ -1940,23 +1944,23 @@ type
 
   TAbility = packed record
     Level: Word;
-    AC: Integer;
-    MAC: Integer;
-    DC: Integer;
-    MC: Integer;
-    SC: Integer;
+    AC: Integer; //防御
+    MAC: Integer; //魔防
+    DC: Integer; //攻击力
+    MC: Integer; //魔法
+    SC: Integer; //道术
     HP: Word;
     MP: Word;
     MaxHP: Word;
     MaxMP: Word;
-    Exp: LongWord;
-    MaxExp: LongWord;
+    Exp: Int64;
+    MaxExp: Int64;
     Weight: Word;
-    MaxWeight: Word;
+    MaxWeight: Word; // 背包
     WearWeight: Word;
-    MaxWearWeight: Word;
+    MaxWearWeight: Word; //负重
     HandWeight: Word;
-    MaxHandWeight: Word;
+    MaxHandWeight: Word; //腕力
   end;
   pTAbility = ^TAbility;
 
@@ -2017,9 +2021,9 @@ type
     wPoisonRecover: Word;
     wHealthRecover: Word;
     wSpellRecover: Word;
-    btLuck: Integer;
+    btLuck: Integer;//诅咒
     nHitSpeed: Integer;
-    btWeaponStrong: Byte;
+    btWeaponStrong: Byte;//强度
     btDeadliness: Byte;
     btExpRate: Byte;
     btHPorMPRate: Byte;
@@ -2029,7 +2033,7 @@ type
   pTAddAbility = ^TAddAbility;
 
   TWAbility = packed record
-    dwExp: LongWord;
+    dwExp: LongWord; //怪物经验值
     wHP: Word;
     wMP: Word;
     wMaxHP: Word;
@@ -2125,9 +2129,9 @@ type
 
   TOldUserItem = packed record
     MakeIndex: Integer;
-    wIndex: Word;
-    Dura: Word;
-    DuraMax: Word;
+    wIndex: Word; //物品id
+    Dura: Word; //当前持久值
+    DuraMax: Word; //最大持久值
     btBindMode1: Byte;
     btBindMode2: Byte;
     TermTime: TDateTime;
@@ -2322,12 +2326,12 @@ type
       );
   end;
 
-  TMonItemInfo = record
-    SelPoint: Integer;
-    MaxPoint: Integer;
-    ItemIdent: Word;
+  TMonItemInfo = record//怪物爆物品类(MonItems目录下,怪名.txt)
+    SelPoint: Integer;//出现点数
+    MaxPoint: Integer;//总点数
+    ItemIdent: Word;//物品名称
     boGold: Boolean;
-    Count: Integer;
+    Count: Integer;//物品数量
     boRandom: Boolean;
     List: TList;
   end;
@@ -2339,21 +2343,21 @@ type
   end;
   PTMonsterInfo = ^TMonsterInfo;
 
-  TMapItem = record
-    Name: string;
-    Looks: Word;
+  TMapItem = record //地图物品
+    Name: string;//名称
+    Looks: Word; //外观
     AniCount: Byte;
     Reserved: Byte;
-    Count: Integer;
-    OfBaseObject: TObject;
-    DropBaseObject: TObject;
+    Count: Integer;//数量
+    OfBaseObject: TObject;//物品谁可以捡起
+    DropBaseObject: TObject;//谁掉落的
     dwCanPickUpTick: LongWord;
     UserItem: TUserItem;
     btIdx: Integer;
   end;
   PTMapItem = ^TMapItem;
 
-  TVisibleMapItem = record
+  TVisibleMapItem = record//可见的地图物品
     wIdent: Word;
     nParam1: Integer;
     Buff: PChar;
@@ -2462,17 +2466,17 @@ type
   pTUserInfo = ^TUserInfo;
 
   TGlobaSessionInfo = record
-    sAccount: string;
-    sIPaddr: string;
-    nSessionID: Integer;
+    sAccount: string;//登录账号
+    sIPaddr: string;//IP地址
+    nSessionID: Integer;//会话ID
     nUserCDKey: Integer;
     nGameGold: Integer;
     //n24: Integer;
     //bo28: Boolean;
-    boLoadRcd: Boolean;
-    boStartPlay: Boolean;
-    dwAddTick: LongWord;
-    dAddDate: TDateTime;
+    boLoadRcd: Boolean;//是否读取
+    boStartPlay: Boolean;//是否开始游戏
+    dwAddTick: LongWord;//加入列表的时间
+    dAddDate: TDateTime;//加入列表的日期
   end;
   pTGlobaSessionInfo = ^TGlobaSessionInfo;
 
@@ -2518,11 +2522,11 @@ type
 
   TItemCount = Integer;
 
-  TBindItem = packed record
-    sUnbindItemName: string[ActorNameLen];
-    nStdMode: Integer;
-    nShape: Integer;
-    btItemType: Byte;
+  TBindItem = packed record//解包物品类
+    sUnbindItemName: string[ActorNameLen];//解包物品名称
+    nStdMode: Integer;//物品分类
+    nShape: Integer;//装配外观
+    btItemType: Byte;//分类
   end;
   pTBindItem = ^TBindItem;
 
@@ -2537,11 +2541,11 @@ type
   end;
 
   TRecordHeader = packed record
-    boDeleted: Boolean;
-    nSelectID: Byte;
-    dwCreateDate: TDateTime;
+    boDeleted: Boolean; //是否删除
+    nSelectID: Byte;   //ID
+    dwCreateDate: TDateTime;//最后登录时间
     dwUpdateDate: TDateTime;
-    sName: string[ActorNameLen];
+    sName: string[ActorNameLen];//角色名称
   end;
   pTRecordHeader = ^TRecordHeader;
 
@@ -2622,7 +2626,7 @@ type
   THumanUseItems = array[0..MAXUSEITEMS - 1] of TUserItem;
   THumanReturnItems = array[0..MAXRETURNITEMS - 1] of TUserItem;
   THumanAppendBagItems = array[0..MAXAPPENDBAGITEMS - 1] of TUserItem;
-  TBagItems = array[0..MAXBAGITEMS - 1] of TUserItem;
+  TBagItems = array[0..MAXBAGITEMS - 1] of TUserItem;//包裹物品
   TStorageItems = array[0..MAXSTORAGEITEMS - 1] of TStorageItem;
 
  { TOldHumanUseItems = array[Low(THumanUseItems)..High(THumanUseItems)] of TUserItem;
@@ -2679,7 +2683,7 @@ type
     wCurX: Word;
     // 当前Y坐标
     wCurY: Word;
-    // 未知属性？
+    // 方向
     btDir: Byte;
     // 发型
     btHair: Byte;
@@ -2708,41 +2712,41 @@ type
     wDieX: Word;
     wDieY: Word;
 
-    sDearName: string[ActorNameLen];
-    MasterName: THumMasterName;
-    boMaster: Boolean;
+    sDearName: string[ActorNameLen];//别名(配偶)
+    MasterName: THumMasterName;//师傅名字
+    boMaster: Boolean;//是否有徒弟
 
     LoginTime: TDateTime;
     LoginAddr: string[15];
 
-    btCreditPoint: Integer;
+    btCreditPoint: Integer;//声望点
 
     sStoragePwd: string[12]; //
     nStorageGold: Integer;
     boStorageLock: Boolean;
     btStorageErrorCount: Byte;
     StorageLockTime: TDateTime;
-    btReLevel: Byte;
+    btReLevel: Byte;//转生等级
 
     nGameGold: Integer; // 游戏
     nGamePoint: Integer;
-    nGameDiamond: Integer;
-    nGameGird: Integer;
-    nPKPoint: Integer;
+    nGameDiamond: Integer;//金刚石 20071226
+    nGameGird: Integer;//灵符 20071226
+    nPKPoint: Integer;//PK点数
     nPullulation: Integer;     //自然成长点
 
-    btAttatckMode: byte;
-    nIncHealth: byte; //
-    nIncSpell: byte; //
-    nIncHealing: byte; //
-    btFightZoneDieCount: Byte;
+    btAttatckMode: Byte;//攻击模式
+    nIncHealth: byte; ////增加健康数
+    nIncSpell: byte; //增加攻击点
+    nIncHealing: byte; //增加治愈点
+    btFightZoneDieCount: Byte;//在行会占争地图中死亡次数
     sAccount: string[16]; //
     sGuildName: string[ActorNameLen];
-    wContribution: Word;
+    wContribution: Word;//贡献值
 
     dBodyLuck: Double; //
     wGuildRcallTime: Word;
-    wGroupRcallTime: Word;
+    wGroupRcallTime: Word; //队传送时间
 
     nAllowSetup: LongWord;
     boAddStabilityPoint: Boolean;
@@ -2750,12 +2754,12 @@ type
     btMasterCount: Word; //
     btWuXin: Byte;
     boChangeName: Boolean; //
-    nExpRate: Integer;
-    nExpTime: LongWord;
+    nExpRate: Integer;//经验倍数
+    nExpTime: LongWord;//经验倍数时间
     dwUpLoadPhotoTime: TDateTime;
     UserRealityInfo: TUserRealityInfo; //用户真实信息
     UserKeySetup: TUserKeySetup;
-    QuestFlag: TQuestFlag;
+    QuestFlag: TQuestFlag;//脚本变量
     MissionFlag: TMissionFlag;
     MissionInfo: TMissionInfos;
     MissionArithmometer: TMissionArithmometer;
@@ -2763,13 +2767,13 @@ type
 
     ReturnItems: THumanReturnItems; //回购物品        4
     AppendBagItems: THumanAppendBagItems; //额外背包   3
-    HumItems: THumanUseItems;                        //16
-    BagItems: TBagItems;                            //105
+    HumItems: THumanUseItems; //9格装备 衣服  武器  蜡烛 头盔 项链 手镯 手镯 戒指 戒指
+    BagItems: TBagItems;  //包裹装备
 
-    HumMagics: THumMagics;
+    HumMagics: THumMagics;//魔法
     CboMagicListInfo: TCboMagicListInfo;
     
-    StorageItems: TStorageItems;              //49
+    StorageItems: TStorageItems;//仓库物品
 
     StorageOpen2: Boolean;
     StorageTime2: TDateTime;
@@ -2834,17 +2838,17 @@ type
   pTSaveRcd = ^TSaveRcd;
 
   TLoadDBInfo = packed record
-    sAccount: string[20];
-    sCharName: string[ActorNameLen];
-    sIPaddr: string[15];
+    sAccount: string[20];//账号
+    sCharName: string[ActorNameLen];//角色名称
+    sIPaddr: string[15];//IP地址
     nSessionID: Integer;
     nAccountID: Integer;
     nChrIndex: Integer;
     nGameGold: Integer;
     nCheckEMail: Integer;
     nIDIndex: Integer;
-    nSoftVersionDate: Integer;
-    nSocket: Integer;
+    nSoftVersionDate: Integer;//客户端版本号
+    nSocket: Integer;//端口
     nGSocketIdx: Integer;
     nGateIdx: Integer;
     dwNewUserTick: LongWord;
@@ -2946,7 +2950,7 @@ type
     nPort: Integer;
     n520: Integer;
     UserList: TList;
-    nUserCount: Integer;
+    nUserCount: Integer;//连接人数
     Buffer: PChar;
     nBuffLen: Integer;
     BufferList: TList;
@@ -2966,10 +2970,10 @@ type
   end;
   pTGateInfo = ^TGateInfo;
 
-  TStartPoint = packed record
+  TStartPoint = packed record//安全区回城点 增加光环效果
     m_sMapName: string[MapNameLen];
-    m_nCurrX: Integer;
-    m_nCurrY: Integer;
+    m_nCurrX: Integer;//座标X(4字节)
+    m_nCurrY: Integer;//座标Y(4字节)
     //m_boNotAllowSay: Boolean;
     m_nRange: Integer;
 //    m_nType: Integer;
@@ -2993,9 +2997,9 @@ type
   pTQuestUnitStatus = ^TQuestUnitStatus;
 
   TMapCondition = packed record
-    nHumStatus: Integer;
-    sItemName: string[14];
-    boNeedGroup: Boolean;
+    nHumStatus: Integer;//人的状态
+    sItemName: string[14];//物品
+    boNeedGroup: Boolean;//是否需要组队
   end;
   pTMapCondition = ^TMapCondition;
 
@@ -3045,23 +3049,23 @@ type
   end;
 
   TUserEntry = packed record
-    sAccount: string[16];
-    sPassword: string[20];
-    sUserName: string[12];
-    sSSNo: string[18];
-    sPhone: string[14];
-    sQuiz: string[20];
-    sAnswer: string[20];
-    sEMail: string[30];
+    sAccount: string[16];//账号
+    sPassword: string[20];//密码
+    sUserName: string[12];//用户名称
+    sSSNo: string[18];//身份证
+    sPhone: string[14];//电话
+    sQuiz: string[20];//问题1
+    sAnswer: string[20];//答案1
+    sEMail: string[30];//邮箱
   end;
 
   TUserEntryAdd = packed record
-    sQuiz2: string[20];
-    sAnswer2: string[20];
-    sBirthDay: string[10];
-    sMobilePhone: string[14];
-    sMemo: string[20];
-    sMemo2: string[20];
+    sQuiz2: string[20];//问题2
+    sAnswer2: string[20];//答案2
+    sBirthDay: string[10];//生日
+    sMobilePhone: string[14];//移动电话
+    sMemo: string[20];//备注一
+    sMemo2: string[20];//备注二
   end;
 
   TAccountDBRecord = packed record
@@ -3073,7 +3077,7 @@ type
     n: array[0..38] of Byte;
   end;
 
-  TMapFlag = record
+  TMapFlag = record//地图参数
     boSAFE: Boolean;
     boDARK: Boolean;
     boFIGHT: Boolean;
@@ -3090,9 +3094,9 @@ type
     boDECHP: Boolean;
     boINCHP: Boolean;
     boDECGAMEGOLD: Boolean;
-    boDECGAMEPOINT: Boolean;
+    boDECGAMEPOINT: Boolean;//自动减游戏点
     boINCGAMEGOLD: Boolean;
-    boINCGAMEPOINT: Boolean;
+    boINCGAMEPOINT: Boolean;//自动加游戏点
     boRUNHUMAN: Boolean;
     boRUNMON: Boolean;
     boNEEDHOLE: Boolean;
@@ -3104,7 +3108,7 @@ type
     boNODRUG: Boolean;
     boMINE: Boolean;
     boNOPOSITIONMOVE: Boolean;
-    boNoManNoMon: Boolean;
+    boNoManNoMon: Boolean;//智能刷怪,有人才重新刷怪
     boShop: Boolean;
     boOffLine: Boolean;
     boNotReAlive: Boolean;
@@ -3140,9 +3144,9 @@ type
     nReConnectY: Integer;
 
     boUnAllowStdItems: Boolean;
-    sUnAllowStdItemsText: string;
+    sUnAllowStdItemsText: string;//地图禁用物品
     boUnAllowMagic: Boolean;
-    sUnAllowMagicText: string;
+    sUnAllowMagicText: string;//不允许魔法
     boAutoMakeMonster: Boolean;
     boNOFIREMAGIC: Boolean;
     boDieTime: Boolean;
@@ -3209,7 +3213,7 @@ type
 
     boParalyCanRun: Boolean;
     boParalyCanWalk: Boolean;
-    boParalyCanHit: Boolean;
+    boParalyCanHit: Boolean;//麻痹能攻击
     boParalyCanSpell: Boolean;
     boShowMoveHPNumber: Boolean;
   end;
@@ -3301,8 +3305,10 @@ begin
   end;
 end;
 
+    // 获取当前技能的法力消耗
 function GetSpellPoint(UserMagic: pTUserMagic): Integer;
 begin
+  // 定义的基础消耗 + 满级消耗 * 当前等级与最大等级比例值
   Result := ROUND(UserMagic.MagicInfo.wSpell / (UserMagic.MagicInfo.btTrainLv + 1) * (UserMagic.btLevel + 1)) +
     UserMagic.MagicInfo.btDefSpell;
 end;
