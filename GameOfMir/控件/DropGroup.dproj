@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\DropGroup.bpl</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\DropGroup.bpl</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>
@@ -28,8 +28,8 @@
     <DelphiCompile Include="DropGroup.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
-    <DCCReference Include="C:\Documents and Settings\Admin\桌面\rtl.dcp" />
-    <DCCReference Include="C:\Documents and Settings\Admin\桌面\vcl.dcp" />
+    <DCCReference Include="..\HGEDelphi\API Tester\Bin\rtl.dcp" />
+    <DCCReference Include="..\HGEDelphi\API Tester\Bin\vcl.dcp" />
     <DCCReference Include="DropGroupPas.pas" />
   </ItemGroup>
 </Project>

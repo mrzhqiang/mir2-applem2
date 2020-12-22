@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>..\..\..\RAD Studio\5.0\Bpl\VCLZipD7_3.bpl</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\VCLZipD7_3.bpl</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>
@@ -33,6 +33,9 @@
     <DelphiCompile Include="VCLZipD7_3.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\rtl.dcp" />
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\vcl.dcp" />
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\vclx.dcp" />
     <DCCReference Include="kpCntn.pas" />
     <DCCReference Include="kpDiskIOs.pas" />
     <DCCReference Include="kpDiskIOWin9x.pas" />
@@ -46,12 +49,9 @@
     <DCCReference Include="kpSStrm.pas" />
     <DCCReference Include="Kpzcnst.pas" />
     <DCCReference Include="kpZipObj.pas" />
-    <DCCReference Include="rtl.dcp" />
-    <DCCReference Include="vcl.dcp" />
     <DCCReference Include="VCLUnZip.dcr" />
     <DCCReference Include="VCLUnZip.dcr" />
     <DCCReference Include="VCLUnZip.pas" />
-    <DCCReference Include="vclx.dcp" />
     <DCCReference Include="VCLZip.dcr" />
     <DCCReference Include="VCLZip.dcr" />
     <DCCReference Include="VCLZip.pas" />

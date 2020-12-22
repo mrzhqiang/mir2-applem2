@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>..\..\..\RAD Studio\5.0\Bpl\GraphicExPack.bpl</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\GraphicExPack.bpl</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>
@@ -29,13 +29,13 @@
     <DelphiCompile Include="GraphicExPack.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\rtl.dcp" />
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\vcl.dcp" />
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\vcljpg.dcp" />
     <DCCReference Include="GraphicCompression.pas" />
     <DCCReference Include="GraphicEx.pas" />
     <DCCReference Include="Image32.pas" />
     <DCCReference Include="MaskFont.pas" />
-    <DCCReference Include="rtl.dcp" />
     <DCCReference Include="Trace.pas" />
-    <DCCReference Include="vcl.dcp" />
-    <DCCReference Include="vcljpg.dcp" />
   </ItemGroup>
 </Project>

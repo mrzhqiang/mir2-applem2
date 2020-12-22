@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\PacRAS.bpl</DCC_DependencyCheckOutputName>
+    <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\PacRAS.bpl</DCC_DependencyCheckOutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>7.0</Version>
@@ -29,6 +29,8 @@
     <DelphiCompile Include="PacRAS.dpk">
       <MainSource>MainSource</MainSource>
     </DelphiCompile>
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\rtl.dcp" />
+    <DCCReference Include="..\..\GameOfMir\HGEDelphi\API Tester\Bin\vcl.dcp" />
     <DCCReference Include="FGInt.pas" />
     <DCCReference Include="FGIntPrimeGeneration.PAS" />
     <DCCReference Include="FGIntRSA.PAS" />
@@ -37,7 +39,5 @@
     <DCCReference Include="PACRAS.re" />
     <DCCReference Include="PACRAS.res" />
     <DCCReference Include="RSA.pas" />
-    <DCCReference Include="rtl.dcp" />
-    <DCCReference Include="vcl.dcp" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,115 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{8996b91a-feec-481f-a928-c4535e678358}</ProjectGuid>
+    <MainSource>RaizeComponentsVcl_Design.dpk</MainSource>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\RaizeComponentsVcl_Design.bpl</DCC_DependencyCheckOutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_AssertionsAtRuntime>False</DCC_AssertionsAtRuntime>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_ImageBase>50800000</DCC_ImageBase>
+    <DCC_Define>RELEASE</DCC_Define>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_AssertionsAtRuntime>False</DCC_AssertionsAtRuntime>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_ImageBase>50800000</DCC_ImageBase>
+    <DCC_Define>DEBUG</DCC_Define>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType>Package</Borland.ProjectType>
+    <BorlandProject>
+<BorlandProject xmlns=""> <Delphi.Personality>   <Parameters>
+      <Parameters Name="UseLauncher">False</Parameters>
+      <Parameters Name="LoadAllSymbols">True</Parameters>
+      <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+    </Parameters>
+    <Package_Options>
+      <Package_Options Name="ImplicitBuild">False</Package_Options>
+      <Package_Options Name="DesigntimeOnly">True</Package_Options>
+      <Package_Options Name="RuntimeOnly">False</Package_Options>
+    </Package_Options>
+    <VersionInfo>
+      <VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+      <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+      <VersionInfo Name="MajorVer">1</VersionInfo>
+      <VersionInfo Name="MinorVer">0</VersionInfo>
+      <VersionInfo Name="Release">0</VersionInfo>
+      <VersionInfo Name="Build">0</VersionInfo>
+      <VersionInfo Name="Debug">False</VersionInfo>
+      <VersionInfo Name="PreRelease">False</VersionInfo>
+      <VersionInfo Name="Special">False</VersionInfo>
+      <VersionInfo Name="Private">False</VersionInfo>
+      <VersionInfo Name="DLL">False</VersionInfo>
+      <VersionInfo Name="Locale">2052</VersionInfo>
+      <VersionInfo Name="CodePage">936</VersionInfo>
+    </VersionInfo>
+    <VersionInfoKeys>
+      <VersionInfoKeys Name="CompanyName"></VersionInfoKeys>
+      <VersionInfoKeys Name="FileDescription"></VersionInfoKeys>
+      <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+      <VersionInfoKeys Name="InternalName"></VersionInfoKeys>
+      <VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys>
+      <VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
+      <VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys>
+      <VersionInfoKeys Name="ProductName"></VersionInfoKeys>
+      <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+      <VersionInfoKeys Name="Comments"></VersionInfoKeys>
+    </VersionInfoKeys>
+    <Source>
+      <Source Name="MainSource">RaizeComponentsVcl_Design.dpk</Source>
+    </Source>
+  </Delphi.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <ItemGroup />
+  <ItemGroup>
+    <DelphiCompile Include="RaizeComponentsVcl_Design.dpk">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="$(SystemRoot)\SysWOW64\DclStd.dcp" />
+    <DCCReference Include="$(SystemRoot)\SysWOW64\DesignIDE.dcp" />
+    <DCCReference Include="$(SystemRoot)\SysWOW64\RaizeComponentsVcl.dcp" />
+    <DCCReference Include="$(SystemRoot)\SysWOW64\Vcl.dcp" />
+    <DCCReference Include="$(SystemRoot)\SysWOW64\VclJPG.dcp" />
+    <DCCReference Include="RaizeComponentsVcl_24x24.dcr" />
+    <DCCReference Include="RaizeComponentsVcl_Design.res" />
+    <DCCReference Include="RaizeComponentsVcl_Reg.pas" />
+    <DCCReference Include="RzAboutEditor.pas" />
+    <DCCReference Include="RzButtonEditor.pas" />
+    <DCCReference Include="RzCaptionEditor.pas" />
+    <DCCReference Include="RzCheckGroupEditor.pas" />
+    <DCCReference Include="RzCheckListEditor.pas" />
+    <DCCReference Include="RzCheckListItemForm.pas" />
+    <DCCReference Include="RzCheckListTabStopEditor.pas" />
+    <DCCReference Include="RzColorNamesEditor.pas" />
+    <DCCReference Include="RzComboBoxEditor.pas" />
+    <DCCReference Include="RzDesignEditors.pas" />
+    <DCCReference Include="RzGroupBarEditor.pas" />
+    <DCCReference Include="RzImageListEditor.pas" />
+    <DCCReference Include="RzLabelEditor.pas" />
+    <DCCReference Include="RzPanelEditor.pas" />
+    <DCCReference Include="RzPathBarEditor.pas" />
+    <DCCReference Include="RzRadioGroupEditor.pas" />
+    <DCCReference Include="RzSelectImageEditor.pas" />
+    <DCCReference Include="RzShellDesignEditors.pas" />
+    <DCCReference Include="RzSplitterEditor.pas" />
+    <DCCReference Include="RzStringListEditor.pas" />
+    <DCCReference Include="RzStringModule.pas" />
+    <DCCReference Include="RzTabStopEditor.pas" />
+    <DCCReference Include="RzToolbarEditor.pas" />
+    <DCCReference Include="RzToolbarPrefixForm.pas" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+</Project>
