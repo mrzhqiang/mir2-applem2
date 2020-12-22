@@ -9,7 +9,7 @@ const
   //g_sVersion = '程序版本: 1.00 Build 20080825';
   g_sUpDateTime = '程序版本: v2020.1.0';
 
-  SIZEOFTHUMAN = 44032;
+  SIZEOFTHUMAN = 44040;
 
 type
   TGList = class(TList)
