@@ -707,7 +707,7 @@ begin
           while (Config.GateList[I].sSendMsg <> '') do begin
             nSendLen := Length(Config.GateList[I].sSendMsg);
             // fixme debug
-            MainOutMessage('Config.GateList'+IntToStr(I)+'.sSendMsg: '+Config.GateList[I].sSendMsg);
+//            MainOutMessage('Config.GateList'+IntToStr(I)+'.sSendMsg: '+Config.GateList[I].sSendMsg);
             if nSendLen > MAXSOCKETBUFFLEN then begin
               sData := Copy(Config.GateList[I].sSendMsg, 1, MAXSOCKETBUFFLEN);
               if Config.GateList[I].Socket.SendText(sData) <> -1 then begin
@@ -963,7 +963,7 @@ var
 begin
 
     // fixme debug
-    MainOutMessage('ReceiveSendUser: '+sData);
+//    MainOutMessage('ReceiveSendUser: '+sData);
   try
     for I := UserList.Count - 1 downto 0 do begin
       UserInfo := UserList.Items[I];
@@ -1326,7 +1326,7 @@ begin
       sSelGateIP := GetSelGateInfo(@g_Config, g_Config.sGateIPaddr, nSelGatePort);
 
     // fixme debug
-    MainOutMessage('sSelGateIP: '+sSelGateIP+', nSelGatePort: '+IntToStr(nSelGatePort));
+//    MainOutMessage('sSelGateIP: '+sSelGateIP+', nSelGatePort: '+IntToStr(nSelGatePort));
       if (sSelGateIP <> '') and (nSelGatePort > 0) then begin
         if FrmMasSoc.IsNotUserFull() then begin
           UserInfo.boSelServer := True;
@@ -1369,7 +1369,7 @@ begin
     DefMsg := DecodeMessage(sDefMsg);
 
     // fixme debug
-    MainOutMessage('ProcessUserMsg: '+sData);
+//    MainOutMessage('ProcessUserMsg: '+sData);
     case DefMsg.Ident of
 {$IF RUNVAR = VAR_DB}
       CM_IDPASSWORD: begin

@@ -372,11 +372,11 @@ end;
 
 procedure TFormMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  CanClose := False;
-  if Application.MessageBox('是否确定关闭排行榜功能插件？', '提示信息', MB_OKCANCEL + MB_ICONQUESTION) = IDOK then
-  begin
+//  CanClose := False;
+//  if Application.MessageBox('是否确定关闭排行榜功能插件？', '提示信息', MB_OKCANCEL + MB_ICONQUESTION) = IDOK then
+//  begin
     CanClose := True;
-  end;
+//  end;
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
