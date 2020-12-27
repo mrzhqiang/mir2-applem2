@@ -23,7 +23,7 @@ type
   end;
 var
   sBaseDir: string = '.\BaseDir\';
-  sServerName: string = '飞鸿网络';
+  sServerName: string = '兰达尔技术';
   sCaption: string = '日志服务器';
   g_dwGameCenterHandle: THandle;
   nServerPort: Integer = 10000;

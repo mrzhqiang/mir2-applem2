@@ -276,7 +276,7 @@ end;
 
 procedure TFormMain.MEMU_HELP_ABOUTClick(Sender: TObject);
 begin
-  ShellAbout(Handle, '游戏日志服务器 2012/05/01', 'Copyright (C) 2012 applem2.com',
+  ShellAbout(Handle, '游戏日志服务器 2020/12/26', 'Copyright (C) 2020 randall.top',
     Application.Icon.Handle);
 end;
 
