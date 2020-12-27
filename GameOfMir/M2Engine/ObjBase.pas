@@ -1379,19 +1379,20 @@ begin
 end;   }
 
 procedure TBaseObject.MagicQuest(TagreBase: TBaseObject; nMagID: Integer; State: TMagicFunState);
+var magId : Integer;
 begin
   if (m_btRaceServer <> RC_PLAYOBJECT) or (g_FunctionNPC = nil) then Exit;
-  if nMagID in [0..MAXMAGICFUNCOUNT] then begin
+  if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
+    magId :=  nMagID mod 1000;
     if TagreBase <> nil then
       TPlayObject(Self).m_sString[0] := TagreBase.m_sCharName;
     case State of
-      mfs_Self: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagSelfFunc[nMagID], False);
-      mfs_Tag: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagTagFunc[nMagID], False);
-      mfs_TagEx: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagTagFuncEx[nMagID], False);
-      mfs_Mon: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagMonFunc[nMagID], False);
+      mfs_Self: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagSelfFunc[magId], False);
+      mfs_Tag: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagTagFunc[magId], False);
+      mfs_TagEx: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagTagFuncEx[magId], False);
+      mfs_Mon: NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FMagMonFunc[magId], False);
     end;
   end;
-
 end;
 
 procedure TBaseObject.NpcGotoLable(NormNpc: TBaseObject; nLabel: Integer; boMaster: Boolean; sLabel: string = '');
@@ -7906,11 +7907,12 @@ begin
         end;
         //±¶±¶≈—±‰ Ω· ¯
         nCheckCode := 427;
-        if m_dwMasterTick <> 0 then begin
+        // ”≈ªØ£∫±¶±¶”¿≤ªÀ¿Õˆ
+        {if m_dwMasterTick <> 0 then begin
           if (GetTickCount - m_dwMasterTick) > 3 * 60 * 60 * 1000 then begin
             m_WAbil.HP := 0;
           end;
-        end;
+        end;}
       end;
     end;
     nCheckCode := 43;

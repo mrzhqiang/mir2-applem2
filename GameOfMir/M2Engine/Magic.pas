@@ -930,7 +930,7 @@ function TMagicManager.DoSpell(PlayObject: TPlayObject;
   UserMagic: pTUserMagic; nTargetX, nTargetY: Integer;
   TargeTBaseObject: TBaseObject): Boolean;
 var
-  boTrain: Boolean;
+  boTrain: Boolean;// 是否增加熟练度
   boSpellFail: Boolean;
   boSpellFire: Boolean;
   btAmuletType: Byte;
@@ -1917,27 +1917,40 @@ begin
   Result := False;
   if (TargeTBaseObject = nil) or (TargeTBaseObject.m_btRaceServer < RC_ANIMAL) then
     exit;
+  // 技能等级增加的几率：25% -- 33% -- 50% -- 100%
   if (TargeTBaseObject.m_btRaceServer <> RC_PLAYOBJECT) and ((Random(4 - nMagicLevel) = 0)) then begin
     TargeTBaseObject.m_TargetCret := nil;
     if TargeTBaseObject.m_Master = BaseObject then begin
-      TargeTBaseObject.OpenHolySeizeMode((nMagicLevel * 5 + 10) * 1000);
+      // 优化：对自己的宝宝不要如此残忍
+//      TargeTBaseObject.OpenHolySeizeMode((nMagicLevel * 5 + 10) * 1000);
       Result := True;
     end
     else begin
+      // 50%
       if Random(2) = 0 then begin
+        // 人物等级比怪物等级低 2 级也可以触发
         if TargeTBaseObject.m_Abil.Level <= BaseObject.m_Abil.Level + 2 then begin
+          // 33%
           if Random(3) = 0 then begin
-            if Random((BaseObject.m_Abil.Level + 20) + (nMagicLevel * 5)) >
+            // 原来的算法，怪物等级越高，技能的等级越不能影响成功几率：
+            // 人 10级，怪 10级，技能 0--3级：33% -- 43% -- 50% -- 55%
+            // 人 50级，怪 10级，技能 0--3级：71% -- 73% -- 75% -- 76%
+            // 人 50级，怪 50级，技能 0--3级：14% -- 20% -- 25% -- 29%
+            // 优化：加大技能等级的影响因子，在怪物 50*3 级以内效果出奇
+            if Random((BaseObject.m_Abil.Level + 20) + (nMagicLevel * 50)) >
               (TargeTBaseObject.m_Abil.Level + g_Config.nMagTammingTargetLevel {10}) then begin
               if {not (TargeTBaseObject.bo2C1) and }
+                // 非不死系，都可以诱惑
                 (TargeTBaseObject.m_btLifeAttrib = 0) and
                 (TargeTBaseObject.m_Abil.Level < g_Config.nMagTammingLevel {50}) and
                 (BaseObject.m_SlaveList.Count < g_Config.nMagTammingCount {(nMagicLevel + 2)}) then begin
-                n14 := TargeTBaseObject.m_WAbil.MaxHP div g_Config.nMagTammingHPRate {100};
+                  // 优化：MaxHP >> HP，血量越低几率越高
+                n14 := TargeTBaseObject.m_WAbil.HP div g_Config.nMagTammingHPRate {100};
                 if n14 <= 2 then
-                  n14 := 2
-                else
-                  Inc(n14, n14);
+                  n14 := 2;
+//                else
+                  // 优化：快节奏生活，不需要这么变态的几率
+//                  Inc(n14, n14);// n * 2
                 if (TargeTBaseObject.m_Master <> BaseObject) and (Random(n14) = 0) then begin
                   TargeTBaseObject.BreakCrazyMode();
                   if TargeTBaseObject.m_Master <> nil then begin
@@ -1945,14 +1958,19 @@ begin
                   end;
                   TargeTBaseObject.m_Master := BaseObject;
                   TargeTBaseObject.m_btWuXin := 0;
+                  // 最短时间：([0--20) + (([0--3] * 4) * 5 + 20)) * 1m == 20m -- 100m，每级技能 + 20m
+                  // 优化：加 0 就完事了，最低 1440 分钟也就是 24 小时
                   TargeTBaseObject.m_dwMasterRoyaltyTick := LongWord((Random(BaseObject.m_Abil.Level * 2) +
-                    (nMagicLevel shl 2) * 5 + 20) * 60 * 1000) + GetTickCount;
+                    (nMagicLevel shl 2) * 5 + 1440) * 60 * 1000) + GetTickCount;
                   TargeTBaseObject.m_btSlaveMakeLevel := nMagicLevel;
+                  // 记录召唤时间，未来超过 3 小时就死亡，已优化为永不死亡
                   if TargeTBaseObject.m_dwMasterTick = 0 then TargeTBaseObject.m_dwMasterTick := GetTickCount();
                   TargeTBaseObject.BreakHolySeizeMode();
+                  // 技能等级影响怪物移动速度
                   if LongWord(1500 - nMagicLevel * 200) < LongWord(TargeTBaseObject.m_nWalkSpeed) then begin
                     TargeTBaseObject.m_nWalkSpeed := 1500 - nMagicLevel * 200;
                   end;
+                  // 技能等级影响怪物攻击间隔
                   if LongWord(2000 - nMagicLevel * 200) < LongWord(TargeTBaseObject.m_nNextHitTime) then begin
                     TargeTBaseObject.m_nNextHitTime := 2000 - nMagicLevel * 200;
                   end;
@@ -1960,28 +1978,40 @@ begin
                   BaseObject.m_SlaveList.Add(TargeTBaseObject);
                 end
                 else begin //004925F2
+                  // 7% 的几率秒杀可召唤的怪物
                   if Random(14) = 0 then
                     TargeTBaseObject.m_WAbil.HP := 0;
                 end;
               end
               else begin //00492615
-                if (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (Random(20) = 0) then
+                // 满级技能时，对非不死系有 10% 的几率秒杀
+                if (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (nMagicLevel = 3) and (Random(10) = 0) then
                   TargeTBaseObject.m_WAbil.HP := 0;
               end;
             end
             else begin //00492641
+              // 可召唤的怪物，5% 几率红名
               if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (Random(20) = 0) then
                 TargeTBaseObject.OpenCrazyMode(Random(20) + 10);
             end;
           end
           else begin //00492674
+            // 可召唤的怪物，等级够的情况下，红名几率 66%，时长 10s -- 30s
             if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) then
               TargeTBaseObject.OpenCrazyMode(Random(20) + 10); //变红
           end;
         end; //004926B0
       end
-      else begin //00492699
-        TargeTBaseObject.OpenHolySeizeMode((nMagicLevel * 5 + 10) * 1000);
+      else begin //00492699 50% 几率进入此分支
+        // 10% 的几率触发红名，诱导厉害的可召唤怪物攻击其他怪物，渔翁得利
+        if Random(5) = 0 then begin
+          // 时长 10s
+          if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) then
+            TargeTBaseObject.OpenCrazyMode(10); //变红
+        end
+        else
+          // 50% * 90% 几率黄名怪物，相当于简化版麻痹，时长：10s -- 25s
+          TargeTBaseObject.OpenHolySeizeMode((nMagicLevel * 5 + 10) * 1000);
       end;
       Result := True;
     end;

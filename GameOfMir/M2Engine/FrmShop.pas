@@ -896,9 +896,9 @@ begin
   StdItem := UserEngine.GetStdItem(ShopItem.wIdent);
   if StdItem <> nil then begin
     New(UserItem);
-    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
+//    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
     if UserEngine.CopyToUserItemFromIdxEx(ShopItem.wIdent, UserItem) then begin
-    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
+//    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
       UserItem.btBindMode1 := ShopItem.btStatus;
       if ShopItem.wTime > 0 then
         UserItem.TermTime := DateTimeToLongWord(IncDay(Now, ShopItem.wTime));
@@ -912,7 +912,7 @@ begin
         UserItem.Dura := _MIN(nCount, UserItem.DuraMax);
         UserItem.MakeIndex := GetItemNumber();
         PlayObject.m_ItemList.Add(UserItem);
-    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
+//    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
         PlayObject.SendAddItem(UserItem);
         if StdItem.NeedIdentify = 1 then
           AddGameLog(PlayObject, LOG_ADDITEM, StdItem.Name, UserItem.MakeIndex, UserItem.Dura, '商铺',
@@ -923,7 +923,7 @@ begin
           UserItem2^ := UserItem^;
           UserItem2.MakeIndex := GetItemNumber();
           PlayObject.m_ItemList.Add(UserItem2);
-    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
+//    MainOutMessage(IntToStr(UserItem.EffectValue.btEffect));
           PlayObject.SendAddItem(UserItem2);
           if StdItem.NeedIdentify = 1 then
             AddGameLog(PlayObject, LOG_ADDITEM, StdItem.Name, UserItem2.MakeIndex, UserItem2.Dura, '商铺',
@@ -952,26 +952,69 @@ begin
   nShopCount := -1;
   boGamePoint := nGameGold = 0;
   nBack := -1; //购买的物品不存在
+  // 有效的商城物品
   if (nItemIndex >= 0) and (nItemIndex < m_ShopItemList.Count) and (nCount > 0) then begin
     ShopItem := m_ShopItemList[nItemIndex];
     if (ShopItem.wIdent = nIdent) and ((ShopItem.nCount = -1) or (ShopItem.nCount > 0)) then begin
       Stditem := UserEngine.GetStdItem(nIdent);
       if Stditem <> nil then begin
+        // 支持叠加物品，超过数量 10 的购买
         if (sm_Superposition in Stditem.StdModeEx) and (Stditem.DuraMax > 1) then begin
           nCount := _MIN(nCount, Stditem.DuraMax);
           if ShopItem.nCount > 0 then begin
             nCount := _MIN(nCount, ShopItem.nCount);
           end;
           nCheckCount := 1;
-        end else begin
+        end else begin // 非叠加物品，最多是现有数量或者 10 个上限购买
           nCount := _MIN(nCount, 10);
           if ShopItem.nCount > 0 then begin
             nCount := _MIN(nCount, ShopItem.nCount);
           end;
           nCheckCount := nCount;
         end;
+        // 检测背包是否可容纳购买的物品数量
         if (PlayObject.m_ItemList.Count + nCheckCount) <= PlayObject.m_nMaxItemListCount then begin
-          Pic64 := Int64(GetShopAgio(ShopItem.nPrict, ShopItem.btAgio)) * Int64(nCount);
+          // 2020-12-27 修复：金币购买时，因元宝价格为 0 而提示物品不存在
+          if nGameGold = 2 then begin
+            if ShopItem.nGoldPrict > 0 then begin
+              Pic64 := Int64(GetShopAgio(ShopItem.nGoldPrict, ShopItem.btAgio)) * Int64(nCount);
+              if Pic64 > 0 then begin
+                // fixme: 修复金币数量超过 21 亿上限
+                if Int64(PlayObject.m_nGold) >= Pic64 then begin
+                  nBack := AddShopItemToBag(PlayObject, ShopItem, nCount, sSTRING_GOLDNAME);
+                  if nBack = 1 then begin
+                    IntegerChange(PlayObject.m_nGold, Pic64, INT_DEL);
+                    if g_boGameLogGold then
+                      AddGameLog(PlayObject, LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayObject.m_nGold, '商铺', '-', IntToStr(Pic64), '购买', nil);
+                    nShopCount := ShopItem.nCount;
+                    PlayObject.GoldChanged;
+                  end;
+                end else
+                  nBack := -8; //金币不足
+              end;
+            end else
+              nBack := -9; //无法使用金币购买
+          end else begin
+            if ShopItem.nPrict > 0 then begin
+              Pic64 := Int64(GetShopAgio(ShopItem.nPrict, ShopItem.btAgio)) * Int64(nCount);
+              if Pic64 > 0 then begin
+                if Int64(PlayObject.m_nGameGold) >= Pic64 then begin
+                  nBack := AddShopItemToBag(PlayObject, ShopItem, nCount, sSTRING_GAMEGOLD);
+                  if nBack = 1 then begin
+                    IntegerChange(PlayObject.m_nGameGold, Pic64, INT_DEL);
+                    if g_boGameLogGameGold then
+                      AddGameLog(PlayObject, LOG_GAMEGOLDCHANGED, sSTRING_GAMEGOLD, 0, PlayObject.m_nGameGold, '商铺',
+                                  '-', IntToStr(Pic64), '购买', nil);
+                    nShopCount := ShopItem.nCount;
+                    PlayObject.GameGoldChanged;
+                  end;
+                end else
+                  nBack := -4; //元宝不足
+              end;
+            end else
+              nBack := -1; //无法使元宝购买
+          end;
+          // 点券？
           if Pic64 > 0 then begin
             if boGamePoint then begin
               if Int64(PlayObject.m_nGamePoint) >= Pic64 then begin
@@ -998,38 +1041,6 @@ begin
               end else
                 nBack := -5; //点卷不足
             end else
-            if nGameGold = 2 then begin
-              if ShopItem.nGoldPrict > 0 then begin
-                Pic64 := Int64(GetShopAgio(ShopItem.nGoldPrict, ShopItem.btAgio)) * Int64(nCount);
-                if Pic64 > 0 then begin
-                  if Int64(PlayObject.m_nGold) >= Pic64 then begin
-                    nBack := AddShopItemToBag(PlayObject, ShopItem, nCount, sSTRING_GOLDNAME);
-                    if nBack = 1 then begin
-                      IntegerChange(PlayObject.m_nGold, Pic64, INT_DEL);
-                      if g_boGameLogGold then
-                        AddGameLog(PlayObject, LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayObject.m_nGold, '商铺', '-', IntToStr(Pic64), '购买', nil);
-                      nShopCount := ShopItem.nCount;
-                      PlayObject.GoldChanged;
-                    end;
-                  end else
-                    nBack := -8; //元宝不足
-                end;
-              end else
-                nBack := -9; //无法使用金币购买
-            end else begin
-              if Int64(PlayObject.m_nGameGold) >= Pic64 then begin
-                nBack := AddShopItemToBag(PlayObject, ShopItem, nCount, sSTRING_GAMEGOLD);
-                if nBack = 1 then begin
-                  IntegerChange(PlayObject.m_nGameGold, Pic64, INT_DEL);
-                  if g_boGameLogGameGold then
-                    AddGameLog(PlayObject, LOG_GAMEGOLDCHANGED, sSTRING_GAMEGOLD, 0, PlayObject.m_nGameGold, '商铺',
-                      '-', IntToStr(Pic64), '购买', nil);
-                  nShopCount := ShopItem.nCount;
-                  PlayObject.GameGoldChanged;
-                end;
-              end else
-                nBack := -4; //元宝不足
-            end;
           end;
         end else
           nBack := -3; //背包空间已满
