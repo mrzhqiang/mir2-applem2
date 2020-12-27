@@ -10717,18 +10717,21 @@ begin
         cu.ClientShopItem := ClientShopItem;
         cu.sHint := GetShopHintList(cu.CLientItem.s.Name);
         if ClientShopItem.btIdx in [0..3] then begin
-          g_ShopList[ClientShopItem.btIdx + 2].Add(cu);
+          if ClientShopItem.nPrict > 0 then
+            g_ShopList[ClientShopItem.btIdx + 2].Add(cu);
           if ClientShopItem.nGoldPrict > 0 then
             g_ShopGoldList[ClientShopItem.btIdx + 2].Add(cu);
 {$IF Var_Interface = Var_Mir2}
           if ClientShopItem.nCount > -1 then begin
-            g_ShopList[1].Add(cu);
+            if ClientShopItem.nPrict > 0 then
+              g_ShopList[1].Add(cu);
             if ClientShopItem.nGoldPrict > 0 then
               g_ShopGoldList[1].Add(cu);
           end;
 {$ELSE}
           if ClientShopItem.btAgio > 0 then begin
-            g_ShopList[1].Add(cu);
+            if ClientShopItem.nPrict > 0 then
+              g_ShopList[1].Add(cu);
             if ClientShopItem.nGoldPrict > 0 then
               g_ShopGoldList[1].Add(cu);
           end;
@@ -10742,7 +10745,8 @@ begin
           Dispose(cu);
       end;
       for I := 0 to QuickPointList.Count - 1 do begin
-        g_ShopList[0].Add(QuickPointList.GetPointer(I));
+        if pTShopItem(QuickPointList.GetPointer(I)).ClientShopItem.nPrict > 0 then
+          g_ShopList[0].Add(QuickPointList.GetPointer(I));
         if pTShopItem(QuickPointList.GetPointer(I)).ClientShopItem.nGoldPrict > 0 then
           g_ShopGoldList[0].Add(QuickPointList.GetPointer(I));
       end;
