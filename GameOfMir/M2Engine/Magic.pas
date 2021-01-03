@@ -1023,13 +1023,21 @@ begin
   // 技能 ID 在 1000 以上时，可以复用技能
   magicId := UserMagic.MagicInfo.wMagicId mod 1000;
   case magicId of //
-    SKILL_FIREBALL {1}, //火球术
-    SKILL_FIREBALL2 {5}: begin //大火球
-        if MagMakeFireball(PlayObject,
-          UserMagic,
-          nTargetX,
-          nTargetY,
-          TargeTBaseObject) then
+    SKILL_FIREBALL: {1} //火球术
+    begin
+      if MagMakeFireball(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
+        boTrain := True;
+    end;
+    SKILL_FIREBALL2: {5} //大火球-烈焰掌
+    begin
+      if MagMakeFireball(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
+          nPower := UserMagic.MagicInfo.btDefMaxPower;
+          TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON,
+                                         POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower,
+                                         Integer(PlayObject),
+                                         ROUND(nPower * (UserMagic.btLevel + 1) / (UserMagic.MagicInfo.btTrainLv + 1))
+              {UserMagic.btLevel}, '', 800);
+          TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
           boTrain := True;
       end;
     SKILL_HEALLING {2}: begin //治愈术
@@ -1081,12 +1089,11 @@ begin
           boTrain := True;
       end;
     SKILL_LIGHTENING {11}: begin //雷电术 0049395C
-        if MagMakeLighting(PlayObject,
-          UserMagic,
-          nTargetX,
-          nTargetY,
-          TargeTBaseObject) then
-          boTrain := True;
+      if MagMakeLighting(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
+        TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_STONE
+            {中毒类型 - 麻痹}, 20 div g_Config.nMabMabeHitMabeTimeRate
+              {20}+ Random(UserMagic.btLevel), Integer(PlayObject), UserMagic.btLevel, '', 650);
+        boTrain := True;
       end;
     SKILL_FIRECHARM {13}, //灵魂火符
     SKILL_HANGMAJINBUB {14}, //幽灵盾
@@ -1185,7 +1192,7 @@ begin
     SKILL_EARTHFIRE {22}: begin //火墙  00493B40
         nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
           SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1, False);
-        nDelayTime := GetPower(10, UserMagic) + (Word(GetRPow(PlayObject.m_WAbil.MC)) shr 1);
+        nDelayTime := GetPower(100, UserMagic) + (Word(GetRPow(PlayObject.m_WAbil.MC)) shr 1);
 
         //2006-11-12 火墙威力和时间的倍数
         nPower := ROUND(nPower * (g_Config.nFirePowerRate / 100));
@@ -1379,7 +1386,7 @@ begin
           nPower,
           nTargetX,
           nTargetY,
-          g_Config.nFireBoomRage {1}, UserMagic.wMagIdx) then
+          0{g_Config.nFireBoomRage} {1}, UserMagic.wMagIdx) then
           boTrain := True;
       end;
     //道士
@@ -2028,8 +2035,7 @@ var
   n14: Integer;
 begin
   Result := False;
-  if TargeTBaseObject.m_boSuperMan or not (TargeTBaseObject.m_btLifeAttrib =
-    LA_UNDEAD) then
+  if TargeTBaseObject.m_boSuperMan or not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) then
     Exit;
   TAnimalObject(TargeTBaseObject).Struck {FFEC}(BaseObject);
   if TargeTBaseObject.m_TargetCret = nil then begin
@@ -2038,15 +2044,20 @@ begin
     TAnimalObject(TargeTBaseObject).m_dwRunAwayTime := 10 * 1000;
   end;
   BaseObject.SetTargetCreat(TargeTBaseObject);
-  if (Random(2) + (BaseObject.m_Abil.Level - 1)) > TargeTBaseObject.m_Abil.Level then begin
-    if TargeTBaseObject.m_Abil.Level < g_Config.nMagTurnUndeadLevel then begin
-      n14 := BaseObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level;
-      if Random(100) < ((nLevel shl 3) - nLevel + 15 + n14) then begin
+  if (Random(Round(2*BaseObject.m_Abil.Level)) + (BaseObject.m_Abil.Level - 1)) > TargeTBaseObject.m_Abil.Level then begin
+//    if TargeTBaseObject.m_Abil.Level < g_Config.nMagTurnUndeadLevel then begin
+      n14 := Max(0, BaseObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level);
+      // 0: 10 + n14 %
+      // 3: 19 + n14 %
+      if Random(100) < ((nLevel shl 2) - nLevel + 10 + n14) then begin
         TargeTBaseObject.SetLastHiter(BaseObject);
-        TargeTBaseObject.m_WAbil.HP := 0;
+        // 10% 当前生命值的掉血
+        TargeTBaseObject.m_WAbil.HP := Max(0, Round(TargeTBaseObject.m_WAbil.HP - TargeTBaseObject.m_WAbil.HP * 0.1));
+        if (Random(20) = 1) then
+          TargeTBaseObject.m_WAbil.HP := 0;
         Result := True;
       end
-    end;
+//    end;
   end;
 end;
 
@@ -2087,7 +2098,8 @@ begin
     BaseObject.SendRefMsg(RM_SPACEMOVE_FIRE2, 0, 0, 0, 0, '');
     if BaseObject is TPlayObject then begin
       Envir := BaseObject.m_PEnvir;
-      BaseObject.MapRandomMove(BaseObject.m_sHomeMap, 1);
+      // 瞬息移动原来的参数是1 改为0 看看是不是随机传送
+      BaseObject.MapRandomMove(BaseObject.m_sHomeMap, 0);
       if (Envir <> BaseObject.m_PEnvir) and (BaseObject.m_btRaceServer = RC_PLAYOBJECT) then begin
         PlayObject := TPlayObject(BaseObject);
         PlayObject.m_boTimeRecall := False;
