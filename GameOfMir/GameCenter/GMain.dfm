@@ -277,6 +277,10 @@ object frmMain: TfrmMain
     object ConfigTab: TTabSheet
       Caption = #37197#32622#21521#23548
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl3: TPageControl
         Left = 0
         Top = 0
@@ -288,6 +292,10 @@ object frmMain: TfrmMain
         TabPosition = tpBottom
         object TabSheet4: TTabSheet
           Caption = #31532#19968#27493'('#22522#26412#35774#32622')'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox1: TGroupBox
             Left = 3
             Top = 13
@@ -456,6 +464,10 @@ object frmMain: TfrmMain
         object TabSheet5: TTabSheet
           Caption = #31532#20108#27493'('#30331#24405#32593#20851')'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object ButtonNext2: TButton
             Left = 408
             Top = 263
@@ -581,6 +593,10 @@ object frmMain: TfrmMain
         object TabSheet6: TTabSheet
           Caption = #31532#19977#27493'('#35282#33394#32593#20851')'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox3: TGroupBox
             Left = 8
             Top = 8
@@ -730,6 +746,10 @@ object frmMain: TfrmMain
         object TabSheet12: TTabSheet
           Caption = #31532#22235#27493'('#28216#25103#32593#20851')'
           ImageIndex = 8
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object ButtonPrv4: TButton
             Left = 320
             Top = 263
@@ -1030,6 +1050,10 @@ object frmMain: TfrmMain
         object TabSheet7: TTabSheet
           Caption = #31532#20116#27493'('#30331#24405#26381#21153#22120')'
           ImageIndex = 3
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox9: TGroupBox
             Left = 8
             Top = 8
@@ -1185,6 +1209,10 @@ object frmMain: TfrmMain
         object TabSheet8: TTabSheet
           Caption = #31532#20845#27493'('#25968#25454#24211#26381#21153#22120')'
           ImageIndex = 4
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox11: TGroupBox
             Left = 8
             Top = 8
@@ -1325,6 +1353,10 @@ object frmMain: TfrmMain
         object TabSheet9: TTabSheet
           Caption = #31532#19971#27493'('#28216#25103#26085#24535#26381#21153#22120')'
           ImageIndex = 5
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox13: TGroupBox
             Left = 8
             Top = 8
@@ -1450,6 +1482,10 @@ object frmMain: TfrmMain
         object TabSheet10: TTabSheet
           Caption = #31532#20843#27493'('#28216#25103#24341#25806#20027#26381#21153#22120')'
           ImageIndex = 6
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox15: TGroupBox
             Left = 8
             Top = 8
@@ -1590,6 +1626,10 @@ object frmMain: TfrmMain
         object TabSheet11: TTabSheet
           Caption = #31532#20061#27493'('#20445#23384#37197#32622')'
           ImageIndex = 7
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object ButtonSave: TButton
             Left = 408
             Top = 263
@@ -1623,6 +1663,10 @@ object frmMain: TfrmMain
     object TabSheet3: TTabSheet
       Caption = #25968#25454#22791#20221
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabelBackMsg: TLabel
         Left = 384
         Top = 304
@@ -1864,6 +1908,10 @@ object frmMain: TfrmMain
     object TabSheet13: TTabSheet
       Caption = #24320#21306#25968#25454#28165#29702
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox25: TGroupBox
         Left = 8
         Top = 8

@@ -142,7 +142,7 @@ type
     m_nSpellRecover: ShortInt; //0x249
     m_btAntiPoison: Byte; //0x24A
     m_nPoisonRecover: ShortInt; //0x24B
-    m_nAntiMagic: ShortInt; //0x24C
+    m_nAntiMagic: ShortInt; //0x24C 魔法躲避几率
     m_nLuck: Integer; //0x250  人物的幸运值Luck
     m_btDeadliness: Byte; //致命一击
     m_nPerHealth: Integer; //0x254
@@ -761,7 +761,8 @@ begin
   m_boTestGa := False;
   m_boGsa := False;
   bo2BA := False;
-  m_boAbilSeeHealGauge := False;
+  // fixme 默认血量可见，不需要心灵启示技能
+  m_boAbilSeeHealGauge := True;
   m_boPowerHit := False;
   //m_boUseThrusting := False;
   //m_boUseHalfMoon := False;
@@ -2080,6 +2081,17 @@ begin
   end;
 end;
 
+    {
+    施法者发送延迟魔法：
+    1 自己
+    2 RM 常量
+    3 伤害、中毒类型
+    4 目标坐标、中毒点数
+    5 不清楚、目标对象
+    6 目标对象、等级系数
+    7 空消息
+    8 延迟时间——飞行时长、固定生效间隔
+    }
 procedure TBaseObject.SendDelayMsg(BaseObject: TBaseObject; wIdent,
   wParam: Word; lParam1, lParam2, lParam3: Integer; sMsg: string;
   dwDelay: LongWord);
@@ -5410,6 +5422,7 @@ begin
   end;
 end;
 
+  {诅咒术}
 function TBaseObject.MagMakeAbilityArea(nX, nY, nRange, nSec, nMagID: Integer;
   btState: Byte; boState: Boolean): Integer;
 var
@@ -5439,17 +5452,17 @@ begin
                      case BaseObject.m_btJob of
                        0: begin
                            if BaseObject.m_wStatusArrValue[0 {0x218}] = 0 then
-                             BaseObject.m_wStatusArrValue[0 {0x218}] := MakeLong(LoWord(BaseObject.m_WAbil.DC), HiWord(BaseObject.m_WAbil.DC) - 2 - (BaseObject.m_Abil.Level div 7));
+                             BaseObject.m_wStatusArrValue[0 {0x218}] := MakeLong(LoWord(BaseObject.m_WAbil.DC), HiWord(BaseObject.m_WAbil.DC) - 10 - (nSec div BaseObject.m_Abil.Level));
                            BaseObject.m_boDC := boState;
                          end;
                        1: begin
                            if BaseObject.m_wStatusArrValue[1 {0x218}] = 0 then
-                             BaseObject.m_wStatusArrValue[1 {0x218}] := MakeLong(LoWord(BaseObject.m_WAbil.MC), HiWord(BaseObject.m_WAbil.MC) - 2 - (BaseObject.m_Abil.Level div 7));
+                             BaseObject.m_wStatusArrValue[1 {0x218}] := MakeLong(LoWord(BaseObject.m_WAbil.MC), HiWord(BaseObject.m_WAbil.MC) - 10 - (nSec div BaseObject.m_Abil.Level));
                            BaseObject.m_boMC := boState;
                          end;
                        2: begin
                            if BaseObject.m_wStatusArrValue[2 {0x218}] = 0 then
-                             BaseObject.m_wStatusArrValue[2 {0x218}] := MakeLong(LoWord(BaseObject.m_WAbil.SC), HiWord(BaseObject.m_WAbil.SC) - 2 - (BaseObject.m_Abil.Level div 7));
+                             BaseObject.m_wStatusArrValue[2 {0x218}] := MakeLong(LoWord(BaseObject.m_WAbil.SC), HiWord(BaseObject.m_WAbil.SC) - 10 - (nSec div BaseObject.m_Abil.Level));
                            BaseObject.m_boSC := boState;
                          end;
                      end;
@@ -7163,15 +7176,15 @@ begin
 
   if m_wStatusTimeArr[STATE_DEFENCEUP {10 0x72}] > 0 then begin
     if m_boAC then
-      m_WAbil.AC := MakeLong(LoWord(m_WAbil.AC), HiWord(m_WAbil.AC) + 2 + (m_Abil.Level div 7))
+      m_WAbil.AC := MakeLong(LoWord(m_WAbil.AC), HiWord(m_WAbil.AC) + 10 + (m_wStatusTimeArr[STATE_DEFENCEUP] div 10))
     else
-      m_WAbil.AC := MakeLong(LoWord(m_WAbil.AC), HiWord(m_WAbil.AC) - 2 - (m_Abil.Level div 7)); //新增减属性
+      m_WAbil.AC := MakeLong(LoWord(m_WAbil.AC), HiWord(m_WAbil.AC) - 10 - (m_wStatusTimeArr[STATE_DEFENCEUP] div (10+m_Abil.Level))); //新增减属性
   end;
   if m_wStatusTimeArr[STATE_MAGDEFENCEUP {11 0x74}] > 0 then begin
     if m_boMAC then
-      m_WAbil.MAC := MakeLong(LoWord(m_WAbil.MAC), HiWord(m_WAbil.MAC) + 2 + (m_Abil.Level div 7))
+      m_WAbil.MAC := MakeLong(LoWord(m_WAbil.MAC), HiWord(m_WAbil.MAC) + 10 + (m_wStatusTimeArr[STATE_MAGDEFENCEUP] div 10))
     else
-      m_WAbil.MAC := MakeLong(LoWord(m_WAbil.MAC), HiWord(m_WAbil.MAC) - 2 - (m_Abil.Level div 7));
+      m_WAbil.MAC := MakeLong(LoWord(m_WAbil.MAC), HiWord(m_WAbil.MAC) - 10 - (m_wStatusTimeArr[STATE_MAGDEFENCEUP] div (10+m_Abil.Level)));
   end;
 
   if m_wStatusArrValue[0] > 0 then begin

@@ -8873,7 +8873,8 @@ begin
     STATUS_AC: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          nPower := 2 + (m_Abil.Level div 7);
+//          nPower := 2 + (m_Abil.Level div 7);
+          nPower := 10 + (m_wStatusTimeArr[STATE_DEFENCEUP] div 10);
           SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[STATE_DEFENCEUP], LoWord(nPower), HiWord(nPower), nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
@@ -8950,7 +8951,8 @@ begin
     STATUS_MAC: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          nPower := 2 + (m_Abil.Level div 7);
+//          nPower := 2 + (m_Abil.Level div 7);
+          nPower := 10 + (m_wStatusTimeArr[STATE_MAGDEFENCEUP] div (10+m_Abil.Level));
           SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[STATE_MAGDEFENCEUP], LoWord(nPower), HiWord(nPower), nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
@@ -15040,13 +15042,14 @@ var
 begin
   Result := False;
   nSpellPoint := GetSpellPoint(UserMagic);
-  if nSpellPoint > 0 then begin
+  if (nSpellPoint > 0) and (m_dwStatusArrTimeOutTick[2 {0x228}] < GetTickCount) then begin
     if m_WAbil.MP < nSpellPoint then
       Exit;
-    n14 := Random(10 + UserMagic.btLevel) + UserMagic.btLevel;
+    n14 := Random(30 * UserMagic.btLevel) + 60;
     m_dwStatusArrTimeOutTick[2 {0x228}] := GetTickCount + LongWord(n14 * 1000);
     m_boSC := True;
-    m_wStatusArrValue[2 {0x218}] := MakeLong(LoWord(m_WAbil.SC), HiWord(m_WAbil.SC) - 2 - (m_Abil.Level div 7));
+    m_wStatusArrValue[2 {0x218}] := MakeLong(Round(LoWord(m_WAbil.SC) * (UserMagic.MagicInfo.wPower / (UserMagic.MagicInfo.btTrainLv+1) * (UserMagic.btLevel+1)) / 100),
+                                              Round(HiWord(m_WAbil.SC) * (UserMagic.MagicInfo.wMaxPower / (UserMagic.MagicInfo.btTrainLv+1) * (UserMagic.btLevel+1)) / 100  + 10));
     SysMsg('道术增加' + IntToStr(m_wStatusArrValue[2 {0x218}] + 2) + '点 ' + IntToStr(n14) + '秒', c_Green, t_Hint);
     ChangeStatusMode(STATUS_SC, True);
     RecalcAbilitys();
@@ -18494,6 +18497,11 @@ begin
         nCheckCode := 607;
         TrainSkill(m_MagicArr[SKILL_ILKWANG], Random(3) + 1);
         nCheckCode := 608;
+        // 0 -- 3 - 0 -- 9 >= 0 几率为：10% -- 20% -- 30% -- 40%
+        if (m_MagicArr[SKILL_ILKWANG].btLevel - Random(10) >= 0) then begin
+          // 新增加精神力战法普攻回蓝 3 * (level + 1) 点
+          Inc(m_nIncSpell, (m_MagicArr[SKILL_ILKWANG].btLevel + 1) * 3);
+        end;
         if not CheckMagicLevelup(m_MagicArr[SKILL_ILKWANG]) then begin
           nCheckCode := 609;
           SendDelayDefMsg(Self, SM_MAGIC_LVEXP, m_MagicArr[SKILL_ILKWANG].MagicInfo.wMagicId,
@@ -18669,7 +18677,7 @@ begin
     if (UserMagic.wMagIdx > 0) and (UserMagic.wMagIdx < SKILL_MAX) then begin
       m_MagicArr[UserMagic.wMagIdx] := UserMagic;
       case UserMagic.wMagIdx of
-        SKILL_ONESWORD: begin //精神力战法
+        SKILL_ONESWORD: begin //基本剑术
             if UserMagic.btLevel > 0 then begin
               m_btHitPoint := m_btHitPoint + ROUND(9 / 3 * UserMagic.btLevel);
             end;
@@ -18688,9 +18696,9 @@ begin
         SKILL_LONGICEHIT: begin //开天斩
             m_nLongIceHitDouble := 4 + UserMagic.btLevel * 3;
           end;
-        SKILL_ILKWANG: begin //基本剑法
+        SKILL_ILKWANG: begin // 精神力战法
             if UserMagic.btLevel > 0 then begin
-              m_btHitPoint := m_btHitPoint + ROUND(8 / 3 * UserMagic.btLevel);
+              m_btHitPoint := m_btHitPoint + ROUND(5 * (UserMagic.btLevel+1));
             end;
           end;
       end;

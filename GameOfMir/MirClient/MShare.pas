@@ -4586,7 +4586,7 @@ begin
     ShowString := ShowString + '当前技能等级: ';
     if CMagic.boStudy then begin
       ShowString := ShowString + IntToStr(CMagic.Level) + '\';
-      if (Magic.btTrainLv <=9) and (CMagic.Level < Magic.btTrainLv) then
+      if (Magic.btTrainLv <= 9) and (CMagic.Level < Magic.btTrainLv) then
         ShowString := ShowString + '当前技能修为: ' + IntToStr(CMagic.CurTrain) + '\';
     end else begin
       ShowString := ShowString + '未修练\';
@@ -4595,6 +4595,50 @@ begin
       ShowString := ShowString + '技能使用间隔: ';
       ShowString := ShowString + IntToStr(Magic.nInterval div 1000) + '秒\';
     end;
+    {if nMagId in [Grobal2.SKILL_FIREBALL2] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round((CMagic.Level + 1) * 3 + 1)) + '%\';
+    end;
+    if nMagId in [Grobal2.SKILL_FIREWIND] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round((20 + CMagic.Level * 10 + 1))) + '% ± 5*[等级差]% 触发\';
+    end;
+    if nMagId in [Grobal2.SKILL_LIGHTENING] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round(CMagic.Level * 5 + 1)) + '% ± [等级差]% 触发\';
+    end;
+    if nMagId in [Grobal2.SKILL_TAMMING] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round((CMagic.Level + 1) * 25)) + '% 几率触发\';
+      ShowString := ShowString + '1. 50% * 10% 怪物红名\';
+      ShowString := ShowString + '2. 50% * 90% 怪物定身 '+IntToStr(Round((CMagic.Level * 5 + 10)))+' 秒\';
+      ShowString := ShowString + '3. 50% * (符合条件时 33% * 相关几率)，成功召唤\';
+      ShowString := ShowString + '4. 其他情况，秒杀怪物\';
+    end;
+    if nMagId in [Grobal2.SKILL_SPACEMOVE] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round((CMagic.Level * 2 + 4) * 100 div 11)) + '%\';
+    end;
+    if nMagId in [Grobal2.SKILL_KILLUNDEAD] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round(CMagic.Level * 30 + 1)) + '% 触发\';
+    end;
+    if nMagId in [Grobal2.SKILL_44] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round(CMagic.Level * 5)) + '% ± [等级差]% 触发\';
+    end;
+    if nMagId in [Grobal2.SKILL_45] then
+    begin
+      ShowString := ShowString + '<技能几率/FCOLOR=' + WUXINISMYCOLOR + '>\';
+      ShowString := ShowString + IntToStr(Round(CMagic.Level * 10)) + '% 触发\';
+    end;}
     case nMagID of
       3,{基本剑术}
       4,{精神力战法}

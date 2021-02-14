@@ -63,6 +63,15 @@ type
     destructor Destroy; override;
   end;
 
+  THoly1CurtainEvent = class(TEvent)
+    m_dwRunTick: LongWord;
+    m_boSetMap: Boolean;
+  public
+    constructor Create(Creat: TBaseObject; nX, nY: Integer; nType, nTime, nPower: Integer);
+    destructor Destroy; override;
+    procedure Run(); override;
+  end;
+
   TMachineryEvent = class(TEvent)
     m_boCloseWait: Boolean;
   private
@@ -235,6 +244,58 @@ begin
 
   inherited;
 end;
+
+{ THoly1CurtainEvent }
+
+constructor THoly1CurtainEvent.Create(Creat: TBaseObject; nX, nY, nType, nTime, nPower: Integer);
+begin
+  inherited Create(Creat.m_PEnvir, nX, nY, nType, nTime, True);
+  if m_Envir <> nil then begin
+    m_boSetMap := True;
+    m_Envir.SetFireBurn(m_nX, m_nY, True);
+  end;
+  m_nDamage := nPower;
+  m_OwnBaseObject := Creat;
+//  inherited Create(Envir, nX, nY, nType, nTime, True);
+end;
+
+destructor THoly1CurtainEvent.Destroy;
+begin
+  if (m_Envir <> nil) and m_boSetMap then begin
+    m_boSetMap := False;
+    m_Envir.SetFireBurn(m_nX, m_nY, False);
+  end;
+  inherited;
+end;
+
+procedure THoly1CurtainEvent.Run;
+var
+  I: Integer;
+  BaseObjectList: TList;
+  TargeTBaseObject: TBaseObject;
+begin
+  if (GetTickCount - m_dwRunTick) > 3000 then begin
+    m_dwRunTick := GetTickCount();
+    BaseObjectList := TList.Create;
+    if m_Envir <> nil then begin
+      m_Envir.GeTBaseObjects(m_nX, m_nY, True, BaseObjectList);
+      for I := 0 to BaseObjectList.Count - 1 do begin
+        TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
+        if (TargeTBaseObject <> nil) and (m_OwnBaseObject <> nil) and (GetTickCount > TargeTBaseObject.m_dwFireBurnTick) and
+        (m_OwnBaseObject.IsProperTarget(TargeTBaseObject)) then begin
+          if TargeTBaseObject.m_btRaceServer = RC_PLAYOBJECT then
+            TargeTBaseObject.m_dwFireBurnTick := GetTickCount + g_Config.nFirePlayDamageTimeRate
+          else
+            TargeTBaseObject.m_dwFireBurnTick := GetTickCount + g_Config.nFireMonDamageTimeRate;
+          TargeTBaseObject.SendMsg(m_OwnBaseObject, RM_MAGSTRUCK_MINE, 0, m_nDamage, 0, 0, '');
+        end;
+      end;
+    end;
+    BaseObjectList.Free;
+  end;
+  inherited;
+end;
+
 { TSafeEvent 安全区光环}
 
 constructor TSafeEvent.Create(Envir: TEnvirnoment; nX, nY: Integer; nType:
