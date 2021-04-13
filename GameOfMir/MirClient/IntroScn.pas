@@ -803,7 +803,7 @@ begin
         frmMain.SendLogin(m_sLoginId, GetMD5TextOf16(m_sLoginPasswd))
       else
         frmMain.SendLogin(m_sLoginId, m_sLoginPasswd);
-      FrmDlg.DEditID.Text := '';
+//      FrmDlg.DEditID.Text := '';
       FrmDlg.DEditPass.Text := '';
     end
     else if (FrmDlg.DEditID.Text = '') then

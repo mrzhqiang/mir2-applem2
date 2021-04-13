@@ -3255,6 +3255,7 @@ begin
   if PlayObject.m_MasterList.Count <= 0 then PlayObject.m_boMaster := False
   else PlayObject.m_boMaster := HumData.boMaster;
   PlayObject.m_CustomVariable := HumData.CustomVariable;
+  PlayObject.m_BStrVariable := HumData.BStrVariable;
   PlayObject.m_nCreditPoint := HumData.btCreditPoint;
 
   PlayObject.m_sStoragePwd := HumData.sStoragePwd;
@@ -3311,9 +3312,9 @@ begin
   PlayObject.m_dBodyLuck := HumData.dBodyLuck;
   //PlayObject.m_boAllowGroupReCall := HumData.boAllowGroupReCall;
 
-  PlayObject.m_RealityInfo := HumData.UserRealityInfo;
+//  PlayObject.m_RealityInfo := HumData.UserRealityInfo;
   PlayObject.m_UserKeySetup := HumData.UserKeySetup;
-  PlayObject.m_dwUpLoadPhotoTime := HumData.dwUpLoadPhotoTime;
+//  PlayObject.m_dwUpLoadPhotoTime := HumData.dwUpLoadPhotoTime;
 
   PlayObject.m_QuestFlag := HumData.QuestFlag;
   PlayObject.m_MissionFlag := HumData.MissionFlag;
@@ -3512,15 +3513,15 @@ begin
 
   if (PlayObject.m_btWuXin < 1) or (PlayObject.m_btWuXin > 5) then
     PlayObject.m_btWuXin := 1;
-  if PlayObject.m_PPhotoData <> nil then
-    FreeMem(PlayObject.m_PPhotoData);
-  PlayObject.m_PPhotoData := nil;
-  PlayObject.m_nPhotoSize := 0;
-  if HumData.nPhotoSize > 0 then begin
-    PlayObject.m_nPhotoSize := _MIN(HumData.nPhotoSize, MAXPHOTODATASIZE);
-    GetMem(PlayObject.m_PPhotoData, PlayObject.m_nPhotoSize);
-    Move(HumData.pPhotoData[0], PlayObject.m_PPhotoData^, PlayObject.m_nPhotoSize);
-  end;
+//  if PlayObject.m_PPhotoData <> nil then
+//    FreeMem(PlayObject.m_PPhotoData);
+//  PlayObject.m_PPhotoData := nil;
+//  PlayObject.m_nPhotoSize := 0;
+//  if HumData.nPhotoSize > 0 then begin
+//    PlayObject.m_nPhotoSize := _MIN(HumData.nPhotoSize, MAXPHOTODATASIZE);
+//    GetMem(PlayObject.m_PPhotoData, PlayObject.m_nPhotoSize);
+//    Move(HumData.pPhotoData[0], PlayObject.m_PPhotoData^, PlayObject.m_nPhotoSize);
+//  end;
 
   //if PlayObject.m_sStoragePwd <> '' then
     //PlayObject.m_boPasswordLocked := True;

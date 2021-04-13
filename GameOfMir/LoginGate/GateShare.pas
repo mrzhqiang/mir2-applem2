@@ -5,7 +5,7 @@ uses
   Windows, Messages, Classes, SysUtils, JSocket, WinSock, SyncObjs, Common, Grobal2;
 
 const
-  g_sUpDateTime = '程序版本: v2020.1.0';
+  g_sUpDateTime = '程序版本: v2021.1.0';
   BlockIPListName = '.\BlockIPList.txt';
   TeledataBlockIPListName = '.\Config\LoginGate_BlockIPList.txt';
   ConfigFileName = '.\Config.ini';

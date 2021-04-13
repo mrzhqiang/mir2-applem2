@@ -7,9 +7,9 @@ uses
 
 const
   //g_sVersion = '程序版本: 1.00 Build 20080825';
-  g_sUpDateTime = '程序版本: v2020.1.0';
+  g_sUpDateTime = '程序版本: v2021.1.0';
 
-  SIZEOFTHUMAN = 44040;
+  SIZEOFTHUMAN = 66197;
 
 type
   TGList = class(TList)

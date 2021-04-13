@@ -1000,62 +1000,69 @@ begin
   n100 := GetValNameNo(CheckQuestConditionInfo.sParam1);
   if n100 >= 0 then begin
     case n100 of
-      0..99: begin
+      0..999: begin
           n140 := PlayObject.m_nVal[n100];
           Result := True;
         end;
-      2000..2999: begin
-          n140 := g_Config.GlobalVal[n100 - 2000];
+      1000..1999: begin
+          n140 := g_Config.GlobalVal[n100 - 1000];
           Result := True;
         end;
-      200..209: begin
-          n140 := PlayObject.m_DyVal[n100 - 200];
+      10000..10009: begin
+          n140 := PlayObject.m_DyVal[n100 - 10000];
           Result := True;
         end;
-      300..399: begin
-          n140 := PlayObject.m_nMval[n100 - 300];
+      9000..9999: begin
+          n140 := PlayObject.m_nMval[n100 - 9000];
           Result := True;
         end;
-      400..499: begin
-          n140 := g_Config.GlobaDyMval[n100 - 400];
+      3000..3999: begin
+          n140 := g_Config.GlobaDyMval[n100 - 3000];
           Result := True;
-        end;
-      5000..5999: begin
-          n140 := PlayObject.m_nInteger[n100 - 5000];
-          Result := True;
-        end;
-      6000..6999: begin
-          if (CompareText(PlayObject.m_sString[n100 - 6000], CheckQuestConditionInfo.sParam2) = 0) then begin
-            n140 := 0;
-            n180 := 0;
-            Result := True;
-          end;
         end;
       7000..7999: begin
-          if (CompareText(g_Config.GlobalAVal[n100 - 7000], CheckQuestConditionInfo.sParam2) = 0) then begin
-            n140 := 0;
-            n180 := 0;
-            Result := True;
-          end;
-        end;
-      800..899: begin
-          if (CompareText(g_Config.GlobalUVal[n100 - 800], CheckQuestConditionInfo.sParam2) = 0) then begin
-            n140 := 0;
-            n180 := 0;
-            Result := True;
-          end;
-        end;
-      900..909: begin
-          if (CompareText(m_GotoValue[n100 - 900], CheckQuestConditionInfo.sParam2) = 0) then begin
-            n140 := 0;
-            n180 := 0;
-            Result := True;
-          end;
-        end;
-      1000..1019: begin
-          n140 := PlayObject.m_CustomVariable[n100 - 1000];
+          n140 := PlayObject.m_nInteger[n100 - 7000];
           Result := True;
-          if n100 = 1000 then
+        end;
+      8000..8999: begin
+          if (CompareText(PlayObject.m_sString[n100 - 8000], CheckQuestConditionInfo.sParam2) = 0) then begin
+            n140 := 0;
+            n180 := 0;
+            Result := True;
+          end;
+        end;
+      2000..2999: begin
+          if (CompareText(g_Config.GlobalAVal[n100 - 2000], CheckQuestConditionInfo.sParam2) = 0) then begin
+            n140 := 0;
+            n180 := 0;
+            Result := True;
+          end;
+        end;
+      6000..6999: begin
+          if (CompareText(PlayObject.m_BStrVariable[n100 - 6000], CheckQuestConditionInfo.sParam2) = 0) then begin
+            n140 := 0;
+            n180 := 0;
+            Result := True;
+          end;
+        end;
+      4000..4999: begin
+          if (CompareText(g_Config.GlobalUVal[n100 - 4000], CheckQuestConditionInfo.sParam2) = 0) then begin
+            n140 := 0;
+            n180 := 0;
+            Result := True;
+          end;
+        end;
+      11000..11009: begin
+          if (CompareText(m_GotoValue[n100 - 11000], CheckQuestConditionInfo.sParam2) = 0) then begin
+            n140 := 0;
+            n180 := 0;
+            Result := True;
+          end;
+        end;
+      5000..5999: begin
+          n140 := PlayObject.m_CustomVariable[n100 - 5000];
+          Result := True;
+          if n100 = 5000 then
             PlayObject.LiteraryChange(True);
         end;
     end;
@@ -1822,7 +1829,7 @@ begin
         Goods.dwRefillTick := GetTickCount();
         Goods.nStock := Goods.nCount;
       end;
-    end;  
+    end;
   except
     on E: Exception do
       MainOutMessage(Format(sExceptionMsg, [m_sCharName, m_nCurrX, m_nCurrY, E.Message, nCHECK]));
@@ -4163,60 +4170,55 @@ var
 begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
-    case n14 of //
-      0..99: begin
+    case n14 of
+      0..999: begin // P999
           if QuestActionInfo.sParam3 = '' then
             PlayObject.m_nVal[n14] := PlayObject.m_nVal[n14] div QuestActionInfo.nParam2
           else
             PlayObject.m_nVal[n14] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
         end;
-      2000..2999: begin
+      1000..1999: begin // G999
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobalVal[n14 - 2000] := g_Config.GlobalVal[n14 - 2000] div QuestActionInfo.nParam2
+            g_Config.GlobalVal[n14 - 1000] := g_Config.GlobalVal[n14 - 1000] div QuestActionInfo.nParam2
           else
-            g_Config.GlobalVal[n14 - 2000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
+            g_Config.GlobalVal[n14 - 1000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
         end;
-      200..209: begin
-
+      3000..3999: begin // I999
+        if QuestActionInfo.sParam3 = '' then
+          g_Config.GlobaDyMval[n14 - 3000] := g_Config.GlobaDyMval[n14 - 3000] div QuestActionInfo.nParam2
+        else
+          g_Config.GlobaDyMval[n14 - 3000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
+      end;
+      5000..5999: begin // C999
+        if QuestActionInfo.sParam3 = '' then
+          PlayObject.m_CustomVariable[n14 - 5000] := PlayObject.m_CustomVariable[n14 - 5000] div QuestActionInfo.nParam2
+        else begin
+          PlayObject.m_CustomVariable[n14 - 5000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
+        end;
+        if n14 = 5000 then
+          PlayObject.LiteraryChange(True);
+        if g_boGameLogCustomVariable then begin
+          AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
+                      'div', QuestActionInfo.sParam2 + '/' + QuestActionInfo.sParam3, '脚本div', nil);
+        end;
+      end;
+      7000..7999: begin // N999
+        if QuestActionInfo.sParam3 = '' then
+          PlayObject.m_nInteger[n14 - 7000] := PlayObject.m_nInteger[n14 - 7000] div QuestActionInfo.nParam2
+        else
+          PlayObject.m_nInteger[n14 - 7000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
+      end;
+      9000..9999: begin // M999
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_DyVal[n14 - 200] := PlayObject.m_DyVal[n14 - 200] div QuestActionInfo.nParam2
+            PlayObject.m_nMval[n14 - 9000] := PlayObject.m_nMval[n14 - 9000] div QuestActionInfo.nParam2
           else
-            PlayObject.m_DyVal[n14 - 200] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
+            PlayObject.m_nMval[n14 - 9000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
         end;
-      300..399: begin
-
-          if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nMval[n14 - 300] := PlayObject.m_nMval[n14 - 300] div QuestActionInfo.nParam2
-          else
-            PlayObject.m_nMval[n14 - 300] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
-        end;
-      400..499: begin
-
-          if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobaDyMval[n14 - 400] := g_Config.GlobaDyMval[n14 - 400] div QuestActionInfo.nParam2
-          else
-            g_Config.GlobaDyMval[n14 - 400] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
-        end;
-      5000..5999: begin
-          if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nInteger[n14 - 5000] := PlayObject.m_nInteger[n14 - 5000] div QuestActionInfo.nParam2
-          else
-            PlayObject.m_nInteger[n14 - 5000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
-        end;
-      1000..1019: begin
-          if QuestActionInfo.sParam3 = '' then begin
-            PlayObject.m_CustomVariable[n14 - 1000] := PlayObject.m_CustomVariable[n14 - 1000] div QuestActionInfo.nParam2
-          end
-          else begin
-            PlayObject.m_CustomVariable[n14 - 1000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
-          end;
-          if n14 = 1000 then
-            PlayObject.LiteraryChange(True);
-
-          if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
-              'div', QuestActionInfo.sParam2 + '/' + QuestActionInfo.sParam3, '脚本div', nil);
-          end;
+      10000..10009: begin // D9
+        if QuestActionInfo.sParam3 = '' then
+          PlayObject.m_DyVal[n14 - 10000] := PlayObject.m_DyVal[n14 - 10000] div QuestActionInfo.nParam2
+        else
+          PlayObject.m_DyVal[n14 - 10000] := QuestActionInfo.nParam2 div QuestActionInfo.nParam3;
         end;
     else begin
         ScriptActionError(PlayObject, '', QuestActionInfo, sSC_DIV);
@@ -4235,57 +4237,54 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           if QuestActionInfo.sParam3 = '' then
             PlayObject.m_nVal[n14] := PlayObject.m_nVal[n14] mod QuestActionInfo.nParam2
           else
             PlayObject.m_nVal[n14] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
         end;
-      2000..2999: begin
+      1000..1999: begin
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobalVal[n14 - 2000] := g_Config.GlobalVal[n14 - 2000] mod QuestActionInfo.nParam2
+            g_Config.GlobalVal[n14 - 1000] := g_Config.GlobalVal[n14 - 1000] mod QuestActionInfo.nParam2
           else
-            g_Config.GlobalVal[n14 - 2000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
+            g_Config.GlobalVal[n14 - 1000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
         end;
-      200..209: begin
-
+      10000..10009: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_DyVal[n14 - 200] := PlayObject.m_DyVal[n14 - 200] mod QuestActionInfo.nParam2
+            PlayObject.m_DyVal[n14 - 10000] := PlayObject.m_DyVal[n14 - 10000] mod QuestActionInfo.nParam2
           else
-            PlayObject.m_DyVal[n14 - 200] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
+            PlayObject.m_DyVal[n14 - 10000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
         end;
-      300..399: begin
-
+      9000..9999: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nMval[n14 - 300] := PlayObject.m_nMval[n14 - 300] mod QuestActionInfo.nParam2
+            PlayObject.m_nMval[n14 - 9000] := PlayObject.m_nMval[n14 - 9000] mod QuestActionInfo.nParam2
           else
-            PlayObject.m_nMval[n14 - 300] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
+            PlayObject.m_nMval[n14 - 9000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
         end;
-      400..499: begin
-
+      3000..3999: begin
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobaDyMval[n14 - 400] := g_Config.GlobaDyMval[n14 - 400] mod QuestActionInfo.nParam2
+            g_Config.GlobaDyMval[n14 - 3000] := g_Config.GlobaDyMval[n14 - 3000] mod QuestActionInfo.nParam2
           else
-            g_Config.GlobaDyMval[n14 - 400] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
+            g_Config.GlobaDyMval[n14 - 3000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
+        end;
+      7000..7999: begin
+          if QuestActionInfo.sParam3 = '' then
+            PlayObject.m_nInteger[n14 - 7000] := PlayObject.m_nInteger[n14 - 7000] mod QuestActionInfo.nParam2
+          else
+            PlayObject.m_nInteger[n14 - 7000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
         end;
       5000..5999: begin
-          if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nInteger[n14 - 5000] := PlayObject.m_nInteger[n14 - 5000] mod QuestActionInfo.nParam2
-          else
-            PlayObject.m_nInteger[n14 - 5000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
-        end;
-      1000..1019: begin
           if QuestActionInfo.sParam3 = '' then begin
-            PlayObject.m_CustomVariable[n14 - 1000] := PlayObject.m_CustomVariable[n14 - 1000] mod QuestActionInfo.nParam2
+            PlayObject.m_CustomVariable[n14 - 5000] := PlayObject.m_CustomVariable[n14 - 5000] mod QuestActionInfo.nParam2
           end
           else begin
-            PlayObject.m_CustomVariable[n14 - 1000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
+            PlayObject.m_CustomVariable[n14 - 5000] := QuestActionInfo.nParam2 mod QuestActionInfo.nParam3;
           end;
-          if n14 = 1000 then
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
 
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'Mod', QuestActionInfo.sParam2 + '/' + QuestActionInfo.sParam3, '脚本Mod', nil);
           end;
         end;
@@ -4506,14 +4505,17 @@ begin
           n14 := GetValNameNo(QuestActionInfo.sParam2);
           if n14 >= 0 then begin
             case n14 of
+              8000..8999: begin
+                  PlayObject.m_sString[n14 - 8000] := LoadList[Random(LoadList.Count)];
+                end;
+              2000..2999: begin
+                  g_Config.GlobalAVal[n14 - 2000] := LoadList[Random(LoadList.Count)];
+                end;
+              4000..4999: begin
+                  g_Config.GlobalUVal[n14 - 4000] := LoadList[Random(LoadList.Count)];
+                end;
               6000..6999: begin
-                  PlayObject.m_sString[n14 - 6000] := LoadList[Random(LoadList.Count)];
-                end;
-              7000..7999: begin
-                  g_Config.GlobalAVal[n14 - 7000] := LoadList[Random(LoadList.Count)];
-                end;
-              800..899: begin
-                  g_Config.GlobalUVal[n14 - 800] := LoadList[Random(LoadList.Count)];
+                PlayObject.m_BStrVariable[n14 - 6000] := LoadList[Random(LoadList.Count)];
                 end;
             else
               ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETRANDOMNAME);
@@ -5815,12 +5817,12 @@ begin
     UserItem := ItemList[I];
     boHorseItem := False;
     btHorseItemWhere := 0;
-    
+
     if (not boHookItem) and (Integer(UserItem) in [16..20]) then
     begin
       if not boUseItem then Continue;
       btHorseItemWhere := Integer(UserItem) - 16;
-      
+
       if (PlayObject.m_UseItems[u_House].wIndex > 0) and (PlayObject.m_UseItems[u_House].HorseItems[btHorseItemWhere].wIndex > 0) then begin
         StdItem := UserEngine.GetStdItem(PlayObject.m_UseItems[u_House].HorseItems[btHorseItemWhere].wIndex);
         if StdItem <> nil then begin
@@ -5881,7 +5883,7 @@ begin
       case QuestActionInfo.nParam1 of
         0: begin
             //UserItem.DuraMax := QuestActionInfo.nParam2;
-            UserItem.DuraMax := ChangeInteger(0, High(Word), UserItem.DuraMax, QuestActionInfo.sParam2);  
+            UserItem.DuraMax := ChangeInteger(0, High(Word), UserItem.DuraMax, QuestActionInfo.sParam2);
           end;
         1: begin
             if CompareText(QuestActionInfo.sParam3, 'HOUR') = 0 then begin
@@ -6136,7 +6138,7 @@ begin
   boChange := False;
   if nWhere in [Low(THumanUseItems)..High(THumanUseItems)] then begin
     if PlayObject.m_UseItems[nWhere].wIndex > 0 then begin
-    
+
       StdItem := UserEngine.GetStdItem(PlayObject.m_UseItems[nWhere].wIndex);
       if (StdItem <> nil) and (StdItem.NeedIdentify = 1) then
         AddGameLog(PlayObject, LOG_DELITEM, StdItem.Name, PlayObject.m_UseItems[nWhere].MakeIndex,
@@ -6339,26 +6341,26 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           Fn18 := PlayObject.m_nVal[n14];
         end;
-      2000..2999: begin
-          Fn18 := g_Config.GlobalVal[n14 - 2000];
+      1000..1999: begin
+          Fn18 := g_Config.GlobalVal[n14 - 1000];
         end;
-      200..209: begin
-          Fn18 := PlayObject.m_DyVal[n14 - 200];
+      10000..10009: begin
+          Fn18 := PlayObject.m_DyVal[n14 - 10000];
         end;
-      300..399: begin
-          Fn18 := PlayObject.m_nMval[n14 - 300];
+      9000..9999: begin
+          Fn18 := PlayObject.m_nMval[n14 - 9000];
         end;
-      400..499: begin
-          Fn18 := g_Config.GlobaDyMval[n14 - 400];
+      3000..3999: begin
+          Fn18 := g_Config.GlobaDyMval[n14 - 3000];
+        end;
+      7000..7999: begin
+          Fn18 := PlayObject.m_nInteger[n14 - 7000];
         end;
       5000..5999: begin
-          Fn18 := PlayObject.m_nInteger[n14 - 5000];
-        end;
-      1000..1019: begin
-          Fn18 := PlayObject.m_CustomVariable[n14 - 1000];
+          Fn18 := PlayObject.m_CustomVariable[n14 - 5000];
         end;
     else begin
         ScriptActionError(PlayObject, '', QuestActionInfo, sSUM);
@@ -6372,26 +6374,26 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam2);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           Fn1C := PlayObject.m_nVal[n14];
         end;
-      2000..2999: begin
+      1000..1999: begin
           Fn1C := g_Config.GlobalVal[n14 - 2000];
         end;
-      200..209: begin
-          Fn1C := PlayObject.m_DyVal[n14 - 200];
+      10000..10009: begin
+          Fn1C := PlayObject.m_DyVal[n14 - 10000];
         end;
-      300..399: begin
-          Fn1C := PlayObject.m_nMval[n14 - 300];
+      9000..9999: begin
+          Fn1C := PlayObject.m_nMval[n14 - 9000];
         end;
-      400..499: begin
-          Fn1C := g_Config.GlobaDyMval[n14 - 400];
+      3000..3999: begin
+          Fn1C := g_Config.GlobaDyMval[n14 - 3000];
+        end;
+      7000..7999: begin
+          Fn1C := PlayObject.m_nInteger[n14 - 7000];
         end;
       5000..5999: begin
-          Fn1C := PlayObject.m_nInteger[n14 - 5000];
-        end;
-      1000..1019: begin
-          Fn1C := PlayObject.m_CustomVariable[n14 - 1000];
+          Fn1C := PlayObject.m_CustomVariable[n14 - 5000];
         end;
     else begin
         ScriptActionError(PlayObject, '', QuestActionInfo, sSUM);
@@ -6404,31 +6406,31 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
-          PlayObject.m_nVal[99] := PlayObject.m_nVal[99] + Fn18 + Fn1C;
+      0..999: begin
+          PlayObject.m_nVal[999] := PlayObject.m_nVal[999] + Fn18 + Fn1C;
         end;
-      2000..2999: begin
+      1000..1999: begin
           g_Config.GlobalVal[999] := g_Config.GlobalVal[999] + Fn18 + Fn1C;
         end;
-      200..209: begin
+      10000..10009: begin
           PlayObject.m_DyVal[9] := PlayObject.m_DyVal[9] + Fn18 + Fn1C;
         end;
-      300..399: begin
-          PlayObject.m_nMval[99] := PlayObject.m_nMval[99] + Fn18 + Fn1C;
+      9000..9999: begin
+          PlayObject.m_nMval[999] := PlayObject.m_nMval[999] + Fn18 + Fn1C;
         end;
-      400..499: begin
-          g_Config.GlobaDyMval[99] := g_Config.GlobaDyMval[99] + Fn18 + Fn1C;
+      3000..3999: begin
+          g_Config.GlobaDyMval[999] := g_Config.GlobaDyMval[999] + Fn18 + Fn1C;
         end;
-      5000..5999: begin
+      7000..7999: begin
           PlayObject.m_nInteger[999] := PlayObject.m_nInteger[999] + Fn18 + Fn1C;
         end;
-      1000..1019: begin
-          PlayObject.m_CustomVariable[19] := PlayObject.m_nInteger[19] + Fn18 + Fn1C;
-          if n14 = 1000 then
+      5000..5999: begin
+          PlayObject.m_CustomVariable[999] := PlayObject.m_nInteger[999] + Fn18 + Fn1C;
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
 
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, 19, PlayObject.m_CustomVariable[19], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, 999, PlayObject.m_CustomVariable[999], m_sCharName,
               'sum', IntToStr(Fn18) + '/' + IntToStr(Fn1C), '脚本sum', nil);
           end;
         end;
@@ -7190,7 +7192,7 @@ var
 begin
   Result := False;
   sMapName := QuestConditionInfo.sParam1;
-  sMonName := QuestConditionInfo.sParam2; 
+  sMonName := QuestConditionInfo.sParam2;
   nCount := StrToIntDef(QuestConditionInfo.sParam4, -1);
   Envir := g_MapManager.FindMap(sMapName);
   if (Envir = nil) or (nCount < 0) then begin
@@ -8792,21 +8794,26 @@ begin
   n01 := GetValNameNo(sValue1);
   if n01 >= 0 then begin
     case n01 of
-      6000..6999: begin
-          sValue1 := PlayObject.m_sString[n01 - 6000];
+      8000..8999: begin
+          sValue1 := PlayObject.m_sString[n01 - 8000];
           if AnsiContainsText(sValue1, sValue2) then
-            PlayObject.m_sString[n01 - 6000] := AnsiReplaceText(sValue1, sValue2, sValue3);
+            PlayObject.m_sString[n01 - 8000] := AnsiReplaceText(sValue1, sValue2, sValue3);
         end;
-      7000..7999: begin
-          sValue1 := g_Config.GlobalAVal[n01 - 7000];
+      2000..2999: begin
+          sValue1 := g_Config.GlobalAVal[n01 - 2000];
           if AnsiContainsText(sValue1, sValue2) then
-            g_Config.GlobalAVal[n01 - 7000] := AnsiReplaceText(sValue1, sValue2,
+            g_Config.GlobalAVal[n01 - 2000] := AnsiReplaceText(sValue1, sValue2,
               sValue3);
         end;
-      800..899: begin
-          sValue1 := g_Config.GlobalUVal[n01 - 800];
+      6000..6999: begin
+          sValue1 := PlayObject.m_BStrVariable[n01 - 6000];
           if AnsiContainsText(sValue1, sValue2) then
-            g_Config.GlobalUVal[n01 - 800] := AnsiReplaceText(sValue1, sValue2,
+            PlayObject.m_BStrVariable[n01 - 6000] := AnsiReplaceText(sValue1, sValue2, sValue3);
+        end;
+      4000..4999: begin
+          sValue1 := g_Config.GlobalUVal[n01 - 4000];
+          if AnsiContainsText(sValue1, sValue2) then
+            g_Config.GlobalUVal[n01 - 4000] := AnsiReplaceText(sValue1, sValue2,
               sValue3);
         end;
     else begin
@@ -9684,7 +9691,7 @@ begin
       end;
     nVAR_TEAM: begin
         sText := '????';
-        
+
         if nID in [0..7] then begin
           if PlayObject.m_GroupOwner <> nil then begin
             if nID < TPlayObject(PlayObject.m_GroupOwner).m_GroupMembers.Count then begin
@@ -10495,48 +10502,52 @@ begin
         n18 := GetValNameNo(sID);
         if n18 >= 0 then begin
           case n18 of
-            0..99: begin
+            0..999: begin
                 sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_nVal[n18]));
                 exit;
               end;
-            2000..2999: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(g_Config.GlobalVal[n18 - 2000]));
+            1000..1999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(g_Config.GlobalVal[n18 - 1000]));
                 exit;
               end;
-            200..209: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_DyVal[n18 - 200]));
+            10000..10009: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_DyVal[n18 - 10000]));
                 exit;
               end;
-            300..399: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_nMval[n18 - 300]));
+            9000..9999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_nMval[n18 - 9000]));
                 exit;
               end;
-            400..499: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(g_Config.GlobaDyMval[n18 - 400]));
-                exit;
-              end;
-            5000..5999: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_nInteger[n18 - 5000]));
-                exit;
-              end;
-            6000..6999: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', PlayObject.m_sString[n18 - 6000]);
+            3000..3999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(g_Config.GlobaDyMval[n18 - 3000]));
                 exit;
               end;
             7000..7999: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', g_Config.GlobalAVal[n18 - 7000]);
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_nInteger[n18 - 7000]));
                 exit;
               end;
-            800..899: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', g_Config.GlobalUVal[n18 - 800]);
+            8000..8999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', PlayObject.m_sString[n18 - 8000]);
                 exit;
               end;
-            900..909: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', m_GotoValue[n18 - 900]);
+            2000..2999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', g_Config.GlobalAVal[n18 - 2000]);
                 exit;
               end;
-            1000..1019: begin
-                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_CustomVariable[n18 - 1000]));
+            6000..6999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', PlayObject.m_BStrVariable[n18 - 6000]);
+                exit;
+              end;
+            4000..4999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', g_Config.GlobalUVal[n18 - 4000]);
+                exit;
+              end;
+            11000..11009: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', m_GotoValue[n18 - 11000]);
+                exit;
+              end;
+            5000..5999: begin
+                sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', IntToStr(PlayObject.m_CustomVariable[n18 - 5000]));
                 exit;
               end;
           else begin
@@ -11486,39 +11497,42 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           PlayObject.m_nVal[n14] := QuestActionInfo.nParam2;
         end;
-      2000..2999: begin
-          g_Config.GlobalVal[n14 - 2000] := QuestActionInfo.nParam2;
+      1000..1999: begin
+          g_Config.GlobalVal[n14 - 1000] := QuestActionInfo.nParam2;
         end;
-      200..209: begin
-          PlayObject.m_DyVal[n14 - 200] := QuestActionInfo.nParam2;
+      10000..10009: begin
+          PlayObject.m_DyVal[n14 - 10000] := QuestActionInfo.nParam2;
         end;
-      300..399: begin
-          PlayObject.m_nMval[n14 - 300] := QuestActionInfo.nParam2;
+      9000..9999: begin
+          PlayObject.m_nMval[n14 - 9000] := QuestActionInfo.nParam2;
         end;
-      400..499: begin
-          g_Config.GlobaDyMval[n14 - 400] := QuestActionInfo.nParam2;
-        end;
-      5000..5999: begin
-          PlayObject.m_nInteger[n14 - 5000] := QuestActionInfo.nParam2;
-        end;
-      6000..6999: begin
-          PlayObject.m_sString[n14 - 6000] := QuestActionInfo.sParam2;
+      3000..3999: begin
+          g_Config.GlobaDyMval[n14 - 3000] := QuestActionInfo.nParam2;
         end;
       7000..7999: begin
-          g_Config.GlobalAVal[n14 - 7000] := QuestActionInfo.sParam2;
+          PlayObject.m_nInteger[n14 - 7000] := QuestActionInfo.nParam2;
         end;
-      800..899: begin
-          g_Config.GlobalUVal[n14 - 800] := QuestActionInfo.sParam2;
+      8000..8999: begin
+          PlayObject.m_sString[n14 - 8000] := QuestActionInfo.sParam2;
         end;
-      1000..1019: begin
-          PlayObject.m_CustomVariable[n14 - 1000] := StrToIntDef(QuestActionInfo.sParam2, 0);
-          if n14 = 1000 then
+      6000..6999: begin
+          PlayObject.m_BStrVariable[n14 - 6000] := QuestActionInfo.sParam2;
+        end;
+      2000..2999: begin
+          g_Config.GlobalAVal[n14 - 2000] := QuestActionInfo.sParam2;
+        end;
+      4000..4999: begin
+          g_Config.GlobalUVal[n14 - 4000] := QuestActionInfo.sParam2;
+        end;
+      5000..5999: begin
+          PlayObject.m_CustomVariable[n14 - 5000] := StrToIntDef(QuestActionInfo.sParam2, 0);
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'mov', QuestActionInfo.sParam2, '脚本mov', nil);
           end;
         end;
@@ -11543,30 +11557,30 @@ begin
     n18 := Random(QuestActionInfo.nParam3 - QuestActionInfo.nParam2) + QuestActionInfo.nParam2;
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           PlayObject.m_nVal[n14] := n18;
         end;
-      2000..2999: begin
-          g_Config.GlobalVal[n14 - 2000] := n18;
+      1000..1999: begin
+          g_Config.GlobalVal[n14 - 1000] := n18;
         end;
-      200..209: begin
-          PlayObject.m_DyVal[n14 - 200] := n18;
+      10000..10009: begin
+          PlayObject.m_DyVal[n14 - 10000] := n18;
         end;
-      300..399: begin
-          PlayObject.m_nMval[n14 - 300] := n18;
+      9000..9999: begin
+          PlayObject.m_nMval[n14 - 9000] := n18;
         end;
-      400..499: begin
-          g_Config.GlobaDyMval[n14 - 400] := n18;
+      3000..3999: begin
+          g_Config.GlobaDyMval[n14 - 3000] := n18;
+        end;
+      7000..7999: begin
+          PlayObject.m_nInteger[n14 - 7000] := n18;
         end;
       5000..5999: begin
-          PlayObject.m_nInteger[n14 - 5000] := n18;
-        end;
-      1000..1019: begin
-          PlayObject.m_CustomVariable[n14 - 1000] := n18;
-          if n14 = 1000 then
+          PlayObject.m_CustomVariable[n14 - 5000] := n18;
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'movr', IntToStr(n18), '脚本movr', nil);
           end;
         end;
@@ -11587,53 +11601,53 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           if QuestActionInfo.sParam3 = '' then
             PlayObject.m_nVal[n14] := PlayObject.m_nVal[n14] * QuestActionInfo.nParam2
           else
             PlayObject.m_nVal[n14] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
         end;
-      2000..2999: begin
+      1000..1999: begin
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobalVal[n14 - 2000] := g_Config.GlobalVal[n14 - 2000] * QuestActionInfo.nParam2
+            g_Config.GlobalVal[n14 - 1000] := g_Config.GlobalVal[n14 - 1000] * QuestActionInfo.nParam2
           else
-            g_Config.GlobalVal[n14 - 2000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
+            g_Config.GlobalVal[n14 - 1000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
         end;
-      200..209: begin
+      10000..10009: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_DyVal[n14 - 200] := PlayObject.m_DyVal[n14 - 200] * QuestActionInfo.nParam2
+            PlayObject.m_DyVal[n14 - 10000] := PlayObject.m_DyVal[n14 - 10000] * QuestActionInfo.nParam2
           else
-            PlayObject.m_DyVal[n14 - 200] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
+            PlayObject.m_DyVal[n14 - 10000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
         end;
-      300..399: begin
+      9000..9999: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nMval[n14 - 300] := PlayObject.m_nMval[n14 - 300] * QuestActionInfo.nParam2
+            PlayObject.m_nMval[n14 - 9000] := PlayObject.m_nMval[n14 - 9000] * QuestActionInfo.nParam2
           else
-            PlayObject.m_nMval[n14 - 300] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
+            PlayObject.m_nMval[n14 - 9000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
         end;
-      400..499: begin
+      3000..3999: begin
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobaDyMval[n14 - 400] := g_Config.GlobaDyMval[n14 - 400] * QuestActionInfo.nParam2
+            g_Config.GlobaDyMval[n14 - 3000] := g_Config.GlobaDyMval[n14 - 3000] * QuestActionInfo.nParam2
           else
-            g_Config.GlobaDyMval[n14 - 400] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
+            g_Config.GlobaDyMval[n14 - 3000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
+        end;
+      7000..7999: begin
+          if QuestActionInfo.sParam3 = '' then
+            PlayObject.m_nInteger[n14 - 7000] := PlayObject.m_nInteger[n14 - 7000] * QuestActionInfo.nParam2
+          else
+            PlayObject.m_nInteger[n14 - 7000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
         end;
       5000..5999: begin
-          if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nInteger[n14 - 5000] := PlayObject.m_nInteger[n14 - 5000] * QuestActionInfo.nParam2
-          else
-            PlayObject.m_nInteger[n14 - 5000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
-        end;
-      1000..1019: begin
           if QuestActionInfo.sParam3 = '' then begin
-            PlayObject.m_CustomVariable[n14 - 1000] := PlayObject.m_CustomVariable[n14 - 1000] * QuestActionInfo.nParam2;
+            PlayObject.m_CustomVariable[n14 - 5000] := PlayObject.m_CustomVariable[n14 - 5000] * QuestActionInfo.nParam2;
           end
           else begin
-            PlayObject.m_CustomVariable[n14 - 1000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
+            PlayObject.m_CustomVariable[n14 - 5000] := QuestActionInfo.nParam2 * QuestActionInfo.nParam3;
           end;
-          if n14 = 1000 then
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'mul', QuestActionInfo.sParam2 + '/' + QuestActionInfo.sParam3, '脚本mul', nil);
           end;
         end;
@@ -11713,53 +11727,53 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           if QuestActionInfo.sParam3 = '' then
             PlayObject.m_nVal[n14] := Trunc(PlayObject.m_nVal[n14] / QuestActionInfo.nParam2 * 100)
           else
             PlayObject.m_nVal[n14] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
         end;
-      2000..2999: begin
+      1000..1999: begin
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobalVal[n14 - 2000] := Trunc(g_Config.GlobalVal[n14 - 2000] / QuestActionInfo.nParam2 * 100)
+            g_Config.GlobalVal[n14 - 1000] := Trunc(g_Config.GlobalVal[n14 - 1000] / QuestActionInfo.nParam2 * 100)
           else
-            g_Config.GlobalVal[n14 - 2000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
+            g_Config.GlobalVal[n14 - 1000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
 
         end;
-      200..209: begin
+      10000..10009: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_DyVal[n14 - 200] := Trunc(PlayObject.m_DyVal[n14 - 200] / QuestActionInfo.nParam2 * 100)
+            PlayObject.m_DyVal[n14 - 10000] := Trunc(PlayObject.m_DyVal[n14 - 10000] / QuestActionInfo.nParam2 * 100)
           else
-            PlayObject.m_DyVal[n14 - 200] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
+            PlayObject.m_DyVal[n14 - 10000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
 
         end;
-      300..399: begin
+      9000..9999: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nMval[n14 - 300] := Trunc(PlayObject.m_nMval[n14 - 300] / QuestActionInfo.nParam2 * 100)
+            PlayObject.m_nMval[n14 - 9000] := Trunc(PlayObject.m_nMval[n14 - 9000] / QuestActionInfo.nParam2 * 100)
           else
-            PlayObject.m_nMval[n14 - 300] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
+            PlayObject.m_nMval[n14 - 9000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
         end;
-      400..499: begin
+      3000..3999: begin
           if QuestActionInfo.sParam3 = '' then
-            g_Config.GlobaDyMval[n14 - 400] := Trunc(g_Config.GlobaDyMval[n14 - 400] / QuestActionInfo.nParam2 * 100)
+            g_Config.GlobaDyMval[n14 - 3000] := Trunc(g_Config.GlobaDyMval[n14 - 3000] / QuestActionInfo.nParam2 * 100)
           else
-            g_Config.GlobaDyMval[n14 - 400] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
+            g_Config.GlobaDyMval[n14 - 3000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
+        end;
+      7000..7999: begin
+          if QuestActionInfo.sParam3 = '' then
+            PlayObject.m_nInteger[n14 - 7000] := Trunc(PlayObject.m_nInteger[n14 - 7000] / QuestActionInfo.nParam2 * 100)
+          else
+            PlayObject.m_nInteger[n14 - 7000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
         end;
       5000..5999: begin
           if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_nInteger[n14 - 5000] := Trunc(PlayObject.m_nInteger[n14 - 5000] / QuestActionInfo.nParam2 * 100)
+            PlayObject.m_CustomVariable[n14 - 5000] := Trunc(PlayObject.m_CustomVariable[n14 - 5000] / QuestActionInfo.nParam2 * 100)
           else
-            PlayObject.m_nInteger[n14 - 5000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
-        end;
-      1000..1019: begin
-          if QuestActionInfo.sParam3 = '' then
-            PlayObject.m_CustomVariable[n14 - 1000] := Trunc(PlayObject.m_CustomVariable[n14 - 1000] / QuestActionInfo.nParam2 * 100)
-          else
-            PlayObject.m_CustomVariable[n14 - 1000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
-          if n14 = 1000 then
+            PlayObject.m_CustomVariable[n14 - 5000] := Trunc(QuestActionInfo.nParam2 / QuestActionInfo.nParam3 * 100);
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'percent', QuestActionInfo.sParam2 + '/' + QuestActionInfo.sParam3, '脚本percent', nil);
           end;
         end;
@@ -12668,24 +12682,24 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      2000..2999: begin
+      1000..1999: begin
           if CompareText(QuestActionInfo.sParam2, 'X') = 0 then begin
-            m_HookObject.m_PHookX := @g_Config.GlobalVal[n14 - 100];
-            g_Config.GlobalVal[n14 - 2000] := m_HookObject.m_nCurrX;
+            m_HookObject.m_PHookX := @g_Config.GlobalVal[n14 - 1000];
+            g_Config.GlobalVal[n14 - 1000] := m_HookObject.m_nCurrX;
           end
           else begin
-            m_HookObject.m_PHookY := @g_Config.GlobalVal[n14 - 100];
-            g_Config.GlobalVal[n14 - 2000] := m_HookObject.m_nCurrY;
+            m_HookObject.m_PHookY := @g_Config.GlobalVal[n14 - 1000];
+            g_Config.GlobalVal[n14 - 1000] := m_HookObject.m_nCurrY;
           end;
         end;
-      400..499: begin
+      3000..3999: begin
           if CompareText(QuestActionInfo.sParam2, 'X') = 0 then begin
-            m_HookObject.m_PHookX := @g_Config.GlobaDyMval[n14 - 400];
-            g_Config.GlobaDyMval[n14 - 400] := m_HookObject.m_nCurrX;
+            m_HookObject.m_PHookX := @g_Config.GlobaDyMval[n14 - 3000];
+            g_Config.GlobaDyMval[n14 - 3000] := m_HookObject.m_nCurrX;
           end
           else begin
-            m_HookObject.m_PHookY := @g_Config.GlobaDyMval[n14 - 400];
-            g_Config.GlobaDyMval[n14 - 400] := m_HookObject.m_nCurrY;
+            m_HookObject.m_PHookY := @g_Config.GlobaDyMval[n14 - 3000];
+            g_Config.GlobaDyMval[n14 - 3000] := m_HookObject.m_nCurrY;
           end;
         end;
     else begin
@@ -12781,7 +12795,7 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           Fn18 := PlayObject.m_nVal[n14];
           if (QuestActionInfo.nParam2 > 0) then begin
             Inc(PlayObject.m_nVal[n14], StrToIntDef(QuestActionInfo.sParam2, 0));
@@ -12789,66 +12803,69 @@ begin
           //else
            //ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
         end;
-      2000..2999: begin
-          Fn18 := g_Config.GlobalVal[n14 - 2000];
+      1000..1999: begin
+          Fn18 := g_Config.GlobalVal[n14 - 1000];
           if (QuestActionInfo.nParam2 > 0) then begin
-            Inc(g_Config.GlobalVal[n14 - 2000], StrToIntDef(QuestActionInfo.sParam2, 0));
+            Inc(g_Config.GlobalVal[n14 - 1000], StrToIntDef(QuestActionInfo.sParam2, 0));
           end;
           //else
            // ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
         end;
-      200..209: begin
-          Fn18 := PlayObject.m_DyVal[n14 - 200];
+      10000..10009: begin
+          Fn18 := PlayObject.m_DyVal[n14 - 10000];
           if (QuestActionInfo.nParam2 > 0) then begin
-            Inc(PlayObject.m_DyVal[n14 - 200], StrToIntDef(QuestActionInfo.sParam2, 0));
+            Inc(PlayObject.m_DyVal[n14 - 10000], StrToIntDef(QuestActionInfo.sParam2, 0));
           end;
           //else
             //ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
         end;
-      300..399: begin
-          Fn18 := PlayObject.m_nMval[n14 - 300];
+      9000..9999: begin
+          Fn18 := PlayObject.m_nMval[n14 - 9000];
           if (QuestActionInfo.nParam2 > 0) then begin
-            Inc(PlayObject.m_nMval[n14 - 300], QuestActionInfo.nParam2);
+            Inc(PlayObject.m_nMval[n14 - 9000], QuestActionInfo.nParam2);
           end;
           //else
             //ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
         end;
-      400..499: begin
-          Fn18 := g_Config.GlobaDyMval[n14 - 400];
+      3000..3999: begin
+          Fn18 := g_Config.GlobaDyMval[n14 - 3000];
           if (QuestActionInfo.nParam2 > 0) then begin
-            Inc(g_Config.GlobaDyMval[n14 - 400], QuestActionInfo.nParam2);
+            Inc(g_Config.GlobaDyMval[n14 - 3000], QuestActionInfo.nParam2);
           end;
           //else
             //ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
+        end;
+      7000..7999: begin
+          Fn18 := PlayObject.m_nInteger[n14 - 7000];
+          if (QuestActionInfo.nParam2 > 0) then begin
+            Inc(PlayObject.m_nInteger[n14 - 7000], QuestActionInfo.nParam2);
+          end;
+          //else
+           // ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
         end;
       5000..5999: begin
-          Fn18 := PlayObject.m_nInteger[n14 - 5000];
+          Fn18 := PlayObject.m_CustomVariable[n14 - 5000];
           if (QuestActionInfo.nParam2 > 0) then begin
-            Inc(PlayObject.m_nInteger[n14 - 5000], QuestActionInfo.nParam2);
-          end;
-          //else
-           // ScriptActionError(PlayObject, '参数二必需大于等于0', QuestActionInfo, sINC);
-        end;
-      1000..1019: begin
-          Fn18 := PlayObject.m_CustomVariable[n14 - 1000];
-          if (QuestActionInfo.nParam2 > 0) then begin
-            Inc(PlayObject.m_CustomVariable[n14 - 1000], QuestActionInfo.nParam2);
-            if n14 = 1000 then
+            Inc(PlayObject.m_CustomVariable[n14 - 5000], QuestActionInfo.nParam2);
+            if n14 = 5000 then
               PlayObject.LiteraryChange(True);
           end;
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'inc', QuestActionInfo.sParam2, '脚本inc', nil);
           end;
         end;
+      8000..8999: begin
+          PlayObject.m_sString[n14 - 8000] := PlayObject.m_sString[n14 - 8000] + QuestActionInfo.sParam2;
+        end;
       6000..6999: begin
-          PlayObject.m_sString[n14 - 6000] := PlayObject.m_sString[n14 - 6000] + QuestActionInfo.sParam2;
+          PlayObject.m_BStrVariable[n14 - 6000] := PlayObject.m_BStrVariable[n14 - 6000] + QuestActionInfo.sParam2;
         end;
-      7000..7999: begin
-          g_Config.GlobalAVal[n14 - 7000] := g_Config.GlobalAVal[n14 - 7000] + QuestActionInfo.sParam2;
+      2000..2999: begin
+          g_Config.GlobalAVal[n14 - 2000] := g_Config.GlobalAVal[n14 - 2000] + QuestActionInfo.sParam2;
         end;
-      800..899: begin
-          g_Config.GlobalUVal[n14 - 800] := g_Config.GlobalUVal[n14 - 800] + QuestActionInfo.sParam2;
+      4000..4999: begin
+          g_Config.GlobalUVal[n14 - 4000] := g_Config.GlobalUVal[n14 - 4000] + QuestActionInfo.sParam2;
         end;
     else begin
         ScriptActionError(PlayObject, '', QuestActionInfo, sINC);
@@ -13027,7 +13044,7 @@ begin
   n14 := GetValNameNo(QuestActionInfo.sParam1);
   if n14 >= 0 then begin
     case n14 of //
-      0..99: begin
+      0..999: begin
           Fn18 := PlayObject.m_nVal[n14];
           if (Fn18 > QuestActionInfo.nParam2) then begin
             if QuestActionInfo.nParam2 > 0 then
@@ -13036,79 +13053,84 @@ begin
           else
             PlayObject.m_nVal[n14] := 0;
         end;
-      2000..2999: begin
-          Fn18 := g_Config.GlobalVal[n14 - 2000];
+      1000..1999: begin
+          Fn18 := g_Config.GlobalVal[n14 - 1000];
           if (Fn18 > QuestActionInfo.nParam2) then begin
             if QuestActionInfo.nParam2 > 0 then
-              Dec(g_Config.GlobalVal[n14 - 2000], QuestActionInfo.nParam2);
+              Dec(g_Config.GlobalVal[n14 - 1000], QuestActionInfo.nParam2);
           end
           else
-            g_Config.GlobalVal[n14 - 2000] := 0;
+            g_Config.GlobalVal[n14 - 1000] := 0;
         end;
-      200..209: begin
-          Fn18 := PlayObject.m_DyVal[n14 - 200];
+      10000..10009: begin
+          Fn18 := PlayObject.m_DyVal[n14 - 10000];
           if (Fn18 > QuestActionInfo.nParam2) then begin
             if QuestActionInfo.nParam2 > 0 then
-              Dec(PlayObject.m_DyVal[n14 - 200], QuestActionInfo.nParam2);
+              Dec(PlayObject.m_DyVal[n14 - 10000], QuestActionInfo.nParam2);
           end
           else
-            PlayObject.m_DyVal[n14 - 200] := 0;
+            PlayObject.m_DyVal[n14 - 10000] := 0;
         end;
-      300..399: begin
-          Fn18 := PlayObject.m_nMval[n14 - 300];
+      9000..9999: begin
+          Fn18 := PlayObject.m_nMval[n14 - 9000];
           if (Fn18 > QuestActionInfo.nParam2) then begin
             if QuestActionInfo.nParam2 > 0 then
-              Dec(PlayObject.m_nMval[n14 - 300], QuestActionInfo.nParam2);
+              Dec(PlayObject.m_nMval[n14 - 9000], QuestActionInfo.nParam2);
           end
           else
-            PlayObject.m_nMval[n14 - 300] := 0;
+            PlayObject.m_nMval[n14 - 9000] := 0;
         end;
-      400..499: begin
-          Fn18 := g_Config.GlobaDyMval[n14 - 400];
+      3000..3999: begin
+          Fn18 := g_Config.GlobaDyMval[n14 - 3000];
           if (Fn18 > QuestActionInfo.nParam2) then begin
             if QuestActionInfo.nParam2 > 0 then
-              Dec(g_Config.GlobaDyMval[n14 - 400], QuestActionInfo.nParam2);
+              Dec(g_Config.GlobaDyMval[n14 - 3000], QuestActionInfo.nParam2);
           end
           else
-            g_Config.GlobaDyMval[n14 - 400] := 0;
+            g_Config.GlobaDyMval[n14 - 3000] := 0;
+        end;
+      7000..7999: begin
+          Fn18 := PlayObject.m_nInteger[n14 - 7000];
+          if (Fn18 > QuestActionInfo.nParam2) then begin
+            if QuestActionInfo.nParam2 > 0 then
+              Dec(PlayObject.m_nInteger[n14 - 7000], QuestActionInfo.nParam2);
+          end
+          else
+            PlayObject.m_nInteger[n14 - 7000] := 0;
         end;
       5000..5999: begin
-          Fn18 := PlayObject.m_nInteger[n14 - 5000];
+          Fn18 := PlayObject.m_CustomVariable[n14 - 5000];
           if (Fn18 > QuestActionInfo.nParam2) then begin
             if QuestActionInfo.nParam2 > 0 then
-              Dec(PlayObject.m_nInteger[n14 - 5000], QuestActionInfo.nParam2);
+              Dec(PlayObject.m_CustomVariable[n14 - 5000], QuestActionInfo.nParam2);
           end
           else
-            PlayObject.m_nInteger[n14 - 5000] := 0;
-        end;
-      1000..1019: begin
-          Fn18 := PlayObject.m_CustomVariable[n14 - 1000];
-          if (Fn18 > QuestActionInfo.nParam2) then begin
-            if QuestActionInfo.nParam2 > 0 then
-              Dec(PlayObject.m_CustomVariable[n14 - 1000], QuestActionInfo.nParam2);
-          end
-          else
-            PlayObject.m_CustomVariable[n14 - 1000] := 0;
-          if n14 = 1000 then
+            PlayObject.m_CustomVariable[n14 - 5000] := 0;
+          if n14 = 5000 then
             PlayObject.LiteraryChange(True);
           if g_boGameLogCustomVariable then begin
-            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 1000, PlayObject.m_CustomVariable[n14 - 1000], m_sCharName,
+            AddGameLog(PlayObject, LOG_CUSTOMVARIABLE, SSTRING_CUSTOMVARIABLE, n14 - 5000, PlayObject.m_CustomVariable[n14 - 5000], m_sCharName,
               'dec', QuestActionInfo.sParam2, '脚本dec', nil);
           end;
         end;
+      8000..8999: begin
+          if QuestActionInfo.sParam2 <> '' then
+            PlayObject.m_sString[n14 - 8000] := AnsiReplaceText(PlayObject.m_sString[n14 - 8000],
+              QuestActionInfo.sParam2, '');
+        end;
       6000..6999: begin
           if QuestActionInfo.sParam2 <> '' then
-            PlayObject.m_sString[n14 - 6000] := AnsiReplaceText(PlayObject.m_sString[n14 - 6000],
+            PlayObject.m_BStrVariable[n14 - 6000] := AnsiReplaceText(PlayObject.m_BStrVariable[n14 - 6000],
               QuestActionInfo.sParam2, '');
         end;
-      7000..7999: begin
+      2000..2999: begin
           if QuestActionInfo.sParam2 <> '' then
-            g_Config.GlobalAVal[n14 - 7000] := AnsiReplaceText(g_Config.GlobalAVal[n14 - 7000],
+            g_Config.GlobalAVal[n14 - 2000] := AnsiReplaceText(g_Config.GlobalAVal[n14 - 2000],
               QuestActionInfo.sParam2, '');
         end;
-      800..899: begin
+      4000..4999: begin
           if QuestActionInfo.sParam2 <> '' then
-            g_Config.GlobalUVal[n14 - 800] := AnsiReplaceText(g_Config.GlobalUVal[n14 - 800],
+            g_Config.GlobalUVal[n14 - 4000] := AnsiReplaceText(g_Config.GlobalUVal[n14 - 4000],
               QuestActionInfo.sParam2, '');
         end;
     else begin
@@ -15018,23 +15040,23 @@ begin
         end;
         if nValNo >= 0 then begin
           case nValNo of
-            0..99: begin
+            0..999: begin
                 PlayObject.m_nVal[nValNo] := nDay;
               end;
-            2000..2999: begin
-                g_Config.GlobalVal[nValNo - 2000] := nDay;
+            1000..1999: begin
+                g_Config.GlobalVal[nValNo - 1000] := nDay;
               end;
-            200..209: begin
-                PlayObject.m_DyVal[nValNo - 200] := nDay;
+            10000..10009: begin
+                PlayObject.m_DyVal[nValNo - 10000] := nDay;
               end;
-            300..399: begin
-                PlayObject.m_nMval[nValNo - 300] := nDay;
+            9000..9999: begin
+                PlayObject.m_nMval[nValNo - 9000] := nDay;
               end;
-            400..499: begin
-                g_Config.GlobaDyMval[nValNo - 400] := nDay;
+            3000..3999: begin
+                g_Config.GlobaDyMval[nValNo - 3000] := nDay;
               end;
-            5000..5999: begin
-                PlayObject.m_nInteger[nValNo - 5000] := nDay;
+            7000..7999: begin
+                PlayObject.m_nInteger[nValNo - 7000] := nDay;
               end;
             {1000..1019: begin
                 PlayObject.m_CustomVariable[nValNo - 1000] := nDay;
@@ -15049,23 +15071,23 @@ begin
 
         if nValNoDay >= 0 then begin
           case nValNoDay of
-            0..99: begin
+            0..999: begin
                 PlayObject.m_nVal[nValNoDay] := nDayCount - nDay;
               end;
-            2000..2999: begin
-                g_Config.GlobalVal[nValNoDay - 2000] := nDayCount - nDay;
+            1000..1999: begin
+                g_Config.GlobalVal[nValNoDay - 1000] := nDayCount - nDay;
               end;
-            200..209: begin
-                PlayObject.m_DyVal[nValNoDay - 200] := nDayCount - nDay;
+            10000..10009: begin
+                PlayObject.m_DyVal[nValNoDay - 10000] := nDayCount - nDay;
               end;
-            300..399: begin
-                PlayObject.m_nMval[nValNoDay - 300] := nDayCount - nDay;
+            9000..9999: begin
+                PlayObject.m_nMval[nValNoDay - 9000] := nDayCount - nDay;
               end;
-            400..499: begin
-                g_Config.GlobaDyMval[nValNo - 400] := nDayCount - nDay;
+            3000..3999: begin
+                g_Config.GlobaDyMval[nValNo - 3000] := nDayCount - nDay;
               end;
-            5000..5999: begin
-                PlayObject.m_nInteger[nValNo - 5000] := nDayCount - nDay;
+            7000..7999: begin
+                PlayObject.m_nInteger[nValNo - 7000] := nDayCount - nDay;
               end;
             {1000..1019: begin
                 PlayObject.m_CustomVariable[nValNo - 1000] := nDayCount - nDay;

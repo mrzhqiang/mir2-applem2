@@ -115,8 +115,8 @@ type
     boChangeName: Boolean; //
     nExpRate: Integer;
     nExpTime: LongWord;
-    dwUpLoadPhotoTime: TDateTime;
-    UserRealityInfo: TUserRealityInfo; //用户真实信息
+//    dwUpLoadPhotoTime: TDateTime;
+//    UserRealityInfo: TUserRealityInfo; //用户真实信息
     UserKeySetup: TUserKeySetup;
     QuestFlag: TQuestFlag;
     MissionFlag: TMissionFlag;
@@ -153,12 +153,13 @@ type
     nItemsSetupCount: Word;
     UserItemsSetup: TUserItemsSetup;
     FriendList: THumanFriends;
-    nPhotoSize: Word;
-    pPhotoData: array[0..MAXPHOTODATASIZE] of byte;
+//    nPhotoSize: Word;
+//    pPhotoData: array[0..MAXPHOTODATASIZE] of byte;
     MakeMagic: TMakeMagic;
     MakeMagicPoint: Word;
     //EMailInfo: THumanEMailInfo;
     CustomVariable: THumCustomVariable;
+    BStrVariable: THumBVariable;
     nReserve: array[0..1023] of byte; //
   end;
 
@@ -301,8 +302,8 @@ begin
               Data.Data.boChangeName := OldData.Data.boChangeName;
               Data.Data.nExpRate := OldData.Data.nExpRate;
               Data.Data.nExpTime := OldData.Data.nExpTime;
-              Data.Data.dwUpLoadPhotoTime := OldData.Data.dwUpLoadPhotoTime;
-              Data.Data.UserRealityInfo := OldData.Data.UserRealityInfo;
+//              Data.Data.dwUpLoadPhotoTime := OldData.Data.dwUpLoadPhotoTime;
+//              Data.Data.UserRealityInfo := OldData.Data.UserRealityInfo;
               Data.Data.UserKeySetup := OldData.Data.UserKeySetup;
               Data.Data.QuestFlag := OldData.Data.QuestFlag;
               Data.Data.MissionFlag := OldData.Data.MissionFlag;
@@ -411,12 +412,13 @@ begin
               Data.Data.nItemsSetupCount := OldData.Data.nItemsSetupCount;
               Data.Data.UserItemsSetup := OldData.Data.UserItemsSetup;
               Data.Data.FriendList := OldData.Data.FriendList;
-              Data.Data.nPhotoSize := OldData.Data.nPhotoSize;
-              Move(OldData.Data.pPhotoData[0], Data.Data.pPhotoData[0], SizeOf(OldData.Data.pPhotoData));
+//              Data.Data.nPhotoSize := OldData.Data.nPhotoSize;
+//              Move(OldData.Data.pPhotoData[0], Data.Data.pPhotoData[0], SizeOf(OldData.Data.pPhotoData));
 
               Data.Data.MakeMagic := OldData.Data.MakeMagic;
               Data.Data.MakeMagicPoint := OldData.Data.MakeMagicPoint;
               Data.Data.CustomVariable := OldData.Data.CustomVariable;
+              Data.Data.BStrVariable := OldData.Data.BStrVariable;
 
               FileWrite(NewFileHandle, Data, SizeOf(Data));
             end

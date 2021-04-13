@@ -330,6 +330,7 @@ begin
 
 end;     }
 
+// 发送数据、统计信息、检测状态
 procedure TRunSocket.Run;
 var
   dwRunTick: LongWord;
@@ -347,6 +348,7 @@ begin
       EnterCriticalSection(m_RunSocketSection);
       try
         nCode := 2;
+        // default: GateLoad == 0
         if g_Config.nGateLoad > 0 then begin
           if (GetTickCount - dwSendTestMsgTick) >= 100 then begin
             dwSendTestMsgTick := GetTickCount();
@@ -382,12 +384,14 @@ begin
             Gate := @g_GateArr[i];
             if Gate.boUsed then begin
               nCode := 8;
+              // 发送超时，断开套接字
               if (GetTickCount - Gate.dwSendKeepTick) >= 60 * 1000 then begin
                 Gate.Socket.Close;
                 CloseGate(Gate.Socket);
                 Continue;
               end;
               nCode := 9;
+              // 每秒数据传输统计
               if (GetTickCount - Gate.dwSendTick) >= 1000 then begin
                 Gate.dwSendTick := GetTickCount();
                 Gate.nSendMsgBytes := Gate.nSendBytesCount;

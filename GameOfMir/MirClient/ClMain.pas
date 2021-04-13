@@ -5452,8 +5452,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.CSocketConnect(Sender: TObject;
-  Socket: TCustomWinSocket);
+procedure TfrmMain.CSocketConnect(Sender: TObject; Socket: TCustomWinSocket);
 begin
   FSendSocketStr := '';
   boCheckSpeed := False;

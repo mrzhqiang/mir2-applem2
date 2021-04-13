@@ -10,7 +10,7 @@ uses
 
 const
 
-  g_sUpDateTime = '程序版本: v2020.1.0';
+  g_sUpDateTime = '程序版本: v2021.1.0';
 
   TESTMODE = 0;
   nVersionType = 0;
@@ -27,7 +27,7 @@ const
 
   MAXSAYITEMCOUNT = 1000;
 
-  SIZEOFTHUMAN = 44040;
+  SIZEOFTHUMAN = 66197;
 
   MAXGMMAKEITEMNUM = 2000000000;
 
@@ -2916,8 +2916,8 @@ var
   boFilterWord: Boolean;
 
   sLogFileName: string;
-  nRunTimeMin: Integer;
-  nRunTimeMax: Integer;
+  nRunTimeMin: Integer;// RunTimerTimer 在 1 秒内执行的次数；RunTimerTimer 的间隔设定为 1ms
+  nRunTimeMax: Integer;// 记录 nRunTimeMin 的最大值
 
   g_nBaseObjTimeMin: Integer;
   g_nBaseObjTimeMax: Integer;
@@ -2964,7 +2964,7 @@ var
   g_dwStartTick: LongWord; //启动间隔
 
   g_dwRunTick: LongWord; //运行间隔
-  n4EBD1C: Integer;
+  n4EBD1C: Integer;// 1s 内的 RunTimerTimer 执行计数，最终会传递给 nRunTimeMin
 
   g_nGameTime: Integer;
 
@@ -3284,9 +3284,10 @@ var
     sClientFile2: 'mir.2';
     sClientFile3: 'mir.3';
 
-    sClothsMan: '布衣(男)';
-    sClothsWoman: '布衣(女)';
-    sWoodenSword: '木剑';
+    // 让 GM 用脚本实现新人初始装备，不要在这边强制给
+    sClothsMan: '';
+    sClothsWoman: '';
+    sWoodenSword: '';
     sCandle: '蜡烛';
     sBasicDrug: '金创药(小量)';
     sGoldStone: '金矿';
@@ -4181,7 +4182,7 @@ var
     sShowMonLevelFormat: '%s\(Lv:%d)';
     boSkill66ReduceMP: True;
 
-    dwGetDBSockMsgTime: 5000;
+    dwGetDBSockMsgTime: 10000;
     boPullCrossInSafeZone: True;
     boHighLevelGroupFixExp: True;
     boStartDropItemMapEvent: False;
@@ -5384,15 +5385,38 @@ function sub_4B2F80(nDir, nRage: Integer): Byte;
 begin
   Result := (nDir + nRage) mod 8;
 end;
-//服务器变量 20080124
+
+  {
+  变量类型：全局变量、人物变量
+  变量数值类型：字符型、整型
+  变量持久化方式：不保存、保存到文件、保存到数据库
+  人物临时变量、切换 NPC 清空 P 0 - 999
+  全局整型变量、保存到文件 G 1000 - 1999
+  全局整型变量、不保存 I 3000 - 3999
+  人物整型变量、保存到数据库 C 5000 - 5099
+  人物整型变量、不保存 N 7000 - 7999
+  人物临时变量、切换地图清空 M 9000 - 9999
+  摇骰子变量 D 10000 - 10009
+  全局字符型变量、保存到文件 A 2000 - 2999
+  全局字符型变量、不保存 U 4000 - 4999
+  人物字符串变量、保存到数据库 B 6000 - 6099
+  人物字符串变量、不保存 S 8000 - 8999
+  T 11000 - 11009
+  }
 function GetValNameNo(sText: string): Integer;
 var
   nValNo: Integer;
 begin
   Result := -1;
   if Length(sText) >= 2 then begin
+    // 人物临时变量，切换 NPC 清空
     if UpCase(sText[1]) = 'P' then begin
-      if Length(sText) = 3 then begin
+      if Length(sText) = 4 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
+        if nValNo < 1000 then
+          Result := nValNo;
+      end
+      else if Length(sText) = 3 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
         if nValNo < 100 then
           Result := nValNo;
@@ -5407,132 +5431,159 @@ begin
       if Length(sText) = 4 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
         if nValNo < 1000 then
-          Result := nValNo + 2000;
+          Result := nValNo + 1000;
       end
-      else
-      if Length(sText) = 3 then begin
+      else if Length(sText) = 3 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
         if nValNo < 100 then
-          Result := nValNo + 2000;
+          Result := nValNo + 1000;
       end
       else begin
         nValNo := StrToIntDef(sText[2], 1000);
         if nValNo < 10 then
-          Result := nValNo + 2000;
-      end;
-    end
-    else if UpCase(sText[1]) = 'M' then begin
-      if Length(sText) = 3 then begin
-        nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
-        if nValNo < 100 then
-          Result := nValNo + 300;
-      end
-      else begin
-        nValNo := StrToIntDef(sText[2], 1000);
-        if nValNo < 10 then
-          Result := nValNo + 300;
-      end;
-    end
-    else if UpCase(sText[1]) = 'I' then begin
-      if Length(sText) = 3 then begin
-        nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
-        if nValNo < 100 then
-          Result := nValNo + 400;
-      end
-      else begin
-        nValNo := StrToIntDef(sText[2], 1000);
-        if nValNo < 10 then
-          Result := nValNo + 400;
-      end;
-    end
-    else if UpCase(sText[1]) = 'D' then begin
-      nValNo := StrToIntDef(sText[2], 1000);
-      if nValNo < 10 then
-        Result := nValNo + 200;
-    end
-    else if UpCase(sText[1]) = 'N' then begin
-      if Length(sText) = 4 then begin
-        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
-        if nValNo < 1000 then
-          Result := nValNo + 5000;
-      end
-      else
-      if Length(sText) = 3 then begin
-        nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
-        if nValNo < 100 then
-          Result := nValNo + 5000;
-      end
-      else begin
-        nValNo := StrToIntDef(sText[2], 1000);
-        if nValNo < 10 then
-          Result := nValNo + 5000;
-      end;
-    end
-    else if UpCase(sText[1]) = 'S' then begin
-      if Length(sText) = 4 then begin
-        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
-        if nValNo < 1000 then
-          Result := nValNo + 6000;
-      end
-      else
-      if Length(sText) = 3 then begin
-        nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
-        if nValNo < 100 then
-          Result := nValNo + 6000;
-      end
-      else begin
-        nValNo := StrToIntDef(sText[2], 1000);
-        if nValNo < 10 then
-          Result := nValNo + 6000;
+          Result := nValNo + 1000;
       end;
     end
     else if UpCase(sText[1]) = 'A' then begin
       if Length(sText) = 4 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
         if nValNo < 1000 then
-          Result := nValNo + 7000;
+          Result := nValNo + 2000;
       end
       else
-      if Length(sText) = 3 then begin
+        if Length(sText) = 3 then begin
+          nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
+          if nValNo < 100 then
+            Result := nValNo + 2000;
+        end
+        else begin
+          nValNo := StrToIntDef(sText[2], 1000);
+          if nValNo < 10 then
+            Result := nValNo + 2000;
+        end;
+    end
+    else if UpCase(sText[1]) = 'I' then begin
+      if Length(sText) = 4 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
+        if nValNo < 1000 then
+          Result := nValNo + 3000;
+      end
+      else if Length(sText) = 3 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
         if nValNo < 100 then
-          Result := nValNo + 7000;
+          Result := nValNo + 3000;
       end
       else begin
         nValNo := StrToIntDef(sText[2], 1000);
         if nValNo < 10 then
-          Result := nValNo + 7000;
+          Result := nValNo + 3000;
       end;
     end
     else if UpCase(sText[1]) = 'U' then begin
-      if Length(sText) = 3 then begin
+      if Length(sText) = 4 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
+        if nValNo < 1000 then
+          Result := nValNo + 4000;
+      end
+      else if Length(sText) = 3 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
         if nValNo < 100 then
-          Result := nValNo + 800;
+          Result := nValNo + 4000;
       end
       else begin
         nValNo := StrToIntDef(sText[2], 1000);
         if nValNo < 10 then
-          Result := nValNo + 800;
+          Result := nValNo + 4000;
       end;
-    end
-    else if UpCase(sText[1]) = 'T' then begin
-      nValNo := StrToIntDef(sText[2], 1000);
-      if nValNo < 10 then
-        Result := nValNo + 900;
     end
     else if UpCase(sText[1]) = 'C' then begin
       if Length(sText) = 3 then begin
         nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
         if nValNo < 100 then
-          Result := nValNo + 1000;
+          Result := nValNo + 5000;
       end
       else begin
         nValNo := StrToIntDef(sText[2], 1000);
         if nValNo < 10 then
-          Result := nValNo + 1000;
+          Result := nValNo + 5000;
       end;
-    end;
+    end
+    else if UpCase(sText[1]) = 'B' then begin
+      if Length(sText) = 3 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
+        if nValNo < 100 then
+          Result := nValNo + 6000;
+      end
+      else begin
+        nValNo := StrToIntDef(sText[2], 1000);
+        if nValNo < 10 then
+          Result := nValNo + 6000;
+      end;
+    end
+    else if UpCase(sText[1]) = 'N' then begin
+      if Length(sText) = 4 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
+        if nValNo < 1000 then
+          Result := nValNo + 7000;
+      end
+      else
+        if Length(sText) = 3 then begin
+          nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
+          if nValNo < 100 then
+            Result := nValNo + 7000;
+        end
+        else begin
+          nValNo := StrToIntDef(sText[2], 1000);
+          if nValNo < 10 then
+            Result := nValNo + 7000;
+        end;
+    end
+    else if UpCase(sText[1]) = 'S' then begin
+      if Length(sText) = 4 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
+        if nValNo < 1000 then
+          Result := nValNo + 8000;
+      end
+      else
+        if Length(sText) = 3 then begin
+          nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
+          if nValNo < 100 then
+            Result := nValNo + 8000;
+        end
+        else begin
+          nValNo := StrToIntDef(sText[2], 1000);
+          if nValNo < 10 then
+            Result := nValNo + 8000;
+        end;
+    end
+    else if UpCase(sText[1]) = 'M' then begin
+      if Length(sText) = 4 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 3), 1000);
+        if nValNo < 1000 then
+          Result := nValNo + 9000;
+      end
+      else if Length(sText) = 3 then begin
+        nValNo := StrToIntDef(Copy(sText, 2, 2), 1000);
+        if nValNo < 100 then
+          Result := nValNo + 9000;
+      end
+      else begin
+        nValNo := StrToIntDef(sText[2], 1000);
+        if nValNo < 10 then
+          Result := nValNo + 9000;
+      end;
+    end
+    else if UpCase(sText[1]) = 'D' then begin
+      nValNo := StrToIntDef(sText[2], 1000);
+      if nValNo < 10 then
+        Result := nValNo + 10000;
+    end
+    else if UpCase(sText[1]) = 'T' then
+    begin
+      nValNo := StrToIntDef(sText[2], 1000);
+      if nValNo < 10 then
+        Result := nValNo + 11000;
+    end
   end;
 end;
 

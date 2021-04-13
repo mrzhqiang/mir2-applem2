@@ -1791,7 +1791,7 @@ begin
   if nFlag < 0 then Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(m_QuestFlag)..High(m_QuestFlag)]) then begin
+  if (n10 >= Low(m_QuestFlag)) and (n10 <= High(m_QuestFlag)) then begin
     if ((128 shr n14) and (m_QuestFlag[n10])) <> 0 then
       Result := 1
     else
@@ -2103,7 +2103,7 @@ begin
   if nFlag < 0 then Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(m_QuestFlag)..High(m_QuestFlag)]) then begin
+  if (n10 >= Low(m_QuestFlag)) and (n10 <= High(m_QuestFlag)) then begin
     bt15 := m_QuestFlag[n10];
     if nValue = 0 then begin
       m_QuestFlag[n10] := (not (128 shr n14)) and (bt15);

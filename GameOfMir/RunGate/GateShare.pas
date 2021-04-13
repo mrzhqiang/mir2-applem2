@@ -7,7 +7,7 @@ uses
 const
   tRunGate = 8;
 
-  g_sUpDateTime = '程序版本: v2020.1.0';
+  g_sUpDateTime = '程序版本: v2021.1.0';
   BlockIPListName = '.\BlockIPList.txt';
   TeledataBlockIPListName = '.\Config\RunGate_BlockIPList.txt';
   ConfigFileName = '.\Config.ini';

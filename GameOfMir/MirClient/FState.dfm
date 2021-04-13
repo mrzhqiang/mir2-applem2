@@ -4,7 +4,7 @@ object FrmDlg: TFrmDlg
   BorderStyle = bsNone
   Caption = 'FrmDlg'
   ClientHeight = 612
-  ClientWidth = 1005
+  ClientWidth = 1011
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -4022,8 +4022,8 @@ object FrmDlg: TFrmDlg
     OnClick = DStateBTItemClick
     Caption = #20449#24687
     DParent = DStateWin
-    Visible = True
-    Enabled = True
+    Visible = False
+    Enabled = False
     MouseFocus = True
     KeyFocus = False
     ClickCount = csGlass
@@ -4104,8 +4104,8 @@ object FrmDlg: TFrmDlg
     OnDirectPaint = DStateWinItemDirectPaint
     Caption = #20154#29289#20449#24687#31383#21475
     DParent = DStateWin
-    Visible = True
-    Enabled = True
+    Visible = False
+    Enabled = False
     MouseFocus = True
     KeyFocus = False
     ClickCount = csNone
@@ -6152,7 +6152,7 @@ object FrmDlg: TFrmDlg
     Caption = #26597#30475#20154#29289#20449#24687#31383#21475
     DParent = DUserState
     Visible = False
-    Enabled = True
+    Enabled = False
     MouseFocus = True
     KeyFocus = False
     ClickCount = csNone
@@ -6421,8 +6421,8 @@ object FrmDlg: TFrmDlg
     OnClick = DUserStateBTItemClick
     Caption = #20010#20154#20449#24687
     DParent = DUserState
-    Visible = True
-    Enabled = True
+    Visible = False
+    Enabled = False
     MouseFocus = True
     KeyFocus = False
     ClickCount = csGlass

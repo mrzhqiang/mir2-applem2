@@ -2607,8 +2607,8 @@ type
  
   TUserItemsSetup = array[0..MAXITEMSSETUPCOUNT - 1] of Word;
 
-  TQuestFlag = array[0..99] of Byte;
-  TMissionFlag = array[0..99] of Byte;
+  TQuestFlag = array[0..800] of Byte;
+  TMissionFlag = array[0..800] of Byte;
   TStatusTime = array[0..MAX_STATUS_ATTRIBUTE - 1] of Word;
   TUserKeySetup = array[0..19] of TUserKeyInfo;
   TMagicConcatenation = array[0..3] of Byte;
@@ -2637,7 +2637,8 @@ type
               }
   TMakeMagic = array[0..mm_MaxCount] of byte;
 
-  THumCustomVariable = array[0..19] of Integer;
+  THumCustomVariable = array[0..999] of Integer;
+  THumBVariable = array[0..999] of string[20];
   THumMasterName = array[0..6] of string[ActorNameLen];
   THumanFriends = array[0..MAXFRIENDS - 1] of THumFriend;
 
@@ -2697,9 +2698,9 @@ type
     nBindGold: Integer;
     // 角色能力
     Abil: TAbility;
-    // 裸体能力？
+    // 潜力增加的能力
     NakedAbil: TNakedAbil;
-    // 裸体数量？
+    // 潜力点
     nNakedAbilCount: Word;
     // 时间状态列表
     wStatusTimeArr: TStatusTime;
@@ -2713,7 +2714,7 @@ type
     wDieY: Word;
 
     sDearName: string[ActorNameLen];//别名(配偶)
-    MasterName: THumMasterName;//师傅名字
+    MasterName: THumMasterName;//徒弟名字
     boMaster: Boolean;//是否有徒弟
 
     LoginTime: TDateTime;
@@ -2756,8 +2757,8 @@ type
     boChangeName: Boolean; //
     nExpRate: Integer;//经验倍数
     nExpTime: LongWord;//经验倍数时间
-    dwUpLoadPhotoTime: TDateTime;
-    UserRealityInfo: TUserRealityInfo; //用户真实信息
+//    dwUpLoadPhotoTime: TDateTime;
+//    UserRealityInfo: TUserRealityInfo; //用户真实信息
     UserKeySetup: TUserKeySetup;
     QuestFlag: TQuestFlag;//脚本变量
     MissionFlag: TMissionFlag;
@@ -2794,12 +2795,13 @@ type
     nItemsSetupCount: Word;
     UserItemsSetup: TUserItemsSetup;
     FriendList: THumanFriends;
-    nPhotoSize: Word;
-    pPhotoData: array[0..MAXPHOTODATASIZE] of byte;
+//    nPhotoSize: Word;
+//    pPhotoData: array[0..MAXPHOTODATASIZE] of byte;
     MakeMagic: TMakeMagic;
     MakeMagicPoint: Word;
     //EMailInfo: THumanEMailInfo;
     CustomVariable: THumCustomVariable;
+    BStrVariable: THumBVariable;
     nReserve: array[0..4025] of byte; //
   end;
 

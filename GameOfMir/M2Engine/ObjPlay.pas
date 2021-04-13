@@ -96,9 +96,9 @@ type
     m_nButchCount: Integer; //人物挖取容错数量
     //m_Script: pTScript; //0x62C
     m_NPC: TBaseObject; //0x630
-    m_nVal: array[0..99] of Integer; //玩家的变量
-    m_nMval: array[0..99] of Integer;//玩家的变量
-    m_DyVal: array[0..9] of Integer; //玩家的变量
+    m_nVal: array[0..999] of Integer; //玩家的变量 P999
+    m_nMval: array[0..999] of Integer;//玩家的变量
+    m_DyVal: array[0..9] of Integer; //玩家的摇骰子变量
     m_sPlayDiceLabel: string;
     m_boTimeRecall: Boolean; //0x684
     m_dwTimeRecallTick: LongWord;
@@ -139,6 +139,7 @@ type
     m_MasterList: TStringList;
     m_boMaster: Boolean;
     m_CustomVariable: THumCustomVariable;
+    m_BStrVariable: THumBVariable;
     m_nCreditPoint: Integer; //声望点
     m_AppendBagItems: THumanAppendBagItems;
     //m_btMarryCount: Byte; //离婚次数
@@ -250,12 +251,12 @@ type
     m_nSQLAppendShopIndex: Word;
     m_nSQLAppendString: string;
     m_nIDIndex: Integer;
-    m_RealityInfo: TUserRealityInfo;
-    m_dwUpLoadPhotoTime: TDateTime;
-    m_nLookPhotoIndex: Integer;
-    m_PPhotoData: PChar;
-    m_nPhotoSize: Word;
-    m_dwLoadPhotoTick: LongWord;
+//    m_RealityInfo: TUserRealityInfo;
+//    m_dwUpLoadPhotoTime: TDateTime;
+//    m_nLookPhotoIndex: Integer;
+//    m_PPhotoData: PChar;
+//    m_nPhotoSize: Word;
+//    m_dwLoadPhotoTick: LongWord;
 
     m_boDealing: Boolean; //0x317
     m_DealLastTick: LongWord; //0x318 交易最后操作时间
@@ -869,11 +870,11 @@ begin
   m_nDealGolds := 0;
   m_boDealing := False;
   m_DealCreat := nil;
-  m_PPhotoData := nil;
-  m_dwLoadPhotoTick := GetTickCount;
+//  m_PPhotoData := nil;
+//  m_dwLoadPhotoTick := GetTickCount;
   SafeFillChar(m_nCheckMsgArr, SizeOf(m_nCheckMsgArr), #0);
   SafeFillChar(m_boStatusModeArr, SizeOf(m_boStatusModeArr), False);
-  m_nPhotoSize := 0;
+//  m_nPhotoSize := 0;
   m_DealLastTick := 0;
   m_nWaitIndex := 0;
   m_nSQLAppendCount := 0;
@@ -924,7 +925,7 @@ begin
   m_nMoveX := 0;
   m_nMoveY := 0;
   m_nDBIndex := -1;
-  m_nLookPhotoIndex := -1;
+//  m_nLookPhotoIndex := -1;
   m_nIDIndex := 0;
   m_dwRunTick := GetTickCount();
   m_nRunTime := 250;
@@ -1278,8 +1279,8 @@ begin
   if m_FriendList <> nil then
     FreeAndNil(m_FriendList);
 
-  if m_PPhotoData <> nil then
-    FreeMem(m_PPhotoData);
+//  if m_PPhotoData <> nil then
+//    FreeMem(m_PPhotoData);
 
   FreeAndNil(m_HookItemEx);
   inherited;
@@ -5466,25 +5467,25 @@ begin
         sItemMsg := sItemMsg + IntToStr(I) + '/' + MakeClientItem(@PlayObject.m_UseItems[i]) + '/';
       end;
     end;
-    if PlayObject.m_RealityInfo.boFriendSee and (not IsMyFriend(PlayObject)) then begin
-      m_DefMsg := MakeDefaultMsg(SM_SENDUSERSTATE, Integer(PlayObject.m_RealityInfo.boFriendSee), 0, 0, 0);
-      if PlayObject.m_RealityInfo.sPhotoID <> '' then
-        sSendMSg := EncodeString('1//')
-      else
-        sSendMSg := '';
-      m_nLookPhotoIndex := -1;
-    end
-    else begin
-      m_DefMsg := MakeDefaultMsg(SM_SENDUSERSTATE,
-        Integer(PlayObject.m_RealityInfo.boFriendSee),
-        MakeWord(PlayObject.m_RealityInfo.btOld, PlayObject.m_RealityInfo.btSex),
-        MakeWord(PlayObject.m_RealityInfo.btProvince, PlayObject.m_RealityInfo.btCity),
-        MakeWord(PlayObject.m_RealityInfo.btArea, PlayObject.m_RealityInfo.btOnlineTime));
-      sSendMsg := EncodeString(PlayObject.m_RealityInfo.sPhotoID + '/' +
-        PlayObject.m_RealityInfo.sUserName + '/' +
-        PlayObject.m_RealityInfo.sIdiograph);
-      m_nLookPhotoIndex := PlayObject.m_nDBIndex;
-    end;
+//    if PlayObject.m_RealityInfo.boFriendSee and (not IsMyFriend(PlayObject)) then begin
+//      m_DefMsg := MakeDefaultMsg(SM_SENDUSERSTATE, Integer(PlayObject.m_RealityInfo.boFriendSee), 0, 0, 0);
+//      if PlayObject.m_RealityInfo.sPhotoID <> '' then
+//        sSendMSg := EncodeString('1//')
+//      else
+//        sSendMSg := '';
+//      m_nLookPhotoIndex := -1;
+//    end
+//    else begin
+//      m_DefMsg := MakeDefaultMsg(SM_SENDUSERSTATE,
+//        Integer(PlayObject.m_RealityInfo.boFriendSee),
+//        MakeWord(PlayObject.m_RealityInfo.btOld, PlayObject.m_RealityInfo.btSex),
+//        MakeWord(PlayObject.m_RealityInfo.btProvince, PlayObject.m_RealityInfo.btCity),
+//        MakeWord(PlayObject.m_RealityInfo.btArea, PlayObject.m_RealityInfo.btOnlineTime));
+//      sSendMsg := EncodeString(PlayObject.m_RealityInfo.sPhotoID + '/' +
+//        PlayObject.m_RealityInfo.sUserName + '/' +
+//        PlayObject.m_RealityInfo.sIdiograph);
+//      m_nLookPhotoIndex := PlayObject.m_nDBIndex;
+//    end;
     SendSocket(@m_DefMsg, EncodeBuffer(@UserState, SizeOf(UserState)) + '/' + sSendMsg + '/' + sItemMsg);
   end;
 end;
@@ -7240,11 +7241,11 @@ end;
 
 procedure TPlayObject.SendRealityInfo;
 begin
-  SendDefMessage(SM_REALITYINFO, Integer(m_RealityInfo.boFriendSee),
-    MakeWord(m_RealityInfo.btOld, m_RealityInfo.btSex),
-    MakeWord(m_RealityInfo.btProvince, m_RealityInfo.btCity),
-    MakeWord(m_RealityInfo.btArea, m_RealityInfo.btOnlineTime),
-    m_RealityInfo.sPhotoID + '/' + m_RealityInfo.sUserName + '/' + m_RealityInfo.sIdiograph);
+//  SendDefMessage(SM_REALITYINFO, Integer(m_RealityInfo.boFriendSee),
+//    MakeWord(m_RealityInfo.btOld, m_RealityInfo.btSex),
+//    MakeWord(m_RealityInfo.btProvince, m_RealityInfo.btCity),
+//    MakeWord(m_RealityInfo.btArea, m_RealityInfo.btOnlineTime),
+//    m_RealityInfo.sPhotoID + '/' + m_RealityInfo.sUserName + '/' + m_RealityInfo.sIdiograph);
 end;
 
 procedure TPlayObject.SendGameSetupInfo;
@@ -7822,93 +7823,93 @@ begin
 end;
 
 procedure TPlayObject.ClientUserPhoto(ProcessMsg: pTProcessMessage; var boResult: Boolean);
-  function IsUpLoadPhoto: Boolean;
-  var
-    nHours: Integer;
-  begin
-    Result := False;
-    if m_Abil.Level < g_Config.nUpPhotoLevel then begin
-      SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0,
-        '等级必需大于' + IntToStr(g_Config.nUpPhotoLevel) + '级(包含' + IntToStr(g_Config.nUpPhotoLevel) + '级)以上才能上传');
-      exit;
-    end;
-    if m_PPhotoData <> nil then begin
-      nHours := HoursBetween(Now, m_dwUpLoadPhotoTime);
-      if nHours < g_Config.nUpPhotoTick then begin
-        SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0,
-          '在' + IntToStr(g_Config.nUpPhotoTick - nHours) + '小时之后才能再次上传');
-        exit;
-      end;
-    end;
-    Result := True;
-  end;
+//  function IsUpLoadPhoto: Boolean;
+//  var
+//    nHours: Integer;
+//  begin
+//    Result := False;
+//    if m_Abil.Level < g_Config.nUpPhotoLevel then begin
+//      SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0,
+//        '等级必需大于' + IntToStr(g_Config.nUpPhotoLevel) + '级(包含' + IntToStr(g_Config.nUpPhotoLevel) + '级)以上才能上传');
+//      exit;
+//    end;
+//    if m_PPhotoData <> nil then begin
+//      nHours := HoursBetween(Now, m_dwUpLoadPhotoTime);
+//      if nHours < g_Config.nUpPhotoTick then begin
+//        SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0,
+//          '在' + IntToStr(g_Config.nUpPhotoTick - nHours) + '小时之后才能再次上传');
+//        exit;
+//      end;
+//    end;
+//    Result := True;
+//  end;
 
-  procedure UserUpLoadPhoto;
-  var
-    nSize: Integer;
-  begin
-    nSize := ProcessMsg.nParam1;
-    if (nSize > MAXPHOTODATASIZE) or (nSize < 10) or (Length(ProcessMsg.sMsg) <> GetCodeMsgSize(nSize * 4 / 3)) then
-      Exit;
-    if IsUpLoadPhoto then begin
-      m_dwLoadPhotoTick := GetTickCount;
-      m_dwUpLoadPhotoTime := Now;
-      ReallocMem(m_PPhotoData, nSize);
-      m_nPhotoSize := nSize;
-      DecodeBuffer(ProcessMsg.sMsg, m_PPhotoData, nSize);
-      m_RealityInfo.sPhotoID := GetMD5TextOf16(m_sCharName + DateTimeToStr(Now));
-      SendDefMessage(SM_UPLOADUSERPHOTO, 0, 0, 0, 1, m_RealityInfo.sPhotoID);
-    end;
-  end;
+//  procedure UserUpLoadPhoto;
+//  var
+//    nSize: Integer;
+//  begin
+//    nSize := ProcessMsg.nParam1;
+//    if (nSize > MAXPHOTODATASIZE) or (nSize < 10) or (Length(ProcessMsg.sMsg) <> GetCodeMsgSize(nSize * 4 / 3)) then
+//      Exit;
+//    if IsUpLoadPhoto then begin
+//      m_dwLoadPhotoTick := GetTickCount;
+//      m_dwUpLoadPhotoTime := Now;
+//      ReallocMem(m_PPhotoData, nSize);
+//      m_nPhotoSize := nSize;
+//      DecodeBuffer(ProcessMsg.sMsg, m_PPhotoData, nSize);
+//      m_RealityInfo.sPhotoID := GetMD5TextOf16(m_sCharName + DateTimeToStr(Now));
+//      SendDefMessage(SM_UPLOADUSERPHOTO, 0, 0, 0, 1, m_RealityInfo.sPhotoID);
+//    end;
+//  end;
 
-  procedure UserGetPhoto;
-  begin
-    if GetTickCount > m_dwLoadPhotoTick then begin
-      m_dwLoadPhotoTick := GetTickCount + 5000;
-      if (m_PPhotoData <> nil) and (m_nPhotoSize >= 10) then begin
-        m_DefMsg := MakeDefaultMsg(SM_UPLOADUSERPHOTO, m_nPhotoSize, 0, 0, 2);
-        SendSocket(@m_DefMsg, EncodeBuffer(m_PPhotoData, m_nPhotoSize));
-      end
-      else
-        SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '获取失败,没有照片数据.');
-    end
-    else
-      SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '请勿超速操作');
-  end;
+//  procedure UserGetPhoto;
+//  begin
+//    if GetTickCount > m_dwLoadPhotoTick then begin
+//      m_dwLoadPhotoTick := GetTickCount + 5000;
+//      if (m_PPhotoData <> nil) and (m_nPhotoSize >= 10) then begin
+//        m_DefMsg := MakeDefaultMsg(SM_UPLOADUSERPHOTO, m_nPhotoSize, 0, 0, 2);
+//        SendSocket(@m_DefMsg, EncodeBuffer(m_PPhotoData, m_nPhotoSize));
+//      end
+//      else
+//        SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '获取失败,没有照片数据.');
+//    end
+//    else
+//      SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '请勿超速操作');
+//  end;
 
-  procedure UserGetPhoto2;
-  var
-    LookBase: TPlayObject;
-  begin
-    if GetTickCount > m_dwLoadPhotoTick then begin
-      m_dwLoadPhotoTick := GetTickCount + 5000;
-      LookBase := GetLoginPlay(m_nLookPhotoIndex);
-      m_nLookPhotoIndex := -1;
-      if LookBase <> nil then begin
-        if (LookBase.m_PPhotoData <> nil) and (LookBase.m_nPhotoSize >= 10) then begin
-          m_DefMsg := MakeDefaultMsg(SM_UPLOADUSERPHOTO, LookBase.m_nPhotoSize, 0, 0, 3);
-          SendSocket(@m_DefMsg, EncodeBuffer(LookBase.m_PPhotoData, LookBase.m_nPhotoSize));
-        end
-        else
-          SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '获取失败,没有照片数据.');
-      end
-      else
-        SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '对方已离线，无法获取数据。');
-    end
-    else
-      SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '请勿超速操作');
+//  procedure UserGetPhoto2;
+//  var
+//    LookBase: TPlayObject;
+//  begin
+//    if GetTickCount > m_dwLoadPhotoTick then begin
+//      m_dwLoadPhotoTick := GetTickCount + 5000;
+//      LookBase := GetLoginPlay(m_nLookPhotoIndex);
+//      m_nLookPhotoIndex := -1;
+//      if LookBase <> nil then begin
+//        if (LookBase.m_PPhotoData <> nil) and (LookBase.m_nPhotoSize >= 10) then begin
+//          m_DefMsg := MakeDefaultMsg(SM_UPLOADUSERPHOTO, LookBase.m_nPhotoSize, 0, 0, 3);
+//          SendSocket(@m_DefMsg, EncodeBuffer(LookBase.m_PPhotoData, LookBase.m_nPhotoSize));
+//        end
+//        else
+//          SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '获取失败,没有照片数据.');
+//      end
+//      else
+//        SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '对方已离线，无法获取数据。');
+//    end
+//    else
+//      SendDefMessage(SM_UPLOADUSERPHOTO_FAIL, 0, 0, 0, 0, '请勿超速操作');
     //m_nLookPhotoIndex
-  end;
+//  end;
 begin
-  case ProcessMsg.wParam of
-    0: begin
-        if IsUpLoadPhoto then
-          SendDefMessage(SM_UPLOADUSERPHOTO, 0, 0, 0, 0, '');
-      end;
-    1: UserUpLoadPhoto;
-    2: UserGetPhoto;
-    3: UserGetPhoto2; //m_dwLoadPhotoTick
-  end;
+//  case ProcessMsg.wParam of
+//    0: begin
+//        if IsUpLoadPhoto then
+//          SendDefMessage(SM_UPLOADUSERPHOTO, 0, 0, 0, 0, '');
+//      end;
+//    1: UserUpLoadPhoto;
+//    2: UserGetPhoto;
+//    3: UserGetPhoto2; //m_dwLoadPhotoTick
+//  end;
 end;
 
 procedure TPlayObject.ClientUpdate(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -8181,29 +8182,29 @@ begin
 end;
 
 procedure TPlayObject.ClientRealityInfoChange(ProcessMsg: pTProcessMessage; var boResult: Boolean);
-var
-  str: string;
-  nParam1, nParam2, nParam3, wParam: Word;
-  sRealityStr: string;
+//var
+//  str: string;
+//  nParam1, nParam2, nParam3, wParam: Word;
+//  sRealityStr: string;
 begin
-  nParam1 := ProcessMsg.nParam1;
-  nParam2 := ProcessMsg.nParam2;
-  nParam3 := ProcessMsg.nParam3;
-  wParam := ProcessMsg.wParam;
-  sRealityStr := ProcessMsg.sMsg;
-  m_RealityInfo.boFriendSee := nParam1 = 1;
-  m_RealityInfo.btOld := LoByte(nParam2);
-  m_RealityInfo.btSex := HiByte(nParam2);
-  m_RealityInfo.btProvince := LoByte(nParam3);
-  m_RealityInfo.btCity := HiByte(nParam3);
-  m_RealityInfo.btArea := LoByte(wParam);
-  m_RealityInfo.btOnlineTime := HiByte(wParam);
-  sRealityStr := GetValidStrEx(DecodeString(sRealityStr), str, ['/']);
-  m_RealityInfo.sUserName := str;
+//  nParam1 := ProcessMsg.nParam1;
+//  nParam2 := ProcessMsg.nParam2;
+//  nParam3 := ProcessMsg.nParam3;
+//  wParam := ProcessMsg.wParam;
+//  sRealityStr := ProcessMsg.sMsg;
+//  m_RealityInfo.boFriendSee := nParam1 = 1;
+//  m_RealityInfo.btOld := LoByte(nParam2);
+//  m_RealityInfo.btSex := HiByte(nParam2);
+//  m_RealityInfo.btProvince := LoByte(nParam3);
+//  m_RealityInfo.btCity := HiByte(nParam3);
+//  m_RealityInfo.btArea := LoByte(wParam);
+//  m_RealityInfo.btOnlineTime := HiByte(wParam);
+//  sRealityStr := GetValidStrEx(DecodeString(sRealityStr), str, ['/']);
+//  m_RealityInfo.sUserName := str;
   //sRealityStr := GetValidStrEx(sRealityStr, str, ['/']);
   //m_RealityInfo.sPhotoID := str;
-  m_RealityInfo.sIdiograph := sRealityStr;
-  SysMsg('[保存个人信息成功]', c_Blue, t_Hint)
+//  m_RealityInfo.sIdiograph := sRealityStr;
+//  SysMsg('[保存个人信息成功]', c_Blue, t_Hint)
 end;
 
 procedure TPlayObject.ClientNakedChange(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -15771,6 +15772,7 @@ begin
     nCode := 2;
     HumData.boMaster := m_boMaster;
     HumData.CustomVariable := m_CustomVariable;
+    HumData.BStrVariable := m_BStrVariable;
     HumData.btCreditPoint := m_nCreditPoint;
 
     HumData.sStoragePwd := m_sStoragePwd;
@@ -15806,9 +15808,9 @@ begin
 
     HumData.boAddStabilityPoint := m_boAddStabilityPoint;
 
-    HumData.UserRealityInfo := m_RealityInfo;
+//    HumData.UserRealityInfo := m_RealityInfo;
     HumData.UserKeySetup := m_UserKeySetup;
-    HumData.dwUpLoadPhotoTime := m_dwUpLoadPhotoTime;
+//    HumData.dwUpLoadPhotoTime := m_dwUpLoadPhotoTime;
 
     HumData.QuestFlag := m_QuestFlag;
     HumData.MissionFlag := m_MissionFlag;
@@ -15960,11 +15962,11 @@ begin
       HumData.nExpTime := 0;
     end;
     nCode := 14;
-    if m_PPhotoData <> nil then begin
-      HumData.nPhotoSize := _MIN(m_nPhotoSize, MAXPHOTODATASIZE);
-      Move(m_PPhotoData^, HumData.pPhotoData[0], HumData.nPhotoSize);
-    end;
-    nCode := 15;
+//    if m_PPhotoData <> nil then begin
+//      HumData.nPhotoSize := _MIN(m_nPhotoSize, MAXPHOTODATASIZE);
+//      Move(m_PPhotoData^, HumData.pPhotoData[0], HumData.nPhotoSize);
+//    end;
+//    nCode := 15;
   Except
     on E: Exception do begin
       MainOutMessage('[Exception] TPlayObject.MakeSaveRcd ' + IntToStr(nCode));
@@ -18541,7 +18543,7 @@ begin
     Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(m_QuestFlag)..High(m_QuestFlag)]) then begin
+  if (n10 >= Low(m_QuestFlag)) and (n10 <= High(m_QuestFlag)) then begin
     if ((128 shr n14) and (m_QuestFlag[n10])) <> 0 then
       Result := 1
     else
@@ -18566,7 +18568,7 @@ begin
     Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(m_QuestFlag)..High(m_QuestFlag)]) then begin
+  if (n10 >= Low(m_QuestFlag)) and (n10 <= High(m_QuestFlag)) then begin
     bt15 := m_QuestFlag[n10];
     if nValue = 0 then begin
       m_QuestFlag[n10] := (not (128 shr n14)) and (bt15);
@@ -18597,7 +18599,7 @@ begin
     Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(m_MissionFlag)..High(m_MissionFlag)]) then begin
+  if (n10 >= Low(m_MissionFlag)) and (n10 <= High(m_MissionFlag)) then begin
     if ((128 shr n14) and (m_MissionFlag[n10])) <> 0 then
       Result := 1
     else
@@ -18622,7 +18624,7 @@ begin
     Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(m_MissionFlag)..High(m_MissionFlag)]) then begin
+  if (n10 >= Low(m_MissionFlag)) and (n10 <= High(m_MissionFlag)) then begin
     bt15 := m_MissionFlag[n10];
     if nValue = 0 then begin
       m_MissionFlag[n10] := (not (128 shr n14)) and (bt15);
