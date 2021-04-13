@@ -11072,9 +11072,9 @@ begin
     g_MyMagicArry[ClientMagic.btMagID].Def := GetMagicInfo(ClientMagic.btMagID);
 {$IF Var_Interface = Var_Mir2}
     if ClientMagic.btMagID <> 100 then begin
-      if (ClientMagic.btMagID in [110..121]) then
-        FrmDlg.MagicList2.AddObject(' ', TObject(ClientMagic.btMagID))
-      else
+//      if (ClientMagic.btMagID in [110..121]) then
+//        FrmDlg.MagicList2.AddObject(' ', TObject(ClientMagic.btMagID))
+//      else
         FrmDlg.MagicList1.AddObject(' ', TObject(ClientMagic.btMagID));
     end;
 {$IFEND}
@@ -11091,18 +11091,18 @@ begin
     SafeFillChar(g_MyMagicArry[magid], SizeOf(g_MyMagicArry[magid]), #0);
   end;
 {$IF Var_Interface = Var_Mir2}
-    if (magid in [110..121]) then begin
-      for I := FrmDlg.MagicList2.Count - 1 downto 0 do begin
-        if Integer(FrmDlg.MagicList2.Objects[I]) = magid then
-          FrmDlg.MagicList2.Delete(I);
-      end;
-    end
-    else begin
+//    if (magid in [110..121]) then begin
+//      for I := FrmDlg.MagicList2.Count - 1 downto 0 do begin
+//        if Integer(FrmDlg.MagicList2.Objects[I]) = magid then
+//          FrmDlg.MagicList2.Delete(I);
+//      end;
+//    end
+//    else begin
       for I := FrmDlg.MagicList1.Count - 1 downto 0 do begin
         if Integer(FrmDlg.MagicList1.Objects[I]) = magid then
           FrmDlg.MagicList1.Delete(I);
       end;
-    end;
+//    end;
 {$IFEND}
 end;
 
@@ -11138,9 +11138,9 @@ begin
         g_MyMagicArry[ClientMagic.btMagID].Def := GetMagicInfo(ClientMagic.btMagID);
 {$IF Var_Interface = Var_Mir2}
         if ClientMagic.btMagID <> 100 then begin
-          if (ClientMagic.btMagID in [110..121]) then
-            FrmDlg.MagicList2.AddObject(' ', TObject(ClientMagic.btMagID))
-          else
+//          if (ClientMagic.btMagID in [110..121]) then
+//            FrmDlg.MagicList2.AddObject(' ', TObject(ClientMagic.btMagID))
+//          else
             FrmDlg.MagicList1.AddObject(' ', TObject(ClientMagic.btMagID));
         end;
 {$IFEND}

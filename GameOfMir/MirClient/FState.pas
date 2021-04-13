@@ -815,6 +815,7 @@ type
     MagicList2: TQuickStringList;
     MagicPage: Byte;
     MagicMaxPage: Byte;
+    // 普通技能、连击技能的切换索引
     DMagicIndex: Byte;
     CboMagicList: TCboMagicListInfo;
 
@@ -2231,7 +2232,7 @@ begin
     exit;
   end;
   with Sender as TDGrid do begin
-    idx := ACol + ARow * ColCount + MagicPage * 10;
+    idx := ACol + ARow * ColCount + MagicPage * 5;
     if (Idx >= 0) and (idx < MagicList.Count) then begin
       nMagID := Integer(MagicList.Objects[idx]);
       if (nMagID > 0) and (nMagID < SKILL_MAX) then begin
@@ -2304,7 +2305,7 @@ begin
         if d <> nil then begin
           rc := d.ClientRect;
           // 九重技能才有熟练度的进度条
-          if Magic.Magic.btTrainLv <= 9 then
+          if (Magic.Magic.btTrainLv <= 9) and (g_MyMagicArry[nMagID].Level < Magic.Magic.btTrainLv) then
             rc.Right := _MIN(Round(rc.Right / (nMaxTrain / g_MyMagicArry[nMagID].CurTrain)), rc.Right);
           dsurface.Draw(SurfaceX(Rect.Left + 46), SurfaceY(Rect.Top + 22), rc, d, FALSE);
         end;
@@ -2322,7 +2323,7 @@ begin
           begin
             if (Magic.Magic.btTrainLv <= 3) then
             begin
-              if (g_MyMagicArry[nMagID].Level < High(Magic.Magic.MaxTrain)) then
+              if (g_MyMagicArry[nMagID].Level < Magic.Magic.btTrainLv) then
               begin
                 sStr := IntToStr(g_MyMagicArry[nMagID].CurTrain) + '/' + IntToStr(nMaxTrain);
                 TextOut(SurfaceX(Rect.Left + 96 - (TextWidth(sStr) div 2)), SurfaceY(Rect.Top + 19), clWhite, sStr);
@@ -15617,12 +15618,12 @@ begin
         for I := Low(g_MagicArry) to High(g_MagicArry) do begin
           if (g_MagicArry[I].Magic.btJob <> 0) and (g_MagicArry[I].Magic.btJob <> 99) then Continue;
           if g_MagicArry[I].isShow then begin
-            if g_MagicArry[I].Magic.wMagicId in [110..121] then
-              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
-            else
+//            if g_MagicArry[I].Magic.wMagicId in [110..121] then
+//              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
+//            else
               MagicList1.AddString(Format('%.5d', [g_MagicArry[I].Magic.TrainLevel[0]]), TObject(g_MagicArry[I].Magic.wMagicId), True);
 
-          end;
+//          end;
         end;
       end;
     1: begin
@@ -15630,22 +15631,22 @@ begin
           if (g_MagicArry[I].Magic.btJob <> 1) and (g_MagicArry[I].Magic.btJob <> 99) then
             Continue;
           if g_MagicArry[I].isShow then begin
-            if g_MagicArry[I].Magic.wMagicId in [110..121] then
-              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
-            else
+//            if g_MagicArry[I].Magic.wMagicId in [110..121] then
+//              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
+//            else
               MagicList1.AddString(Format('%.5d', [g_MagicArry[I].Magic.TrainLevel[0]]), TObject(g_MagicArry[I].Magic.wMagicId), True);
-          end;
+//          end;
         end;
       end;
     2: begin
         for I := Low(g_MagicArry) to High(g_MagicArry) do begin
           if (g_MagicArry[I].Magic.btJob <> 2) and (g_MagicArry[I].Magic.btJob <> 99) then Continue;
           if g_MagicArry[I].isShow then begin
-            if g_MagicArry[I].Magic.wMagicId in [110..121] then
-              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
-            else
+//            if g_MagicArry[I].Magic.wMagicId in [110..121] then
+//              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
+//            else
               MagicList1.AddString(Format('%.5d', [g_MagicArry[I].Magic.TrainLevel[0]]), TObject(g_MagicArry[I].Magic.wMagicId), True);
-          end;
+//          end;
         end;
       end;
   end;

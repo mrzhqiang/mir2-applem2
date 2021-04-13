@@ -11,26 +11,26 @@ type
     constructor Create();
     destructor Destroy; override;
     function MagMakePrivateTransparent(BaseObject: TBaseObject; nHTime:
-      Integer): Boolean;
+                                                                    Integer): Boolean;
     //function IsWarrSkill(wMagIdx: Integer): Boolean;
     function DoSpell(PlayObject: TPlayObject; UserMagic: pTUserMagic; nTargetX,
-      nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
+                                                                        nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
 
     function MagBigHealing(PlayObject: TBaseObject; nPower, nX, nY, nMagID: Integer):
-      Boolean;
+        Boolean;
     function MagPushArround(PlayObject: TBaseObject; nMagID, nPushLevel: Integer):
-      Integer;
+        Integer;
     function MagTurnUndead(BaseObject, TargeTBaseObject: TBaseObject; nTargetX,
-      nTargetY: Integer; nLevel: Integer): Boolean;
-    function MagMakeHolyCurtain(BaseObject: TBaseObject; nPower: Integer; nX,
-      nY: Integer): Integer;
+                                                                        nTargetY: Integer; nLevel: Integer): Boolean;
+    function MagMakeHolyCurtain(PlayObject: TPlayObject; delay, nPower: Integer; nX,
+                                                                            nY: Integer): Integer;
     function MagMakeGroupTransparent(BaseObject: TBaseObject; nX, nY: Integer;
-      nHTime, nMagID: Integer): Boolean;
+                                        nHTime, nMagID: Integer): Boolean;
     function MagTamming(BaseObject, TargeTBaseObject: TBaseObject; nTargetX,
-      nTargetY: Integer; nMagicLevel: Integer): Boolean;
+                                                                     nTargetY: Integer; nMagicLevel: Integer): Boolean;
     function MagSaceMove(BaseObject: TBaseObject; nLevel: Integer): Boolean;
     function MagMakeFireCross(PlayObject: TPlayObject; nDamage, nHTime, nX, nY:
-      Integer): Integer;
+                                                           Integer): Integer;
     function MagBigExplosion(BaseObject: TBaseObject; nPower, nX, nY: Integer; nRage, nMagID: Integer): Boolean;
     function MagBigExplosionTime(BaseObject: TBaseObject; nPower, nX, nY: Integer; nRage, nMagID: Integer): Boolean;
     function MagBigExplosionAndMakePoisonByWarr(BaseObject: TBaseObject; UserMagic: pTUserMagic; nPower, nX, nY: Integer; nRage: Integer; var boMove: Boolean): Boolean;
@@ -40,74 +40,74 @@ type
     function MagDoubleBigExplosionEx(PlayObject: TPlayObject; nPower, nX, nY: Integer; nRage, nMagID: Integer; boDecMP: Boolean = False): Boolean;
     function MagElecBlizzard(BaseObject: TBaseObject; nPower, nMagID: Integer): Boolean;
     function MabMabe(BaseObject, TargeTBaseObject: TBaseObject; nPower, nLevel,
-      nTargetX, nTargetY, nMagID: Integer): Boolean;
+                                                                  nTargetX, nTargetY, nMagID: Integer): Boolean;
     function MagMakeSlave(PlayObject: TPlayObject; UserMagic: pTUserMagic):
-      Boolean;
+        Boolean;
     //    function MagMakeSelf(BaseObject, TargeTBaseObject: TBaseObject; UserMagic: pTUserMagic): Boolean;
     function MagMakeSinSuSlave(PlayObject: TPlayObject; UserMagic: pTUserMagic): Boolean;
     function MagMakeMoonSlave(PlayObject: TPlayObject; UserMagic: pTUserMagic): Boolean;
 
 
     function MagWindTebo(PlayObject: TPlayObject; UserMagic: pTUserMagic):
-      Boolean;
+        Boolean;
     function MagGroupLightening(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject; var boSpellFire:
-      Boolean): Boolean;
+                                   nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject; var boSpellFire:
+                                                                                                   Boolean): Boolean;
     function MagGroupAmyounsul(PlayObject: TPlayObject {修改 TBaseObject};
-      UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; TargeTBaseObject:
-      TBaseObject): Boolean;
+                                  UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; TargeTBaseObject:
+                                                                                           TBaseObject): Boolean;
     function MagGroupDeDing(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
+                               nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
     function MagGroupMb(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
+                           nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
     function MagHbFireBall(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY, nPower: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                              nTargetX, nTargetY, nPower: Integer; var TargeTBaseObject: TBaseObject): Boolean;
 
     function MagWideAttack(PlayObject: TPlayObject; UserMagic: pTUserMagic): Boolean;
 
     function MagReturn(BaseObject, TargeTBaseObject: TBaseObject; nTargetX,
-      nTargetY, nMagicLevel: Integer): Boolean;
+                                                                    nTargetY, nMagicLevel: Integer): Boolean;
     {function MagMakeSlave_(PlayObject: TPlayObject; UserMagic: pTUserMagic;
       sMonName: string; nCount, nHumLevel, nMonLevel: Integer): Boolean;  }
     function MagLightening(PlayObject: TPlayObject {修改 TBaseObject};
-      UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; TargeTBaseObject:
-      TBaseObject): Boolean;
+                              UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; TargeTBaseObject:
+                                                                                       TBaseObject): Boolean;
     function MagMakeSuperFireCross(PlayObject: TPlayObject; nDamage, nHTime, nX,
-      nY: Integer; nCount: Integer): Integer;
+                                                              nY: Integer; nCount: Integer): Integer;
 
     function MagMakeFireball(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                                nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeCBOBase(PlayObject: TPlayObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagTreatment(PlayObject: TPlayObject; UserMagic: pTUserMagic; var
-      nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                                                                             nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeHellFire(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
+                                nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeQuickLighting(PlayObject: TPlayObject; UserMagic:
-      pTUserMagic; var nTargetX, nTargetY: Integer; TargeTBaseObject:
-      TBaseObject): Boolean;
+                                                               pTUserMagic; var nTargetX, nTargetY: Integer; TargeTBaseObject:
+                                                                                                                 TBaseObject): Boolean;
     function MagMakeLighting(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                                nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeFireCharm(PlayObject: TBaseObject { 修改 TBaseObject};
-      UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; var TargeTBaseObject:
-      TBaseObject; boMove: Boolean): Boolean;
+                                 UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; var TargeTBaseObject:
+                                                                                        TBaseObject; boMove: Boolean): Boolean;
     function MagMakeFireCharmEx(PlayObject: TBaseObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer;
-      var TargeTBaseObject: TBaseObject): Boolean;
+                                   var TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeUnTreatment(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                                   nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeLivePlayObject(PlayObject: TPlayObject; UserMagic:
-      pTUserMagic; TargeTBaseObject: TBaseObject): Boolean;
+                                                                pTUserMagic; TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeArrestObject(PlayObject: TPlayObject; UserMagic:
-      pTUserMagic; TargeTBaseObject: TBaseObject): Boolean;
+                                                              pTUserMagic; TargeTBaseObject: TBaseObject): Boolean;
     function MagChangePosition(PlayObject: TPlayObject; nTargetX, nTargetY:
-      Integer; TargeTBaseObject: TBaseObject): Boolean;
+                                                            Integer; TargeTBaseObject: TBaseObject): Boolean;
     function MagMakeFireDay(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                               nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagVampire(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
+                           nTargetX, nTargetY: Integer; var TargeTBaseObject: TBaseObject): Boolean;
     function MagGroupFengPo(PlayObject: TPlayObject; UserMagic: pTUserMagic;
-      nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
+                               nTargetX, nTargetY: Integer; TargeTBaseObject: TBaseObject): Boolean;
     function MagTamming2(BaseObject, TargeTBaseObject: TBaseObject; nTargetX,
-      nTargetY, nMagicLevel: Integer): Boolean;
+                                                                      nTargetY, nMagicLevel: Integer): Boolean;
   end;
 
 function Max(Val1, Val2: Integer): Integer;
@@ -275,8 +275,7 @@ begin
 end;
 
 {技能推开附近的玩家}
-function TMagicManager.MagPushArround(PlayObject: TBaseObject; nMagID, nPushLevel:
-  Integer): Integer; //00492204
+function TMagicManager.MagPushArround(PlayObject: TBaseObject; nMagID, nPushLevel: Integer): Integer;
 var
   i, nDir, levelgap, push: Integer;
   BaseObject: TBaseObject;
@@ -290,17 +289,16 @@ begin
     if (abs(PlayObject.m_nCurrX - BaseObject.m_nCurrX) <= 1) and (abs(PlayObject.m_nCurrY - BaseObject.m_nCurrY) <= 1) then begin
       {对象没有死亡，并且不是自己}
       if (not BaseObject.m_boDeath) and (BaseObject <> PlayObject) then begin
-        {自己等级大于对方等级，并且对方没有处于坚守模式时（比如城门、城墙、蜘蛛女皇怪物等}
-        if (PlayObject.m_Abil.Level > BaseObject.m_Abil.Level) and (not BaseObject.m_boStickMode) then begin
+        {对方没有处于坚守模式时（比如城门、城墙、蜘蛛女皇怪物等}
+        if {(PlayObject.m_Abil.Level > BaseObject.m_Abil.Level - 10) and} (not BaseObject.m_boStickMode) then begin
           levelgap := PlayObject.m_Abil.Level - BaseObject.m_Abil.Level;
-          {如果 0 -- 20 之间的值，小于 推开技能等级}
-          // 技能等级每升 1 级，则几率提高 15%
-          // 人物等级差，每多 1 级，则几率提高 5%
-          // 在满级技能以及等级差 5 级的情况下，有 100 %几率推开附近的玩家
-          if (Random(20) < 6 + nPushLevel * 3 + levelgap) then begin
+          // 2021-01-05 优化为：默认 20% 几率推开敌人，每级技能 +10% 几率，每 1 个等级差 ±5% 几率
+          // 满级技能为 50% 几率，高出 10 级时，达到 100% 几率，低于 10 级时，减少为 0% 几率
+          // todo 几率值可配置
+          if (Random(100) < (20 + nPushLevel * 10 + levelgap * 5)) then begin
             // 是一个正确的目标（对方是玩家、怪物、非宝宝，没有在安全区，不是新手..）
             if PlayObject.IsProperTarget(BaseObject) then begin
-              // 推开距离：1 -- 4 格子
+              // 推开距离：2 -- 4 格子
               push := 1 + _MAX(0, nPushLevel - 1) + Random(2);
               nDir := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, BaseObject.m_nCurrX, BaseObject.m_nCurrY);
               BaseObject.CharPushed(nDir, push);
@@ -428,6 +426,21 @@ begin
           MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
           400 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
         //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
+
+        // todo 参数可配置
+        // 0级 3% 几率 -- 3 级 12% 几率
+        if (UserMagic.wMagIdx = SKILL_FIREBALL2) and (Random(100) < (UserMagic.btLevel + 1) * 3) then
+        begin
+          // todo 检查中毒点数
+//          nPower := UserMagic.MagicInfo.btDefMaxPower;
+          TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON,
+                                         POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower{持续时间},
+                                         Integer(PlayObject),
+                                         ROUND(nPower * (UserMagic.btLevel + 1) / (UserMagic.MagicInfo.btTrainLv + 1)){减防系数}
+              {UserMagic.btLevel}, '', 800);
+//          TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+        end;
+
         TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
         // 奇怪的判断
         if (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
@@ -443,34 +456,35 @@ begin
     TargeTBaseObject := nil;
 end;
 
-{治愈术}
+{治愈术，不能强化也不属于 20 级技能}
 
 function TMagicManager.MagTreatment(PlayObject: TPlayObject;
   UserMagic: pTUserMagic; var nTargetX, nTargetY: Integer;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
   nPower: Integer;
-  {function MPow(UserMagic: pTUserMagic): Integer;
+  // power -- maxPower 之间的随机值
+  function MPow(UserMagic: pTUserMagic): Integer;
   begin
-    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
-      - UserMagic.MagicInfo.wPower);
+    Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower - UserMagic.MagicInfo.wPower);
   end;
+  // 随机的伤害固定值 + 当前等级比的伤害（满级就是最大值，0 级就是 1/(N+1)）
   function GetPower(nPower: Integer): Integer;
   begin
     Result := ROUND(nPower / (UserMagic.MagicInfo.btTrainLv + 1) *
       (UserMagic.btLevel + 1)) + (UserMagic.MagicInfo.btDefPower +
       Random(UserMagic.MagicInfo.btDefMaxPower - UserMagic.MagicInfo.btDefPower));
-  end;}
+  end;
 begin
   Result := False;
+  // 目标为空，给自己加血
   if TargeTBaseObject = nil then begin
     TargeTBaseObject := PlayObject;
     nTargetX := PlayObject.m_nCurrX;
     nTargetY := PlayObject.m_nCurrY;
   end;
   if PlayObject.IsProperFriend(TargeTBaseObject) then begin
-    // fixme: 治愈术类型的技能最大等级为 20 级时，不能是技能系数的加成
-    nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) +
+    nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic)) +
       LoWord(PlayObject.m_WAbil.SC) * 2,
       SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) * 2 + 1);
     if TargeTBaseObject.m_WAbil.HP < TargeTBaseObject.m_WAbil.MaxHP then begin
@@ -573,7 +587,7 @@ function TMagicManager.MagMakeLighting(PlayObject: TPlayObject;
   UserMagic: pTUserMagic; nTargetX, nTargetY: Integer;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
-  nPower: Integer;
+  nPower,levelgap: Integer;
   {function MPow(UserMagic: pTUserMagic): Integer;
   begin
     Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
@@ -605,6 +619,17 @@ begin
         nPower := ROUND(nPower * 1.5); }
       PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
         600);
+
+      levelgap := PlayObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level;
+      // 2021-01-05 优化为：每级技能 +5% 几率，每 1 个等级差 ±1% 几率
+      // 满级技能为 15% 几率，高出 85 级时，达到 100% 几率，低于 15 级时，减少为 0% 几率
+      // 持续时间： [1, magic level]
+      // todo 几率值可配置
+      if (Random(100) < Round(UserMagic.btLevel * 5 + levelgap)) then begin
+          TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_STONE
+              {中毒类型 - 麻痹}, Round(1+Random(UserMagic.btLevel+1)){持续时间}, Integer(PlayObject), 0, '', 600);
+      end;
+
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
       //if PlayObject.m_btRaceServer = RC_PLAYMOSTER then Result := True
@@ -647,7 +672,8 @@ var
     Result := nil;
     BaseObjectList := TList.Create;
     Try
-      Targe.GetMapBaseObjects(Targe.m_PEnvir, Targe.m_nCurrX, Targe.m_nCurrY, 3, BaseObjectList);
+      // fixme 范围 3 改为 范围 5 后面观察一下效果
+      Targe.GetMapBaseObjects(Targe.m_PEnvir, Targe.m_nCurrX, Targe.m_nCurrY, 5, BaseObjectList);
       for I := BaseObjectList.Count - 1 downto 0 do begin
         TargeBase := TBaseObject(BaseObjectList[I]);
         if (not PlayObject.IsProperTarget(TargeBase)) or (Targe = TargeBase) or (PlayObject = TargeBase) or
@@ -690,9 +716,10 @@ begin
             Result := True;
 
           if boMove then begin
-            if UserMagic.btLevel > 0 then begin
+            if UserMagic.btLevel >= 0 then begin
               TargeBase := TargeTBaseObject;
-              for I := 2 to (_MIN(UserMagic.btLevel, 3) + 1) do begin
+              // 0级分裂1次，1级分裂3次，2级分裂5次，3级分裂7次
+              for I := 2 to (_MIN(UserMagic.btLevel, UserMagic.MagicInfo.btTrainLv)+UserMagic.btLevel+2) do begin
                 AroundBase := GetAroundObject(TargeBase);
                 if AroundBase = nil then break;
                 PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(AroundBase.m_nCurrX, AroundBase.m_nCurrY), 2, Integer(AroundBase), '', I * 400);
@@ -710,7 +737,7 @@ begin
     TargeTBaseObject := nil;
 end;
 
-// 升级版灵魂火符？
+
 function TMagicManager.MagMakeFireCharmEx(PlayObject: TBaseObject; UserMagic: pTUserMagic; nTargetX, nTargetY, nPower: Integer;
   var TargeTBaseObject: TBaseObject): Boolean;
 begin
@@ -785,7 +812,7 @@ function TMagicManager.MagMakeFireDay(PlayObject: TPlayObject;
   UserMagic: pTUserMagic; nTargetX, nTargetY: Integer;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
-  nPower: Integer;
+  nPower, nPoint: Integer;
   {function MPow(UserMagic: pTUserMagic): Integer;
   begin
     Result := UserMagic.MagicInfo.wPower + Random(UserMagic.MagicInfo.wMaxPower
@@ -803,23 +830,28 @@ begin
     exit;
   if PlayObject.IsProperTarget(TargeTBaseObject) then begin
     // fixme 魔法躲避
-    if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then begin
-      if CheckMagicRate(UserMagic) then begin
+    if (Random(10) >= TargeTBaseObject.m_nAntiMagic) then
+    begin
+      if CheckMagicRate(UserMagic) then
+      begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.MC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC) + 1) *
                                              (1 + GetPower(MPow(UserMagic), UserMagic) / 100)));
       end
       else begin
-      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
-        SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
+        nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
+                                             SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
       end;
       {if TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD then
         nPower := ROUND(nPower * 1.5); }
       PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-        MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 600);
+                               MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 600);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
-      if g_Config.boPlayObjectReduceMP then
-        TargeTBaseObject.DamageSpell(nPower div 2);
+      if g_Config.boPlayObjectReduceMP and (Random(10) < UserMagic.btLevel)then
+          // 1/4 当前法力值 -- 1/1 当前法力值
+        nPoint := Min(0, Round(TargeTBaseObject.m_WAbil.MP * (UserMagic.MagicInfo.btTrainLv + 1) / (UserMagic.btLevel + 1)));
+        // 1/10 削减，如果小于伤害的 1/2，则被替换之
+        TargeTBaseObject.DamageSpell(Max(nPoint div 10, nPower div 2));
       if TargeTBaseObject.m_btRaceServer >= RC_ANIMAL then
         Result := True;
     end
@@ -1023,21 +1055,10 @@ begin
   // 技能 ID 在 1000 以上时，可以复用技能
   magicId := UserMagic.MagicInfo.wMagicId mod 1000;
   case magicId of //
-    SKILL_FIREBALL: {1} //火球术
-    begin
-      if MagMakeFireball(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
-        boTrain := True;
-    end;
-    SKILL_FIREBALL2: {5} //大火球-烈焰掌
-    begin
-      if MagMakeFireball(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
-          nPower := UserMagic.MagicInfo.btDefMaxPower;
-          TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON,
-                                         POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower,
-                                         Integer(PlayObject),
-                                         ROUND(nPower * (UserMagic.btLevel + 1) / (UserMagic.MagicInfo.btTrainLv + 1))
-              {UserMagic.btLevel}, '', 800);
-          TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+    SKILL_FIREBALL{1},// 小火球
+    SKILL_FIREBALL2: {5} //大火球-飞龙焰-双龙破效果
+      begin
+        if MagMakeFireball(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
           boTrain := True;
       end;
     SKILL_HEALLING {2}: begin //治愈术
@@ -1048,24 +1069,42 @@ begin
           TargeTBaseObject) then
           boTrain := True;
       end;
-    SKILL_AMYOUNSUL {6}: begin //施毒术
+    SKILL_AMYOUNSUL, {6} //施毒术
+      SKILL_GROUPAMYOUNSUL {38 群体施毒术}: begin
         btAmuletType := GetAmuletType(PlayObject);
         boSpellFire := False;
-        if btAmuletType = 2 then
-          btAmuletType := MAGICEX_AMYOUNSUL
-        else
-          btAmuletType := 4;
-        PlayObject.SendRefMsg(RM_SPELL, btAmuletType, nTargetX, nTargetY, UserMagic.MagicInfo.wMagicId, '');
-        if MagLightening(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then begin
-          boTrain := True;
-          PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-            MakeWord(UserMagic.MagicInfo.btEffectType, btAmuletType),
-            MakeLong(nTargetX, nTargetY),
-            Integer(TargeTBaseObject),
-            '');
-        end
-        else
-          boSpellFail := True;
+        if UserMagic.btLevel < 3 then // 0 -- 2 是普通施毒术，3 是群体施毒术
+        begin
+          if btAmuletType = 2 then
+            btAmuletType := MAGICEX_AMYOUNSUL
+          else
+            btAmuletType := 4;
+          PlayObject.SendRefMsg(RM_SPELL, btAmuletType, nTargetX, nTargetY, SKILL_AMYOUNSUL, '');
+          if MagLightening(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then begin
+            boTrain := True;
+            PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
+                                   MakeWord(UserMagic.MagicInfo.btEffectType, btAmuletType),
+                                   MakeLong(nTargetX, nTargetY),
+                                   Integer(TargeTBaseObject),
+                                   '');
+          end
+          else
+            boSpellFail := True;
+        end else begin
+          if btAmuletType = 2 then
+            btAmuletType := MAGICEX_AMYOUNSULGROUP
+          else
+            btAmuletType := 47;
+          PlayObject.SendRefMsg(RM_SPELL, btAmuletType, nTargetX, nTargetY, SKILL_GROUPAMYOUNSUL, '');
+          if MagGroupAmyounsul(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then begin
+            boTrain := True;
+            PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
+                                   MakeWord(UserMagic.MagicInfo.btEffectType, btAmuletType),
+                                   MakeLong(nTargetX, nTargetY),
+                                   Integer(TargeTBaseObject),
+                                   '');
+          end;
+        end;
       end;
     SKILL_FIREWIND {8}: begin //抗拒火环  00493754
         if MagPushArround(PlayObject, UserMagic.wMagIdx, UserMagic.btLevel) > 0 then
@@ -1090,19 +1129,32 @@ begin
       end;
     SKILL_LIGHTENING {11}: begin //雷电术 0049395C
       if MagMakeLighting(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then
-        TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_STONE
-            {中毒类型 - 麻痹}, 20 div g_Config.nMabMabeHitMabeTimeRate
-              {20}+ Random(UserMagic.btLevel), Integer(PlayObject), UserMagic.btLevel, '', 650);
         boTrain := True;
       end;
+    SKILL_SKELLETON {17}: begin //召唤骷髅 004943A2
+      if MagMakeSlave(PlayObject, UserMagic) then begin
+        boTrain := True;
+      end;
+    end;
+    SKILL_HOLYSHIELD {16}: begin //捆魔咒 00494353
+      nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
+                                           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1, False);
+      nDelayTime := GetPower(60, UserMagic) + (Word(GetRPow(PlayObject.m_WAbil.SC)) shr 1);
+
+      if MagMakeHolyCurtain(PlayObject, nDelayTime, nPower, nTargetX, nTargetY) > 0 then
+        boTrain := True;
+    end;
+    SKILL_52: begin //诅咒术
+      nPower := PlayObject.GetAttackPower(60 + LoWord(PlayObject.m_WAbil.SC) * 10,
+                                           SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) * 10 + 1);
+      if PlayObject.MagMakeAbilityArea(nTargetX, nTargetY, 3, nPower, UserMagic.wMagIdx, 0, False) > 0 then
+        boTrain := True;
+    end;
     SKILL_FIRECHARM {13}, //灵魂火符
     SKILL_HANGMAJINBUB {14}, //幽灵盾
     SKILL_DEJIWONHO {15}, //神圣战甲术
-    SKILL_HOLYSHIELD {16}, //困魔咒
-    SKILL_SKELLETON {17}, //召唤骷髅
     SKILL_CLOAK {18}, //隐身术
     SKILL_BIGCLOAK {19}, //集体隐身术
-    SKILL_52 ,           //诅咒术
     SKILL_67: begin //004940BC  //裂神符
         boSpellFail := True;
         if CheckAmulet(PlayObject, 1, 1) then begin
@@ -1116,7 +1168,7 @@ begin
                   TargeTBaseObject, False) then
                   boTrain := True;
               end;
-            SKILL_67 {13}: begin //灵魂火符 0049415F
+            SKILL_67 {67}: begin //裂神符 0049415F
                 if MagMakeFireCharm(PlayObject,
                   UserMagic,
                   nTargetX,
@@ -1124,43 +1176,35 @@ begin
                   TargeTBaseObject, True) then
                   boTrain := True;
               end;
+            SKILL_DEJIWONHO {15}, //神圣战甲术 004942E5
             SKILL_HANGMAJINBUB {14}: begin //幽灵盾 00494277
-                nPower := PlayObject.GetAttackPower(GetPower13(60) + LoWord(PlayObject.m_WAbil.SC) * 10,
-                  SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
-                if PlayObject.MagMakeDefenceArea(nTargetX, nTargetY, 3, nPower, UserMagic.wMagIdx, 1, True) > 0 then
-                  boTrain := True;
-              end;
-            SKILL_DEJIWONHO {15}: begin //神圣战甲术 004942E5
-                nPower := PlayObject.GetAttackPower(GetPower13(60) + LoWord(PlayObject.m_WAbil.SC) * 10,
-                  SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
-                if PlayObject.MagMakeDefenceArea(nTargetX, nTargetY, 3, nPower, UserMagic.wMagIdx, 0, True) > 0 then
-                  boTrain := True;
-              end;
-            SKILL_HOLYSHIELD {16}: begin //捆魔咒 00494353
-                if MagMakeHolyCurtain(PlayObject, GetPower13(40) + GetRPow(PlayObject.m_WAbil.SC) * 3, nTargetX, nTargetY) > 0 then
-                  boTrain := True;
-              end;
-            SKILL_SKELLETON {17}: begin //召唤骷髅 004943A2
-                if MagMakeSlave(PlayObject, UserMagic) then begin
-                  boTrain := True;
+                // 需要生成 SKILL_HANGMAJINBUB 的魔法特效
+                PlayObject.SendRefMsg(RM_SPELL, 11, nTargetX, nTargetY, SKILL_HANGMAJINBUB, '');
+                if (TargeTBaseObject <> nil) and TargeTBaseObject.m_boDeath then
+                  TargeTBaseObject := nil;
+                if TargeTBaseObject <> nil then begin
+                  if TargeTBaseObject.m_btRaceServer = RC_PLAYOBJECT then begin
+                    PlayObject.MagicQuest(TargeTBaseObject, SKILL_HANGMAJINBUB, mfs_Tag);
+                  end else begin
+                    PlayObject.MagicQuest(TargeTBaseObject, SKILL_HANGMAJINBUB, mfs_Mon);
+                  end;
                 end;
+
+                // 时间长度：秒，幽灵盾和神圣战甲术合二为一
+                nPower := PlayObject.GetAttackPower(60 + LoWord(PlayObject.m_WAbil.SC) * 10,
+                  SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) * 10 + 1);
+                if (PlayObject.MagMakeDefenceArea(nTargetX, nTargetY, 3, nPower, SKILL_HANGMAJINBUB, 1, True) > 0)
+                  and (PlayObject.MagMakeDefenceArea(nTargetX, nTargetY, 3, nPower, SKILL_DEJIWONHO, 0, True) > 0) then
+                    boTrain := True;
               end;
-            SKILL_CLOAK {18}: begin //隐身术
-                if MagMakePrivateTransparent(PlayObject, GetPower13(30) +
-                  GetRPow(PlayObject.m_WAbil.SC) * 3) then
+            SKILL_CLOAK {18},
+            SKILL_BIGCLOAK {19}: begin //隐身术 + 集体隐身术
+                if (UserMagic.btLevel < 3) and
+                  MagMakePrivateTransparent(PlayObject, 60 + GetRPow(PlayObject.m_WAbil.SC) * 10) then
                   boTrain := True;
-              end;
-            SKILL_BIGCLOAK {19}: begin //集体隐身术
-                if MagMakeGroupTransparent(PlayObject, nTargetX, nTargetY,
-                  GetPower13(30) + GetRPow(PlayObject.m_WAbil.SC) * 3, UserMagic.wMagIdx) then
-                  boTrain := True;
-              end;
-            SKILL_52: begin //诅咒术
-                nPower := PlayObject.GetAttackPower(GetPower13(20) +
-                  LoWord(PlayObject.m_WAbil.SC) * 2,
-                  SmallInt(HiWord(PlayObject.m_WAbil.SC) -
-                  LoWord(PlayObject.m_WAbil.SC)) + 1);
-                if PlayObject.MagMakeAbilityArea(nTargetX, nTargetY, 3, nPower, UserMagic.wMagIdx, 0, False) > 0 then
+                if  (UserMagic.btLevel = 3) and
+                  MagMakeGroupTransparent(PlayObject, nTargetX, nTargetY,
+                                           60 + GetRPow(PlayObject.m_WAbil.SC) * 10, SKILL_BIGCLOAK) then
                   boTrain := True;
               end;
             {SKILL_57: begin //复活术
@@ -1175,8 +1219,7 @@ begin
       end;
     SKILL_TAMMING {20}: begin //诱惑之光 00493A51
         if (TargeTBaseObject <> nil) and PlayObject.IsProperTarget(TargeTBaseObject) then begin
-          if MagTamming(PlayObject, TargeTBaseObject, nTargetX, nTargetY,
-            UserMagic.btLevel) then
+          if MagTamming(PlayObject, TargeTBaseObject, nTargetX, nTargetY, UserMagic.btLevel) then
             boTrain := True;
         end;
       end;
@@ -1202,12 +1245,20 @@ begin
           boTrain := True;
       end;
     SKILL_FIREBOOM {23}: begin //爆裂火焰
+      // 裂地冰，攻击范围 1
+      // todo 参数可配置
+      if UserMagic.MagicInfo.wMagicId = SKILL_FIREBOOM + 1000 then
+      begin
         if MagBigExplosion(PlayObject,
-          PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
-          SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
-          nTargetX,
-          nTargetY,
-          g_Config.nFireBoomRage {1}, UserMagic.wMagIdx) then
+                            PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
+                                SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
+                            nTargetX, nTargetY, 1, UserMagic.wMagIdx) then
+          boTrain := True;
+      end
+      else if MagBigExplosion(PlayObject,
+                               PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
+                                  SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1),
+                               nTargetX, nTargetY, g_Config.nFireBoomRage {3}, UserMagic.wMagIdx) then
           boTrain := True;
       end;
     SKILL_LIGHTFLOWER {24}: begin //地狱雷光
@@ -1249,7 +1300,7 @@ begin
       end;
     SKILL_SHIELD {31}: begin //魔法盾
         boSpellFail := True;
-        if PlayObject.m_wStatusTimeArr[STATE_BUBBLEDEFENCEUPEX] = 0 then begin
+        if PlayObject.m_wStatusTimeArr[STATE_BUBBLEDEFENCEUP] = 0 then begin
           boSpellFail := False;
           if PlayObject.MagBubbleDefenceUp(UserMagic.btLevel, GetPower(GetRPow(PlayObject.m_WAbil.MC) + 15, UserMagic), STATE_BUBBLEDEFENCEUP) then
             boTrain := True;
@@ -1313,24 +1364,6 @@ begin
           TargeTBaseObject, boSpellFire) then
           boTrain := True;
       end;
-    SKILL_GROUPAMYOUNSUL {38 群体施毒术}: begin
-        btAmuletType := GetAmuletType(PlayObject);
-        boSpellFire := False;
-        if btAmuletType = 2 then
-          btAmuletType := MAGICEX_AMYOUNSULGROUP
-        else
-          btAmuletType := 47;
-        PlayObject.SendRefMsg(RM_SPELL, btAmuletType, nTargetX, nTargetY, UserMagic.MagicInfo.wMagicId, '');
-        if MagGroupAmyounsul(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then begin
-          boTrain := True;
-
-        end;
-        PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-            MakeWord(UserMagic.MagicInfo.btEffectType, btAmuletType),
-            MakeLong(nTargetX, nTargetY),
-            Integer(TargeTBaseObject),
-            '');
-      end;
     SKILL_GROUPDEDING {39 地钉}: begin
        // if (GetTickCount - PlayObject.m_dwDedingUseTick) > LongWord(g_Config.nDedingUseTime * 1000) then begin
           //PlayObject.m_dwDedingUseTick := GetTickCount;
@@ -1347,7 +1380,7 @@ begin
           boTrain := True;
       end;
     //法师
-    SKILL_44: begin //结冰掌
+    SKILL_44: begin //结冰掌 寒冰掌
       if CheckMagicRate(UserMagic) then begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.MC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC) + 1) *
@@ -1357,9 +1390,7 @@ begin
         nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.MC),
                                              SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
       end;
-        if MagHbFireBall(PlayObject, UserMagic, nTargetX, nTargetY,
-          nPower,
-          TargeTBaseObject) then
+        if MagHbFireBall(PlayObject, UserMagic, nTargetX, nTargetY, nPower, TargeTBaseObject) then
           boTrain := True;
       end;
     SKILL_45: begin //灭天火
@@ -1423,7 +1454,7 @@ begin
         if MagChangePosition(PlayObject, nTargetX, nTargetY, TargeTBaseObject) then
           boTrain := True;
       end;   }
-    SKILL_57: begin
+    SKILL_57: begin // 流星火雨
       if CheckMagicRate(UserMagic) then begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.MC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC) + 1) *
@@ -1471,7 +1502,7 @@ begin
     SKILL_61: begin //群攻
         boTrain := True;
       end;
-    SKILL_62: begin //加血
+    SKILL_62: begin //加血 医疗阵？
         if PlayObject.m_PEnvir.GetEvent(nTargetX, nTargetY) = nil then begin
           g_EventManager.AddEvent(TFireBurnEvent.Create(PlayObject, nTargetX, nTargetY, ET_INCHP, 10 * 1000, 100));
         end; //00492E3E
@@ -1504,7 +1535,7 @@ begin
             boTrain := True;
           end;
       end;
-    SKILL_66: begin
+    SKILL_66: begin // 冰霜雪雨
       if CheckMagicRate(UserMagic) then begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.MC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC) + 1) *
@@ -1521,7 +1552,7 @@ begin
           1, UserMagic.wMagIdx, True) then
           boTrain := True;
       end;
-    SKILL_70: begin
+    SKILL_70: begin // 十步一杀
       if CheckMagicRate(UserMagic) then begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.DC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.DC) - LoWord(PlayObject.m_WAbil.DC) + 1) *
@@ -1539,7 +1570,7 @@ begin
           boMove) then
           boTrain := True;
       end;
-    SKILL_71: begin
+    SKILL_71: begin // 冰霜群雨
       if CheckMagicRate(UserMagic) then begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.MC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC) + 1) *
@@ -1556,7 +1587,7 @@ begin
           3) then
           boTrain := True;
       end;
-    SKILL_72: begin
+    SKILL_72: begin  // 死亡之眼
       if CheckMagicRate(UserMagic) then begin
         nPower := PlayObject.GetAttackPower(Round(LoWord(PlayObject.m_WAbil.SC) * (1 + GetPower(MPow(UserMagic), UserMagic) / 100)),
                                              Round((HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC) + 1) *
@@ -1811,6 +1842,7 @@ begin
   Result := True;
 end;
 
+    { 隐身术 }
 function TMagicManager.MagMakePrivateTransparent(BaseObject: TBaseObject;
   nHTime: Integer): Boolean; //004930E8
 var
@@ -1919,13 +1951,14 @@ end;
 function TMagicManager.MagTamming(BaseObject, TargeTBaseObject: TBaseObject;
   nTargetX, nTargetY, nMagicLevel: Integer): Boolean;
 var
-  n14: Integer;
+//  n14: Integer;
+  levelGap: Integer;
 begin
   Result := False;
   if (TargeTBaseObject = nil) or (TargeTBaseObject.m_btRaceServer < RC_ANIMAL) then
     exit;
   // 技能等级增加的几率：25% -- 33% -- 50% -- 100%
-  if (TargeTBaseObject.m_btRaceServer <> RC_PLAYOBJECT) and ((Random(4 - nMagicLevel) = 0)) then begin
+  if (TargeTBaseObject.m_btRaceServer <> RC_PLAYOBJECT) and ((Random(4) - nMagicLevel) <= 0) then begin
     TargeTBaseObject.m_TargetCret := nil;
     if TargeTBaseObject.m_Master = BaseObject then begin
       // 优化：对自己的宝宝不要如此残忍
@@ -1935,30 +1968,33 @@ begin
     else begin
       // 50%
       if Random(2) = 0 then begin
-        // 人物等级比怪物等级低 2 级也可以触发
-        if TargeTBaseObject.m_Abil.Level <= BaseObject.m_Abil.Level + 2 then begin
+        // 人物等级比怪物等级低 10 级也可以触发
+        if TargeTBaseObject.m_Abil.Level <= BaseObject.m_Abil.Level + 10 then begin
           // 33%
           if Random(3) = 0 then begin
+            // 人物等级比怪物等级低就是 负数，最多 -10，最高无上限
+            levelGap := TargeTBaseObject.m_Abil.Level - BaseObject.m_Abil.Level;
             // 原来的算法，怪物等级越高，技能的等级越不能影响成功几率：
             // 人 10级，怪 10级，技能 0--3级：33% -- 43% -- 50% -- 55%
             // 人 50级，怪 10级，技能 0--3级：71% -- 73% -- 75% -- 76%
             // 人 50级，怪 50级，技能 0--3级：14% -- 20% -- 25% -- 29%
-            // 优化：加大技能等级的影响因子，在怪物 50*3 级以内效果出奇
-            if Random((BaseObject.m_Abil.Level + 20) + (nMagicLevel * 50)) >
-              (TargeTBaseObject.m_Abil.Level + g_Config.nMagTammingTargetLevel {10}) then begin
+            // 优化：加大技能等级的影响因子
+            if Random(100) > Round((nMagicLevel * (levelGap + g_Config.nMagTammingTargetLevel {10}) + 1)) then begin
               if {not (TargeTBaseObject.bo2C1) and }
                 // 非不死系，都可以诱惑
                 (TargeTBaseObject.m_btLifeAttrib = 0) and
-                (TargeTBaseObject.m_Abil.Level < g_Config.nMagTammingLevel {50}) and
+                    // 去除等级限制
+//                (TargeTBaseObject.m_Abil.Level < g_Config.nMagTammingLevel {50}) and
                 (BaseObject.m_SlaveList.Count < g_Config.nMagTammingCount {(nMagicLevel + 2)}) then begin
                   // 优化：MaxHP >> HP，血量越低几率越高
-                n14 := TargeTBaseObject.m_WAbil.HP div g_Config.nMagTammingHPRate {100};
-                if n14 <= 2 then
-                  n14 := 2;
+//                n14 := TargeTBaseObject.m_WAbil.HP div g_Config.nMagTammingHPRate {100};
+//                if n14 <= 2 then
+//                  n14 := 2;
 //                else
                   // 优化：快节奏生活，不需要这么变态的几率
 //                  Inc(n14, n14);// n * 2
-                if (TargeTBaseObject.m_Master <> BaseObject) and (Random(n14) = 0) then begin
+                // 去掉后续的几率控制
+                if (TargeTBaseObject.m_Master <> BaseObject) {and (Random(n14) = 0)} then begin
                   TargeTBaseObject.BreakCrazyMode();
                   if TargeTBaseObject.m_Master <> nil then begin
                     TargeTBaseObject.m_WAbil.HP := TargeTBaseObject.m_WAbil.HP div 10;
@@ -1984,30 +2020,30 @@ begin
                   TargeTBaseObject.RefShowName();
                   BaseObject.m_SlaveList.Add(TargeTBaseObject);
                 end
-                else begin //004925F2
-                  // 7% 的几率秒杀可召唤的怪物
-                  if Random(14) = 0 then
-                    TargeTBaseObject.m_WAbil.HP := 0;
-                end;
               end
-              else begin //00492615
-                // 满级技能时，对非不死系有 10% 的几率秒杀
-                if (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (nMagicLevel = 3) and (Random(10) = 0) then
+              else begin //004925F2
+                // 7% 的几率秒杀，在宝宝列表已满的情况下
+                if Random(14) = 0 then
                   TargeTBaseObject.m_WAbil.HP := 0;
               end;
             end
-            else begin //00492641
-              // 可召唤的怪物，5% 几率红名
-              if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (Random(20) = 0) then
-                TargeTBaseObject.OpenCrazyMode(Random(20) + 10);
-            end;
+            else begin //00492615
+              // 对非不死系有 5% -- 20% 的几率秒杀
+              if (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (Random(20) <= nMagicLevel) then
+                TargeTBaseObject.m_WAbil.HP := 0;
+            end
           end
-          else begin //00492674
-            // 可召唤的怪物，等级够的情况下，红名几率 66%，时长 10s -- 30s
-            if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) then
-              TargeTBaseObject.OpenCrazyMode(Random(20) + 10); //变红
+          else begin //00492641
+            // 可召唤的怪物，30% * 5% 几率红名
+            if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) and (Random(20) = 0) then
+              TargeTBaseObject.OpenCrazyMode(Random(20) + 10);
           end;
-        end; //004926B0
+        end
+        else begin //00492674
+          // 等级不够的情况下，红名几率 66%，时长 10s -- 30s
+          if not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) then
+            TargeTBaseObject.OpenCrazyMode(Random(20) + 10); //变红
+        end;
       end
       else begin //00492699 50% 几率进入此分支
         // 10% 的几率触发红名，诱导厉害的可召唤怪物攻击其他怪物，渔翁得利
@@ -2032,7 +2068,7 @@ end;
 function TMagicManager.MagTurnUndead(BaseObject, TargeTBaseObject: TBaseObject;
   nTargetX, nTargetY, nLevel: Integer): Boolean; //004926D4
 var
-  n14: Integer;
+  levelGap: Integer;
 begin
   Result := False;
   if TargeTBaseObject.m_boSuperMan or not (TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD) then
@@ -2044,20 +2080,23 @@ begin
     TAnimalObject(TargeTBaseObject).m_dwRunAwayTime := 10 * 1000;
   end;
   BaseObject.SetTargetCreat(TargeTBaseObject);
-  if (Random(Round(2*BaseObject.m_Abil.Level)) + (BaseObject.m_Abil.Level - 1)) > TargeTBaseObject.m_Abil.Level then begin
+  // 触发几率 1% -- 31% -- 61% -- 91%
+  if (Random(100) <= Round(nLevel * 30)) then begin
 //    if TargeTBaseObject.m_Abil.Level < g_Config.nMagTurnUndeadLevel then begin
-      n14 := Max(0, BaseObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level);
-      // 0: 10 + n14 %
-      // 3: 19 + n14 %
-      if Random(100) < ((nLevel shl 2) - nLevel + 10 + n14) then begin
+      levelGap := Max(0, BaseObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level);
+      // 掉血几率：(10 + levelGap) * level %
+      // 0级需要等级差 90 才 100% 几率
+      // 1级需要 40，2级需要 23，3级需要 15
+      if Random(100) < ((nLevel+1) *(10 + levelGap)) then begin
         TargeTBaseObject.SetLastHiter(BaseObject);
         // 10% 当前生命值的掉血
-        TargeTBaseObject.m_WAbil.HP := Max(0, Round(TargeTBaseObject.m_WAbil.HP - TargeTBaseObject.m_WAbil.HP * 0.1));
-        if (Random(20) = 1) then
+        TargeTBaseObject.m_WAbil.HP := Max(0, Round(TargeTBaseObject.m_WAbil.HP - TargeTBaseObject.m_WAbil.HP div 10));
+        // 秒杀几率： 5%
+        if (Random(20) <= 1) then
           TargeTBaseObject.m_WAbil.HP := 0;
-        Result := True;
-      end
+      end;
 //    end;
+        Result := True;
   end;
 end;
 
@@ -2094,12 +2133,13 @@ var
   PlayObject: TPlayObject;
 begin
   Result := False;
+  // 0 -- 4/11，3 -- 10 / 11
   if Random(11) < nLevel * 2 + 4 then begin
     BaseObject.SendRefMsg(RM_SPACEMOVE_FIRE2, 0, 0, 0, 0, '');
     if BaseObject is TPlayObject then begin
       Envir := BaseObject.m_PEnvir;
-      // 瞬息移动原来的参数是1 改为0 看看是不是随机传送
-      BaseObject.MapRandomMove(BaseObject.m_sHomeMap, 0);
+      // BaseObject.m_sHomeMap 改成当前环境地图，就是随机传送了
+      BaseObject.MapRandomMove(Envir, 0);
       if (Envir <> BaseObject.m_PEnvir) and (BaseObject.m_btRaceServer = RC_PLAYOBJECT) then begin
         PlayObject := TPlayObject(BaseObject);
         PlayObject.m_boTimeRecall := False;
@@ -2138,7 +2178,7 @@ begin
       if nPower > 0 then begin
         BaseObject.StruckDamage(nPower, PlayObject);
         PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-          MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 1,
+          MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 2,
           Integer(BaseObject), '', 200);
       end;
       if BaseObject.m_btRaceServer >= RC_ANIMAL then
@@ -2186,7 +2226,7 @@ begin
                   {中毒类型 - 绿毒}, nPower, Integer(PlayObject),
                   ROUND(UserMagic.btLevel / 3 * (nPower /
                   g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 1000);
-                BaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+                BaseObject.MagicQuest(PlayObject, SKILL_GROUPAMYOUNSUL, mfs_TagEx);
               end;
             2: begin
                 nPower := GetPower13(30, UserMagic) + GetRPow(PlayObject.m_WAbil.SC) * 2;
@@ -2194,7 +2234,7 @@ begin
                   POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower,
                   Integer(PlayObject), ROUND(UserMagic.btLevel / 3 * (nPower /
                   g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 1000);
-                BaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+                BaseObject.MagicQuest(PlayObject, SKILL_GROUPAMYOUNSUL, mfs_TagEx);
               end;
           end;
           if (BaseObject.m_btRaceServer = RC_PLAYOBJECT) or (BaseObject.m_btRaceServer >= RC_ANIMAL) then
@@ -2352,7 +2392,7 @@ begin //施毒术
                   POISON_DECHEALTH {中毒类型 - 绿毒}, nPower, Integer(PlayObject),
                   ROUND(UserMagic.btLevel / 3 * (nPower /
                   g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 800);
-                TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+                TargeTBaseObject.MagicQuest(PlayObject, SKILL_AMYOUNSUL, mfs_TagEx);
               end;
             2: begin
                 nPower := GetPower13(30) + GetRPow(PlayObject.m_WAbil.SC) * 2;
@@ -2360,7 +2400,7 @@ begin //施毒术
                   POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower,
                   Integer(PlayObject), ROUND(UserMagic.btLevel / 3 * (nPower /
                   g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 800);
-                TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
+                TargeTBaseObject.MagicQuest(PlayObject, SKILL_AMYOUNSUL, mfs_TagEx);
               end;
           end;
           if (TargeTBaseObject.m_btRaceServer = RC_PLAYOBJECT) or
@@ -2442,15 +2482,28 @@ begin
   if (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
     Result := True;
 
-  if (PlayObject.m_Abil.Level > TargeTBaseObject.m_Abil.Level) and (not TargeTBaseObject.m_boStickMode) then begin
+  if {(PlayObject.m_Abil.Level > TargeTBaseObject.m_Abil.Level) and} (not TargeTBaseObject.m_boStickMode) then begin
     levelgap := PlayObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level;
-    if (Random(20) < 6 + UserMagic.btLevel * 3 + levelgap) then begin
-      push := Random(UserMagic.btLevel);
+    // 2021-01-05 优化为：每级技能 +5% 几率，每 1 个等级差 ±1% 几率
+    // 满级技能为 15% 几率，高出 85 级时，达到 100% 几率，低于 15 级时，减少为 0% 几率
+    // todo 几率值可配置
+    if (Random(100) < (UserMagic.btLevel * 5 + levelgap)) then begin
+//      push := Random(UserMagic.btLevel) + 1;
       //if push > 0 then begin
-      nDir := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject.m_nCurrX, TargeTBaseObject.m_nCurrY);
-      PlayObject.SendDelayMsg(PlayObject, RM_DELAYPUSHED, nDir,
-        MakeLong(nTargetX, nTargetY), push, Integer(TargeTBaseObject), '',
-        200 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
+//      nDir := GetNextDirection(PlayObject.m_nCurrX, PlayObject.m_nCurrY, TargeTBaseObject.m_nCurrX, TargeTBaseObject.m_nCurrY);
+//      PlayObject.SendDelayMsg(PlayObject, RM_DELAYPUSHED, nDir,
+//        MakeLong(nTargetX, nTargetY), push, Integer(TargeTBaseObject), '',
+//        200 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
+
+      // 2021-01-05 优化为：默认 12% 几率触发，每级技能 +6% 几率，每 1 个等级差 ±3% 几率
+      // 满级技能为 30% 几率，高出 24 级时，达到 100% 几率，低于 10 级时，减少为 0% 几率
+      // todo 几率值可配置
+//      if (Random(100) < (12 + UserMagic.btLevel * 6 + levelgap * 3)) then begin
+        TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_COBWEB
+            {中毒类型 - 蛛网}, Round(1+Random(UserMagic.btLevel+1)), Integer(PlayObject), 0, '',
+            200 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
+//      end;
+
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
     end;
   end;
@@ -3033,32 +3086,32 @@ begin
   BaseObjectList.Free;
 end;
 
-function TMagicManager.MagMakeHolyCurtain(BaseObject: TBaseObject; nPower:
+function TMagicManager.MagMakeHolyCurtain(PlayObject: TPlayObject; delay, nPower:
   Integer; nX, nY: Integer): Integer; //004928C0
 var
   i: Integer;
   BaseObjectList: TList;
   TargeTBaseObject: TBaseObject;
   MagicEvent: pTMagicEvent;
-  HolyCurtainEvent: THolyCurtainEvent;
+  HolyCurtainEvent: THoly1CurtainEvent;
 begin
   Result := 0;
-  if BaseObject.m_PEnvir.CanWalk(nX, nY, True) then begin
+  if PlayObject.m_PEnvir.CanWalk(nX, nY, True) then begin
     BaseObjectList := TList.Create;
     MagicEvent := nil;
-    BaseObject.GetMapBaseObjects(BaseObject.m_PEnvir, nX, nY, 1, BaseObjectList);
+    PlayObject.GetMapBaseObjects(PlayObject.m_PEnvir, nX, nY, 2, BaseObjectList);
     for i := 0 to BaseObjectList.Count - 1 do begin
       TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
       if (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) and
-        ((Random(4) + (BaseObject.m_Abil.Level - 1)) > TargeTBaseObject.m_Abil.Level) and
+        ((Random(20) + (PlayObject.m_Abil.Level + 1)) > TargeTBaseObject.m_Abil.Level) and
         (TargeTBaseObject.m_Master = nil) then begin
-        TargeTBaseObject.OpenHolySeizeMode(nPower * 1000);
+        TargeTBaseObject.OpenHolySeizeMode(delay * 1000);
         if MagicEvent = nil then begin
           New(MagicEvent);
           SafeFillChar(MagicEvent^, SizeOf(TMagicEvent), #0);
           MagicEvent.BaseObjectList := TList.Create;
           MagicEvent.dwStartTick := GetTickCount();
-          MagicEvent.dwTime := nPower * 1000;
+          MagicEvent.dwTime := delay * 1000;
         end;
         MagicEvent.BaseObjectList.Add(TargeTBaseObject);
         Inc(Result);
@@ -3069,28 +3122,28 @@ begin
     end;
     BaseObjectList.Free;
     if (Result > 0) and (MagicEvent <> nil) then begin
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX - 1, nY - 2, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX - 1, nY - 2, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[0] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX + 1, nY - 2, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX + 1, nY - 2, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[1] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX - 2, nY - 1, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX - 2, nY - 1, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[2] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX + 2, nY - 1, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX + 2, nY - 1, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[3] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX - 2, nY + 1, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX - 2, nY + 1, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[4] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX + 2, nY + 1, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX + 2, nY + 1, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[5] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX - 1, nY + 2, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX - 1, nY + 2, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[6] := HolyCurtainEvent;
-      HolyCurtainEvent := THolyCurtainEvent.Create(BaseObject.m_PEnvir, nX + 1, nY + 2, ET_HOLYCURTAIN, nPower * 1000);
+      HolyCurtainEvent := THoly1CurtainEvent.Create(PlayObject, nX + 1, nY + 2, ET_HOLYCURTAIN, delay * 1000, nPower);
       g_EventManager.AddEvent(HolyCurtainEvent);
       MagicEvent.Events[7] := HolyCurtainEvent;
       UserEngine.m_MagicEventList.Add(MagicEvent);
@@ -3113,7 +3166,8 @@ var
 begin
   Result := False;
   BaseObjectList := TList.Create;
-  BaseObject.GetMapBaseObjects(BaseObject.m_PEnvir, nX, nY, 1, BaseObjectList);
+  // 隐身范围大一点嘛
+  BaseObject.GetMapBaseObjects(BaseObject.m_PEnvir, nX, nY, 2, BaseObjectList);
   for i := 0 to BaseObjectList.Count - 1 do begin
     TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
     if BaseObject.IsProperFriend(TargeTBaseObject) then begin
