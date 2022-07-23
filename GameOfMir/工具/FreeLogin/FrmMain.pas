@@ -413,7 +413,7 @@ begin
   //Application.OnMessage := MyMessage;
   //Application.OnException := MyException;
   g_TitleName := 'À¼´ï¶û´«Ææ';
-  g_ListName := 'http://small.randall.top:8888/ServerInfo.txt';
+  g_ListName := 'http://mir2.mrzhqiang.cn:8888/randall.txt';
   g_MapName := '1234567890123456';
   //sStr := 'DBC';
 
