@@ -43,7 +43,7 @@ type
     m_ClientRect: TRect;
     m_OldClientRect: TRect;
     m_nBlockLeft: Integer;
-    m_nBlockTop: Integer; //Å¸ÀÏ ÁÂÇ¥·Î ¿ŞÂÊ, ²À´ë±â ÁÂÇ¥
+    m_nBlockTop: Integer; //´É×©×ø±ê£¬×ó±ß¡¢¶¥²¿×ø±ê
     m_nOldLeft: Integer;
     m_nOldTop: Integer;
     m_sOldMap: string;
@@ -216,7 +216,7 @@ begin
   end;
 end;
 
-//ÁÖÄ³¸¯ÀÌ ÀÌµ¿½Ã ºó¹øÀÌ È£Ãâ..
+//ÒÆ¶¯Ê±Æµ·±ºô½Ğ¡­
 
 procedure TMap.UpdateMapPos(mx, my: Integer);//mx,myÏóËØ×ø±ê
 var

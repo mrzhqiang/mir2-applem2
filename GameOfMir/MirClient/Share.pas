@@ -3,7 +3,7 @@ unit Share;
 interface
 
 var
-  CLIENTUPDATETIME: string = '2020.03.08';
+  CLIENTUPDATETIME: string = '2022.05.04';
 
 
 const
@@ -28,12 +28,15 @@ const
 
   BGSURFACECOLOR = 8;
 
-  DEFSCREENWIDTH = 800;
-  DEFSCREENHEIGHT = 600;
-  DEFWIDESCREENWIDTH = 1024;
-  DEFWIDESCREENHEIGHT = 600;
-  DEFMAXSCREENWIDTH = 1024;
-  DEFMAXSCREENHEIGHT = 768;
+  // mode == other
+  DEFSCREENWIDTH = 1024;
+  DEFSCREENHEIGHT = 576;
+  // mode == 1
+  DEFWIDESCREENWIDTH = 1280;
+  DEFWIDESCREENHEIGHT = 720;
+  // mode == 2
+  DEFMAXSCREENWIDTH = 1600;
+  DEFMAXSCREENHEIGHT = 900;
 
   OPERATEHINTWIDTH = 425;
   OPERATEHINTHEIGHT = 32;
@@ -89,9 +92,17 @@ const
   crSrepair = 10;
 
 var
-  g_FScreenMode: Byte = 2;
+  g_BitCount : Integer = 16;
+  // 屏幕分辨率模式：1 1024 x 768 2 1600 x 900 other 800 x 600
+  g_FScreenMode: Byte = 1;
   g_FScreenWidth: Integer = DEFSCREENWIDTH;
   g_FScreenHeight: Integer = DEFSCREENHEIGHT;
+  g_FScreenWidthOffset: Integer = 0;
+  g_FScreenHeightOffset: Integer = 0;
+  g_btMP3Volume: Byte = 70;
+  g_btSoundVolume: Byte = 70;
+  g_boBGSound: Boolean = True;
+  g_boSound: Boolean = True;
 
 
 Type

@@ -4193,7 +4193,7 @@ begin
   end;
 end;
 
-//根据当前动作和状态计算下一个动作对应的帧
+// 根据当前动作和状态计算下一个动作对应的帧
 function TActor.Move(step: Integer; out boChange: Boolean): Boolean;
 var
   prv, curstep, maxstep: Integer;
@@ -4213,7 +4213,9 @@ begin
   if (m_nCurrentAction = SM_BACKSTEP) or (m_nCurrentAction = SM_MAGICFIR) then
     //or (CurrentAction = SM_RUSH) or (CurrentAction = SM_RUSHKUNG) then
     fastmove := TRUE;
-  if (m_nCurrentAction = SM_RUSH) or (m_nCurrentAction = SM_RUSHCBO) or (m_nCurrentAction = SM_MAGICMOVE) or (m_nCurrentAction = SM_RUSHKUNG) or (m_nCurrentAction = SM_MAGICFIR)
+  if (m_nCurrentAction = SM_RUSH) or (m_nCurrentAction = SM_RUSHCBO) 
+  or (m_nCurrentAction = SM_MAGICMOVE) or (m_nCurrentAction = SM_RUSHKUNG) 
+  or (m_nCurrentAction = SM_MAGICFIR)
     then
     normmove := TRUE;
   if (Self = g_MySelf) and (not fastmove) and (not normmove) then begin

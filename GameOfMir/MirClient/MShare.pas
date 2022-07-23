@@ -456,7 +456,7 @@ var
   HINTCOLOR2: string = '$848385';
   //Ì××° 145  ÊÛ¼Û 67/68
 
-  g_boFullScreen: Boolean = False;
+//  g_boFullScreen: Boolean = False;
 
   //g_ImgMixSurface: TDirectDrawSurface = nil;
   //g_MiniMapSurface: TDirectDrawSurface = nil;

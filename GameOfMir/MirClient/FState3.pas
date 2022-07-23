@@ -96,7 +96,7 @@ type
     DGSClose2: TDButton;
     DGSDefault: TDButton;
     DDGSSetup: TDWindow;
-    DDGSWindow: TDCheckBox;
+//    DDGSWindow: TDCheckBox;
     DDGSVPN: TDCheckBox;
     DDGSZIP: TDCheckBox;
     DDGSBits: TDComboBox;
@@ -2296,7 +2296,7 @@ begin
   if boVisible then begin
     //基本设置
     DDGSBits.ItemIndex := Integer(ClMain.HGE.System_GetState(HGE_SCREENBPP) = 32);
-    DDGSWindow.Checked := not g_boFullScreen;
+//    DDGSWindow.Checked := not g_boFullScreen;
     DDGSMp3Close.Checked := not g_boBGSound;
     DDGSMusicClose.Checked := not g_boSound;
     //DDGSMp3.Left := 94 + Round(g_btMP3Volume * 1.4);
@@ -2810,12 +2810,12 @@ var
   ini: TIniFile;
 begin
   //基本设置
-  if (DDGSWindow.Checked <> (not g_boFullScreen)) then begin
+//  if (DDGSWindow.Checked <> (not g_boFullScreen)) then begin
     if DDGSBits.ItemIndex = 1 then ClMain.HGE.System_SetState(HGE_SCREENBPP, 32)
     else ClMain.HGE.System_SetState(HGE_SCREENBPP, 16);
-    FrmMain.FullScreen(not DDGSWindow.Checked);
-  end;
-  DDGSWindow.Checked := not g_boFullScreen;
+//    FrmMain.FullScreen(not DDGSWindow.Checked);
+//  end;
+//  DDGSWindow.Checked := not g_boFullScreen;
   g_btMP3Volume := Round((DDGSMp3.Left - 94) / 1.4);
   g_btSoundVolume := Round((DDGSMusic.Left - 94) / 1.4);
   g_boBGSound := not DDGSMp3Close.Checked;
@@ -2842,7 +2842,7 @@ begin
     begin
       ini.WriteBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, ClMain.HGE.System_GetState(HGE_SCREENBPP) = 32);
       ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, DDGSXY.ItemIndex);
-      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, DDGSWindow.Checked);
+//      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, DDGSWindow.Checked);
       ini.WriteBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, g_boBGSound);
       ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
       ini.WriteBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, g_boSound);
@@ -3094,7 +3094,7 @@ begin
   if DDGSSetup.Visible then begin
     DDGSBits.ItemIndex := 0;
     DDGSXY.ItemIndex := 0;
-    DDGSWindow.Checked := True;
+//    DDGSWindow.Checked := True;
     DDGSMp3Close.Checked := False;
     DDGSMusicClose.Checked := False;
     SetButtonHight(DDGSMp3, 234);
@@ -6298,9 +6298,9 @@ begin
 {$IFEND}
 
 
-  DDGSWindow.SetImgIndex(g_WMain99Images, 151);
-  DDGSWindow.Left := 268;
-  DDGSWindow.Top := 38;
+//  DDGSWindow.SetImgIndex(g_WMain99Images, 151);
+//  DDGSWindow.Left := 268;
+//  DDGSWindow.Top := 38;
   DDGSVPN.SetImgIndex(g_WMain99Images, 151);
   DDGSVPN.Left := 268;
   DDGSVPN.Top := 58;

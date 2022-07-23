@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Classes, Bass, HGESounds, 
-  Grobal2, HUtil32, WMFile, WIL;
+  Grobal2, HUtil32, WMFile, WIL, Share;
 
 type
   TBGMState = (bgmPlay, bgmStop, bgmPause);

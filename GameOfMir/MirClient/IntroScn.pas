@@ -8,7 +8,9 @@ uses
   HUtil32;
 
 const
-
+  gameTipsTitle = '健康游戏公告';
+  gameTipsContent1 = '抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，';
+  gameTipsContent2 = '沉迷游戏伤身。合理安排时间，享受健康生活。严厉打击赌博，营造和谐环境。';
 {$IF Var_Interface = Var_Mir2}
    SELECTEDFRAME = 16;//selected frame 选人时点了左边或右边的角色此时会有人物动画，有16帧
    //打开ChrSel.wil,,可以看到男54是40-55,,
@@ -694,7 +696,7 @@ procedure TLoginScene.OpenScene;
 //  i: Integer;
 //  d: TDirectDrawSurface;
 begin
-  HGE.Gfx_Restore(DEFSCREENWIDTH, DEFSCREENHEIGHT, 16);
+  HGE.Gfx_Restore(g_FScreenWidth, g_FScreenHeight, 16);
   m_nCurFrame := 0;
 {$IF Var_Interface = Var_Mir2}
   m_nMaxFrame := 10;
@@ -1082,13 +1084,13 @@ begin
   d := g_WMain99Images.Images[LOGINBAGIMGINDEX];
 {$IFEND}
   if (d <> nil) and (g_boCanDraw) then begin
-    MSurface.Draw(0, 0, d.ClientRect, d, FALSE);
+    MSurface.Draw((g_FScreenWidth - d.Width) div 2, (g_FScreenHeight - d.Height) div 2, d.ClientRect, d, FALSE);
     with g_DXCanvas do begin
-      TextOut(DEFSCREENWIDTH - TextWidth(CLIENTUPDATETIME) - 1, DEFSCREENHEIGHT - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
+      TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 1, g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
 {$IF Var_Interface = Var_Mir2}
-      TextOut(359, 530, $88ECF0, '健康游戏公告');
-      TextOut(191, 552, $88ECF0, '抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，');
-      TextOut(191, 574, $88ECF0, '沉迷游戏伤身。合理安排时间，享受健康生活。严厉打击赌博，营造和谐环境。');
+      TextOut((g_FScreenWidth - TextWidth(gameTipsTitle)) div 2, g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
+      TextOut((g_FScreenWidth - TextWidth(gameTipsContent1)) div 2, g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
+      TextOut((g_FScreenWidth - TextWidth(gameTipsContent2)) div 2, g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
 {$IFEND}
     end;
   end;
@@ -1105,7 +1107,7 @@ begin
 {$IF Var_Interface = Var_Mir2}
     d := g_WOChrSelImages.Images[23 + m_nCurFrame];
     if (d <> nil) and (g_boCanDraw) then
-      MSurface.Draw({(g_FScreenWidth - DEFSCREENWIDTH) div 2 + }152, {(g_FScreenHeight - DEFSCREENHEIGHT) div 2 + }96, d.ClientRect, d, True);
+      MSurface.Draw(g_FScreenWidthOffset div 2 + 152, g_FScreenHeightOffset div 2 + 96, d.ClientRect, d, True);
 {$ELSE}
     d := g_WMain99Images.Images[9];
     if (d <> nil) and (g_boCanDraw) then
@@ -1380,7 +1382,7 @@ end;
 
 procedure TSelectChrScene.OpenScene;
 begin
-  HGE.Gfx_Restore(DEFSCREENWIDTH, DEFSCREENHEIGHT, 16);
+  HGE.Gfx_Restore(g_FScreenWidth, g_FScreenHeight, 16);
   FrmDlg.DSelectChr.Visible := True;
   SoundTimer.Enabled := True;
   SoundTimer.Interval := 100;
@@ -1702,11 +1704,11 @@ begin
 {$IF Var_Interface = Var_Mir2}
   NewIndex := index;
   if index = 0 then begin
-    FrmDlg.DCreateChr.Left := 415;
-    FrmDlg.DCreateChr.Top := 15;
+    FrmDlg.DCreateChr.Left := 415 + g_FScreenWidthOffset div 2;
+    FrmDlg.DCreateChr.Top := 15 + g_FScreenHeightOffset div 2;
   end else begin
-    FrmDlg.DCreateChr.Left := 75;
-    FrmDlg.DCreateChr.Top := 15;
+    FrmDlg.DCreateChr.Left := 75 + g_FScreenWidthOffset div 2;
+    FrmDlg.DCreateChr.Top := 15 + g_FScreenHeightOffset div 2;
   end;
   ChrArr[NewIndex].Valid := TRUE;
   ChrArr[NewIndex].FreezeState := FALSE;
@@ -1878,7 +1880,7 @@ begin
   //显示选择人物背景画面
   if (d <> nil) and (g_boCanDraw) then begin
     //      MSurface.Draw (0, 0, d.ClientRect, d, FALSE);
-    MSurface.Draw((DEFSCREENWIDTH - d.Width) div 2, (DEFSCREENHEIGHT - d.Height) div 2, d.ClientRect, d, FALSE);
+    MSurface.Draw((g_FScreenWidth - d.Width) div 2, (g_FScreenHeight - d.Height) div 2, d.ClientRect, d, FALSE);
     if CreateChrMode then
       exit;
 {$IF Var_Interface =  Var_Default}
@@ -1892,7 +1894,7 @@ begin
         //SetBkMode(Canvas.Handle, TRANSPARENT);
         svname := g_sServerName;
 {$IF Var_Interface = Var_Mir2}
-        TextOut(DEFSCREENWIDTH div 2 + 3 - TextWidth(svname) div 2, 8, clWhite, svname);
+        TextOut(g_FScreenWidth div 2 + 3 - TextWidth(svname) div 2, 8, clWhite, svname);
 {$ELSE}
         TextOut(DEFSCREENWIDTH div 2 {405} - TextWidth(svname) div 2, (DEFSCREENHEIGHT - 600) div 2 + 18 {8}, clWhite, svname);
 {$IFEND}
@@ -1902,7 +1904,7 @@ begin
     end;
 {$IF Var_Interface =  Var_Default}
     with g_DXCanvas do begin
-      TextOut(DEFSCREENWIDTH - TextWidth(CLIENTUPDATETIME) - 1, DEFSCREENHEIGHT - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
+      TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 1, g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
     end;
 {$IFEND}
   end;
@@ -1912,55 +1914,55 @@ begin
 {$IF Var_Interface = Var_Mir2}
   for n := 0 to 1 do begin
     if ChrArr[n].Valid then begin
-      ex := (DEFSCREENWIDTH - 800) div 2 + 90 {90};
-      ey := (DEFSCREENHEIGHT - 600) div 2 + 60 - 2 {60-2};
+      ex := (g_FScreenWidth - 800) div 2 + 90 {90};
+      ey := (g_FScreenHeight - 600) div 2 + 60 - 2 {60-2};
       case ChrArr[n].UserChr.Job of
         0: begin
             if ChrArr[n].UserChr.Sex = 0 then begin
-              bx := (DEFSCREENWIDTH - 800) div 2 + 71 {71};
-              by := (DEFSCREENHEIGHT - 600) div 2 + 75 - 23 {75-23}; //巢磊
+              bx := (g_FScreenWidth - 800) div 2 + 71 {71};
+              by := (g_FScreenHeight - 600) div 2 + 75 - 23 {75-23}; //巢磊
               fx := bx;
               fy := by;
             end
             else begin
-              bx := (DEFSCREENWIDTH - 800) div 2 + 65 {65};
-              by := (DEFSCREENHEIGHT - 600) div 2 + 75 - 2 - 18 {75-2-18}; //咯磊  倒惑怕
+              bx := (g_FScreenWidth - 800) div 2 + 65 {65};
+              by := (g_FScreenHeight - 600) div 2 + 75 - 2 - 18 {75-2-18}; //咯磊  倒惑怕
               fx := bx - 28 + 28;
               fy := by - 16 + 16; //框流捞绰 惑怕
             end;
           end;
         1: begin
             if ChrArr[n].UserChr.Sex = 0 then begin
-              bx := (DEFSCREENWIDTH - 800) div 2 + 77 {77};
-              by := (DEFSCREENHEIGHT - 600) div 2 + 75 - 29 {75-29};
+              bx := (g_FScreenWidth - 800) div 2 + 77 {77};
+              by := (g_FScreenHeight - 600) div 2 + 75 - 29 {75-29};
               fx := bx;
               fy := by;
             end
             else begin
-              bx := (DEFSCREENWIDTH - 800) div 2 + 141 + 30 {141+30};
-              by := (DEFSCREENHEIGHT - 600) div 2 + 85 + 14 - 2 {85+14-2};
+              bx := (g_FScreenWidth - 800) div 2 + 141 + 30 {141+30};
+              by := (g_FScreenHeight - 600) div 2 + 85 + 14 - 2 {85+14-2};
               fx := bx - 30;
               fy := by - 14;
             end;
           end;
         2: begin
             if ChrArr[n].UserChr.Sex = 0 then begin
-              bx := (DEFSCREENWIDTH - 800) div 2 + 85 {85};
-              by := (DEFSCREENHEIGHT - 600) div 2 + 75 - 12 {75-12};
+              bx := (g_FScreenWidth - 800) div 2 + 85 {85};
+              by := (g_FScreenHeight - 600) div 2 + 75 - 12 {75-12};
               fx := bx;
               fy := by;
             end
             else begin
-              bx := (DEFSCREENWIDTH - 800) div 2 + 141 + 23 {141+23};
-              by := (DEFSCREENHEIGHT - 600) div 2 + 85 + 20 - 2 {85+20-2};
+              bx := (g_FScreenWidth - 800) div 2 + 141 + 23 {141+23};
+              by := (g_FScreenHeight - 600) div 2 + 85 + 20 - 2 {85+20-2};
               fx := bx - 23;
               fy := by - 20;
             end;
           end;
       end;
       if n = 1 then begin
-        ex := (DEFSCREENWIDTH - 800) div 2 + 430 {430};
-        ey := (DEFSCREENHEIGHT - 600) div 2 + 60 {60};
+        ex := (g_FScreenWidth - 800) div 2 + 430 {430};
+        ey := (g_FScreenHeight - 600) div 2 + 60 {60};
         bx := bx + 340;
         by := by + 2;
         fx := fx + 340;
@@ -2053,16 +2055,16 @@ begin
         with g_DXCanvas do begin
           if n = 0 then begin
             with MSurface do begin
-              TextOut((DEFSCREENWIDTH - 800) div 2 + 117 {117}, (DEFSCREENHEIGHT - 600) div 2 + 492 + 2 {492+2}, clWhite, ChrArr[n].UserChr.Name);
-              TextOut((DEFSCREENWIDTH - 800) div 2 + 117 {117}, (DEFSCREENHEIGHT - 600) div 2 + 523 {523}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
-              TextOut((DEFSCREENWIDTH - 800) div 2 + 117 {117}, (DEFSCREENHEIGHT - 600) div 2 + 553 {553}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
+              TextOut((g_FScreenWidth - 800) div 2 + 117 {117}, (g_FScreenHeight - 600) div 2 + 492 + 2 {492+2}, clWhite, ChrArr[n].UserChr.Name);
+              TextOut((g_FScreenWidth - 800) div 2 + 117 {117}, (g_FScreenHeight - 600) div 2 + 523 {523}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
+              TextOut((g_FScreenWidth - 800) div 2 + 117 {117}, (g_FScreenHeight - 600) div 2 + 553 {553}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
             end;
           end
           else begin
             with MSurface do begin
-              TextOut((DEFSCREENWIDTH - 800) div 2 + 671 {671}, (DEFSCREENHEIGHT - 600) div 2 + 492 + 4 {492+4}, clWhite, ChrArr[n].UserChr.Name);
-              TextOut((DEFSCREENWIDTH - 800) div 2 + 671 {671}, (DEFSCREENHEIGHT - 600) div 2 + 523 + 2 {525}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
-              TextOut((DEFSCREENWIDTH - 800) div 2 + 671 {671}, (DEFSCREENHEIGHT - 600) div 2 + 553 + 2 {555}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
+              TextOut((g_FScreenWidth - 800) div 2 + 671 {671}, (g_FScreenHeight - 600) div 2 + 492 + 4 {492+4}, clWhite, ChrArr[n].UserChr.Name);
+              TextOut((g_FScreenWidth - 800) div 2 + 671 {671}, (g_FScreenHeight - 600) div 2 + 523 + 2 {525}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
+              TextOut((g_FScreenWidth - 800) div 2 + 671 {671}, (g_FScreenHeight - 600) div 2 + 553 + 2 {555}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
             end;
           end;
         end;
@@ -2213,7 +2215,7 @@ procedure TSelServer.OpenScene;
 begin
   //inherited OpenScene;
   FrmDlg.DWinSelServer.Visible := True;
-  HGE.Gfx_Restore(DEFSCREENWIDTH, DEFSCREENHEIGHT, 16);
+  HGE.Gfx_Restore(g_FScreenWidth, g_FScreenHeight, 16);
 {$IF Var_Interface = Var_Mir2}
   PlayBGM(bmg_intro);
 {$ELSE}
@@ -2232,13 +2234,13 @@ begin
   d := g_WMain99Images.Images[LOGINBAGIMGINDEX];
 {$IFEND}
   if (d <> nil) and (g_boCanDraw) then begin
-    MSurface.Draw(0, 0, d.ClientRect, d, FALSE);
+    MSurface.Draw((g_FScreenWidth - d.Width) div 2, (g_FScreenHeight - d.Height) div 2, d.ClientRect, d, FALSE);
     with g_DXCanvas do begin
-      TextOut(DEFSCREENWIDTH - TextWidth(CLIENTUPDATETIME) - 1, DEFSCREENHEIGHT - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
+      TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 1, g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
 {$IF Var_Interface = Var_Mir2}
-      TextOut(359, 530, $88ECF0, '健康游戏公告');
-      TextOut(191, 552, $88ECF0, '抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，');
-      TextOut(191, 574, $88ECF0, '沉迷游戏伤身。合理安排时间，享受健康生活。严厉打击赌博，营造和谐环境。');
+      TextOut((g_FScreenWidth - TextWidth(gameTipsTitle)) div 2, g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
+      TextOut((g_FScreenWidth - TextWidth(gameTipsContent1)) div 2, g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
+      TextOut((g_FScreenWidth - TextWidth(gameTipsContent2)) div 2, g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
 {$IFEND}
     end;
   end;
@@ -2265,7 +2267,7 @@ procedure THintScene.OpenScene;
 begin
   FrmDlg.DWndHint.Visible := True;
   FrmDlg.DBTHintClose.Visible := True;
-  HGE.Gfx_Restore(DEFSCREENWIDTH, DEFSCREENHEIGHT, 16);
+  HGE.Gfx_Restore(g_FScreenWidth, g_FScreenHeight, g_BitCount);
 end;
 
 procedure THintScene.PlayScene(MSurface: TDirectDrawSurface);
@@ -2276,12 +2278,12 @@ begin
   if LastForm = lf_Login then begin
     d := g_WOChrSelImages.Images[LOGINBAGIMGINDEX];
     if (d <> nil) and (g_boCanDraw) then begin
-      MSurface.Draw(0, 0, d.ClientRect, d, FALSE);
+      MSurface.Draw((g_FScreenWidth - d.Width) div 2, (g_FScreenHeight - d.Height) div 2, d.ClientRect, d, FALSE);
       with g_DXCanvas do begin
-        TextOut(DEFSCREENWIDTH - TextWidth(CLIENTUPDATETIME) - 1, DEFSCREENHEIGHT - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
-        TextOut(359, 530, $88ECF0, '健康游戏公告');
-        TextOut(191, 552, $88ECF0, '抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，');
-        TextOut(191, 574, $88ECF0, '沉迷游戏伤身。合理安排时间，享受健康生活。严厉打击赌博，营造和谐环境。');
+        TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 1, g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
+        TextOut((g_FScreenWidth - TextWidth(gameTipsTitle)) div 2, g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
+        TextOut((g_FScreenWidth - TextWidth(gameTipsContent1)) div 2, g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
+        TextOut((g_FScreenWidth - TextWidth(gameTipsContent2)) div 2, g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
       end;
     end;
   end else

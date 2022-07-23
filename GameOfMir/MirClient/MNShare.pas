@@ -633,7 +633,7 @@ begin
   if nFlag < 0 then Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(g_MissionFlag)..High(g_MissionFlag)]) then begin
+  if (n10 >= Low(g_MissionFlag)) and (n10 <= High(g_MissionFlag)) then begin
     if ((128 shr n14) and (g_MissionFlag[n10])) <> 0 then
       Result := 1
     else
@@ -657,7 +657,7 @@ begin
   if nFlag < 0 then Exit;
   n10 := nFlag div 8;
   n14 := (nFlag mod 8);
-  if (n10 in [Low(g_MissionFlag)..High(g_MissionFlag)]) then begin
+  if (n10 >= Low(g_MissionFlag)) and (n10 <= High(g_MissionFlag)) then begin
     bt15 := g_MissionFlag[n10];
     if nValue = 0 then begin
       g_MissionFlag[n10] := (not (128 shr n14)) and (bt15);

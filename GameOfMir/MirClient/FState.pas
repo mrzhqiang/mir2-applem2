@@ -1212,7 +1212,7 @@ begin
       if (Button = mbRight) and (x >= Left) and (y >= Top) and (X <= Left + Width) and (y <= Top + Height) then begin
         DUserKeyGrid2DblClick(DUserKeyGrid1);
       end else
-      if (x >= 208) and (y >= 230) and (X <= 208 + g_FScreenWidth - 436) and (y <= 230 + 16) then begin
+      if (x >= 208) and (y >= 230) and (X <= 208 + g_FScreenWidth - 436 - g_FScreenWidthOffset) and (y <= 230 + 16) then begin
         if not DEditChat.Visible then begin
           DEditChat.Visible := True;
           DEditChat.SetFocus;
@@ -1248,6 +1248,7 @@ var
   I: Integer;
 {$IFEND}
 begin
+  // 底部状态栏
   with Sender as TDWindow do begin
     ax := SurfaceX(Left);
     ay := SurfaceY(Top);
@@ -1256,6 +1257,7 @@ begin
       dsurface.Draw(ax, ay, d.ClientRect, d, True);
 
 {$IF Var_Interface = Var_Mir2}
+    // 每两秒钟提示一次未读信件
     if GetTickCount > AppendTick then begin
       AppendTick := GetTickCount + 2000;
       boNewEMail := False;
@@ -1266,44 +1268,26 @@ begin
         end;
       end;
     end;
-
+    // 底部物品栏 1、2、3、4、5、6 格子编号
     d := g_WMain99Images.Images[1822];
     if d <> nil then
-      if g_FScreenWidth = DEFMAXSCREENWIDTH then
-        dsurface.Draw(385, ay + 79, d.ClientRect, d, True)
-      else
-        dsurface.Draw(283, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw( 283 + g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1823];
     if d <> nil then
-      if g_FScreenWidth = DEFMAXSCREENWIDTH then
-        dsurface.Draw(428, ay + 79, d.ClientRect, d, True)
-      else
-        dsurface.Draw(326, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(326 + g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1824];
     if d <> nil then
-      if g_FScreenWidth = DEFMAXSCREENWIDTH then
-        dsurface.Draw(472, ay + 79, d.ClientRect, d, True)
-      else
-        dsurface.Draw(370, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(370 + g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1825];
     if d <> nil then
-      if g_FScreenWidth = DEFMAXSCREENWIDTH then
-        dsurface.Draw(516, ay + 79, d.ClientRect, d, True)
-      else
-        dsurface.Draw(414, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(414 + g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1826];
     if d <> nil then
-      if g_FScreenWidth = DEFMAXSCREENWIDTH then
-        dsurface.Draw(559, ay + 79, d.ClientRect, d, True)
-      else
-        dsurface.Draw(457, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(457 + g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1827];
     if d <> nil then
-      if g_FScreenWidth = DEFMAXSCREENWIDTH then
-        dsurface.Draw(604, ay + 79, d.ClientRect, d, True)
-      else
-        dsurface.Draw(502, ay + 79, d.ClientRect, d, True);
-
+        dsurface.Draw(502 + g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, True);
+    // 服务器时间
     d := nil;
     case HourOf(g_ServerDateTime) of
       0..6: d := g_WMain99Images.Images[1862]; //早上
@@ -1312,22 +1296,24 @@ begin
       19..23: d := g_WMain99Images.Images[1861]; //晚上
     end;
     if d <> nil then
-      dsurface.Draw(g_FScreenWidth - 52, ay + 79, d.ClientRect, d, FALSE);
+      dsurface.Draw(g_FScreenWidth - 52 - g_FScreenWidthOffset div 2, ay + 79, d.ClientRect, d, FALSE);
+
     if g_MySelf <> nil then begin
+      // 左侧 HP MP 状态球
       if (g_MySelf.m_Abil.MaxHP > 0) and (g_MySelf.m_Abil.MaxMP > 0) then begin
         if (g_MySelf.m_btJob = 0) and (g_MySelf.m_Abil.Level < 28) then begin //武士
           d := g_WMain99Images.Images[1864];
           if d <> nil then begin
             rc := d.ClientRect;
             rc.Right := d.ClientRect.Right - 2;
-            dsurface.Draw(38, ay + 90, rc, d, FALSE);
+            dsurface.Draw(38 + g_FScreenWidthOffset div 2, ay + 90, rc, d, FALSE);
           end;
           d := g_WMain99Images.Images[1865];
           if d <> nil then begin
             rc := d.ClientRect;
             rc.Right := d.ClientRect.Right - 2;
             rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
-            dsurface.Draw(38, ay + 90 + rc.Top, rc, d, FALSE);
+            dsurface.Draw(38 + g_FScreenWidthOffset div 2, ay + 90 + rc.Top, rc, d, FALSE);
           end;
         end else begin
           d := g_WMain99Images.Images[1863];
@@ -1336,17 +1322,16 @@ begin
             rc := d.ClientRect;
             rc.Right := d.ClientRect.Right div 2 - 1;
             rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
-            dsurface.Draw(40, ay + 91 + rc.Top, rc, d, FALSE);
+            dsurface.Draw(40 + g_FScreenWidthOffset div 2, ay + 91 + rc.Top, rc, d, FALSE);
             //MP 图形
             rc := d.ClientRect;
             rc.Left := d.ClientRect.Right div 2 + 1;
             rc.Right := d.ClientRect.Right - 1;
             rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxMP * (g_MySelf.m_Abil.MaxMP - g_MySelf.m_Abil.MP));
-            dsurface.Draw(40 + rc.Left, ay + 91 + rc.Top, rc, d, FALSE);
+            dsurface.Draw(40 + rc.Left + g_FScreenWidthOffset div 2, ay + 91 + rc.Top, rc, d, FALSE);
           end;
         end;
       end;
-
       if (g_MySelf.m_Abil.MaxExp > 0) then begin
         d := g_WMain99Images.Images[1866];
         if d <> nil then begin
@@ -1361,20 +1346,19 @@ begin
           else
             rc.Right := 0;
           rc.Right := _MIN(rc.Right, d.Width);
-          dsurface.Draw(g_FScreenWidth - 134, g_FScreenHeight - 73, rc, d, FALSE);
+          dsurface.Draw(g_FScreenWidth - 134 - g_FScreenWidthOffset div 2, g_FScreenHeight - 73, rc, d, FALSE);
           //背包重量条
-
           rc := d.ClientRect;
           if g_nDander > 0 then begin
             rc.Right := _MIN(Round(rc.Right / (10000 / g_nDander)), rc.Right);
             rc.Right := _MIN(rc.Right, d.Width);
-            dsurface.Draw(g_FScreenWidth - 134, g_FScreenHeight - 40, rc, d, FALSE);
+            dsurface.Draw(g_FScreenWidth - 134 - g_FScreenWidthOffset div 2, g_FScreenHeight - 40, rc, d, FALSE);
           end;
-
         end;
       end;
-
     end;
+
+    // 左上角，区域标识
     d := nil;
     case g_nAreaStateValue of
       OT_SAFEAREA: d := g_WMain99Images.Images[1868];
@@ -1383,19 +1367,20 @@ begin
     end;
     if d <> nil then
       dsurface.Draw(0, 0, d.ClientRect, d, False);
-      
+    //
     with g_DXCanvas do begin
       if DBTAttackMode.Tag in [Low(AttackModeName)..High(AttackModeName)] then
-        TextOut(ax + g_FScreenWidth - 152, ay + 113, clWhite, AttackModeName[DBTAttackMode.Tag]);
+        TextOut(g_FScreenWidth - 152 - g_FScreenWidthOffset div 2, ay + 113, clWhite, AttackModeName[DBTAttackMode.Tag]);
 
-      TextOut(ax + g_FScreenWidth - 128, ay + 230, clWhite, FormatDateTime('HH:MM:SS', g_ServerDateTime));
+      TextOut(g_FScreenWidth - 128 - g_FScreenWidthOffset div 2, ay + 230, clWhite, FormatDateTime('HH:MM:SS', g_ServerDateTime));
+      // todo 单位化 HP MP 显示
       sStr := IntToStr(g_MySelf.m_Abil.HP) + '/' + IntToStr(g_MySelf.m_Abil.MaxHP); 
       TextOut(ax + 56 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
       sStr := IntToStr(g_MySelf.m_Abil.MP) + '/' + IntToStr(g_MySelf.m_Abil.MaxMP); 
       TextOut(ax + 118 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
       sStr := IntToStr(g_MySelf.m_Abil.Level); 
-      TextOut(ax + g_FScreenWidth - 121 - TextWidth(sStr) div 2, ay + 146, clWhite, sStr);
-      TextOut(8, g_FScreenHeight - 16, clWhite, g_sMapTitle + ' ' + IntToStr(g_MySelf.m_nCurrX) + ':' + IntToStr(g_MySelf.m_nCurrY));
+      TextOut(g_FScreenWidth - 121 - TextWidth(sStr) div 2 - g_FScreenWidthOffset div 2, ay + 146, clWhite, sStr);
+      TextOut(8 + g_FScreenWidthOffset div 2, g_FScreenHeight - 16, clWhite, g_sMapTitle + ' ' + IntToStr(g_MySelf.m_nCurrX) + ':' + IntToStr(g_MySelf.m_nCurrY));
     end;
 {$IFEND}
   end;
@@ -1461,7 +1446,7 @@ begin
   Dec(Y, DBottom.Top);
   Dec(X, DBottom.Left);
   ShowMsg := '';
-  nLeft := g_FScreenWidth - 160;
+  nLeft := g_FScreenWidth - 160 - g_FScreenWidthOffset;
   if (x >= nLeft) and (x <= nLeft + 105) and (y >= 172) and (y <= 172 + 26) then begin
     x := nLeft;
     Y := 192;
@@ -11886,8 +11871,8 @@ begin
     DWinSelServer.SetImgIndex(g_WMain99Images, 360);
 {$IFEND}
 
-    DWinSelServer.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DWinSelServer.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DWinSelServer.Left := (g_FScreenWidth - d.Width) div 2;
+    DWinSelServer.Top := (g_FScreenHeight - d.Height) div 2;
   end;
 {$IF Var_Interface = Var_Mir2}
   dbtnSelServerClose.SetImgIndex(g_WMain99Images, 1850);
@@ -11972,8 +11957,8 @@ begin
   d := g_WMain99Images.Images[1620];
   if d <> nil then begin
     DWndHint.SetImgIndex(g_WMain99Images, 1620);
-    DWndHint.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DWndHint.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DWndHint.Left := (g_FScreenWidth - d.Width) div 2;
+    DWndHint.Top := (g_FScreenHeight - d.Height) div 2;
   end;
 
   DBTHintClose.SetImgIndex(g_WMain99Images, 1650);
@@ -12001,8 +11986,8 @@ begin
   d := g_WMain99Images.Images[1891];
   if d <> nil then begin
     DLogin.SetImgIndex(g_WMain99Images, 1891);
-    DLogin.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DLogin.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DLogin.Left := (g_FScreenWidth - d.Width) div 2;
+    DLogin.Top := (g_FScreenHeight - d.Height) div 2;
   end;
 
   DLoginOk.SetImgIndex(g_WMain99Images, 1892);
@@ -12046,12 +12031,16 @@ begin
     DLoginChgPw.OnDirectPaint := DMyStateDirectPaint;
     dbtnLoginLostPw.Visible := False;
     //DEditID.MaxLength := 10;
+{$IFDEF DEBUG}
+    DEditID.Text := 'z12355';
+    DEditPass.Text := '12355';
+{$ENDIF}
     DEditPass.MaxLength := 15;
     DLoginNew.Caption := '注册账号';
   end;
 
   DLoginExit.SetImgIndex(g_WMain99Images, 1850);
-  DLoginExit.Left := 252;
+  DLoginExit.Left := 254;
   DLoginExit.Top := 28;
   DLoginExit.OnDirectPaint := DMyStateDirectPaint;
 {$ELSE}
@@ -12113,8 +12102,8 @@ begin
   d := g_WMain99Images.Images[1895];
   if d <> nil then begin
     DNewAccount.SetImgIndex(g_WMain99Images, 1895);
-    DNewAccount.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DNewAccount.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DNewAccount.Left := (g_FScreenWidth - d.Width) div 2;
+    DNewAccount.Top := (g_FScreenHeight - d.Height) div 2;
   end;
 
   DNewAccountOk.SetImgIndex(g_WMain99Images, 1892);
@@ -12151,8 +12140,8 @@ begin
   d := g_WMain99Images.Images[1897];
   if d <> nil then begin
     DChgPw.SetImgIndex(g_WMain99Images, 1897);
-    DChgPw.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DChgPw.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DChgPw.Left := (g_FScreenWidth - d.Width) div 2;
+    DChgPw.Top := (g_FScreenHeight - d.Height) div 2;
   end;
   DChgpwOk.SetImgIndex(g_WMain99Images, 1898);
   DChgpwOk.Left := 181;
@@ -12182,8 +12171,8 @@ begin
   d := g_WMain99Images.Images[30];
   if d <> nil then begin
     DMsgDlg.SetImgIndex(g_WMain99Images, 30);
-    DMsgDlg.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DMsgDlg.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DMsgDlg.Left := (g_FScreenWidth - d.Width) div 2;
+    DMsgDlg.Top := (g_FScreenHeight - d.Height) div 2;
   end;
   DMsgDlgOk.SetImgIndex(g_WMain99Images, 24);
   DMsgDlgCancel.SetImgIndex(g_WMain99Images, 24);
@@ -12192,42 +12181,42 @@ begin
 {$IF Var_Interface = Var_Mir2}
   DSelectChr.Left := 0;
   DSelectChr.Top := 0;
-  DSelectChr.Width := DEFSCREENWIDTH;
-  DSelectChr.Height := DEFSCREENHEIGHT;
+  DSelectChr.Width := g_FScreenWidth;
+  DSelectChr.Height := g_FScreenHeight;
 
   DscStart.SetImgIndex(g_WMain99Images, 1899);
-  DscStart.Left := 385;
-  DscStart.Top := 456;
+  DscStart.Left := 385 + g_FScreenWidthOffset div 2;
+  DscStart.Top := 456 + g_FScreenHeightOffset div 2;
   DscStart.OnDirectPaint := DMyStateDirectPaint;
   DscNewChr.SetImgIndex(g_WMain99Images, 1900);
-  DscNewChr.Left := 348;
-  DscNewChr.Top := 486;
+  DscNewChr.Left := 348 + g_FScreenWidthOffset div 2;
+  DscNewChr.Top := 486 + g_FScreenHeightOffset div 2;
   DscNewChr.OnDirectPaint := DMyStateDirectPaint;
   DscEraseChr.SetImgIndex(g_WMain99Images, 1901);
-  DscEraseChr.Left := 347;
-  DscEraseChr.Top := 506;
+  DscEraseChr.Left := 347 + g_FScreenWidthOffset div 2;
+  DscEraseChr.Top := 506 + g_FScreenHeightOffset div 2;
   DscEraseChr.OnDirectPaint := DMyStateDirectPaint;
   DscCredits.SetImgIndex(g_WMain99Images, 2136);
-  DscCredits.Left := 346;
-  DscCredits.Top := 527;
+  DscCredits.Left := 346 + g_FScreenWidthOffset div 2;
+  DscCredits.Top := 527 + g_FScreenHeightOffset div 2;
   DscCredits.OnDirectPaint := DMyStateDirectPaint;
   DscExit.SetImgIndex(g_WMain99Images, 1902);
-  DscExit.Left := 379;
-  DscExit.Top := 547;
+  DscExit.Left := 379 + g_FScreenWidthOffset div 2;
+  DscExit.Top := 547 + g_FScreenHeightOffset div 2;
   DscExit.OnDirectPaint := DMyStateDirectPaint;
 
   DscSelect1.SetImgIndex(g_WMain99Images, 1903);
-  DscSelect1.Left := 134;
-  DscSelect1.Top := 453;
+  DscSelect1.Left := 134 + g_FScreenWidthOffset div 2;
+  DscSelect1.Top := 453 + g_FScreenHeightOffset div 2;
   DscSelect1.OnDirectPaint := DMyStateDirectPaint;
 
   DscSelect2.SetImgIndex(g_WMain99Images, 1904);
-  DscSelect2.Left := 686;
-  DscSelect2.Top := 454;
+  DscSelect2.Left := 686 + g_FScreenWidthOffset div 2;
+  DscSelect2.Top := 454 + g_FScreenHeightOffset div 2;
   DscSelect2.OnDirectPaint := DMyStateDirectPaint;
 
-  DscSelect3.Left := 542;
-  DscSelect3.Top := 87;
+  DscSelect3.Left := 542 + g_FScreenWidthOffset div 2;
+  DscSelect3.Top := 87 + g_FScreenHeightOffset div 2;
   DscSelect3.Width := 242;
   DscSelect3.Height := 351;
   DscSelect3.Visible := False;
@@ -12274,8 +12263,8 @@ begin
   d := g_WMain99Images.Images[1905];
   if d <> nil then begin
     DCreateChr.SetImgIndex(g_WMain99Images, 1905);
-    DCreateChr.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DCreateChr.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DCreateChr.Left := (g_FScreenWidth - d.Width) div 2;
+    DCreateChr.Top := (g_FScreenHeight - d.Height) div 2;
   end;
   DccWarrior.SetImgIndex(g_WMain99Images, 1911);
   DccWizzard.SetImgIndex(g_WMain99Images, 1912);
@@ -12401,8 +12390,8 @@ begin
   d := g_WMain99Images.Images[2137];
   if d <> nil then begin
     DRenewChr.SetImgIndex(g_WMain99Images, 2137);
-    DRenewChr.Left := (DEFSCREENWIDTH - d.Width) div 2;
-    DRenewChr.Top := (DEFSCREENHEIGHT - d.Height) div 2;
+    DRenewChr.Left := (g_FScreenWidth - d.Width) div 2;
+    DRenewChr.Top := (g_FScreenHeight - d.Height) div 2;
   end;
   DButRenewClose.SetImgIndex(g_WMain99Images, 1850);
   DButRenewClose.Left := 247;
@@ -12430,22 +12419,22 @@ begin
 
   //底部状态栏
 {$IF Var_Interface = Var_Mir2}
-  if g_FScreenWidth = DEFMAXSCREENWIDTH then
-    i := 1614
-  else
+//  if g_FScreenWidth = DEFMAXSCREENWIDTH then
+//    i := 1615
+//  else
     i := 1615;
 
   d := g_WMain99Images.Images[i];
   if d <> nil then begin
     DBottom.SetImgIndex(g_WMain99Images, i);
-    DBottom.Left := 0;
+    DBottom.Left :=  (g_FScreenWidth - d.Width) div 2;
     DBottom.Top := g_FScreenHeight - d.Height;
   end;
 
-  if g_FScreenWidth = DEFMAXSCREENWIDTH then
-    DUserKeyGrid1.Left := 387
-  else
-    DUserKeyGrid1.Left := 285;
+//  if g_FScreenWidth = DEFMAXSCREENWIDTH then
+//    DUserKeyGrid1.Left := 387
+//  else
+    DUserKeyGrid1.Left := 285 + g_FScreenWidthOffset div 2;
   DUserKeyGrid1.Top := 59;
   DUserKeyGrid1.Width := 252;
   DUserKeyGrid1.Height := 30;
@@ -12454,7 +12443,7 @@ begin
   DUserKeyGrid1.ColCount := 6;
   DUserKeyGrid1.ColOffset := 12;
 
-  DUserKeyGrid2.Left := 65;
+  DUserKeyGrid2.Left := 65 + g_FScreenWidthOffset div 2;
   DUserKeyGrid2.Top := 7;
   DUserKeyGrid2.Width := 332;
   DUserKeyGrid2.Height := 38;
@@ -12462,39 +12451,39 @@ begin
   d := g_WMain99Images.Images[11];
   if d <> nil then begin
     DBottom2.SetImgIndex(g_WMain99Images, 11);
-    DBottom2.Left := 390;
+    DBottom2.Left := 390 + g_FScreenWidthOffset div 2;
     DBottom2.Top := -d.Height;
   end;
 
   DBTAttackMode.SetImgIndex(g_WMain99Images, 493);
   DBTAttackMode.Top := 32;
-  DBTAttackMode.Left := 510;
+  DBTAttackMode.Left := 510 + g_FScreenWidthOffset div 2;
 
   DWndAttackModeList.SetImgIndex(g_WMain99Images, 492);
   DWndAttackModeList.Top := 54;
-  DWndAttackModeList.Left := 508;
+  DWndAttackModeList.Left := 508 + g_FScreenWidthOffset div 2;
 
   DBTAttackModeAll.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModeAll.Top := 3;
-  DBTAttackModeAll.Left := 2;
+  DBTAttackModeAll.Left := 2 + g_FScreenWidthOffset div 2;
   DBTAttackModePeace.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModePeace.Top := 3 + 1 * 24;
-  DBTAttackModePeace.Left := 2;
+  DBTAttackModePeace.Left := 2 + g_FScreenWidthOffset div 2;
   DBTAttackModeDear.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModeDear.Top := 3 + 2 * 24;
-  DBTAttackModeDear.Left := 2;
+  DBTAttackModeDear.Left := 2 + g_FScreenWidthOffset div 2;
   DBTAttackModeMaster.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModeMaster.Top := 3 + 3 * 24;
-  DBTAttackModeMaster.Left := 2;
+  DBTAttackModeMaster.Left := 2 + g_FScreenWidthOffset div 2;
   DBTAttackModeGroup.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModeGroup.Top := 3 + 4 * 24;
-  DBTAttackModeGroup.Left := 2;
+  DBTAttackModeGroup.Left := 2 + g_FScreenWidthOffset div 2;
   DBTAttackModeGuild.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModeGuild.Top := 3 + 5 * 24;
-  DBTAttackModeGuild.Left := 2;
+  DBTAttackModeGuild.Left := 2 + g_FScreenWidthOffset div 2;
   DBTAttackModePK.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModePK.Top := 3 + 6 * 24;
-  DBTAttackModePK.Left := 2;
+  DBTAttackModePK.Left := 2 + g_FScreenWidthOffset div 2;
 
 
   {
@@ -12527,19 +12516,20 @@ begin
   DBTCheck10.Top := -348;  }
 
   DMyState.SetImgIndex(g_WMain99Images, 1916);
-  DMyState.Left := g_FScreenWidth - 157;
+  DMyState.Left := g_FScreenWidth - 157 - g_FScreenWidthOffset;
   DMyState.Top := 61;
   DMyState.ClickCount := csStone;
+  // fixme 补丁位置不对导致鼠标移动和点击不到对应的按钮
   DMyBag.SetImgIndex(g_WMain99Images, 1917);
-  DMyBag.Left := g_FScreenWidth - 118;
+  DMyBag.Left := g_FScreenWidth - 118 - g_FScreenWidthOffset;
   DMyBag.Top := 41;
   DMyBag.ClickCount := csStone;
   DMyMagic.SetImgIndex(g_WMain99Images, 1918);
-  DMyMagic.Left := g_FScreenWidth - 78;
+  DMyMagic.Left := g_FScreenWidth - 78 - g_FScreenWidthOffset;
   DMyMagic.Top := 21;
   DMyMagic.ClickCount := csStone;
   DBotMusic.SetImgIndex(g_WMain99Images, 1919);
-  DBotMusic.Left := g_FScreenWidth - 36;
+  DBotMusic.Left := g_FScreenWidth - 36 - g_FScreenWidthOffset;
   DBotMusic.Top := 11;
   DBotMusic.Visible := True;
 
@@ -12599,7 +12589,7 @@ begin
 
 
   DTopShop.SetImgIndex(g_WMain99Images, 2220);
-  DTopShop.Left := g_FScreenWidth - 46;
+  DTopShop.Left := g_FScreenWidth - 46 - g_FScreenWidthOffset;
   DTopShop.Top := 204;
   if DTopShop.DParent <> nil then DTopShop.DParent.DelChild(DTopShop);
   DTopShop.DParent := DBottom;
@@ -12607,7 +12597,7 @@ begin
   DBottom.AddChild(DTopShop);
 
   DTopHelp.SetImgIndex(g_WMain99Images, 2042);
-  DTopHelp.Left := g_FScreenWidth - 199;
+  DTopHelp.Left := g_FScreenWidth - 199 - g_FScreenWidthOffset;
   DTopHelp.Top := 59;
   if DTopHelp.DParent <> nil then DTopHelp.DParent.DelChild(DTopHelp);
   DTopHelp.DParent := DBottom;
@@ -12623,7 +12613,7 @@ begin
   DBottom.AddChild(DTopEMail);
 
   DBTFace.SetImgIndex(g_WMain99Images, 1634);
-  DBTFace.Left := g_FScreenWidth - 228;
+  DBTFace.Left := g_FScreenWidth - 228 - g_FScreenWidthOffset;
   DBTFace.Top := 229;
   if DBTFace.DParent <> nil then DBTFace.DParent.DelChild(DBTFace);
   DBTFace.DParent := DBottom;
@@ -12641,7 +12631,7 @@ begin
 
   DSayUpDown.SetImgIndex(g_WMain99Images, 2202);
   DSayUpDown.Top := 118;
-  DSayUpDown.Left := g_FScreenWidth - 203;
+  DSayUpDown.Left := g_FScreenWidth - 203 - g_FScreenWidthOffset;
   DSayUpDown.Height := 112;
 
   DSayUpDown.UpButton.SetImgIndex(g_WMain99Images, 2203);
@@ -12651,16 +12641,16 @@ begin
   DEditChat.Left := 208;
   DEditChat.Top := 230;
   DEditChat.Height := 16;
-  DEditChat.Width := g_FScreenWidth - 436;
-  if g_FScreenWidth = DEFSCREENWIDTH then
-    DEditChat.MaxLength := 70
-  else
-    DEditChat.MaxLength := 96;
+  DEditChat.Width := g_FScreenWidth - 436 - g_FScreenWidthOffset;
+//  if g_FScreenWidth = DEFSCREENWIDTH then
+    DEditChat.MaxLength := 70;
+//  else
+//    DEditChat.MaxLength := 96;
   DEditChat.boTransparent := False;
 
   DBotWndSay.Left := 209;
   DBotWndSay.Top := 118;
-  DBotWndSay.Width := g_FScreenWidth - 414;
+  DBotWndSay.Width := g_FScreenWidth - 414 - g_FScreenWidthOffset;
   DBotWndSay.Height := 112;
   DBotWndSay.Visible := True;
 
@@ -12773,34 +12763,34 @@ begin
 {$IFEND}
 
   DBTCheck1.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck1.Left := 380;
+  DBTCheck1.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck1.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck2.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck2.Left := 380;
+  DBTCheck2.SetImgIndex(g_WMain99Images, 379);
+  DBTCheck2.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck2.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck3.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck3.Left := 380;
+  DBTCheck3.SetImgIndex(g_WMain99Images, 381);
+  DBTCheck3.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck3.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck4.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck4.Left := 380;
+  DBTCheck4.SetImgIndex(g_WMain99Images, 382);
+  DBTCheck4.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck4.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck5.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck5.Left := 380;
+  DBTCheck5.SetImgIndex(g_WMain99Images, 384);
+  DBTCheck5.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck5.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck6.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck6.Left := 380;
+  DBTCheck6.SetImgIndex(g_WMain99Images, 385);
+  DBTCheck6.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck6.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck7.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck7.Left := 380;
+  DBTCheck7.SetImgIndex(g_WMain99Images, 387);
+  DBTCheck7.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck7.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck8.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck8.Left := 380;
+  DBTCheck8.SetImgIndex(g_WMain99Images, 388);
+  DBTCheck8.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck8.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck9.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck9.Left := 380;
+  DBTCheck9.SetImgIndex(g_WMain99Images, 390);
+  DBTCheck9.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck9.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
-  DBTCheck10.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck10.Left := 380;
+  DBTCheck10.SetImgIndex(g_WMain99Images, 391);
+  DBTCheck10.Left := 380 + g_FScreenWidthOffset div 2;
   DBTCheck10.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
 
   dwndWhisperName.Left := 15;
@@ -13066,7 +13056,7 @@ begin
   DWndSay.Height := 2 + SAYLISTHEIGHT * 7;
   DWndSay.Top := g_FScreenHeight - DWndSay.Height - DBottom.Height - 39;
 
-  DWndSay.Width := DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} + 16;
+  DWndSay.Width := DEFSAYLISTWIDTH + 16;
 
   DBtnSayAll.SetImgIndex(g_WMain99Images, 594);
   DBtnSayAll.Left := 16;
@@ -14971,8 +14961,8 @@ begin
 
   DMiniMap.Left := 0;
   DMiniMap.Top := 0;
-  DMiniMap.Width := 192;
-  DMiniMap.Height := 160;
+  DMiniMap.Width := 192 + g_FScreenWidthOffset div 2;
+  DMiniMap.Height := 160 + g_FScreenHeightOffset div 2;
   DMiniMap.CreateSurface(nil);
 
   DMerchantDlg.Surface.Size := Point(DEFMDLGMAXWIDTH, MDLGMAXHEIGHT);
@@ -15623,7 +15613,7 @@ begin
 //            else
               MagicList1.AddString(Format('%.5d', [g_MagicArry[I].Magic.TrainLevel[0]]), TObject(g_MagicArry[I].Magic.wMagicId), True);
 
-//          end;
+          end;
         end;
       end;
     1: begin
@@ -15635,7 +15625,7 @@ begin
 //              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
 //            else
               MagicList1.AddString(Format('%.5d', [g_MagicArry[I].Magic.TrainLevel[0]]), TObject(g_MagicArry[I].Magic.wMagicId), True);
-//          end;
+          end;
         end;
       end;
     2: begin
@@ -15646,7 +15636,7 @@ begin
 //              MagicList2.AddObject(' ', TObject(g_MagicArry[I].Magic.wMagicId))
 //            else
               MagicList1.AddString(Format('%.5d', [g_MagicArry[I].Magic.TrainLevel[0]]), TObject(g_MagicArry[I].Magic.wMagicId), True);
-//          end;
+          end;
         end;
       end;
   end;

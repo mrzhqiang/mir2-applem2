@@ -141,11 +141,6 @@ type
   end;
 
 var
-  g_btMP3Volume: Byte = 70;
-  g_btSoundVolume: Byte = 70;
-  g_boBGSound: Boolean = True;
-  g_boSound: Boolean = True;
-
   g_nGameSetupData: LongWord;
   g_boCanSound: Boolean = True;
   g_boChangeWindow: Boolean = False;
