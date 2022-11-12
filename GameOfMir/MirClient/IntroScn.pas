@@ -1662,11 +1662,11 @@ begin
 {$IF Var_Interface = Var_Mir2}
   NewIndex := index;
   if index = 0 then begin
-    FrmDlg.DCreateChr.Left := 415;
-    FrmDlg.DCreateChr.Top := 15;
+    FrmDlg.DCreateChr.Left := Share.getSupportX(415);
+    FrmDlg.DCreateChr.Top := Share.getSupportY(15);
   end else begin
-    FrmDlg.DCreateChr.Left := 75;
-    FrmDlg.DCreateChr.Top := 15;
+    FrmDlg.DCreateChr.Left := Share.getSupportX(75);
+    FrmDlg.DCreateChr.Top := Share.getSupportY(15);
   end;
   ChrArr[NewIndex].Valid := TRUE;
   ChrArr[NewIndex].FreezeState := FALSE;
@@ -1837,8 +1837,7 @@ begin
 {$IF Var_Interface = Var_Mir2}
         TextOut(getLayoutX(TextWidth(svname)), getLayoutY(d.Height) + 8, clWhite, svname);
 {$ELSE}
-        // fixme 这里分辨率可能存在问题，要修正
-        TextOut(getLayoutX(TextWidth(svname)), 18, clWhite, svname);
+        TextOut(getLayoutX(TextWidth(svname)), Share.getSupportY(18), clWhite, svname);
 {$IFEND}
       end;
     end;
@@ -1854,66 +1853,76 @@ begin
     exit;
 
 {$IF Var_Interface = Var_Mir2}
+  // 盛大界面的角色列表，只有两个
   for n := 0 to 1 do begin
     if ChrArr[n].Valid then begin
-      ex := 90 {90};
-      ey :=  60 - 2 {60-2};
+      ex := Share.getSupportX(90);
+      ey := Share.getSupportY(58);
+      // 根据职业展示不同的预览动画
       case ChrArr[n].UserChr.Job of
         0: begin
+            // 根据性别在不同的位置展示
             if ChrArr[n].UserChr.Sex = 0 then begin
-              bx := 71 {71};
-              by :=  75 - 23 {75-23};
+              bx := Share.getSupportX(71);
+              by := Share.getSupportY(52);
               fx := bx;
               fy := by;
             end
             else begin
-              bx := 65 {65};
-              by :=  75 - 2 - 18 {75-2-18};
-              fx := bx - 28 + 28;
-              fy := by - 16 + 16;
+              bx := Share.getSupportX(65);
+              by :=  Share.getSupportY(55);
+              fx := bx;
+              fy := by;
             end;
           end;
         1: begin
             if ChrArr[n].UserChr.Sex = 0 then begin
-              bx := 77 {77};
-              by :=  75 - 29 {75-29};
+              bx := Share.getSupportX(77) {77};
+              by := Share.getSupportY( 46) {75-29};
               fx := bx;
               fy := by;
             end
             else begin
-              bx := 141 + 30 {141+30};
-              by :=  85 + 14 - 2 {85+14-2};
+              bx := Share.getSupportX(171) {141+30};
+              by := Share.getSupportY( 97) {85+14-2};
               fx := bx - 30;
               fy := by - 14;
             end;
           end;
         2: begin
             if ChrArr[n].UserChr.Sex = 0 then begin
-              bx := 85 {85};
-              by :=  75 - 12 {75-12};
+              bx := Share.getSupportX(85) {85};
+              by :=  Share.getSupportY(63) {75-12};
               fx := bx;
               fy := by;
             end
             else begin
-              bx := 141 + 23 {141+23};
-              by :=  85 + 20 - 2 {85+20-2};
+              bx := Share.getSupportX(164) {141+23};
+              by := Share.getSupportY( 103) {85+20-2};
               fx := bx - 23;
               fy := by - 20;
             end;
           end;
       end;
+      // 如果是第二个角色，需要放在右边
       if n = 1 then begin
-        ex := 430 {430};
-        ey :=  60 {60};
+        ex := Share.getSupportX(90 + 340) {430};
+        ey := Share.getSupportY(  60) {60};
         bx := bx + 340;
         by := by + 2;
         fx := fx + 340;
         fy := fy + 2;
       end;
       if ChrArr[n].Unfreezing then begin
+        // 计算不同职业、不同性别的职业展示动画的素材位置
+        // 盛大客户端文件计算公式
         img := 140 - 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].UserChr.Sex * 120;
+        // 基础补丁文件计算公式
+//        img := 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].UserChr.Sex * 120;
         d := g_WOChrSelImages.Images[img + ChrArr[n].aniIndex];
+//        d := g_WChrSelImages.Images[img + ChrArr[n].aniIndex];
         e := g_WOChrSelImages.Images[4 + ChrArr[n].effIndex];
+//        e := g_WChrSelImages.Images[ChrArr[n].effIndex];
         if d <> nil then
           MSurface.Draw(bx, by, d.ClientRect, d, TRUE);
         if e <> nil then
@@ -1939,7 +1948,9 @@ begin
       end;
       if ChrArr[n].Freezing then begin
         img := 140 - 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].UserChr.Sex * 120;
+//        img := 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].UserChr.Sex * 120;
         d := g_WOChrSelImages.Images[img + FREEZEFRAME - ChrArr[n].aniIndex - 1];
+//        d := g_WChrSelImages.Images[img + FREEZEFRAME - ChrArr[n].aniIndex - 1];
         if d <> nil then
           MSurface.Draw(bx, by, d.ClientRect, d, TRUE);
         if GetTickCount - ChrArr[n].StartTime > 50 then begin
@@ -1955,25 +1966,18 @@ begin
       if not ChrArr[n].Unfreezing and not ChrArr[n].Freezing then begin
         if not ChrArr[n].FreezeState then begin
           img := 120 - 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].aniIndex + ChrArr[n].UserChr.Sex * 120;
+//          img := 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].aniIndex + ChrArr[n].UserChr.Sex * 120;
           d := g_WOChrSelImages.Images[img];
+//          d := g_WChrSelImages.Images[img];
           if d <> nil then begin
-            {if ChrArr[n].DarkLevel > 0 then begin
-              dd := TDirectDrawSurface.Create(frmMain.DXDraw.DDraw);
-              dd.SystemMemory := TRUE;
-              dd.SetSize(d.Width, d.Height);
-              dd.Draw(0, 0, d.ClientRect, d, FALSE);
-              //MakeDark (dd, 30-ChrArr[n].DarkLevel);
-              MSurface.Draw(fx, fy, dd.ClientRect, dd, TRUE);
-              dd.Free;
-            end
-            else  }
             MSurface.Draw(fx, fy, d.ClientRect, d, TRUE);
-
           end;
         end
         else begin
           img := 140 - 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].UserChr.Sex * 120;
+//          img := 80 + ChrArr[n].UserChr.Job * 40 + ChrArr[n].UserChr.Sex * 120;
           d := g_WOChrSelImages.Images[img];
+//          d := g_WChrSelImages.Images[img];
           if d <> nil then
             MSurface.Draw(bx, by, d.ClientRect, d, TRUE);
         end;
@@ -1995,16 +1999,16 @@ begin
         with g_DXCanvas do begin
           if n = 0 then begin
             with MSurface do begin
-              TextOut(117 {117},  492 + 2 {492+2}, clWhite, ChrArr[n].UserChr.Name);
-              TextOut(117 {117},  523 {523}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
-              TextOut(117 {117},  553 {553}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
+              TextOut(Share.getSupportX(117) {117},  Share.getSupportY(494) {492+2}, clWhite, ChrArr[n].UserChr.Name);
+              TextOut(Share.getSupportX(117) {117},  Share.getSupportY(523) {523}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
+              TextOut(Share.getSupportX(117) {117},  Share.getSupportY(553) {553}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
             end;
           end
           else begin
             with MSurface do begin
-              TextOut(671 {671},  492 + 4 {492+4}, clWhite, ChrArr[n].UserChr.Name);
-              TextOut(671 {671},  523 + 2 {525}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
-              TextOut(671 {671},  553 + 2 {555}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
+              TextOut(Share.getSupportX(671) {671},  Share.getSupportY(496) {492+4}, clWhite, ChrArr[n].UserChr.Name);
+              TextOut(Share.getSupportX(671) {671},  Share.getSupportY(525) {525}, clWhite, IntToStr(ChrArr[n].UserChr.Level));
+              TextOut(Share.getSupportX(671) {671},  Share.getSupportY(555) {555}, clWhite, GetJobName(ChrArr[n].UserChr.Job));
             end;
           end;
         end;
@@ -2013,26 +2017,23 @@ begin
   end;
 {$ELSE}
   for n := 0 to 2 do begin
-    {ChrArr[n].UserChr.Job := n;
-    ChrArr[n].UserChr.Sex := 1;
-    ChrArr[n].FreezeState := True;  }
     if (ChrArr[n].Valid) then begin
-      ex := 0;
-      ey := 0;
+      ex := Share.getSupportX(0);
+      ey := Share.getSupportY(0);
       if n = 0 then begin
-        ex := 21 + 110;
-        ey := 90 + 170;
+        ex := Share.getSupportX(21 + 110);
+        ey := Share.getSupportY(90 + 170);
       end
       else if n = 1 then begin
-        ex := 284 + 110;
-        ey := 90 + 170;
+        ex := Share.getSupportX(284 + 110);
+        ey := Share.getSupportY(90 + 170);
       end
       else if n = 2 then begin
-        ex := 547 + 110;
-        ey := 90 + 170;
+        ex := Share.getSupportX(547 + 110);
+        ey := Share.getSupportY(90 + 170);
       end;
 
-      if ChrArr[n].Unfreezing then begin //解冻进行
+      if ChrArr[n].Unfreezing then begin //解冻动画开始
         img := 60 + ChrArr[n].UserChr.job * 60 + ChrArr[n].UserChr.sex * 180 + ChrArr[n].AniIndex;
         d := g_WChrSelImages.GetCachedImage(img, fx, fy);
         if (d <> nil) and (g_boCanDraw) then
@@ -2059,7 +2060,7 @@ begin
         ChrArr[n].AniIndex := 0;
         ChrArr[n].StartTime := GetTickCount;
       end;
-      if ChrArr[n].Freezing then begin //冰冻进行
+      if ChrArr[n].Freezing then begin //冰冻动画开始
         img := 60 + ChrArr[n].UserChr.job * 60 + ChrArr[n].UserChr.sex * 180;
         d := g_WChrSelImages.GetCachedImage(img + FREEZEFRAME - ChrArr[n].AniIndex - 1, fx, fy);
         if (d <> nil) and (g_boCanDraw) then
@@ -2108,16 +2109,16 @@ begin
         end;
       end;
       if n = 0 then begin
-        ex := 21;
-        ey := 90;
+        ex := Share.getSupportX(21);
+        ey := Share.getSupportY(90);
       end
       else if n = 1 then begin
-        ex := 284;
-        ey := 90;
+        ex := Share.getSupportX(284);
+        ey := Share.getSupportY(90);
       end
       else if n = 2 then begin
-        ex := 547;
-        ey := 90;
+        ex := Share.getSupportX(547);
+        ey := Share.getSupportY(90);
       end;
       if (ChrArr[n].UserChr.name <> '') and (g_boCanDraw) then begin
         with g_DXCanvas do begin
@@ -2173,15 +2174,15 @@ begin
   d := g_WMain99Images.Images[Resource.LOGINBAGIMGINDEX];
 {$IFEND}
   if (d <> nil) and (g_boCanDraw) then begin
-    MSurface.Draw(g_FScreenXOrigin - d.Width div 2, g_FScreenYOrigin - d.Height div 2, d.ClientRect, d, FALSE);
+    MSurface.Draw(Share.getLayoutX(d.Width), Share.getLayoutY(d.Height), d.ClientRect, d, FALSE);
     with g_DXCanvas do begin
       TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 8,
                g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 8,
                clYellow, CLIENTUPDATETIME);
 {$IF Var_Interface = Var_Mir2}
-      TextOut(g_FScreenXOrigin - TextWidth(gameTipsTitle) div 2, g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
-      TextOut(g_FScreenXOrigin - TextWidth(gameTipsContent1) div 2, g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
-      TextOut(g_FScreenXOrigin - TextWidth(gameTipsContent2) div 2, g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
+      TextOut(Share.getLayoutX(TextWidth(gameTipsTitle)), g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
+      TextOut(Share.getLayoutX(TextWidth(gameTipsContent1)), g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
+      TextOut(Share.getLayoutX(TextWidth(gameTipsContent2)), g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
 {$IFEND}
     end;
   end;
@@ -2219,12 +2220,12 @@ begin
   if LastForm = lf_Login then begin
     d := g_WOChrSelImages.Images[Resource.LOGINBAGIMGINDEX];
     if (d <> nil) and (g_boCanDraw) then begin
-      MSurface.Draw(g_FScreenXOrigin - d.Width div 2, g_FScreenYOrigin - d.Height div 2, d.ClientRect, d, FALSE);
+      MSurface.Draw(Share.getLayoutX(d.Width), Share.getLayoutY(d.Height), d.ClientRect, d, FALSE);
       with g_DXCanvas do begin
-        TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 1, g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
-        TextOut(g_FScreenXOrigin - TextWidth(gameTipsTitle) div 2, g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
-        TextOut(g_FScreenXOrigin - TextWidth(gameTipsContent1) div 2, g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
-        TextOut(g_FScreenXOrigin - TextWidth(gameTipsContent2) div 2, g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
+        TextOut(g_FScreenWidth - TextWidth(CLIENTUPDATETIME) - 8, g_FScreenHeight - TextHeight(CLIENTUPDATETIME) - 8, clYellow, CLIENTUPDATETIME);
+        TextOut(Share.getLayoutX(TextWidth(gameTipsTitle)), g_FScreenHeight - TextHeight(gameTipsTitle) - 64, $88ECF0, gameTipsTitle);
+        TextOut(Share.getLayoutX(TextWidth(gameTipsContent1)), g_FScreenHeight - TextHeight(gameTipsContent1) - 44, $88ECF0, gameTipsContent1);
+        TextOut(Share.getLayoutX(TextWidth(gameTipsContent2)), g_FScreenHeight - TextHeight(gameTipsContent2) - 24, $88ECF0, gameTipsContent2);
       end;
     end;
   end else
@@ -2236,7 +2237,7 @@ begin
   if (d <> nil) and (g_boCanDraw) then begin
     MSurface.Draw(0, 0, d.ClientRect, d, FALSE);
     with g_DXCanvas do begin
-      TextOut(OLD_SCREEN_WIDTH - TextWidth(CLIENTUPDATETIME) - 1, OLD_SCREEN_HEIGHT - TextHeight(CLIENTUPDATETIME) - 1, clYellow, CLIENTUPDATETIME);
+      TextOut(Share.getSupportX(TextWidth(CLIENTUPDATETIME) - 8), Share.getSupportY(TextHeight(CLIENTUPDATETIME) - 8), clYellow, CLIENTUPDATETIME);
     end;
   end;
 {$IFEND}

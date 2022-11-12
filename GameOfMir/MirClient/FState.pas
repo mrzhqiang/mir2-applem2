@@ -883,7 +883,7 @@ implementation
 
 uses
   ClMain, Share, Actor, GameSetup, FState2, WMFile, cliUtil, Clipbrd, EDcodeEx, Jpeg, FState3, wil,
-  MNSHare, LShare, ShellAPI, MD5Unit, FState4, FWeb, Registry, Bass, IniFiles, ClientSetup;
+  MNSHare, LShare, ShellAPI, MD5Unit, FState4, FWeb, Registry, Bass, IniFiles, ClientSetup, Resource;
 
 const
   MDLGCLICKOX = 25;
@@ -12181,100 +12181,100 @@ begin
   //选择角色窗口
 {$IF Var_Interface = Var_Mir2}
   // 窗口位置：居中，适配旧分辨率
-  DSelectChr.Left := g_FScreenXOrigin - OLD_SCREEN_WIDTH div 2;
-  DSelectChr.Top := g_FScreenYOrigin - OLD_SCREEN_HEIGHT div 2;
+  DSelectChr.Left := 0;
+  DSelectChr.Top := 0;
   DSelectChr.Width := OLD_SCREEN_WIDTH;
   DSelectChr.Height := OLD_SCREEN_HEIGHT;
 
   // 以下按钮必须以客户端的中间点为坐标原点，
-  DscStart.SetImgIndex(g_WMain99Images, 1899);
+  DscStart.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_START);
   // 开始按钮，X 轴居中，Y 轴
-  DscStart.Left := g_FScreenXOrigin - DscStart.Width div 2;
-  DscStart.Top := g_FScreenYOrigin + 160;
+  DscStart.Left := Share.getLayoutX(DscStart.Width);
+  DscStart.Top := Share.getSupportY(458);
   DscStart.OnDirectPaint := DMyStateDirectPaint;
-  DscNewChr.SetImgIndex(g_WMain99Images, 1900);
-  DscNewChr.Left := g_FScreenXOrigin - DscNewChr.Width div 2;
-  DscNewChr.Top := g_FScreenYOrigin + 190;
+  DscNewChr.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_NEW);
+  DscNewChr.Left := Share.getLayoutX(DscNewChr.Width);
+  DscNewChr.Top := Share.getSupportY(486);
   DscNewChr.OnDirectPaint := DMyStateDirectPaint;
-  DscEraseChr.SetImgIndex(g_WMain99Images, 1901);
-  DscEraseChr.Left := g_FScreenXOrigin - DscEraseChr.Width div 2;
-  DscEraseChr.Top := g_FScreenYOrigin + 205;
+  DscEraseChr.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_DELETE);
+  DscEraseChr.Left := Share.getLayoutX(DscEraseChr.Width);
+  DscEraseChr.Top := Share.getSupportY(506);
   DscEraseChr.OnDirectPaint := DMyStateDirectPaint;
-  DscCredits.SetImgIndex(g_WMain99Images, 2136);
-  DscCredits.Left := g_FScreenXOrigin - DscCredits.Width div 2;
-  DscCredits.Top := g_FScreenYOrigin + 225;
+  DscCredits.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_RECOVER);
+  DscCredits.Left := Share.getLayoutX(DscCredits.Width);
+  DscCredits.Top := Share.getSupportY(527);
   DscCredits.OnDirectPaint := DMyStateDirectPaint;
-  DscExit.SetImgIndex(g_WMain99Images, 1902);
-  DscExit.Left := g_FScreenXOrigin - DscExit.Width div 2;
-  DscExit.Top := g_FScreenYOrigin + 245;
+  DscExit.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_EXIT);
+  DscExit.Left := Share.getLayoutX(DscExit.Width);
+  DscExit.Top := Share.getSupportY(547);
   DscExit.OnDirectPaint := DMyStateDirectPaint;
 
-  DscSelect1.SetImgIndex(g_WMain99Images, 1903);
-  DscSelect1.Left := g_FScreenXOrigin - 270;
-  DscSelect1.Top := g_FScreenYOrigin + 150;
+  DscSelect1.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_LEFT_NORMAL);
+  DscSelect1.Left := Share.getSupportX(134);
+  DscSelect1.Top := Share.getSupportY(453);
   DscSelect1.OnDirectPaint := DMyStateDirectPaint;
 
-  DscSelect2.SetImgIndex(g_WMain99Images, 1904);
-  DscSelect2.Left := g_FScreenXOrigin + 285;
-  DscSelect2.Top := g_FScreenYOrigin + 150;
+  DscSelect2.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_LEFT_PRESSE);
+  DscSelect2.Left := Share.getSupportX(686);
+  DscSelect2.Top := Share.getSupportY(454);
   DscSelect2.OnDirectPaint := DMyStateDirectPaint;
 
-  DscSelect3.Left := g_FScreenXOrigin + 285 + 1;
-  DscSelect3.Top := g_FScreenYOrigin + 150 + 1;
+  DscSelect3.Left := Share.getSupportX(542);
+  DscSelect3.Top := Share.getSupportY(87);
   DscSelect3.Width := 1;
   DscSelect3.Height := 1;
   DscSelect3.Visible := False;
 {$ELSE}
   DSelectChr.Left := 0;
   DSelectChr.Top := 0;
-  DSelectChr.Width := BASE_WIDTH;
-  DSelectChr.Height := BASE_HEIGHT;
+  DSelectChr.Width := OLD_SCREEN_WIDTH;
+  DSelectChr.Height := OLD_SCREEN_HEIGHT;
 
-  DscStart.SetImgIndex(g_WMain99Images, 13);
-  DscStart.Left := 314 {385};
-  DscStart.Top := 456 {456};
-  DscNewChr.SetImgIndex(g_WMain99Images, 13);
-  DscNewChr.Left := 41 {348};
-  DscNewChr.Top := 505 {486};
-  DscEraseChr.SetImgIndex(g_WMain99Images, 13);
-  DscEraseChr.Left := 223 {347};
-  DscEraseChr.Top := 505 {506};
-  DscCredits.SetImgIndex(g_WMain99Images, 13);
-  DscCredits.Left := 405 {362};
-  DscCredits.Top := 505 {527};
-  DscExit.SetImgIndex(g_WMain99Images, 13);
-  DscExit.Left := 587 {379};
-  DscExit.Top := 505 {547};
+  DscStart.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_START);
+  DscStart.Left := Share.getSupportX(314) {385};
+  DscStart.Top := Share.getLayoutY(456) {456};
+  DscNewChr.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_NEW);
+  DscNewChr.Left := Share.getSupportX(41) {348};
+  DscNewChr.Top := Share.getLayoutY(505) {486};
+  DscEraseChr.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_DELETE);
+  DscEraseChr.Left := Share.getSupportX(223) {347};
+  DscEraseChr.Top := Share.getLayoutY(505) {506};
+  DscCredits.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_RECOVER);
+  DscCredits.Left := Share.getSupportX(405) {362};
+  DscCredits.Top := Share.getLayoutY(505) {527};
+  DscExit.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_EXIT);
+  DscExit.Left := Share.getSupportX(587) {379};
+  DscExit.Top := Share.getLayoutY(505) {547};
 
-  DscSelect1.Left := 16;
-  DscSelect1.Top := 87;
+  DscSelect1.Left := Share.getSupportX(16);
+  DscSelect1.Top := Share.getLayoutY(87);
   DscSelect1.Width := 242;
   DscSelect1.Height := 351;
 
-  DscSelect2.Left := 279;
-  DscSelect2.Top := 87;
+  DscSelect2.Left := Share.getSupportX(279);
+  DscSelect2.Top := Share.getLayoutY(87);
   DscSelect2.Width := 242;
   DscSelect2.Height := 351;
 
-  DscSelect3.Left := 542;
-  DscSelect3.Top := 87;
+  DscSelect3.Left := Share.getSupportX(542);
+  DscSelect3.Top := Share.getLayoutY(87);
   DscSelect3.Width := 242;
   DscSelect3.Height := 351;
 {$IFEND}
 
   //创建角色窗口
 {$IF Var_Interface = Var_Mir2}
-  d := g_WMain99Images.Images[1905];
+  d := g_WMain99Images.Images[BG_CREATE_ROLE];
   if d <> nil then begin
-    DCreateChr.SetImgIndex(g_WMain99Images, 1905);
-    DCreateChr.Left := g_FScreenXOrigin - d.Width div 2;
-    DCreateChr.Top := g_FScreenYOrigin - d.Height div 2;
+    DCreateChr.SetImgIndex(g_WMain99Images, BG_CREATE_ROLE);
+    DCreateChr.Left := Share.getLayoutX(d.Width);
+    DCreateChr.Top := Share.getLayoutY(d.Height);
   end;
-  DccWarrior.SetImgIndex(g_WMain99Images, 1911);
-  DccWizzard.SetImgIndex(g_WMain99Images, 1912);
-  DccMonk.SetImgIndex(g_WMain99Images, 1913);
-  DccMale.SetImgIndex(g_WMain99Images, 1914);
-  DccFemale.SetImgIndex(g_WMain99Images, 1915);
+  DccWarrior.SetImgIndex(g_WMain99Images, BTN_WARRIOR);
+  DccWizzard.SetImgIndex(g_WMain99Images, BTN_WIZZARD);
+  DccMonk.SetImgIndex(g_WMain99Images, BTN_MONK);
+  DccMale.SetImgIndex(g_WMain99Images, BTN_MALE);
+  DccFemale.SetImgIndex(g_WMain99Images, BTN_FEMALE);
 
   DccJ.Visible := False;
   DccM.Visible := False;
@@ -12282,8 +12282,8 @@ begin
   DccH.Visible := False;
   DccT.Visible := False;
 
-  DccOk.SetImgIndex(g_WMain99Images, 1892);
-  DccClose.SetImgIndex(g_WMain99Images, 1850);
+  DccOk.SetImgIndex(g_WMain99Images, BTN_CREATE_OK);
+  DccClose.SetImgIndex(g_WMain99Images, BTN_CREATE_CLOSE);
 
   DccWarrior.Left := 48;
   DccWarrior.Top := 157;
@@ -12307,8 +12307,8 @@ begin
   d := g_WMain99Images.Images[1480];
   if d <> nil then begin
     DCreateChr2.SetImgIndex(g_WMain99Images, 1480);
-    DCreateChr2.Left := (BASE_WIDTH - d.Width) div 2;
-    DCreateChr2.Top := (BASE_HEIGHT - d.Height) div 2;
+    DCreateChr2.Left := Share.getLayoutX(d.Width);
+    DCreateChr2.Top := Share.getLayoutY(d.Height);
   end;
 
   DccOk2.SetImgIndex(g_WMain99Images, 24);
@@ -12343,8 +12343,8 @@ begin
   d := g_WMain99Images.Images[34];
   if d <> nil then begin
     DCreateChr.SetImgIndex(g_WMain99Images, 34);
-    DCreateChr.Left := (BASE_WIDTH - d.Width) div 2;
-    DCreateChr.Top := (BASE_HEIGHT - d.Height) div 2;
+    DCreateChr.Left := Share.getLayoutX(d.Width);
+    DCreateChr.Top := Share.getLayoutY(d.Height);
   end;
   DccWarrior.SetImgIndex(g_WMain99Images, 42);
   DccWizzard.SetImgIndex(g_WMain99Images, 42);
@@ -12394,8 +12394,8 @@ begin
   d := g_WMain99Images.Images[2137];
   if d <> nil then begin
     DRenewChr.SetImgIndex(g_WMain99Images, 2137);
-    DRenewChr.Left := g_FScreenXOrigin - d.Width div 2;
-    DRenewChr.Top := g_FScreenYOrigin - d.Height div 2;
+    DRenewChr.Left := Share.getLayoutX(d.Width);
+    DRenewChr.Top := Share.getLayoutY(d.Height);
   end;
   DButRenewClose.SetImgIndex(g_WMain99Images, 1850);
   DButRenewClose.Left := 247;
@@ -12409,8 +12409,8 @@ begin
   d := g_WMain99Images.Images[35];
   if d <> nil then begin
     DRenewChr.SetImgIndex(g_WMain99Images, 35);
-    DRenewChr.Left := (BASE_WIDTH - d.Width) div 2;
-    DRenewChr.Top := (BASE_HEIGHT - d.Height) div 2;
+    DRenewChr.Left := Share.getLayoutX(d.Width);
+    DRenewChr.Top := Share.getLayoutY(d.Height);
   end;
   DButRenewClose.SetImgIndex(g_WMain99Images, 24);
   DButRenewClose.Left := 166;
@@ -12423,15 +12423,13 @@ begin
 
   //底部状态栏
 {$IF Var_Interface = Var_Mir2}
-  if g_FScreenWidth = LARGE_SCREEN_WIDTH then
-    i := 1614
-  else
-    i := 1615;
+// 没有 800x600 分辨率，所以不需要 1615 这种底部状态栏了
+    i := 1614;
 
   d := g_WMain99Images.Images[i];
   if d <> nil then begin
     DBottom.SetImgIndex(g_WMain99Images, i);
-    DBottom.Left :=  g_FScreenXOrigin - d.Width div 2;
+    DBottom.Left :=  Share.getLayoutX(d.Width);
     DBottom.Top := g_FScreenHeight - d.Height;
   end;
 
@@ -13056,14 +13054,14 @@ begin
 
 
   //聊天框
-  DWndSay.Left := 0;
+  DWndSay.Left := Share.getSupportX(0);
   DWndSay.Height := 2 + SAYLISTHEIGHT * 7;
   DWndSay.Top := g_FScreenHeight - DWndSay.Height - DBottom.Height - 39;
 
   DWndSay.Width := DEFSAYLISTWIDTH + 16;
 
   DBtnSayAll.SetImgIndex(g_WMain99Images, 594);
-  DBtnSayAll.Left := 16;
+  DBtnSayAll.Left := Share.getSupportX(16);
   DBtnSayAll.Top := DWndSay.Height + 1;
   DBtnSayAll.AppendData := Pointer(Integer(us_All));
   DBtnSayHear.SetImgIndex(g_WMain99Images, 596);
@@ -13100,31 +13098,31 @@ begin
   dchkSayLock.Top := DWndSay.Height + 2;
 
   DBTSayLock.SetImgIndex(g_WMain99Images, 582);
-  DBTSayLock.Left := -1;
+  DBTSayLock.Left := Share.getSupportX(-1);
   DBTSayLock.Top := DWndSay.Height + 19;
 
   dwndSayMode.Left := DBTSayLock.Left;
-  dwndSayMode.Top := 415;
+  dwndSayMode.Top := Share.getSupportY(415);
   dwndSayMode.Height := 10;
   dwndSayMode.Width := 10;
 
   dbtnSayModeWorld.SetImgIndex(g_WMain99Images, 656);
-  dbtnSayModeWorld.Left := 0;
-  dbtnSayModeWorld.Top := 0;
+  dbtnSayModeWorld.Left := Share.getSupportX(0);
+  dbtnSayModeWorld.Top := Share.getSupportY(0);
   dbtnSayModeGuild.SetImgIndex(g_WMain99Images, 654);
-  dbtnSayModeGuild.Left := 0;
+  dbtnSayModeGuild.Left := Share.getSupportX(0);
   dbtnSayModeGuild.Top := dbtnSayModeWorld.Top + dbtnSayModeWorld.Height;
   dbtnSayModeGroup.SetImgIndex(g_WMain99Images, 652);
-  dbtnSayModeGroup.Left := 0;
+  dbtnSayModeGroup.Left := Share.getSupportX(0);
   dbtnSayModeGroup.Top := dbtnSayModeGuild.Top + dbtnSayModeGuild.Height;
   dbtnSayModeCry.SetImgIndex(g_WMain99Images, 650);
-  dbtnSayModeCry.Left := 0;
+  dbtnSayModeCry.Left := Share.getSupportX(0);
   dbtnSayModeCry.Top := dbtnSayModeGroup.Top + dbtnSayModeGroup.Height;
   dbtnSayModeWhisper.SetImgIndex(g_WMain99Images, 658);
-  dbtnSayModeWhisper.Left := 0;
+  dbtnSayModeWhisper.Left := Share.getSupportX(0);
   dbtnSayModeWhisper.Top := dbtnSayModeCry.Top + dbtnSayModeCry.Height;
   dbtnSayModeHear.SetImgIndex(g_WMain99Images, 648);
-  dbtnSayModeHear.Left := 0;
+  dbtnSayModeHear.Left := Share.getSupportX(0);
   dbtnSayModeHear.Top := dbtnSayModeWhisper.Top + dbtnSayModeWhisper.Height;
 
   DBTEdit.SetImgIndex(g_WMain99Images, 102);

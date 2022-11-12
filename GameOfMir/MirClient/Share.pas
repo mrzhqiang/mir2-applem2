@@ -102,6 +102,10 @@ var
   function getLayoutX(width: Integer): Integer;
   // 获取布局的 Y 坐标，即相对于场景中心点的左上角 Y 坐标
   function getLayoutY(height: Integer): Integer;
+  // 获取兼容的 X 坐标，原先是在 800x600 坐标系中的参数，需要切换到大屏时，必须使用兼容坐标
+  function getSupportX(x: Integer): Integer;
+  // 获取兼容的 Y 坐标，原先是在 800x600 坐标系中的参数，需要切换到大屏时，必须使用兼容坐标
+  function getSupportY(y: Integer): Integer;
 
 implementation
 
@@ -172,6 +176,16 @@ end;
 function getLayoutY(height: Integer): Integer;
 begin
     Result := g_FScreenYOrigin - height div 2;
+end;
+
+function getSupportX(x: Integer): Integer;
+begin
+    Result := getLayoutX(OLD_SCREEN_WIDTH) + x;
+end;
+
+function getSupportY(y: Integer): Integer;
+begin
+    Result := getLayoutY(OLD_SCREEN_HEIGHT) + y;
 end;
 
 end.

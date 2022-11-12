@@ -6,7 +6,7 @@ interface
 uses
   Windows, SysUtils, Classes, Graphics, Controls, Forms, HGE, 
   IntroScn, HGETextures, DirectXGraphics, HGEBase, 
-  HUtil32, MShare, wil;
+  HUtil32, MShare, wil, Resource;
 
 type
   pTSayHint = ^TSayHint;
@@ -383,7 +383,7 @@ begin
   WideStr := str;
 
 {$IF Var_Interface = Var_Mir2}
-  SayMessage := NewSayMsgEx(DEFSAYLISTWIDTH + g_FScreenWidth - OLD_SCREEN_WIDTH, SAYLISTHEIGHT, UserSayType, BColor);
+  SayMessage := NewSayMsgEx(DEFSAYLISTWIDTH, SAYLISTHEIGHT, UserSayType, BColor);
 {$ELSE}
   SayMessage := NewSayMsg(DEFSAYLISTWIDTH, SAYLISTHEIGHT, UserSayType);
 {$IFEND}
@@ -391,7 +391,7 @@ begin
   if boFirst then begin
 {$IF Var_Interface =  Var_Default}
     if boSys then begin
-      d := g_WMain99Images.Images[288];
+      d := g_WMain99Images.Images[Resource.EXCLAMATION_POINT];
       if d <> nil then begin
         SayMessage.SaySurface.CopyTexture(6, (SAYLISTHEIGHT - d.Height) div 2, d);
       end;
