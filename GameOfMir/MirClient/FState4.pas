@@ -673,10 +673,10 @@ begin
 {$IF Var_Interface = Var_Mir2}
   DTopMsg.Left := 260;
   DTopMsg.Top := 0;
-  DTopMsg.Width := 280 + (g_FScreenWidth - DEFSCREENWIDTH);
+  DTopMsg.Width := 280 + (g_FScreenWidth - OLD_SCREEN_WIDTH);
   DTopMsg.Height := 16;
 {$ELSE}
-  DTopMsg.Left := 224 + (g_FScreenWidth - DEFSCREENWIDTH) div 2;
+  DTopMsg.Left := 224 + g_FScreenXOrigin - OLD_SCREEN_WIDTH div 2;
   DTopMsg.Top := 37;
   DTopMsg.Width := 280;
   DTopMsg.Height := 16;
@@ -904,8 +904,8 @@ begin
   d := g_WMain99Images.Images[2074];
   if d <> nil then begin
     DWndMagicKey.SetImgIndex(g_WMain99Images, 2074);
-    DWndMagicKey.Left := (g_FScreenWidth - d.Width) div 2;
-    DWndMagicKey.Top := (g_FScreenHeight - d.Height) div 2;
+    DWndMagicKey.Left := g_FScreenXOrigin - d.Width div 2;
+    DWndMagicKey.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DMagicKeyF1.SetImgIndex(g_WMain99Images, 1970);

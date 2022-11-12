@@ -21,7 +21,7 @@ uses
   IntroScn, PlayScn, MapUnit, WIL, Grobal2, HGEFonts, DirectXGraphics, D3DX81mo,
   Actor, CliUtil, HUtil32, EDcodeEx, LShare,
   ClFunc, magiceff, SoundUtil, clEvent, Bass, DateUtils,
-  MShare, Share, jpeg, HGECanvas, RSA, SDK;
+  MShare, Share, jpeg, HGECanvas, RSA, SDK, Resource;
 
 type
   TLoginConnInfo = packed record
@@ -649,13 +649,12 @@ var
   //  BoOneClick: Boolean;
   OneClickMode: TOneClickMode;
 
-    //  m_boPasswordIntputStatus: Boolean = FALSE;
-
 implementation
 
 uses
   HerbActor, GameSetup, Common, FState3, FState2, FState, FState4, FindMapPath, MudUtil, WMFile, HGEBase,
-  MD5Unit, Registry, FWeb, MNShare, CheckDLL, MyCommon, UrlMon, Logo, EncryptFile, FrmAD, ShellAPI, DlgConfig, GuaJi, IniFiles;
+  MD5Unit, Registry, FWeb, MNShare, CheckDLL, MyCommon, UrlMon, Logo, EncryptFile, FrmAD, ShellAPI,
+  DlgConfig, GuaJi, IniFiles, ClientSetup;
 
 {$R *.DFM}
 {$R NewCursor.RES}
@@ -787,9 +786,8 @@ var
   NewEnumDisplayDevices: TNewEnumDisplayDevices;
   NewChangeDisplaySettings: TNewChangeDisplaySettings;
   REGPathStr: string;
-  boBITDEPTH: Boolean;
-  ini: TIniFile;
 begin
+  // 获取 RGB 资源，并读取到 g_ColorTable -- TRGBQuad 数组
   Res := TResourceStream.Create(Hinstance, '256RGB', 'RGB');
   try
     Res.Read(g_ColorTable, SizeOf(g_ColorTable));
@@ -797,14 +795,20 @@ begin
     Res.Free;
   end;
 
-  boBITDEPTH := True; // True == 32 位颜色
-  REGPathStr := '';
-
+  // 加载客户端配置
+  ClientSetup.loadData();
+  // Windows 系统库
+  // https://learn.microsoft.com/zh-cn/windows/win32/dlls/dynamic-link-library-creation#using-an-import-library
   MODULE := LoadLibrary('user32.dll');
+  // 查询注册表
   Reg := TRegistry.Create;
-  ini := TIniFile.Create('.\mir2.ini');
+  REGPathStr := '';
   Try
+    // 允许你获取有关当前会话中的显示设备的信息
+    // https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesa
     NewEnumDisplayDevices := GetProcAddress(MODULE, 'EnumDisplayDevicesA');
+    // 将默认显示设备的设置更改为指定的图形模式
+    // https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-changedisplaysettingsa
     NewChangeDisplaySettings := GetProcAddress(MODULE, 'ChangeDisplaySettingsA');
     if Assigned(NewEnumDisplayDevices) then
     begin
@@ -814,40 +818,30 @@ begin
       REGPathStr := GetValidStr3(REGPathStr, flname, ['\']);
       REGPathStr := GetValidStr3(REGPathStr, flname, ['\']);
     end;
+
     Try
-      if ini <> nil then
-      begin
-        boBITDEPTH := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_BITDEPTH, boBITDEPTH);
-        g_FScreenMode := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_DISPLAY, g_FScreenMode);
-//        g_boFullScreen := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_WINDOWS, False);
-        g_btMP3Volume := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
-        g_btSoundVolume := ini.ReadInteger(REG_SETUP_OPATH, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
-        g_boBGSound := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_MP3OPEN, g_boBGSound);
-        g_boSound := ini.ReadBool(REG_SETUP_OPATH, REG_SETUP_SOUNDOPEN, g_boSound);
-
-        boBITDEPTH := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, boBITDEPTH);
-        g_FScreenMode := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, g_FScreenMode);
-//        g_boFullScreen := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, g_boFullScreen);
-        g_btMP3Volume := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
-        g_btSoundVolume := ini.ReadInteger(REG_SETUP_PATH, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
-        g_boBGSound := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, g_boBGSound);
-        g_boSound := ini.ReadBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, g_boSound);
-      end;
-
       if (REGPathStr <> '') and (Assigned(NewChangeDisplaySettings)) then
       begin
+        // WIN + R 输入 regedit 可以打开注册表编辑器
         Reg.RootKey := HKEY_LOCAL_MACHINE;
+        // 计算机\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000
         if Reg.OpenKey(REGPathStr, True) then
         begin
+          // 检查是否开启显卡硬件加速，0 为开启，非 0 为关闭
           if ReadInteger(Reg, 'Acceleration.Level', 0) <> 0 then
           begin
             Reg.DeleteValue('Acceleration.Level');
-            NewChangeDisplaySettings(nil, $40);
+            // https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-changedisplaysettingsa#parameters
+            // $40 不符合参数描述，可能在 delphi 中有特殊意义？或者它根本没生效？
+            // 所以我们使用 CDS_RESET  试试
+            NewChangeDisplaySettings(nil, CDS_RESET);
           end;
         end;
         Reg.CloseKey;
       end;
 
+      // https://www.office26.com/windows/windows_35890.html
+      // WIN + R 输入 dxdiag 可以查看硬件相关参数，下面三个注册表参数就与之相关
       Reg.RootKey := HKEY_LOCAL_MACHINE;
       if Reg.OpenKey('SOFTWARE\Microsoft\DirectDraw', True) then
       begin
@@ -868,72 +862,88 @@ begin
     End;
   Finally
     Reg.Free;
-    if ini <> nil then
-    begin
-      ini.Free;
-    end;
     FreeLibrary(MODULE);
   End;
 
+  // 根据读取的客户端配置，设置分辨率
   case g_FScreenMode of
-    1: // 1280 x 720
+    DEF_SCREEN_MODE:
     begin
-      g_FScreenWidth := DEFWIDESCREENWIDTH;
-      g_FScreenHeight := DEFWIDESCREENHEIGHT;
+      g_FScreenWidth := DEF_SCREEN_WIDTH;
+      g_FScreenHeight := DEF_SCREEN_HEIGHT;
     end;
-    2: // 1600 x 900
+    LARGE_SCREEN_MODE:
     begin
-      g_FScreenWidth := DEFMAXSCREENWIDTH;
-      g_FScreenHeight := DEFMAXSCREENHEIGHT;
+      g_FScreenWidth := LARGE_SCREEN_WIDTH;
+      g_FScreenHeight := LARGE_SCREEN_HEIGHT;
     end;
-  else // 1024 x 576 default
-  begin
-    g_FScreenWidth := DEFSCREENWIDTH;
-    g_FScreenHeight := DEFSCREENHEIGHT;
-  end;
+  else
+    begin
+      g_FScreenWidth := OLD_SCREEN_WIDTH;
+      g_FScreenHeight := OLD_SCREEN_HEIGHT;
+    end;
   end;
 
-  g_FScreenWidthOffset := g_FScreenWidth - DEFSCREENWIDTH;
-  g_FScreenHeightOffset := g_FScreenHeight - DEFSCREENHEIGHT;
+  // 记录屏幕中心点 X Y 坐标
+  g_FScreenXOrigin := g_FScreenWidth div 2;
+  g_FScreenYOrigin := g_FScreenHeight div 2;
+  // 设置 HGE 的屏幕宽高
   GUIFScreenWidth := g_FScreenWidth;
   GUIFScreenHeight := g_FScreenHeight;
+  // DirectDrawCreate 句柄，但看代码似乎没什么用
+  // https://learn.microsoft.com/zh-cn/windows/win32/api/ddraw/nf-ddraw-directdrawcreate
   FDDrawHandle := 0;
   FIDDraw := nil;
-  boShowPrintMsg := True;
-  //EnumDisplaySettings(nil, $FFFFFFFF, FDevMode);
-
-  //EnumDisplayDevices(0, 0, DV, 0);
   FboDisplayChange := False;
+  // =====以上无用代码分割线=====
+
+  // 显示截图消息
+  boShowPrintMsg := True;
+
   g_btMapinitializePos := 0;
   FLoginConnIndex := 0;
   FCheckLogin := False;
+
+  // 程序请求参数
   g_sMainParam1 := ParamStr(1);
   g_sMainParam2 := ParamStr(2);
   g_sMainParam3 := ParamStr(3);
   g_sMainParam4 := ParamStr(4);
   g_sMainParam5 := ParamStr(5);
   g_sMainParam6 := ParamStr(6);
+
+  // 各种提示计时
   FShowHintTick := 0;
   FShowHintTick2 := 0;
+
+  // 服务器列表相关参数
   FillChar(g_ServerInfo, SizeOf(g_ServerInfo), #0);
   g_Login_Handle := StrToIntDef(ParamStr(1), 0);
   g_ServerInfoCount := 0;
+
+  // logo 相关参数
   FboShowLogo := False;
   FnShowLogoIndex := 0;
   FdwShowLogoTick := GetTickCount;
 
+  // 内嵌网页浏览器
   FrmWeb := TFrmWeb.Create(Self);
   FrmWeb.Left := 5;
   FrmWeb.Top := 39;
   FrmWeb.ClientWidth := g_FScreenWidth - 10;
   FrmWeb.ClientHeight := g_FScreenHeight - 54;
   FrmWeb.Parent := Self;
+
+  // 文件版本信息
   GetFileVersion(ParamStr(0), @g_FileVersionInfo);
+  // 初始化随机种子
   Randomize;
+  // 临界区，相当于可重入锁
   InitializeCriticalSection(FCriticalSection);
+  // 鼠标移动计时？
   mousemovetime := GetTickCount;
 
-  //DXDraw.AutoInitialize := True;
+  // 鼠标光标样式
 {$IF Var_Interface = Var_Mir2}
   Screen.Cursors[crMyDeal] := LoadCursor(HInstance, MAKEINTRESOURCE('Deal'));
   Screen.Cursors[crOpenBox] := LoadCursor(HInstance, MAKEINTRESOURCE('OpenBox'));
@@ -958,58 +968,40 @@ begin
 {$IFEND}
 
   HGE := HGECreate(HGE_VERSION);
-  if boBITDEPTH then
-    g_BitCount := 32
-  else
-    g_BitCount := 16;
-
   HGE.System_SetState(HGE_SCREENBPP, g_BitCount);
-  //ChangeDisplaySettingsW(nil, CDS_RESET);
+
   m_FreeTextureTick := GetTickCount;
   m_FreeTextureIndex := 0;
+
   m_boExit := False;
+
   g_StditemList := TList.Create;
   g_StditemFiltrateList := TList.Create;
+
   boSocketClose := False;
+
   tempidx := 0;
   CheckSpeedTick := 0;
+
   TempItemList := TList.Create;
   g_SetItemsList := TList.Create;
   mousechecktime := GetTickCount;
+
   g_DWinMan := TDWinManager.Create(Self);
-  //g_DXDraw := DXDraw;
 
   boSizeMove := False;
   boInFocus := True;
   g_boSendLuck := False;
   boOpenLoginDoor := False;
+
   g_dwDefTime := GetTickCount;
   g_EMailList := TQuickStringPointerList.Create;
 
   m_SayMsgList := TList.Create;
-  //g_boFullScreen := True;
-//  if g_boFullScreen then begin
-//    BorderStyle := bsNone;
-//    //HGE.System_SetState(HGE_WINDOWED, False);
-//    BorderStyle := bsNone;
-//    BorderIcons := [];
-//    //HGE.System_SetState(HGE_WINDOWED, False);
-//    ClientWidth := DEFSCREENWIDTH;
-//    ClientHeight := DEFSCREENHEIGHT;
-//    WindowState := wsMaximized;
-//
-//    DisplayChange(False);
-//
-//    m_Point := ClientOrigin;
-//  end
-//  else begin
   BorderStyle := bsSingle;
-//  end;
   HGE.System_SetState(HGE_WINDOWED, True);
   ClientWidth := g_FScreenWidth;
   ClientHeight := g_FScreenHeight;
-  //MyDevice.Width := g_FScreenWidth;
-  //MyDevice.Height := g_FScreenHeight;
   HGE.System_SetState(HGE_FScreenWidth, g_FScreenWidth);
   HGE.System_SetState(HGE_FScreenHeight, g_FScreenHeight);
   HGE.System_SetState(HGE_HIDEMOUSE, False);
@@ -1022,11 +1014,9 @@ begin
   HGE.System_SetState(HGE_FINALIZE, MyDeviceFinalize);
   HGE.System_SetState(HGE_NOTIFYEVENT, MyDeviceNotifyEvent);
 
-  {g_boFullScreen := True;
-  //全屏   }
   if not DirectoryExists(g_sPhotoDirname) then
     CreateDir(g_sPhotoDirname);
-  //end;
+
   Caption := g_sLogoText;
   LoadWMImagesLib(nil);
 
@@ -1040,34 +1030,24 @@ begin
 
   g_WgHintList := TStringList.Create;
   g_DControlFreeList := TList.Create;
-  //g_ShowMsgDlgList := TList.Create;
 
-  //g_ItemFiltrateList := TList.Create;
   g_MasterHDInfoList := TList.Create;
   g_QuestMsgList := TList.Create;
   g_DXSound := TDXSound.Create(Self);
   g_DXSound.Initialize;
 
-  //DXDraw.Color := clBlack;
-  //Label1.Left := (g_FScreenWidth - label1.Width) div 2;
-  //Label1.Top :=  (g_FScreenHeight - label1.Height) div 2;
-  //DXDraw.Display.Width := g_FScreenWidth;
-  //DXDraw.Display.Height := g_FScreenHeight;
   if g_DXSound.Initialized then
   begin
     g_Sound := TSoundEngine.Create(g_DXSound.DSound);
     g_Sound.Volume := g_btSoundVolume;
-    //MP3 := TMPEG.Create(nil);
   end
   else begin
     g_Sound := nil;
-    //MP3 := nil;
   end;
 
   g_ToolMenuHook := SetWindowsHookEx(WH_KEYBOARD, @KeyboardHookProc, 0, GetCurrentThreadID);
 
   g_DXFont := TDXFont.Create;
-
 
   g_SoundList := TStringList.Create;
   BGMusicList := TStringList.Create;
@@ -1111,30 +1091,18 @@ begin
   Except
   End;
 
-
   for I := Low(g_MakeMagicList) to High(g_MakeMagicList) do
     g_MakeMagicList[I] := TList.Create;
 
-  //LoadStditemList();
-  //LoadMagicList();
-
   LoadMapEffectList();
-  //LoadShopHintList();
-  //LoadMissionList();
-  //LoadMasterHDInfo();
-  {if FileExists('.\Data\explain2.dat') then
-    g_WgHintList.LoadFromFile('.\Data\explain2.dat');}
-  //if FileExists (flname) then
-  //   SoundList.LoadFromFile (flname);
 
+  // 文本屏幕
   DScreen := TDrawScreen.Create;
-  //IntroScene := TIntroScene.Create;
   LoginScene := TLoginScene.Create;
   SelectChrScene := TSelectChrScene.Create;
   PlayScene := TPlayScene.Create;
   HintScene := THintScene.Create;
   SelServer := TSelServer.Create;
-  //LoginNoticeScene := TLoginNotice.Create;
   g_FriendList := TStringList.Create;
   g_MyWhisperList := TStringList.Create;
   g_MyBlacklist := TStringList.Create;
@@ -1142,21 +1110,17 @@ begin
   Map := TMap.Create;
   g_nMiniMapPath := nil;
   m_boCheckAppend := False;
-  //g_LegendMap := nil;
   g_LegendMap := TLegendMap.Create;
   g_GuaJi := TGuaJi.Create;
   g_DropedItemList := TList.Create;
-  //g_MagicList := TList.Create;
   g_FreeActorList := TList.Create;
   g_FreeItemList := TList.Create;
-  //DObjList := TList.Create;
   EventMan := TClEventManager.Create;
   g_ChangeFaceReadyList := TList.Create;
 
   g_MySelf := nil;
 
   SafeFillChar(g_UseItems, sizeof(g_UseItems), #0);
-  //   SafeFillChar (UseItems, sizeof(TClientItem)*9, #0);
   SafeFillChar(g_ItemArr, sizeof(g_ItemArr), #0);
   SafeFillChar(g_DealItems, sizeof(g_DealItems), #0);
   SafeFillChar(g_DealRemoteItems, sizeof(g_DealRemoteItems), #0);
@@ -1171,12 +1135,9 @@ begin
   SafeFillChar(g_MyShopSellItems, SizeOf(g_MyShopSellItems), 0);
   SafeFillChar(g_MyShopBuyItems, SizeOf(g_MyShopBuyItems), 0);
 
-  //SafeFillChar(g_MouseShopItems,SizeOf(TShopItem),#0);
-  //DXDraw.Initialize
   g_SaveItemList := TList.Create;
   g_MenuItemList := TList.Create;
   g_WaitingUseItem.Item.S.name := '';
-  //馒侩芒 辑滚客 烹脚埃俊 烙矫历厘
   g_EatingItem.Item.S.name := '';
 
   g_nTargetX := -1;
@@ -1216,23 +1177,19 @@ begin
   g_dwSHTimerTime := 0;
   g_nSHFakeCount := 0;
 
-  //g_nDayBright := 3;
   g_nAreaStateValue := 0;
   g_ConnectionStep := cnsSelServer;
 
   g_boSendLogin := FALSE;
   g_boServerConnected := FALSE;
   SocStr := '';
-  WarningLevel := 0; //阂樊菩哦 荐脚 冉荐 (菩哦汗荤 啊瓷己 乐澜)
+  WarningLevel := 0;
   ActionFailLock := FALSE;
-  //g_boMapMoving := FALSE;
   g_boMapMovingWait := FALSE;
   g_boMapInitialize := False;
   g_boMapApoise := False;
   g_boCheckBadMapMode := FALSE;
   g_boCheckSpeedHackDisplay := FALSE;
-  //g_boViewMiniMap := True;
-  //g_boShowGreenHint := True;
   g_boShowWhiteHint := True;
   FailDir := 0;
   FailAction := 0;
@@ -1266,10 +1223,8 @@ begin
 
   g_boNextTimeFireHit := FALSE;
 
-  //g_boNoDarkness := FALSE;
   g_SoftClosed := FALSE;
 
-  //g_boAllowGroup := FALSE;
   g_GroupMembers := TList.Create;
   SetDefKeyInfo();
 
@@ -1277,59 +1232,14 @@ begin
   FrmMainWinHandle := Handle;
   g_FrmMainWinHandle := Handle;
 
-  //盔努腐, 内齿岿靛 殿..
-  //BoOneClick := FALSE;
   OneClickMode := toNone;
 
-  //g_boSound := True;
-  //g_boBGSound := True;
-
-  (*if g_sMainParam1 = '' then begin
-    CSocket.Address := g_sServerAddr;
-    CSocket.Port := g_nServerPort;
-  end
-  else begin
-    if (g_sMainParam1 <> '') and (g_sMainParam2 = '') then
-      CSocket.Address := g_sMainParam1;
-    if (g_sMainParam2 <> '') and (g_sMainParam3 = '') then begin
-      CSocket.Address := g_sMainParam1;
-      CSocket.Port := StrToIntDef(g_sMainParam2, 0);
-    end;
-    if (g_sMainParam3 <> '') then begin
-      //if CompareText(g_sMainParam1, '/KWG') = 0 then begin
-        {
-        CSocket.Address := kornetworldaddress;  //game.megapass.net';
-        CSocket.Port := 9000;
-        BoOneClick := TRUE;
-        OneClickMode := toKornetWorld;
-        with KornetWorld do begin
-           CPIPcode := MainParam2;
-           SVCcode  := MainParam3;
-           LoginID  := MainParam4;
-           CheckSum := MainParam5; //'dkskxhdkslxlkdkdsaaaasa';
-        end;
-        }
-      //end
-      //else begin
-      CSocket.Address := g_sMainParam2;
-      CSocket.Port := StrToIntDef(g_sMainParam3, 0);
-      //BoOneClick := True;
-    //end;
-    end;
-  end;         *)
-
-  //CSocket.Active := True;
-  //MainSurface := nil;
   DebugOutStr('----------------------- started ------------------------');
-  {QueryPerformanceFrequency(Frequency);
-  QueryPerformanceCounter(OldCounter);
-  CheckSpeedTime := GetTickCount;      }
   Application.OnException := OnProgramException;
   FrmDlg := TFrmDlg.Create(nil);
   FrmDlg2 := TFrmDlg2.Create(nil);
   FrmDlg3 := TFrmDlg3.Create(nil);
   FrmDlg4 := TFrmDlg4.Create(nil);
-  //Application.OnIdle := OnIdle;
 end;
 
 procedure TfrmMain.OnProgramException(Sender: TObject; E: Exception);
@@ -1691,8 +1601,8 @@ begin
       ClientHeight := HGE.System_GetState(HGE_FScreenHeight);
 //        if g_boFullScreen then begin
 //          if FIDDraw <> nil then begin
-//            if ClientWidth = DEFSCREENWIDTH then FIDDraw.SetDisplayMode(DEFSCREENWIDTH, DEFSCREENHEIGHT, 16)
-//            else FIDDraw.SetDisplayMode(DEFMAXSCREENWIDTH, DEFMAXSCREENHEIGHT, 16);
+//            if ClientWidth = OLD_SCREEN_WIDTH then FIDDraw.SetDisplayMode(OLD_SCREEN_WIDTH, OLD_SCREEN_HEIGHT, 16)
+//            else FIDDraw.SetDisplayMode(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, 16);
 //          end;
 //          m_Point.X := 0;
 //          m_Point.Y := 0;
@@ -1706,127 +1616,7 @@ begin
 end;
 
 procedure TfrmMain.DXDrawInitialize(Sender: TObject);
-(* procedure RefLoginWin(Len: Integer);
- var
-   d: TDirectDrawSurface;
-   rc: TRect;
- begin
-   if g_boChangeWindow then
-     exit;
-   DXDraw.Surface.Fill(0);
-   d := g_WMain99Images.Images[LOGINBAGIMGINDEX];
-   if d <> nil then
-     DXDraw.Surface.Draw(0, 0, d.ClientRect, d, True);
-
-   d := g_WMain99Images.Images[7];
-   if d <> nil then
-     DXDraw.Surface.Draw(102, 450 + 60, d.ClientRect, d, True);
-
-   d := g_WMain99Images.Images[8];
-   if d <> nil then begin
-     rc := d.ClientRect;
-     rc.Right := Trunc(d.Width * (len / 100));
-     DXDraw.Surface.Draw(108, 457 + 60, rc, d, True);
-   end;
-   DxDraw.Flip;
- end;       *)
 begin
-  (*  if g_boFirstTime then begin
-      g_boFirstTime := FALSE;
-
-      DXDraw.SurfaceWidth := g_FScreenWidth;
-      DXDraw.SurfaceHeight := g_FScreenHeight;
-  {$IF USECURSOR = DEFAULTCURSOR}
-      DXDraw.Cursor := crHourGlass;
-  {$ELSE}
-      DXDraw.Cursor := crMyNone;
-  {$IFEND}
-
-      DXDraw.Surface.Canvas.Font.Assign(frmMain.Font);
-
-      frmMain.Font.name := DEFFONTNAME;
-      frmMain.Font.Size := DEFFONTSIZE;
-      frmMain.Canvas.Font.name := DEFFONTNAME;
-      frmMain.Canvas.Font.Size := DEFFONTSIZE;
-      DXDraw.Surface.Canvas.Font.name := DEFFONTNAME;
-      DXDraw.Surface.Canvas.Font.Size := DEFFONTSIZE;
-      //FrmDlg.DEditChat.Font.name := g_sCurFontName;
-      Refresh; //刷新主窗口,以免全黑
-
-      //DxDraw.Surface.Fill(0);
-
-      if not g_boChangeWindow then
-        InitWMImagesLib(DXDraw)
-      else
-        InitWMImagesLibEx(DXDraw);
-
-      g_ColorTable := g_WMainImages.MainPalette;
-
-      RefLoginWin(10);
-      if not g_boChangeWindow then begin
-        BuildColorLevels();
-        RefLoginWin(30);
-        FrmDlg.Initialize;
-        RefLoginWin(40);
-        FrmDlg2.Initialize;
-        RefLoginWin(50);
-        FrmDlg3.Initialize;
-      end;
-      FrmDlg.InitializeEx(DXDraw.DDraw);
-      FrmDlg2.InitializeEx(DXDraw.DDraw);
-      FrmDlg3.InitializeEx(DXDraw.DDraw);
-      RefLoginWin(60);
-      DScreen.Initialize;
-      RefLoginWin(70);
-      PlayScene.Initialize;
-      RefLoginWin(90);
-      g_ImgMixSurface := TDirectDrawSurface.Create(DXDraw.DDraw);
-      g_ImgMixSurface.SystemMemory := True;
-      g_ImgMixSurface.SetSize(300, 350);
-
-      g_MiniMapSurface := TDirectDrawSurface.Create(DXDraw.DDraw);
-      g_MiniMapSurface.SystemMemory := True;
-      g_MiniMapSurface.SetSize(540, 360);
-
-      if g_boChangeWindow then begin
-        LoadActorSurface();
-        LoadItemSurface();
-        LoadSaySurface();
-        if FrmDlg2.HDInfoDIB <> nil then begin
-          FrmDlg2.HDInfoSurface := TDirectDrawSurface.Create(DXDraw.DDraw);
-          FrmDlg2.HDInfoSurface.SystemMemory := True;
-          FrmDlg2.HDInfoSurface.SetSize(FrmDlg2.HDInfoDIB.Width, FrmDlg2.HDInfoDIB.Height);
-          FrmDlg2.HDInfoSurface.Canvas.Draw(0, 0, FrmDlg2.HDInfoDIB);
-          FrmDlg2.HDInfoSurface.Canvas.Release;
-        end;
-        if FrmDlg.MyHDDIB <> nil then begin
-          FrmDlg.MyHDInfoSurface := TDirectDrawSurface.Create(DXDraw.DDraw);
-          FrmDlg.MyHDInfoSurface.SystemMemory := True;
-          FrmDlg.MyHDInfoSurface.SetSize(FrmDlg2.DUpLoadImage.Width, FrmDlg2.DUpLoadImage.Height);
-          FrmDlg.MyHDInfoSurface.Canvas.Draw(0, 0, FrmDlg.MyHDDIB);
-          FrmDlg.MyHDInfoSurface.Canvas.Release;
-        end;
-        if FrmDlg.UserHDDIB <> nil then begin
-          FrmDlg.UserHDInfoSurface := TDirectDrawSurface.Create(DXDraw.DDraw);
-          FrmDlg.UserHDInfoSurface.SystemMemory := True;
-          FrmDlg.UserHDInfoSurface.SetSize(FrmDlg2.DUpLoadImage.Width, FrmDlg2.DUpLoadImage.Height);
-          FrmDlg.UserHDInfoSurface.Canvas.Draw(0, 0, FrmDlg.UserHDDIB);
-          FrmDlg.UserHDInfoSurface.Canvas.Release;
-        end;
-      end;
-  {$IF USECURSOR = DEFAULTCURSOR}
-      DXDraw.Cursor := crDefault;
-  {$IFEND}
-      RefLoginWin(100);
-      if not g_boChangeWindow then begin
-        sleep(100);
-        DScreen.ChangeScene(stSelServer);
-      end;
-
-      TimerRun.Enabled := True;
-      //TimerSocket.Enabled := True;
-      g_boChangeWindow := False;
-    end;     *)
 end;
 
 procedure TfrmMain.DXDrawFinalize(Sender: TObject);
@@ -1901,6 +1691,7 @@ begin
       Close;
       exit;
     end;
+// 非调试模式，从跳转过来的自由登录器获取服务信息
 {$IFNDEF DEBUG}
     g_ServerInfoCount := 0;
     g_Login_Index := 0;
@@ -2021,6 +1812,7 @@ begin
       HGE.System_Shutdown;
       Exit;
     end;
+    // 回调 MinTimerTimer 函数
     MinTimer.Enabled := True;
   end;
 end;
@@ -2116,48 +1908,42 @@ begin
     rc := d.ClientRect;
     rc.Right := Trunc(d.Width * (len / 100));
     g_DXCanvas.Draw(108, 457 + Pointer, rc, d, True);
-
-    //RSADecodeString('bk9iZk7sqab=ZMlhJQVYmfhjgxddHaDZJcgyS7Sh9whNZ72w=y4');
   end;
 end;
-
+// 游戏 LOGO 界面初始化
 procedure LogoInitialize(MinImage: Integer);
 var
   d: TDirectDrawSurface;
+  x, y: Integer;
 begin
   if g_LogoSurface <> nil then
   begin
+    x := getLayoutX(g_LogoSurface.Width);
+    y := getLayoutY(g_LogoSurface.Height);
     if FnShowLogoIndex < 256 then
     begin
-      g_DXCanvas.Draw((g_FScreenWidth - g_LogoSurface.Width) div 2,
-                       (g_FScreenHeight - g_LogoSurface.Height) div 2 - 20,
-                       g_LogoSurface.ClientRect, g_LogoSurface, True,
-                       cColor4($FFFFFF or (FnShowLogoIndex shl 24)));
-    end else
-      if FnShowLogoIndex < 400 then
+      // 绘制居中的 LOGO 图片
+      g_DXCanvas.Draw(x, y, g_LogoSurface.ClientRect, g_LogoSurface, True, cColor4($FFFFFF or (FnShowLogoIndex shl 24)));
+    end else if FnShowLogoIndex < 400 then
+    begin
+      // 绘制居中的 LOGO 图片
+      g_DXCanvas.Draw(x, y, g_LogoSurface.ClientRect, g_LogoSurface, True);
+    end else if FnShowLogoIndex < 626 then
+    begin
+      d := g_WMain99Images.Images[MinImage];
+      if d <> nil then
       begin
-        g_DXCanvas.Draw((g_FScreenWidth - g_LogoSurface.Width) div 2,
-                         (g_FScreenHeight - g_LogoSurface.Height) div 2 - 20,
-                         g_LogoSurface.ClientRect, g_LogoSurface, True);
-      end else
-        if FnShowLogoIndex < 626 then
-        begin
-          d := g_WMain99Images.Images[MinImage];
-          if d <> nil then
-            g_DXCanvas.Draw(0, 0, d.ClientRect, d, True, cColor4($FFFFFF or ((FnShowLogoIndex - 400) shl 24)));
-
-          g_DXCanvas.Draw((g_FScreenWidth - g_LogoSurface.Width) div 2,
-                           (g_FScreenHeight - g_LogoSurface.Height) div 2 - 20,
-                           g_LogoSurface.ClientRect, g_LogoSurface, True,
-                           cColor4($FFFFFF or ((655 - FnShowLogoIndex) shl 24)));
-        end else begin
-          d := g_WMain99Images.Images[MinImage];
-          if d <> nil then
-            g_DXCanvas.Draw(0, 0, d.ClientRect, d, True);
-          FBoShowLogo := True;
-
-          //FnShowLogoIndex := 0;
-        end;
+        // 先绘制整个客户端界面的背景图片
+        g_DXCanvas.Draw(0, 0, d.ClientRect, d, True, cColor4($FFFFFF or ((FnShowLogoIndex - 400) shl 24)));
+      end;
+      // 再绘制居中的 LOGO 图片
+      g_DXCanvas.Draw(x, y, g_LogoSurface.ClientRect, g_LogoSurface, True, cColor4($FFFFFF or ((655 - FnShowLogoIndex) shl 24)));
+    end else begin
+      d := g_WMain99Images.Images[MinImage];
+      if d <> nil then
+        g_DXCanvas.Draw(0, 0, d.ClientRect, d, True);
+      FBoShowLogo := True;
+    end;
   end else FBoShowLogo := True;
 end;
 
@@ -2167,108 +1953,108 @@ var
 begin
   if not FBoShowLogo then
   begin
-    LogoInitialize(LOGINBAGIMGINDEX);
-  end else
-    if g_boMapInitialize or g_boMapApoise then
+    LogoInitialize(Resource.LOGINBAGIMGINDEX);
+  end
+  else if g_boMapInitialize or g_boMapApoise then
+  begin
+    RefInitialize(303, 110, g_btMapinitializePos);
+  end
+  else if not g_boInitialize then
+  begin
+    ProcessFreeTexture;
+    ProcessKeyMessages;
+    ProcessActionMessages;
+    if DScreen.CurrentScene = PlayScene then
     begin
-      RefInitialize(303, 110, g_btMapinitializePos);
-    end
-    else if not g_boInitialize then
+      {if (g_MySelf <> nil) and g_MySelf.m_boDeath then
+      MyDevice.Canvas.Draw(SOFFX, SOFFY, PlayScene.m_MagSurface.ClientRect, PlayScene.m_MagSurface, True, clRed4)
+    else  }
+      g_DXCanvas.Draw(SOFFX, SOFFY, PlayScene.m_MagSurface.ClientRect, PlayScene.m_MagSurface, True);
+    end;
+    DScreen.DrawScreen(g_DXCanvas.DrawTexture);
+    if g_boCanDraw then
     begin
-      ProcessFreeTexture;
-      ProcessKeyMessages;
-      ProcessActionMessages;
-      if DScreen.CurrentScene = PlayScene then
-      begin
-        {if (g_MySelf <> nil) and g_MySelf.m_boDeath then
-        MyDevice.Canvas.Draw(SOFFX, SOFFY, PlayScene.m_MagSurface.ClientRect, PlayScene.m_MagSurface, True, clRed4)
-      else  }
-        g_DXCanvas.Draw(SOFFX, SOFFY, PlayScene.m_MagSurface.ClientRect, PlayScene.m_MagSurface, True);
-      end;
-      DScreen.DrawScreen(g_DXCanvas.DrawTexture);
-      if g_boCanDraw then
-      begin
-        g_DWinMan.DirectPaint(g_DXCanvas.DrawTexture);
-        DScreen.DrawScreenTop(g_DXCanvas.DrawTexture);
-        //if g_boCtrlDown then
-        // g_DXCanvas.FillRect(0, 0, 800, 600, $FF000000);
-        DScreen.DrawHint(g_DXCanvas.DrawTexture);
+      g_DWinMan.DirectPaint(g_DXCanvas.DrawTexture);
+      DScreen.DrawScreenTop(g_DXCanvas.DrawTexture);
+      //if g_boCtrlDown then
+      // g_DXCanvas.FillRect(0, 0, 800, 600, $FF000000);
+      DScreen.DrawHint(g_DXCanvas.DrawTexture);
 
-        if g_boItemMoving and g_boCanDraw then
+      if g_boItemMoving and g_boCanDraw then
+      begin
+        GetCursorPos(p);
+        p.X := p.X - m_Point.X;
+        p.Y := p.Y - m_Point.Y;
+        if g_MovingItem.ItemType = mtBottom then
         begin
-          GetCursorPos(p);
-          p.X := p.X - m_Point.X;
-          p.Y := p.Y - m_Point.Y;
-          if g_MovingItem.ItemType = mtBottom then
-          begin
-            case LoWord(g_MovingItem.Index2) of
-              UKTYPE_ITEM:
+          case LoWord(g_MovingItem.Index2) of
+            UKTYPE_ITEM:
+            begin
+              d := GetBagItemImg(g_MovingItem.Item.S.looks);
+              if d <> nil then
               begin
-                d := GetBagItemImg(g_MovingItem.Item.S.looks);
-                if d <> nil then
-                begin
-                  FrmDlg.RefItemPaint(g_DXCanvas.DrawTexture, d,
-                                       p.X - (d.ClientRect.Right div 2),
-                                       p.Y - (d.ClientRect.Bottom div 2),
-                                       p.X - (d.ClientRect.Right div 2) + 34,
-                                       p.Y - (d.ClientRect.Bottom div 2) + 18,
-                                       @g_MovingItem.Item, False);
-                end;
-              end;
-              UKTYPE_MAGIC:
-              begin
-                d := g_WMagIconImages.Images[g_MovingItem.Item.S.looks];
-                if d <> nil then
-                  g_DXCanvas.Draw(p.X - d.Width div 2, p.Y - d.Height div 2, d.ClientRect, d, True);
+                FrmDlg.RefItemPaint(g_DXCanvas.DrawTexture, d,
+                                     p.X - (d.ClientRect.Right div 2),
+                                     p.Y - (d.ClientRect.Bottom div 2),
+                                     p.X - (d.ClientRect.Right div 2) + 34,
+                                     p.Y - (d.ClientRect.Bottom div 2) + 18,
+                                     @g_MovingItem.Item, False);
               end;
             end;
-          end
-          else if g_MovingItem.ItemType = mtStateMagic then
-          begin
-            d := g_WMagIconImages.Images[HiWord(g_MovingItem.Index2)];
-            if d <> nil then
+            UKTYPE_MAGIC:
             begin
-              g_DXCanvas.Draw(p.X - d.Width div 2, p.Y - d.Height div 2, d.ClientRect, d, True);
-            end;
-          end
-          else if (g_MovingItem.Item.S.name <> g_sGoldName {'金币'}) then
-          begin
-            d := GetBagItemImg(g_MovingItem.Item.S.looks);
-            if d <> nil then
-            begin
-              FrmDlg.RefItemPaint(g_DXCanvas.DrawTexture, d,
-                                   p.X - (d.ClientRect.Right div 2),
-                                   p.Y - (d.ClientRect.Bottom div 2),
-                                   p.X - (d.ClientRect.Right div 2) + 34,
-                                   p.Y - (d.ClientRect.Bottom div 2) + 18,
-                                   @g_MovingItem.Item, False);
-            end;
-          end
-          else begin
-            d := GetBagItemImg(115); //金币外形
-            if d <> nil then
-            begin
-              g_DXCanvas.Draw(p.X - (d.ClientRect.Right div 2),
-                               p.Y - (d.ClientRect.Bottom div 2),
-                               d.ClientRect,
-                               d,
-                               True);
+              d := g_WMagIconImages.Images[g_MovingItem.Item.S.looks];
+              if d <> nil then
+                g_DXCanvas.Draw(p.X - d.Width div 2, p.Y - d.Height div 2, d.ClientRect, d, True);
             end;
           end;
-        end;
-        if g_boShowFormImage then
+        end
+        else if g_MovingItem.ItemType = mtStateMagic then
         begin
-          d := g_WMain99Images.Images[g_boShowFormIndex];
+          d := g_WMagIconImages.Images[HiWord(g_MovingItem.Index2)];
           if d <> nil then
           begin
-            g_DXCanvas.Draw((g_FScreenWidth - d.Width) div 2, (g_FScreenHeight - d.Height) div 2, d.ClientRect, d, True);
-          end else
-            g_boShowFormImage := False;
+            g_DXCanvas.Draw(p.X - d.Width div 2, p.Y - d.Height div 2, d.ClientRect, d, True);
+          end;
+        end
+        else if (g_MovingItem.Item.S.name <> g_sGoldName {'金币'}) then
+        begin
+          d := GetBagItemImg(g_MovingItem.Item.S.looks);
+          if d <> nil then
+          begin
+            FrmDlg.RefItemPaint(g_DXCanvas.DrawTexture, d,
+                                 p.X - (d.ClientRect.Right div 2),
+                                 p.Y - (d.ClientRect.Bottom div 2),
+                                 p.X - (d.ClientRect.Right div 2) + 34,
+                                 p.Y - (d.ClientRect.Bottom div 2) + 18,
+                                 @g_MovingItem.Item, False);
+          end;
+        end
+        else begin
+          d := GetBagItemImg(115); //金币外形
+          if d <> nil then
+          begin
+            g_DXCanvas.Draw(p.X - (d.ClientRect.Right div 2),
+                             p.Y - (d.ClientRect.Bottom div 2),
+                             d.ClientRect,
+                             d,
+                             True);
+          end;
         end;
       end;
-    end
-    else
-      RefInitialize(LOGINBAGIMGINDEX, 60, g_nInitializePer);
+      if g_boShowFormImage then
+      begin
+        d := g_WMain99Images.Images[g_boShowFormIndex];
+        if d <> nil then
+        begin
+          g_DXCanvas.Draw(g_FScreenXOrigin - d.Width div 2, g_FScreenYOrigin - d.Height div 2, d.ClientRect, d, True);
+        end else
+          g_boShowFormImage := False;
+      end;
+    end;
+  end
+  else
+    RefInitialize(Resource.LOGINBAGIMGINDEX, 60, g_nInitializePer);
 end;
 
 procedure TfrmMain.AppOnIdle(boInitialize: Boolean = False);
@@ -2308,67 +2094,65 @@ begin
       MyDeviceRender(nil);
       HGE.Gfx_EndScene;
     end;
-  end else
-    if g_boMapInitialize or g_boMapApoise then
+  end else if g_boMapInitialize or g_boMapApoise then
+  begin
+    if g_boCanDraw then
     begin
+      HGE.Gfx_BeginScene;
+      HGE.Gfx_Clear(0);
+      HGE.RenderBatch;
+      MyDeviceRender(nil);
+      HGE.Gfx_EndScene;
+    end;
+  end else if not boInitialize then
+  begin
+    if DScreen.CurrentScene = PlayScene then
+    begin
+      PlayScene.BeginScene; //DebugOutStr('106');
+
       if g_boCanDraw then
       begin
-        HGE.Gfx_BeginScene;
+        if PlayScene.CanDrawTileMap then
+        begin
+          HGE.Gfx_BeginScene(PlayScene.m_MapSurface.Target);
+          HGE.Gfx_Clear(0);
+          HGE.RenderBatch;
+          PlayScene.DrawTileMap(nil);
+          HGE.Gfx_EndScene;
+        end;
+        if PlayScene.m_boPlayChange then
+        begin
+          HGE.Gfx_BeginScene(PlayScene.m_ObjSurface.Target);
+          HGE.Gfx_Clear(0);
+          HGE.RenderBatch;
+          PlayScene.PlaySurface(nil);
+          HGE.Gfx_EndScene;
+        end;
+        HGE.Gfx_BeginScene(PlayScene.m_MagSurface.Target);
         HGE.Gfx_Clear(0);
         HGE.RenderBatch;
-        MyDeviceRender(nil);
+        PlayScene.MagicSurface(nil);
         HGE.Gfx_EndScene;
       end;
-    end else
-      if not boInitialize then
-      begin
-        if DScreen.CurrentScene = PlayScene then
-        begin
-          PlayScene.BeginScene; //DebugOutStr('106');
-
-          if g_boCanDraw then
-          begin
-            if PlayScene.CanDrawTileMap then
-            begin
-              HGE.Gfx_BeginScene(PlayScene.m_MapSurface.Target);
-              HGE.Gfx_Clear(0);
-              HGE.RenderBatch;
-              PlayScene.DrawTileMap(nil);
-              HGE.Gfx_EndScene;
-            end;
-            if PlayScene.m_boPlayChange then
-            begin
-              HGE.Gfx_BeginScene(PlayScene.m_ObjSurface.Target);
-              HGE.Gfx_Clear(0);
-              HGE.RenderBatch;
-              PlayScene.PlaySurface(nil);
-              HGE.Gfx_EndScene;
-            end;
-            HGE.Gfx_BeginScene(PlayScene.m_MagSurface.Target);
-            HGE.Gfx_Clear(0);
-            HGE.RenderBatch;
-            PlayScene.MagicSurface(nil);
-            HGE.Gfx_EndScene;
-          end;
-        end;
-        if g_boCanDraw then
-        begin
-          HGE.Gfx_BeginScene;
-          HGE.Gfx_Clear(0);
-          HGE.RenderBatch;
-          MyDeviceRender(nil);
-          HGE.Gfx_EndScene;
-        end;
-      end else begin
-        if g_boCanDraw then
-        begin
-          HGE.Gfx_BeginScene;
-          HGE.Gfx_Clear(0);
-          HGE.RenderBatch;
-          MyDeviceRender(nil);
-          HGE.Gfx_EndScene;
-        end;
-      end;
+    end;
+    if g_boCanDraw then
+    begin
+      HGE.Gfx_BeginScene;
+      HGE.Gfx_Clear(0);
+      HGE.RenderBatch;
+      MyDeviceRender(nil);
+      HGE.Gfx_EndScene;
+    end;
+  end else begin
+    if g_boCanDraw then
+    begin
+      HGE.Gfx_BeginScene;
+      HGE.Gfx_Clear(0);
+      HGE.RenderBatch;
+      MyDeviceRender(nil);
+      HGE.Gfx_EndScene;
+    end;
+  end;
 
   if g_MySelf <> nil then
   begin
@@ -3240,7 +3024,6 @@ end;
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
   //  mx, my: Integer;
-//  ini: TIniFile;
   I: Integer;
   str: string;
 begin
@@ -3386,8 +3169,8 @@ begin
 {$IF Var_Interface =  Var_Default}
       VK_ESCAPE:
       begin
-        FrmDlg2.dwndSysSetup.Left := (g_FScreenWidth - FrmDlg2.dwndSysSetup.Width) div 2;
-        FrmDlg2.dwndSysSetup.Top := (g_FScreenHeight - FrmDlg2.dwndSysSetup.Height) div 2;
+        FrmDlg2.dwndSysSetup.Left := g_FScreenXOrigin - FrmDlg2.dwndSysSetup.Width div 2;
+        FrmDlg2.dwndSysSetup.Top := g_FScreenYOrigin - FrmDlg2.dwndSysSetup.Height div 2;
         FrmDlg2.dwndSysSetup.TopShow;
       end;
 {$IFEND}
@@ -3859,9 +3642,9 @@ begin
     end
     else begin
 {$IF Var_Interface = Var_Mir2}
-      tdir := GetFlyDirection(364 + (g_FScreenWidthOffset div 2), 224 + (g_FScreenHeightOffset div 2 + 12), tx, ty);
+      tdir := GetFlyDirection(364, 224 + (12), tx, ty);
 {$ELSE}
-      tdir := GetFlyDirection(364 + (g_FScreenWidthOffset div 2), 288 + (g_FScreenHeightOffset div 2 + 12), tx, ty);
+      tdir := GetFlyDirection(364, 288 + (12), tx, ty);
 {$IFEND}
 
       //     MagicTarget := FocusCret;
@@ -5068,10 +4851,10 @@ begin
     g_LogoStr := RSADecodeString('bk9iZk7sqab=ZMlhJQVYmfhjgxddHaDZJcgyS7Sh9whNZ72w=y4');
   Except
   End;
-  frmMain.Font.name := DEFFONTNAME;
-  frmMain.Font.Size := DEFFONTSIZE;
-  frmMain.Canvas.Font.name := DEFFONTNAME;
-  frmMain.Canvas.Font.Size := DEFFONTSIZE;
+  frmMain.Font.name := DEF_FONT_NAME;
+  frmMain.Font.Size := DEF_FONT_SIZE;
+  frmMain.Canvas.Font.name := DEF_FONT_NAME;
+  frmMain.Canvas.Font.Size := DEF_FONT_SIZE;
 
   g_boInitialize := True;
   g_nInitializePer := 0;
@@ -5153,7 +4936,7 @@ begin
   end;
   g_nInitializePer := 70;
   AppOnIdle();
-  Success := g_DXFont.Initialize(DEFFONTNAME, DEFFONTSIZE);
+  Success := g_DXFont.Initialize(DEF_FONT_NAME, DEF_FONT_SIZE);
   if not Success then
   begin
     ErrorMsg := 'Font Initialize Error';
@@ -5191,8 +4974,8 @@ begin
       {$IFDEF RELEASE}
 {$IF Public_Ver <> Public_Free}
       EncryptFile_InitializationDataStream;
-      DLL_Encode6BitBuf := Dll_Encrypt.FindExport(DecodeString('wxSKlhgF]kKWm  {  W<p<'));
-      DLL_Decode6BitBuf := Dll_Encrypt.FindExport(DecodeString('whwKlhgF]kKWm  {  W<p<'));
+      DLL_Encode6BitBuf := Dll_Encrypt.FindExport(DecodeString('wxSKlhgF]kKWm     {     W<p<'));
+      DLL_Decode6BitBuf := Dll_Encrypt.FindExport(DecodeString('whwKlhgF]kKWm     {     W<p<'));
 {$IFEND}
       {$ENDIF}
     ErrorMsg := 'Error Code = 7';
@@ -6649,7 +6432,7 @@ begin
     Exit;
     end;
 
-    {  if str = '@password' then begin
+    {     if str = '@password' then begin
     if FrmDlg.DEditChat.PasswordChar = #0 then
     FrmDlg.DEditChat.PasswordChar := '*'
     else
@@ -7729,7 +7512,6 @@ end
 procedure TfrmMain.TimerInitializeTimer(Sender: TObject);
 begin
   TimerInitialize.Enabled := False;
-
 end
 
 ;
@@ -10995,14 +10777,14 @@ begin
     if not FboDisplayChange then
     begin
       FormStyle := fsStayOnTop;
-      if HGE.System_GetState(HGE_FScreenWidth) = DEFSCREENWIDTH then
+      if HGE.System_GetState(HGE_FScreenWidth) = OLD_SCREEN_WIDTH then
       begin
-        nWidth := DEFSCREENWIDTH;
-        nHeight := DEFSCREENHEIGHT;
+        nWidth := OLD_SCREEN_WIDTH;
+        nHeight := OLD_SCREEN_HEIGHT;
       end
       else begin
-        nWidth := DEFMAXSCREENWIDTH;
-        nHeight := DEFMAXSCREENHEIGHT;
+        nWidth := DEF_SCREEN_WIDTH;
+        nHeight := DEF_SCREEN_HEIGHT;
       end;
 
       FIDDraw := nil;
@@ -12256,8 +12038,8 @@ begin
   {DropItem.d := TDirectDrawSurface.Create(DXDraw.DDraw);
   DropItem.d.SystemMemory := True;
   DropItem.d.SetSize(DropItem.Width, DropItem.Height);
-  DropItem.d.Canvas.Font.Name := DEFFONTNAME;
-  DropItem.d.Canvas.Font.Size := DEFFONTSIZE;
+  DropItem.d.Canvas.Font.Name := DEF_FONT_NAME;
+  DropItem.d.Canvas.Font.Size := DEF_FONT_SIZE;
   DropItem.boColor := DropItem.Filtr.boColor;
   SetBkMode(DropItem.d.Canvas.Handle, TRANSPARENT);
   if DropItem.boColor then
@@ -13911,6 +13693,7 @@ var
 begin
   if g_boChangeWindow then
     exit;
+
   with PlayScene do
     for i := g_FreeActorList.count - 1 downto 0 do
     begin
@@ -13934,6 +13717,7 @@ begin
       g_FreeItemList.Delete(i);
     end;
   end;
+
 {$IFDEF RELEASE}
   if g_Login_Handle <> 0 then
   if SendMessage(g_Login_Handle, WM_CHECK_CLIENT, Handle, MakeLong(MSG_CHECK_CLIENT_TEST, g_Login_Index)) <= 0 then
@@ -14827,7 +14611,7 @@ begin
     nY := 320;
     for I := nX to 340 do
     for Ii := nY to 340 do begin
-    if (Random(3) = 0)   {  (I mod 2 = 0) }   {   and (Ii mod 2 <> 0) } then begin
+    if (Random(3) = 0)      {     (I mod 2 = 0) }      {      and (Ii mod 2 <> 0) } then begin
     Actor := PlayScene.NewActor(I * 10000 + Ii, i, Ii, Random(8),
     302121472, MakeWord(0, 15));
     if Actor <> nil then begin

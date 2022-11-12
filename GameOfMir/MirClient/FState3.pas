@@ -493,7 +493,7 @@ implementation
 
 uses
   SoundUtil, ClMain, DrawScrn, ClFunc, cliUtil, HUtil32, GameSetup, FState, EDcodeEx, HGEBase,
-  FState2, Registry, Bass, IniFiles;
+  FState2, Registry, Bass, IniFiles, ClientSetup;
 {$R *.dfm}
 
 const
@@ -2807,7 +2807,6 @@ var
   i: integer;
   SetupFiltrate: pTSetupFiltrate;
   ClientStditem: pTClientStditem;
-  ini: TIniFile;
 begin
   //基本设置
 //  if (DDGSWindow.Checked <> (not g_boFullScreen)) then begin
@@ -2835,25 +2834,8 @@ begin
     end;
   end
   else ClearBGM;
- 
-  ini := TIniFile.Create('.\mir2.ini');
-  Try
-    if ini <> nil then
-    begin
-      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_BITDEPTH, ClMain.HGE.System_GetState(HGE_SCREENBPP) = 32);
-      ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_DISPLAY, DDGSXY.ItemIndex);
-//      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_WINDOWS, DDGSWindow.Checked);
-      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_MP3OPEN, g_boBGSound);
-      ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_MP3VOLUME, g_btMP3Volume);
-      ini.WriteBool(REG_SETUP_PATH, REG_SETUP_SOUNDOPEN, g_boSound);
-      ini.WriteInteger(REG_SETUP_PATH, REG_SETUP_SOUNDVOLUME, g_btSoundVolume);
-    end;
-  Finally
-    if ini <> nil then
-    begin
-      ini.Free;
-    end;
-  End;
+
+  ClientSetup.saveData();
   //选项设置
   g_SetupInfo.nExpFiltrateCount := DEFExp.Value;
 
@@ -5830,8 +5812,8 @@ begin
   d := g_WMain99Images.Images[1662];
   if d <> nil then begin
     DGuildDlg.SetImgIndex(g_WMain99Images, 1662);
-    DGuildDlg.Left := (g_FScreenWidth - d.Width) div 2;
-    DGuildDlg.Top := (g_FScreenHeight - d.Height) div 2;
+    DGuildDlg.Left := g_FScreenXOrigin - d.Width div 2;
+    DGuildDlg.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   DGDClose.SetImgIndex(g_WMain99Images, 1850);
   DGDClose.Left := 622;
@@ -5905,8 +5887,8 @@ begin
   d := g_WMain99Images.Images[222];
   if d <> nil then begin
     DGuildDlg.SetImgIndex(g_WMain99Images, 222);
-    DGuildDlg.Left := (g_FScreenWidth - d.Width) div 2;
-    DGuildDlg.Top := (g_FScreenHeight - d.Height) div 2;
+    DGuildDlg.Left := g_FScreenXOrigin - d.Width div 2;
+    DGuildDlg.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   DGDClose.SetImgIndex(g_WMain99Images, 133);
   DGDClose.Left := DGuildDlg.Width - 20;
@@ -6191,8 +6173,8 @@ begin
   d := g_WMain99Images.Images[1740];
   if d <> nil then begin
     DGameSetup.SetImgIndex(g_WMain99Images, 1740);
-    DGameSetup.Left := (g_FScreenWidth - d.Width) div 2;
-    DGameSetup.Top := (g_FScreenHeight - d.Height) div 2;
+    DGameSetup.Left := g_FScreenXOrigin - d.Width div 2;
+    DGameSetup.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   DGSClose.SetImgIndex(g_WMain99Images, 1850);
   DGSClose.Left := 459;
@@ -6242,8 +6224,8 @@ begin
   d := g_WMain99Images.Images[570];
   if d <> nil then begin
     DGameSetup.SetImgIndex(g_WMain99Images, 570);
-    DGameSetup.Left := (g_FScreenWidth - d.Width) div 2;
-    DGameSetup.Top := (g_FScreenHeight - d.Height) div 2;
+    DGameSetup.Left := g_FScreenXOrigin - d.Width div 2;
+    DGameSetup.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   DGSClose.SetImgIndex(g_WMain99Images, 133);
   DGSClose.Left := DGameSetup.Width - 20;
@@ -6668,7 +6650,7 @@ begin
   if d <> nil then begin
     dwndMission.SetImgIndex(g_WMain99Images, 1716);
     dwndMission.Left := g_FScreenWidth - d.Width;
-    dwndMission.Top := (g_FScreenHeight - d.Height) div 2;
+    dwndMission.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   dbtnMissionClose.SetImgIndex(g_WMain99Images, 1850);
   dbtnMissionClose.Left := 454;
@@ -6729,7 +6711,7 @@ begin
   if d <> nil then begin
     dwndMission.SetImgIndex(g_WMain99Images, 666);
     dwndMission.Left := g_FScreenWidth - d.Width;
-    dwndMission.Top := (g_FScreenHeight - d.Height) div 2;
+    dwndMission.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   dbtnMissionClose.SetImgIndex(g_WMain99Images, 133);
   dbtnMissionClose.Left := dwndMission.Width - 20;
@@ -6785,8 +6767,8 @@ begin
   d := g_WMain99Images.Images[2235];
   if d <> nil then begin
     dwndBox.SetImgIndex(g_WMain99Images, 2235);
-    dwndBox.Left := (g_FScreenWidth - d.Width) div 2;
-    dwndBox.Top := (g_FScreenHeight - d.Height) div 2;
+    dwndBox.Left := g_FScreenXOrigin - d.Width div 2;
+    dwndBox.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   dbtnBoxClose.SetImgIndex(g_WMain99Images, 1850);
   dbtnBoxClose.Left := dwndBox.Width - 21;
@@ -6856,8 +6838,8 @@ begin
   d := g_WMain99Images.Images[672];
   if d <> nil then begin
     dwndBox.SetImgIndex(g_WMain99Images, 672);
-    dwndBox.Left := (g_FScreenWidth - d.Width) div 2;
-    dwndBox.Top := (g_FScreenHeight - d.Height) div 2;
+    dwndBox.Left := g_FScreenXOrigin - d.Width div 2;
+    dwndBox.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   dbtnBoxClose.SetImgIndex(g_WMain99Images, 133);
   dbtnBoxClose.Left := dwndBox.Width - 20;
@@ -6926,7 +6908,7 @@ begin
   d := g_WMain99Images.Images[1764];
   if d <> nil then begin
     DWindowTop.SetImgIndex(g_WMain99Images, 1764);
-    DWindowTop.Left := (g_FScreenWidth - d.Width) div 2;
+    DWindowTop.Left := g_FScreenXOrigin - d.Width div 2;
     DWindowTop.Top := 0;
   end;
 
@@ -7019,8 +7001,8 @@ begin
   d := g_WMain99Images.Images[1449];
   if d <> nil then begin
     DWindowTop.SetImgIndex(g_WMain99Images, 1449);
-    DWindowTop.Left := (g_FScreenWidth - d.Width) div 2;
-    DWindowTop.Top := (g_FScreenHeight - d.Height) div 2;
+    DWindowTop.Left := g_FScreenXOrigin - d.Width div 2;
+    DWindowTop.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DTopClose.SetImgIndex(g_WMain99Images, 143);

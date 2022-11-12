@@ -370,7 +370,7 @@ begin
     exit;
 
 {$IF Var_Interface =  Var_Default}
-  m_OperateHintSurface := MakeDXImageTexture(OPERATEHINTWIDTH + g_FScreenWidthOffset, OPERATEHINTHEIGHT + g_FScreenHeightOffset, WILFMT_A4R4G4B4, g_DXCanvas);
+  m_OperateHintSurface := MakeDXImageTexture(OPERATEHINTWIDTH, OPERATEHINTHEIGHT, WILFMT_A4R4G4B4, g_DXCanvas);
   if m_OperateHintSurface = nil then exit;
 {$IFEND}
 
@@ -562,14 +562,14 @@ begin
 
   with Map.m_ClientRect do
   begin
-//    if g_FScreenHeight = DEFWIDESCREENHEIGHT then nY := -UNITY * 1
+//    if g_FScreenHeight = DEF_SCREEN_HEIGHT then nY := -UNITY * 1
 //    else nY := -UNITY * 4;
     nY := -UNITY;
 
     //从地图顶部到下部
     for j := (Top - Map.m_nBlockTop - 1) to (Bottom - Map.m_nBlockTop + 1) do
     begin
-//      if g_FScreenWidth = DEFWIDESCREENWIDTH then nX := AAX + 28 - UNITX * 2
+//      if g_FScreenWidth = DEF_SCREEN_WIDTH then nX := AAX + 28 - UNITX * 2
 //      else nX := AAX + 14 - UNITX * 4;
       nX := - UNITX;
       //从左边到右边
@@ -608,11 +608,11 @@ begin
   //显示地上的草   比如比齐安全区的草
   with Map.m_ClientRect do
   begin
-    if g_FScreenHeight = DEFWIDESCREENHEIGHT then nY := -UNITY * 1
+    if g_FScreenHeight = DEF_SCREEN_HEIGHT then nY := -UNITY * 1
     else nY := -UNITY * 4;
     for j := (Top - Map.m_nBlockTop - 1) to (Bottom - Map.m_nBlockTop + 1) do
     begin
-      if g_FScreenWidth = DEFWIDESCREENWIDTH then nX := AAX + 28 - UNITX * 2
+      if g_FScreenWidth = DEF_SCREEN_WIDTH then nX := AAX + 28 - UNITX * 2
       else nX := AAX + 14 - UNITX * 4;
       for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do
       begin
@@ -860,7 +860,7 @@ begin
     if n >= 5 then break;
     CenterMsg := g_CenterMsgList[I];
     sShowStr := Format(CenterMsg.sMsgStr, [_MAX(1, (CenterMsg.nTime - GetTickCount) div 1000)]);
-    g_DXCanvas.TextOut((g_FScreenWidth - g_DXCanvas.TextWidth(sShowStr)) div 2, nHeight - n * 18, CenterMsg.nFColor, sShowStr);
+    g_DXCanvas.TextOut(g_FScreenXOrigin - g_DXCanvas.TextWidth(sShowStr) div 2, nHeight - n * 18, CenterMsg.nFColor, sShowStr);
     Inc(n);
   end;
 {$ELSE}
@@ -869,7 +869,7 @@ begin
   if n >= 5 then break;
   CenterMsg := g_CenterMsgList[I];
   sShowStr := Format(CenterMsg.sMsgStr, [_MAX(1, (CenterMsg.nTime - GetTickCount) div 1000)]);
-  g_DXCanvas.TextOut(294 + ((506 - g_DXCanvas.TextWidth(sShowStr)) div 2) + (g_FScreenWidth - DEFSCREENWIDTH) div 2, nHeight - n * 18, CenterMsg.nFColor, sShowStr);
+  g_DXCanvas.TextOut(294 + ((506 - g_DXCanvas.TextWidth(sShowStr)) div 2) + g_FScreenXOrigin - OLD_SCREEN_WIDTH div 2, nHeight - n * 18, CenterMsg.nFColor, sShowStr);
   Inc(n);
   end;
 {$IFEND}
@@ -1137,7 +1137,7 @@ begin
   //end;
 {$IF Var_Interface =  Var_Default}
   if m_OperateHintSurface <> nil then
-    m_ObjSurface.Draw(g_FScreenWidth - DEFSCREENWIDTH + OPERATEHINTX, g_FScreenHeight - DEFSCREENHEIGHT + OPERATEHINTY, m_OperateHintSurface.ClientRect, m_OperateHintSurface, True);
+    m_ObjSurface.Draw(g_FScreenWidth - OLD_SCREEN_WIDTH + OPERATEHINTX, g_FScreenHeight - OLD_SCREEN_HEIGHT + OPERATEHINTY, m_OperateHintSurface.ClientRect, m_OperateHintSurface, True);
 {$IFEND}
 
   if (g_FocusCret <> nil) and IsValidActor(g_FocusCret) then
@@ -1759,14 +1759,6 @@ begin
       end;
       DrawBlend(m_ObjSurface, 0, 0, HintTexture, 1);
     end;
-      {if GetTickCount > TestTick2 then begin
-        FrmMain.Caption := IntToStr(GetTickCount - TestTick1);
-        TestTick2 := GetTickCount + 500;
-      end;   }
-      //end;
-      //if (GetTickCount - TestTick) > 500 then begin
-      //DebugOutStr('TPlayScene.PlaySurface 102 ' + IntToStr(GetTickCount - TestTick));
-      //end;
   except
     DebugOutStr('106 ' + intToStr(nIndex));
   end;

@@ -1,5 +1,6 @@
-unit DrawScrn;//DrawScrn,其实更准确地说是DrawScrn-txt,,,,整个场景的实际绘图工作已经在introscrn.pas和playscrn.pas中完成了
-//场景管理器
+unit DrawScrn;
+// 其实更准确地说是文本绘制器，因为整个场景的实际绘图工作已经在 introscrn.pas 和 playscrn.pas 中完成了
+// TODO 参考 GEE 以及 GOM 引擎，可以将一些特效放在屏幕中间，以字幕形式展示出来
 interface
 
 uses
@@ -7,16 +8,7 @@ uses
   IntroScn, HGETextures, DirectXGraphics, HGEBase, 
   HUtil32, MShare, wil;
 
-const
-  MAXSYSLINE = 8;
-
-  BOTTOMBOARD = 1;
-   VIEWCHATLINE = 9;//9行文本输入框
-   AREASTATEICONBASE = 150;//area state icon base Prguse.wil中150战斗151安全
-  
-
 type
-
   pTSayHint = ^TSayHint;
   TSayHint = record
     SaySurface: TDirectDrawSurface;
@@ -32,75 +24,69 @@ type
     DefColor: TColor;
     boFirst: Boolean;
   end;
-//走马灯
 
   TDrawScreen = class
   private
-    //m_dwFrameTime: LongWord;
-    //m_dwFrameCount: LongWord;
-    //m_dwDrawFrameCount: LongWord;
-
   public
-      CurrentScene: TScene;       //当前场景
-    //ChatStrs: TStringList;
-    //    ChatBks: TList;
-    //ChatBoardTop: Integer;
+    CurrentScene: TScene;
     m_SysMsgList: TStringList;
     m_SysInfoList: TList;
     m_NewSayMsgList: TList;
     m_SayTransferList: TList;
 
-//    SysMsgBoardTop: Integer;
-
     HintX, HintY, HintWidth, HintHeight: Integer;
     HintUp: Boolean;
+
     NpcTempList: TStringList;
     AutoImgTime: LongWord;
-    m_HintSurface: TDirectDrawSurface; //0x0C
-//    m_HintBGSurface: TDirectDrawSurface;
+    m_HintSurface: TDirectDrawSurface;
     m_HintList: TList;
     SurfaceRefTick: LongWord;
     boShowSurface: Boolean;
     nShowIndex: Integer;
     m_nShowSysTick: LongWord;
 
-    //    SysMsgCount: array[0..10 - 1] of Integer;
-    //    SysMsgPosition: array[0..10 - 1] of Integer;
     constructor Create;
     destructor Destroy; override;
+
+    procedure Initialize;
+    procedure Finalize;
+
     procedure KeyPress(var Key: Char);
     procedure KeyDown(var Key: Word; Shift: TShiftState);
     procedure MouseMove(Shift: TShiftState; X, Y: Integer);
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure Initialize;
-    procedure Finalize;
-    procedure ChangeScene(scenetype: TSceneType);
-    procedure DrawScreen(MSurface: TDirectDrawSurface);
-    procedure DrawScreenTop(MSurface: TDirectDrawSurface);
-    procedure ClearSysMsg;
+
     procedure AddSysMsgEx(str: string; Color: TColor; boFirst: Boolean = True; DefColor: TColor = 0);
     procedure AddSysMsg(str: string; Color: TColor; boFirst: Boolean = True; DefColor: TColor = 0);
-    //procedure DeleteSysMsg(nType: Integer);
-    //function GetLaseSysMsg(nType, nX, nY: Integer): pTSysMsg;
-    procedure AddSayMsg(str: string; FColor: TColor; BColor: TColor; boSys: Boolean; UserSayType: TUserSayType; boFirst: Boolean = True;
-      DefFColor: TColor = 0; DefBColor: TColor = 0);
+    procedure AddSayMsg(str: string; FColor: TColor; BColor: TColor;
+                           boSys: Boolean; UserSayType: TUserSayType; boFirst: Boolean = True;
+                           DefFColor: TColor = 0; DefBColor: TColor = 0);
+    procedure ChangeScene(scenetype: TSceneType);
+    procedure ChangeTransferMsg(UserSaySet: TUserSaySet);
 
-    //procedure AddChatBoardString(str: string; fcolor, bcolor: Integer);
+    procedure DrawScreen(MSurface: TDirectDrawSurface);
+    procedure DrawScreenTop(MSurface: TDirectDrawSurface);
+    procedure DrawHint(MSurface: TDirectDrawSurface);
+    procedure DrawHintEx(MSurface, HintSurface: TDirectDrawSurface;
+                            nX, nY, HWidth, HHeight: Integer; HintList: TList);
+    procedure ShowHintEx(X, Y: Integer; str: string);
+
+    procedure ClearSysMsg;
     procedure ClearChatBoard;
+    procedure ClearBit(SayMessage: pTSayMessage; nMaxLen: Integer);
+    procedure ClearHint(boClear: Boolean = False);
     procedure DisposeSayMsg(SayMessage: pTSayMessage);
     procedure DelTransferMsg(SayMessage: pTSayMessage);
-    procedure ChangeTransferMsg(UserSaySet: TUserSaySet);
-    Function  NewSayMsg(nWidth, nHeight:Integer; UserSayType: TUserSayType): pTSayMessage;
-    Function  NewSayMsgEx(nWidth, nHeight:Integer; UserSayType: TUserSayType; BColor: Cardinal): pTSayMessage;
-    procedure ClearBit(SayMessage: pTSayMessage; nMaxLen: Integer);
 
-    Function ShowHint(X, Y: Integer; str: string; Color: TColor; drawup:
-      Boolean; ShowIndex: Integer; boItemHint: Boolean = False; HintSurface:TDirectDrawSurface = nil;
-      HintList: TList = nil; boLeft: Boolean = False): TPoint;
-    procedure ShowHintEx(X, Y: Integer; str: string);
-    procedure ClearHint(boClear: Boolean = False);
-    procedure DrawHint(MSurface: TDirectDrawSurface);
-    procedure DrawHintEx(MSurface, HintSurface: TDirectDrawSurface; nX, nY, HWidth, HHeight: Integer; HintList: TList);
+    Function ShowHint(X, Y: Integer;
+                         str: string; Color: TColor; drawup: Boolean;
+                         ShowIndex: Integer; boItemHint: Boolean = False;
+                         HintSurface:TDirectDrawSurface = nil;
+                         HintList: TList = nil; boLeft: Boolean = False): TPoint;
+    Function  NewSayMsg(nWidth, nHeight:Integer; UserSayType: TUserSayType): pTSayMessage;
+    Function  NewSayMsgEx(nWidth, nHeight:Integer;
+                             UserSayType: TUserSayType; BColor: Cardinal): pTSayMessage;
   end;
 
 implementation
@@ -109,18 +95,11 @@ uses
   ClMain, Share, Grobal2, FState, WMFile, cliUtil;
 
 constructor TDrawScreen.Create;
-//var
-//  i: Integer;
 begin
   CurrentScene := nil;
-  //m_dwFrameTime := GetTickCount;
-  //m_dwFrameCount := 0;
   m_SysMsgList := TStringList.Create;
-  //ChatBks := TList.Create;
-  //SysMsgBoardTop := 0;
   m_HintSurface := nil;
   m_nShowSysTick := GetTickCount;
-  //m_HintBGSurface := nil;
   m_SysInfoList := TList.Create;
   SurfaceRefTick := GetTickCount;
   boShowSurface := False;
@@ -130,8 +109,6 @@ begin
   m_HintList := TList.Create;
   m_NewSayMsgList := TList.Create;
   m_SayTransferList := TList.Create;
-  //SafeFillChar(SysMsgCount, SizeOf(SysMsgCount), #0);
- // SafeFillChar(SysMsgPosition, SizeOf(SysMsgPosition), #0);
 end;
 
 destructor TDrawScreen.Destroy;
@@ -159,7 +136,6 @@ begin
   m_SysInfoList.Free;
   m_SysMsgList.Free;
   m_HintList.Free;
-  //ChatBks.Free; pTShowHint
   NpcTempList.Free;
   m_NewSayMsgList.Free;
   m_SayTransferList.Free;
@@ -174,31 +150,13 @@ begin
   m_HintSurface.PatternSize := Point(g_FScreenWidth, g_FScreenHeight);
   m_HintSurface.Format := D3DFMT_A4R4G4B4;
   m_HintSurface.Active := True;
-
-  //更新
-  {m_HintSurface := TDirectDrawSurface.Create(frmMain.DXDraw.DDraw);
-  m_HintSurface.SystemMemory := True;
-  m_HintSurface.SetSize(400, 600);
-  m_HintSurface.Canvas.Font.Name := DEFFONTNAME;
-  m_HintSurface.Canvas.Font.Size := DEFFONTSIZE;    }
-
-  {m_HintBGSurface := TDirectDrawSurface.Create(frmMain.DXDraw.DDraw);
-  m_HintBGSurface.SystemMemory := True;
-  m_HintBGSurface.SetSize(400, 600);
-  m_HintBGSurface.Canvas.Font.Name := DEFFONTNAME;
-  m_HintBGSurface.Canvas.Font.Size := DEFFONTSIZE;
-  m_HintBGSurface.Fill(2048);     }
-
 end;
 
 procedure TDrawScreen.Finalize;
 begin
   if m_HintSurface <> nil then
     m_HintSurface.Free;
-  {if m_HintBGSurface <> nil then
-    m_HintBGSurface.Free;  }
   m_HintSurface := nil;
-  //m_HintBGSurface := nil;
 end;
 
 procedure TDrawScreen.KeyPress(var Key: Char);
@@ -240,7 +198,8 @@ begin
   if CurrentScene <> nil then
     CurrentScene.OpenScene;
 end;
-//添加系统信息
+
+//添加系统消息
 procedure TDrawScreen.AddSysMsg(str: string; Color: TColor; boFirst: Boolean = True; DefColor: TColor = 0);
 var
   AddSysInfo: pTAddSysInfo; 
@@ -259,7 +218,6 @@ begin
     m_nShowSysTick := 0;
 end;
 
-      //DefColor: TColor = 0
 procedure TDrawScreen.AddSysMsgEx(str: string; Color: TColor; boFirst: Boolean; DefColor: TColor);
   function GetStrLen: Integer;
   var
@@ -299,7 +257,6 @@ begin
 
   with SaySurface do begin
     len := Length(str);
-    //SetBkMode(Canvas.Handle, TRANSPARENT);
     nLeng := 1;
     fColor := Color;
     bColor := $8;
@@ -389,7 +346,6 @@ begin
       TextOutEx(nLeng, 2, temp, fColor, bColor);
       str := '';
     end;
-    //Canvas.Release;
     New(SayHint);
     SayHint.SaySurface := SaySurface;
     SayHint.AddTime := GetTickCount;
@@ -402,14 +358,6 @@ begin
       m_SysMsgList.Delete(0);
     end;
     m_SysMsgList.AddObject(tempstr, TObject(SayHint));
-    {if m_SysMsgList.Count > ADDSAYCOUNT then begin
-      SayHint := pTSayHint(m_SysMsgList.Objects[0]);
-      m_SysMsgList.Delete(0);
-      SayHint.SaySurface.Free;
-      Dispose(SayHint);
-    end;    }
-    //if str <> '' then
-      //AddSysMsg(str, fColor, False, Color);
   end;
 end;
 
@@ -435,7 +383,7 @@ begin
   WideStr := str;
 
 {$IF Var_Interface = Var_Mir2}
-  SayMessage := NewSayMsgEx(DEFSAYLISTWIDTH + g_FScreenWidth - DEFSCREENWIDTH, SAYLISTHEIGHT, UserSayType, BColor);
+  SayMessage := NewSayMsgEx(DEFSAYLISTWIDTH + g_FScreenWidth - OLD_SCREEN_WIDTH, SAYLISTHEIGHT, UserSayType, BColor);
 {$ELSE}
   SayMessage := NewSayMsg(DEFSAYLISTWIDTH, SAYLISTHEIGHT, UserSayType);
 {$IFEND}
@@ -479,7 +427,7 @@ begin
           boImage := False;
           nindex := StrToIntDef(cmdstr, -1);
           if nIndex in [Low(g_FaceIndexInfo)..High(g_FaceIndexInfo)] then begin
-            if (nLen + SAYFACEWIDTH) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} - 1) then begin
+            if (nLen + SAYFACEWIDTH) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - OLD_SCREEN_WIDTH{$IFEND} - 1) then begin
               OldStr := '#' + cmdstr + '#' + OldStr;
               cmdstr := '';
               Break;
@@ -504,14 +452,14 @@ begin
           if sClickIndex <> '' then ClickIndex := StrToIntDef(sClickIndex, 0);
           cmdstr := sname;
           nTextLen := g_DXCanvas.TextWidth(cmdstr);
-          if (nLen + nTextLen) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} - 1) then begin
+          if (nLen + nTextLen) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - OLD_SCREEN_WIDTH{$IFEND} - 1) then begin
             WideStr2 := cmdstr;
             cmdstr := '';
             AddStr2 := '';
             for ii := 1 to Length(WideStr2) do begin
               tstr2 := WideStr2[ii];
               OldStr2 := Copy(WideStr2, ii + 1, Length(WideStr2));
-              if (nLen + g_DXCanvas.TextWidth(AddStr2 + tstr2)) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} - 1) then begin
+              if (nLen + g_DXCanvas.TextWidth(AddStr2 + tstr2)) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - OLD_SCREEN_WIDTH{$IFEND} - 1) then begin
                 nTextLen := g_DXCanvas.TextWidth(AddStr2);
                 New(ClickName);
                 ClickIndex := Integer(ClickName);
@@ -568,14 +516,14 @@ begin
                 ClickIndex := StrToIntDef(sClickIndex, 0);
               end else cmdstr := '<' + StdItem.Name + '>';
               nTextLen := g_DXCanvas.TextWidth(cmdstr);
-              if (nLen + nTextLen) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} - 1) then begin
+              if (nLen + nTextLen) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - OLD_SCREEN_WIDTH{$IFEND} - 1) then begin
                 WideStr2 := cmdstr;
                 cmdstr := '';
                 AddStr2 := '';
                 for ii := 1 to Length(WideStr2) do begin
                   tstr2 := WideStr2[ii];
                   OldStr2 := Copy(WideStr2, ii + 1, Length(WideStr2));
-                  if (nLen + g_DXCanvas.TextWidth(AddStr2 + tstr2)) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} - 1) then begin
+                  if (nLen + g_DXCanvas.TextWidth(AddStr2 + tstr2)) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - OLD_SCREEN_WIDTH{$IFEND} - 1) then begin
                     nTextLen := g_DXCanvas.TextWidth(AddStr2);
                     New(ClickItem);
                     SafeFillChar(ClickItem^, SizeOf(TClickItem), #0);
@@ -669,7 +617,7 @@ begin
           AddStr := '';
           cmdstr := '';
         end else
-        if (nLen + g_DXCanvas.TextWidth(AddStr + tstr)) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - DEFSCREENWIDTH{$IFEND} - 1) then begin
+        if (nLen + g_DXCanvas.TextWidth(AddStr + tstr)) > (DEFSAYLISTWIDTH{$IF Var_Interface = Var_Mir2} + g_FScreenWidth - OLD_SCREEN_WIDTH{$IFEND} - 1) then begin
           TextOutEx(nLen, 2, AddStr, nFColor, nBColor);
           Inc(nLen, g_DXCanvas.TextWidth(AddStr));
           AddStr := '';
@@ -711,84 +659,12 @@ begin
       AddSayMsg(OldStr, FColor, BColor, boSys, UserSayType, False, nFColor, nBColor);
   end;
 end;
-(*
-procedure TDrawScreen.AddChatBoardString(str: string; fcolor, bcolor: Integer);
-  {procedure AddStrToList(StrList: TStringList; Msg: string);
-  var
-    nLen: Integer;
-    d: TDirectDrawSurface;
-  begin
-    nLen := frmMain.Canvas.TextWidth(Msg);
-    d := TDirectDrawSurface.Create(frmMain.DXDraw.DDraw);
-    d.SystemMemory := True;
-    d.SetSize(nLen, SAYLISTHEIGHT);
-    d.Canvas.Font.Name := DEFFONTNAME;
-    d.Canvas.Font.Size := DEFFONTSIZE;
-    //d.Fill(bcolor);
-    SetBkMode(d.Canvas.Handle, TRANSPARENT);
-    //d.Canvas.Font.Color := fcolor;
-    //d.Canvas.Brush.Color := bcolor;
-    BoldTextOutEx(d, 0, (SAYLISTHEIGHT - 12) div 2, fcolor, bcolor, Msg);
-    //d.Canvas.TextOut(0, (SAYLISTHEIGHT - 12) div 2, Msg);
-    d.Canvas.Release;
-    StrList.AddObject(Msg, TObject(d));
-  end;
-var
-  i, len, aline, cmdi: Integer;
-  temp, fdata: string;
-const
-  BOXWIDTH = 295 - 18; //41 聊天框文字宽度 }
-begin
-  {len := Length(str);
-  temp := '';
-  i := 1;
-  cmdi := 1;
-  while True do begin
-    if i > len then
-      break;
-    if byte(str[i]) >= 128 then begin
-      fdata := str[i];
-      Inc(i);
-      if i <= len then
-        fdata := fdata + str[i]
-      else
-        break;
-    end
-    else
-      fdata := str[i];
-
-    aline := frmMain.Canvas.TextWidth(temp + fdata);
-    if aline > BOXWIDTH then begin
-      AddStrToList(ChatStrs, temp);
-      str := Copy(str, cmdi + 1, len - cmdi);
-      temp := '';
-      break;
-    end;
-    temp := temp + fdata;
-    cmdi := i;
-    Inc(i);
-  end;
-  if temp <> '' then begin
-    AddStrToList(ChatStrs, temp);
-    str := '';
-  end;          
-  if ChatStrs.Count > 200 then begin
-    TDirectDrawSurface(ChatStrs.Objects[0]).Free;
-    ChatStrs.Delete(0);
-    if ChatStrs.Count - ChatBoardTop < VIEWCHATLINE then
-      Dec(ChatBoardTop);
-  end
-  else if (ChatStrs.Count - ChatBoardTop) > VIEWCHATLINE then begin
-    Inc(ChatBoardTop);
-  end;
-  if str <> '' then
-    AddChatBoardString(' ' + str, fcolor, bcolor); }
-end;       *)
 
 procedure TDrawScreen.ShowHintEx(X, Y: Integer; str: string);
 begin
   ClearHint;
 end;
+
 //鼠标放在某个物品上显示的信息   清清 2007.10.21
 Function TDrawScreen.ShowHint(X, Y: Integer; str: string; Color: TColor;
   drawup: Boolean; ShowIndex: Integer; boItemHint: Boolean; HintSurface:TDirectDrawSurface;
@@ -817,7 +693,6 @@ begin
   Result.X := 0;
   Result.Y := 0;
   addw := 0;
-//  addh := 0;
   if HintSurface = nil then HintSurface := m_HintSurface;
   if HintList = nil then HintList := m_HintList;
 
@@ -833,7 +708,6 @@ begin
     OldHintColor := Color;
     HintColor := Color;
     boEndColor := False;
-    //SetBkMode(HintSurface.Canvas.Handle, TRANSPARENT);
     offHint := g_DXCanvas.TextHeight('A');
     if boItemHint then h := 14
     else h := 5;
@@ -848,7 +722,6 @@ begin
           if (h + 3) > HintHeight then
             HintHeight := HintHeight + h + 3;
         end;
-        //HintHeight := HintHeight + h + 2;
         h := addh;
         addw := HintWidth + 10;
       end;
@@ -875,7 +748,6 @@ begin
             if CompareLStr(cmdstr, 'COLOR', Length('COLOR')) then begin
               sFColor := GetValidStr3(cmdstr, sTemp, ['=']);
               HintColor := StrToIntDef(sFColor, Color);
-              //HintColor := GetRGBEx(GetBValue(HintColor),GetGValue(HintColor),GetRValue(HintColor));
               Continue;
             end
             else if CompareLStr(cmdstr, 'ENDCOLOR', Length('ENDCOLOR')) then begin
@@ -898,7 +770,6 @@ begin
               Continue;
             end
             else if CompareText(cmdstr, 'SetItem') = 0 then begin
-              //HintHeight := HintHeight + h + 2;
               if boItemHint then begin
                 if (h + 9) > HintHeight then
                   HintHeight := {HintHeight +} h + 9;
@@ -911,7 +782,6 @@ begin
               Continue;
             end
             else if CompareText(cmdstr, 'Line') = 0 then begin
-              //addh := h;
               Inc(h, 4);
               New(ShowHint);
               SafeFillChar(ShowHint^, SizeOf(TNewShowHint), #0);
@@ -1018,7 +888,6 @@ begin
             sFColor := '';
             sBColor := '';
             FColor := HintColor;
-//            BColor := $8;
             if pos(',', cmdparam) > 0 then begin
               sBColor := GetValidStr3(cmdparam, sFColor, [',']);
             end
@@ -1028,11 +897,9 @@ begin
             if CompareLStr(sFColor, 'FCOLOR', length('FCOLOR')) then begin
               sFColor := GetValidStr3(sFColor, sTemp, ['=']);
               FColor := StrToIntDef(sFColor, Color);
-              //pHint.FColor := GetRGBEx(GetBValue(pHint.FColor),GetGValue(pHint.FColor),GetRValue(pHint.FColor));
             end;
             if CompareLStr(sBColor, 'BCOLOR', length('BCOLOR')) then begin
               sBColor := GetValidStr3(sBColor, sTemp, ['=']);
-//              BColor := StrToIntDef(sBColor, Color);
             end;
             HintSurface.TextOutEx(w, h, cmdstr, FColor);
             Inc(w, g_DXCanvas.TextWidth(cmdstr));
@@ -1055,7 +922,6 @@ begin
         Inc(h, offHint + 1);
       end;
     end;
-    //HintSurface.Canvas.Release;
     if boItemHint then
       HintWidth := _MAX(150, HintWidth);
     if boItemHint then begin
@@ -1075,9 +941,8 @@ begin
   boShowSurface := True;
   Result.X := HintWidth;
   Result.Y := HintHeight;
-  //HintX := 20;
-  //HintY := (g_FScreenHeight - HintHeight) div 2;
 end;
+
 //清除鼠标放在某个物品上显示的信息   清清 2007.10.21
 procedure TDrawScreen.ClearHint(boClear: Boolean);
 var
@@ -1211,20 +1076,13 @@ end;
 
 Function TDrawScreen.NewSayMsg(nWidth, nHeight:Integer; UserSayType: TUserSayType): pTSayMessage;
 begin
-  //Result := nil;
   New(Result);
-  {Result.SayMsg := '';
-  Result.boFirst := False;
-  Result.boSys := False;  }
   Result.ClickList := nil;
   Result.ItemList := nil;
   Result.ImageList := nil;
   Result.SaySurface := MakeDXImageTexture(nWidth, nHeight, WILFMT_A4R4G4B4, g_DXCanvas);
   Result.SaySurface.Clear;
-  //Result.boTransfer := False;
   Result.UserSayType := UserSayType;
-  {Result.SaySurface.Canvas.Font.Name := DEFFONTNAME;
-  Result.SaySurface.Canvas.Font.Size := DEFFONTSIZE;}
 end;
 
 procedure TDrawScreen.ClearBit(SayMessage: pTSayMessage; nMaxLen: Integer);
@@ -1285,8 +1143,8 @@ begin
   if CurrentScene <> nil then
     CurrentScene.PlayScene(MSurface);
 end;
-//显示左上角信息文字
 
+//显示左上角信息文字
 procedure TDrawScreen.DrawScreenTop(MSurface: TDirectDrawSurface);
 var
   ax, ay: integer;
@@ -1315,7 +1173,6 @@ begin
     m_SysInfoList.Clear;
     m_nShowSysTick := GetTickCount + 1000;
   end;
-  //ax := 360;
 
 {$IF Var_Interface = Var_Mir2}
   ay := g_FScreenHeight - 310;
@@ -1333,7 +1190,7 @@ begin
 {$IF Var_Interface = Var_Mir2}
     ax := 30;
 {$ELSE}
-    ax := (g_FScreenWidth - SayHint.SaySurface.Width - 20) div 2;
+    ax := g_FScreenXOrigin - 10 - SayHint.SaySurface.Width div 2;
 {$IFEND}
     if I = ADDSAYCOUNT then begin
       if boTop then begin

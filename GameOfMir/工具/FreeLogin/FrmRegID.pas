@@ -95,7 +95,7 @@ begin
   end;
 
   if Length(edt_EdPasswd.Text) < 5 then begin
-    MessageBox(Handle, '密码长度必须大于 4位.', '提示信息', MB_OK or MB_ICONASTERISK);
+    MessageBox(Handle, '密码长度必须超过 4位.', '提示信息', MB_OK or MB_ICONASTERISK);
     edt_EdPasswd.SetFocus;
     exit;
   end;
@@ -243,7 +243,7 @@ begin
   if Sender = edt_EdPasswd then begin
     mmoMsg.Lines.Clear;
     mmoMsg.Lines.Add('您的密码可以是字符与数据的组合');
-    mmoMsg.Lines.Add('但密码长度不能少于4位');
+    mmoMsg.Lines.Add('但密码长度不能少于5位');
     mmoMsg.Lines.Add('建议您的密码不要过于简单');
     mmoMsg.Lines.Add('以防被人猜到');
     mmoMsg.Lines.Add('请记住您输入的密码');

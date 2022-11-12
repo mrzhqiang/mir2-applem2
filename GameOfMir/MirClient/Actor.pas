@@ -3797,8 +3797,8 @@ begin
  m_UserNameSurface := TDirectDrawSurface.Create(DDraw);
  m_UserNameSurface.SystemMemory := True;
  m_UserNameSurface.SetSize(nWidth, nHeight);
- m_UserNameSurface.Canvas.Font.Name := DEFFONTNAME;
- m_UserNameSurface.Canvas.Font.Size := DEFFONTSIZE;
+ m_UserNameSurface.Canvas.Font.Name := DEF_FONT_NAME;
+ m_UserNameSurface.Canvas.Font.Size := DEF_FONT_SIZE;
  m_UserNameSurface.Fill(0);
  SetBkMode(m_UserNameSurface.Canvas.Handle, TRANSPARENT);
  BoldTextOutEx(m_UserNameSurface, 1, 1, clwhite, $8, m_UserName);

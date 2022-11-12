@@ -1423,7 +1423,7 @@ begin
       if d <> nil then begin
         FSurface := TDirectDrawSurface.Create(DDraw);
         FSurface.SystemMemory := True;
-        FSurface.Canvas.Font.Name := DEFFONTNAME;
+        FSurface.Canvas.Font.Name := DEF_FONT_NAME;
         FSurface.Canvas.Font.Size := DEFFONTSIZE;
         FSurface.SetSize(d.Width, d.Height);
         FSurface.Draw(0, 0, d.ClientRect, d, True);
@@ -1432,7 +1432,7 @@ begin
     else begin
       FSurface := TDirectDrawSurface.Create(DDraw);
       FSurface.SystemMemory := True;
-      FSurface.Canvas.Font.Name := DEFFONTNAME;
+      FSurface.Canvas.Font.Name := DEF_FONT_NAME;
       FSurface.Canvas.Font.Size := DEFFONTSIZE;
       FSurface.SetSize(Width, Height);
       FSurface.Fill(0);
@@ -2977,7 +2977,7 @@ begin
   FIndent := 2;
   FCloseSpace := False;
   Color := clBlack;
-  Font.Name := DEFFONTNAME;
+  Font.Name := DEF_FONT_NAME;
   Font.Color := clWhite;
   Font.Size := DEFFONTSIZE;
   Canvas.Font.Name := Font.Name;
@@ -4284,7 +4284,7 @@ begin
   FLines := TDMemoStringList.Create;
   TDMemoStringList(FLines).DMemo := Self;
 
-  Font.Name := DEFFONTNAME;
+  Font.Name := DEF_FONT_NAME;
   Font.Color := clWhite;
   Font.Size := DEFFONTSIZE;
   Canvas.Font.Name := Font.Name;
@@ -5365,7 +5365,7 @@ begin
   FHeight := 0;
   FWidth := 0;
   FItemIndex := -1;
-  Canvas.Font.Name := DEFFONTNAME;
+  Canvas.Font.Name := DEF_FONT_NAME;
   Canvas.Font.Size := DEFFONTSIZE;
   FHeightOffset := 16;
   FAlpha := 220;

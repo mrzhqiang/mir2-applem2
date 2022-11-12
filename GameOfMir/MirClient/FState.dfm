@@ -3,8 +3,8 @@ object FrmDlg: TFrmDlg
   Top = 0
   BorderStyle = bsNone
   Caption = 'FrmDlg'
-  ClientHeight = 612
-  ClientWidth = 1011
+  ClientHeight = 863
+  ClientWidth = 1139
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

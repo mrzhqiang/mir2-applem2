@@ -65,8 +65,8 @@ const
   WINRIGHT = 800 - 60;
   BOTTOMEDGE = 600 - 60; // Bottom WINBOTTOM
 
-  DEFFONTNAME = 'ËÎÌו';
-  DEFFONTSIZE = 9;
+  DEF_FONT_NAME = 'ËÎÌו';
+  DEF_FONT_SIZE = 9;
 
 type
   TBmpPartBuffer = array[0..BMP_PART_SIZE - 1] of Char;

@@ -555,8 +555,8 @@ begin
   d := g_WMain99Images.Images[192];
   if d <> nil then begin
     DShopWin.SetImgIndex(g_WMain99Images, 192);
-    DShopWin.Left := (g_FScreenWidth - d.Width) div 2;
-    DShopWin.Top := (g_FScreenHeight - d.Height) div 2;
+    DShopWin.Left := g_FScreenXOrigin - d.Width div 2;
+    DShopWin.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DBotShopClose.SetImgIndex(g_WMain99Images, 143);
@@ -1008,7 +1008,7 @@ begin
   if d <> nil then begin
     DWinFriend.SetImgIndex(g_WMain99Images, 354);
     DWinFriend.Left := g_FScreenWidth - d.Width;
-    DWinFriend.Top := (g_FScreenHeight - d.Height) div 2;
+    DWinFriend.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   DFriClose.SetImgIndex(g_WMain99Images, 133);
   DFriClose.Left := DWinFriend.Width - 20;
@@ -1051,8 +1051,8 @@ begin
   d := g_WMain99Images.Images[366];
   if d <> nil then begin
     DMatrixCardWnd.SetImgIndex(g_WMain99Images, 366);
-    DMatrixCardWnd.Left := (g_FScreenWidth - d.Width) div 2;
-    DMatrixCardWnd.Top := (g_FScreenHeight - d.Height) div 2;
+    DMatrixCardWnd.Left := g_FScreenXOrigin - d.Width div 2;
+    DMatrixCardWnd.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DCardOK.SetImgIndex(g_WMain99Images, 24);
@@ -1067,8 +1067,8 @@ begin
   d := g_WMain99Images.Images[1758];
   if d <> nil then begin
     DWinUpLoad.SetImgIndex(g_WMain99Images, 1758);
-    DWinUpLoad.Left := (g_FScreenWidth - d.Width) div 2;
-    DWinUpLoad.Top := (g_FScreenHeight - d.Height) div 2;
+    DWinUpLoad.Left := g_FScreenXOrigin - d.Width div 2;
+    DWinUpLoad.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DUpLoadClose.SetImgIndex(g_WMain99Images, 1850);
@@ -1120,7 +1120,7 @@ begin
   d := g_WMain99Images.Images[258];
   if d <> nil then begin
     DWinUpLoad.SetImgIndex(g_WMain99Images, 258);
-    DWinUpLoad.Left := (g_FScreenWidth - d.Width) div 2;
+    DWinUpLoad.Left := g_FScreenXOrigin - d.Width div 2;
     DWinUpLoad.Top := 60;
   end;
 
@@ -1176,7 +1176,7 @@ begin
   if d <> nil then begin
     DWndUserShop.SetImgIndex(g_WMain99Images, 1722);
     DWndUserShop.Left := g_FScreenWidth - d.Width;
-    DWndUserShop.Top := (g_FScreenHeight - d.Height) div 2;
+    DWndUserShop.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DUserShopSellGrid.Top := 57;
@@ -1291,8 +1291,8 @@ begin
   d := g_WMain99Images.Images[1723];
   if d <> nil then begin
     DReadUserShop.SetImgIndex(g_WMain99Images, 1723);
-    DReadUserShop.Left := (g_FScreenWidth - d.Width) div 2;
-    DReadUserShop.Top := (g_FScreenHeight - d.Height) div 2;
+    DReadUserShop.Left := g_FScreenXOrigin - d.Width div 2;
+    DReadUserShop.Top := g_FScreenYOrigin - d.Height div 2;
   end;
 
   DReadShopClose.SetImgIndex(g_WMain99Images, 1850);
@@ -1472,8 +1472,8 @@ begin
   d := g_WMain99Images.Images[1713];
   if d <> nil then begin
     DWndDeath.SetImgIndex(g_WMain99Images, 1713);
-    DWndDeath.Left := (g_FScreenWidth - d.Width) div 2;
-    DWndDeath.Top := (g_FScreenHeight - d.Height) div 2;
+    DWndDeath.Left := g_FScreenXOrigin - d.Width div 2;
+    DWndDeath.Top := g_FScreenYOrigin - d.Height div 2;
   end;
   dbtnAcceptCure.SetImgIndex(g_WMain99Images, 1650);
   dbtnAcceptCure.Left := 17;
@@ -1494,7 +1494,7 @@ begin
   if d <> nil then begin
     DWndDeath.SetImgIndex(g_WMain99Images, 232);
     DWndDeath.Left := (g_FScreenWidth- d.Width) div 2 - 5;
-    DWndDeath.Top := g_FScreenHeight div 2 + (g_FScreenHeight div 2 - d.Height) div 2 - 10;
+    DWndDeath.Top := g_FScreenHeight div 2 + g_FScreenYOrigin div 2 - d.Height div 2 - 10;
   end;
   dbtnAcceptCure.SetImgIndex(g_WMain99Images, 330);
   dbtnAcceptCure.Left := 21;
@@ -1514,15 +1514,15 @@ begin
   d := g_WMain99Images.Images[1627];
   if d <> nil then begin
     DWndBar.SetImgIndex(g_WMain99Images, 1627);
-    DWndBar.Left := (g_FScreenWidth - d.Width) div 2 - 5;
+    DWndBar.Left := g_FScreenXOrigin - d.Width div 2 - 5;
     DWndBar.Top := g_FScreenHeight - d.Height - 205;
   end;
 {$ELSE}
   d := g_WMain99Images.Images[230];
   if d <> nil then begin
     DWndBar.SetImgIndex(g_WMain99Images, 230);
-    DWndBar.Left := (g_FScreenWidth - d.Width) div 2 - 5;
-    DWndBar.Top := g_FScreenHeight div 2 + (g_FScreenHeight div 2 - d.Height) div 2 - 10;
+    DWndBar.Left := g_FScreenXOrigin - d.Width div 2 - 5;
+    DWndBar.Top := g_FScreenHeight div 2 + g_FScreenYOrigin div 2 - d.Height div 2 - 10;
   end;
 {$IFEND}
 
@@ -1640,8 +1640,8 @@ begin
   //DScreen.AddSysMsg(FsUrl, clWhite);
   DWndWeb.Width := _MIN(nWidth, g_FScreenWidth);
   DWndWeb.Height := _MIN(nHeight, g_FScreenHeight);
-  DWndWeb.Left := (g_FScreenWidth - nWidth) div 2;
-  DWndWeb.Top := (g_FScreenHeight - nHeight) div 2;
+  DWndWeb.Left := g_FScreenXOrigin - nWidth div 2;
+  DWndWeb.Top := g_FScreenYOrigin - nHeight div 2;
   dBtWebClose.Left := nWidth - dBtWebClose.Width;
   FrmWeb.Left := DWndWeb.Left + 4;
   FrmWeb.Top := DWndWeb.Top + 38;
