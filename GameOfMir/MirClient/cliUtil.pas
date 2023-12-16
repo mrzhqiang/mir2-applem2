@@ -110,12 +110,12 @@ var
   i: integer;
   nA, nR, nG, nB, nX: Byte;
 begin                           
-  ImgMixSurfaceR5G6B5 := MakeDXImageTexture(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, WILFMT_R5G6B5);
-  ImgMixSurfaceA1R5G5B5 := MakeDXImageTexture(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, WILFMT_A1R5G5B5);
-  ImgMixSurfaceA4R4G4B4 := MakeDXImageTexture(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, WILFMT_A4R4G4B4);
-  ImgMaxSurfaceR5G6B5 := MakeDXImageTexture(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, WILFMT_R5G6B5);
-  ImgMaxSurfaceA1R5G5B5 := MakeDXImageTexture(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, WILFMT_A1R5G5B5);
-  ImgMaxSurfaceA4R4G4B4 := MakeDXImageTexture(LARGE_SCREEN_WIDTH, LARGE_SCREEN_HEIGHT, WILFMT_A4R4G4B4);
+  ImgMixSurfaceR5G6B5 := MakeDXImageTexture(g_FScreenWidth, g_FScreenHeight, WILFMT_R5G6B5);
+  ImgMixSurfaceA1R5G5B5 := MakeDXImageTexture(g_FScreenWidth, g_FScreenHeight, WILFMT_A1R5G5B5);
+  ImgMixSurfaceA4R4G4B4 := MakeDXImageTexture(g_FScreenWidth, g_FScreenHeight, WILFMT_A4R4G4B4);
+  ImgMaxSurfaceR5G6B5 := MakeDXImageTexture(g_FScreenWidth, g_FScreenHeight, WILFMT_R5G6B5);
+  ImgMaxSurfaceA1R5G5B5 := MakeDXImageTexture(g_FScreenWidth, g_FScreenHeight, WILFMT_A1R5G5B5);
+  ImgMaxSurfaceA4R4G4B4 := MakeDXImageTexture(g_FScreenWidth, g_FScreenHeight, WILFMT_A4R4G4B4);
   ImgMixSurfaceR5G6B5.Canvas := g_DXCanvas;
   ImgMixSurfaceA1R5G5B5.Canvas := g_DXCanvas;
   ImgMixSurfaceA4R4G4B4.Canvas := g_DXCanvas;

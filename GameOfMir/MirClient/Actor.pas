@@ -27,7 +27,7 @@ const
 
    RUN_MINHEALTH = 10;//低于这个血量只能走动
    DEFSPELLFRAME = 10; //魔法最大浈
-  FIREHIT_READYFRAME = 6; //堪拳搬 矫傈 橇贰烙
+  FIREHIT_READYFRAME = 6;
   MAGBUBBLEBASE = 30; //魔法盾效果图位置
   MAGBUBBLESTRUCKBASE = 33; //被攻击时魔法盾效果图位置
   MAXWPEFFECTFRAME = 5;
@@ -42,7 +42,7 @@ type
     frame   :Word;//0x16              // 帧数
     skip    :Word;//0x18              // 跳过的帧数
     ftime   :Word;//0x1A              // 每帧的延迟时间（毫秒）
-    usetick :Word;//0x1C              // 荤侩平, 捞悼 悼累俊父 荤侩凳
+    usetick :Word;//0x1C              // 使用间隔
   end;
   pTActionInfo = ^TActionInfo;
 
@@ -1365,6 +1365,7 @@ type
     m_SayList: TList;
     m_Group: pTGroupMember;
 
+    // 表示坐标偏移，人物移动时，根据不同方位，得到对应的坐标偏移
     m_nShiftX: Integer; //0x98
     m_nShiftY: Integer; //0x9C
 

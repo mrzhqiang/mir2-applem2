@@ -314,7 +314,22 @@ $80000000  }
   MAXRETURNITEMS = 4;
   MAXAPPENDBAGITEMS = 3;
   MAXFLUTECOUNT = 3;
-  LOGICALMAPUNIT = 30;
+
+  // 逻辑地图单位，需小于 (ScreenWidth + 10 * UNITX) div UNITX or (ScreenHeight + 10 * UNITY) div UNITY
+  // 在旧的坐标体系中：
+  // 800 / 48 + 10 = 26 < 30
+  // 600 / 32 + 10 = 28 < 30
+  // 在新的坐标体系中：
+  // 1024 / 48 + 10 = 31 > 30
+  // 768 / 32 + 10 = 34 > 30
+  // 因此，在一张 1000x1000 的地图坐标系中，当玩家坐标位于 1000/30 * N 的点位附近时，BlockTop 和 BlockLeft 距离玩家坐标
+  // 的坐标数值无限趋向于 30，则旧坐标系可以支撑地图数据缓冲，而新坐标系可能出现问题
+  // 另外，无理由增加 10 单位的地图数据而不进行渲染，很容易产生性能问题
+  // 所以可以将这个逻辑地图单位调整为固定大小：40
+  // 40 * 48 = 1920
+  // 40 * 32 = 1280
+  // 也就是说，分辨率最大值为 1920x1280
+  LOGICALMAPUNIT = 40;
   MAXFRIENDS = 30;
   MAXRETURNITEMSCOUNT = 30;
   MAXEMAILCOUNT = 20;

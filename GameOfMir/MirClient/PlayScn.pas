@@ -1,5 +1,4 @@
 unit PlayScn;
-//游戏屏幕
 
 interface
 
@@ -10,21 +9,23 @@ uses
   StdCtrls, ClFunc, magiceff, ExtCtrls, MShare, Share, MNShare;
 
 const
-  // todo 下面几个常量需弄清楚
+  // todo 不太清楚此参数的意义
   LONGHEIGHT_IMAGE = 35 {35};
-  // 这个应该是跑步时，移动的地板地图距离
-  // 额外绘制这个距离的地板地图，跑步就不会出现缝隙
   AAX = 16;
   SOFFX = 0;
   SOFFY = 0;
-  // 人物头上的 HP 条
-  HEALTHBAR_BLACK = 0;
-  // 绘制列表数量（上限？）
+  // 人物头上的 HP 条在 必备补丁 中的索引
+  HEALTHBAR_BLACK = 6;
+  // 绘制列表数量：模拟旧时代的电子显像管屏幕，每一个列表代表屏幕上的一行，从上到下一共分成 40 行
+  // 所谓一行实际上是指地图坐标系中，y 坐标相同 x 坐标不同的一条线
+  // 根据 UNITY=32 设定，在最大分辨率 1600x900 中，900 div 32 = 28.125 < 40，因此当前参数满足需求
+  // 即使因为地图纹理大小的缘故，需要对 Top 和 Bottom 的坐标减少和增加 5 个坐标，即 28.125 + 10 < 40 也满足需求
+  // 如果对分辨率有所改动，请注意更改此参数
   DRAWLISTCOUNT = 40;
 
 type
-  // 绘制列表
-
+  // 绘制列表：表示在地图坐标系中，从左到右的每一行需要绘制的数据
+  // 通常与服务器的可见范围有关系，请参考 g_Config.nSendRefMsgRange
   TDrawList = record
     // 物品列表
     ItemList: TList;
@@ -34,42 +35,35 @@ type
     DeathActorList: TList;
     // 摆摊玩家列表
     ShopActorList: TList;
-    // 技能特效列表（火墙？）
+    // 技能特效列表（类似火墙？）
     MagicEffList: TList;
     // 事件列表？
     ClEvent: TList;
   end;
-  // 游戏场景
-
+  // 玩家场景——游戏界面
   TPlayScene = class(TScene)
-    // 地图表面？渲染模板纹理？
+    // 地图表面
     m_MapSurface: TDXRenderTargetTexture;
-    // 对象纹理？
+    // 对象表面
     m_ObjSurface: TDXRenderTargetTexture;
-    // 技能纹理？
+    // 技能表面
     m_MagSurface: TDXRenderTargetTexture;
 {$IF Var_Interface =  Var_Default}
-    // 剑侠界面的操作提示纹理？
     m_OperateHintSurface: TDirectDrawSurface;
 {$IFEND}
     // HP 条
     m_HealthBarSurface: TDXImageTexture;
-    // 是否播放变化
+    // 玩家是否变化
     m_boPlayChange: Boolean;
-    // 播放变化间隔
+    // 玩家变化间隔
     m_dwPlayChangeTick: LongWord;
 
   private
-    // 移动速度计时器
     m_dwMoveTime: LongWord;
-    // 移动步数统计
     m_nMoveStepCount: Integer;
-    // todo can be remove？
     m_dwAniTime: LongWord;
     m_nAniCount: Integer;
-    // 默认 X 坐标？
     m_nDefXX: Integer;
-    // 默认 Y 坐标？
     m_nDefYY: Integer;
     // 背景音频播放计时器
     m_MainSoundTimer: TTimer;
@@ -77,18 +71,14 @@ type
     procedure SoundOnTimer(Sender: TObject);
 
   public
-    // 备忘录
 {$IFDEF DEBUG}
     MemoLog: TMemo;
 {$ENDIF}
     m_DrawArray: array[0..DRAWLISTCOUNT] of TDrawList;
-//    m_DrawIndex: LongWord;
     m_DrawOutsideList: TList;
-    // 角色列表
+    // 玩家列表
     m_ActorList: TList;
-    // buff 列表？
     m_EffectList: TList;
-    // 飞列表？
     m_FlyList: TList;
     m_dwBlinkTime: LongWord;
     m_boViewBlink: Boolean;
@@ -139,11 +129,7 @@ type
 
     function IsValidActor(Actor: TActor): Boolean;
 
-    function NewActor(chrid: Integer;
-                         cx, cy, cdir: Word;
-                         cfeature, cstate: Integer;
-                         btSIdx: Integer = -1;
-                         btWuXin: Integer = -1): TActor;
+    function NewActor(chrid: Integer; cx, cy, cdir: Word; cfeature, cstate: Integer; btSIdx: Integer = -1; btWuXin: Integer = -1): TActor;
 
     procedure SetMissionList(Actor: TNPCActor);
 
@@ -173,53 +159,33 @@ type
 
     procedure SetActorGroup(Actor: TActor);
 
-    procedure SetMembersGroup(GroupMember: pTGroupMember; boGroup: Boolean);
-      overload;
+    procedure SetMembersGroup(GroupMember: pTGroupMember; boGroup: Boolean); overload;
 
     procedure SetMembersGroup(GroupMembers: TList); overload;
 
-    procedure SendMsg(ident, chrid, X, Y, cdir, Feature, State: Integer;
-                         str: string;
-                         btSIdx: Integer = -1;
-                         btWuXin: Integer = -1);
+    procedure SendMsg(ident, chrid, X, Y, cdir, Feature, State: Integer; str: string; btSIdx: Integer = -1; btWuXin: Integer = -1);
 
-    procedure NewMagic(aowner: TActor;
-                          magid, magnumb, cx, cy, tx, ty, targetcode: Integer;
-                          mtype: TMagicType;
-                          Recusion: Boolean;
-                          anitime: Integer;
-                          var bofly: Boolean);
+    procedure NewMagic(aowner: TActor; magid, magnumb, cx, cy, tx, ty, targetcode: Integer; mtype: TMagicType; Recusion: Boolean; anitime: Integer; var bofly: Boolean);
 
     procedure DelMagic(magid: Integer);
 
-    function NewFlyObject(aowner: TActor;
-                             cx, cy, tx, ty, targetcode: Integer;
-                             mtype: TMagicType): TMagicEff;
+    function NewFlyObject(aowner: TActor; cx, cy, tx, ty, targetcode: Integer; mtype: TMagicType): TMagicEff;
 
-    procedure ScreenXYfromMCXY(cx, cy: Integer;
-                                  var sx, sy: Integer);
+    procedure ScreenXYfromMCXY(cx, cy: Integer; var sx, sy: Integer);
 
-    procedure CXYfromMouseXY(mx, my: Integer;
-                                var ccx, ccy: Integer);
+    procedure CXYfromMouseXY(mx, my: Integer; var ccx, ccy: Integer);
 
-    function GetCharacter(X, Y, wantsel: Integer;
-                             var nowsel: Integer;
-                             liveonly: Boolean): TActor;
+    function GetCharacter(X, Y, wantsel: Integer; var nowsel: Integer; liveonly: Boolean): TActor;
 
-    function GetAttackFocusCharacter(X, Y, wantsel: Integer;
-                                        var nowsel: Integer;
-                                        liveonly: Boolean): TActor;
+    function GetAttackFocusCharacter(X, Y, wantsel: Integer; var nowsel: Integer; liveonly: Boolean): TActor;
 
     function IsSelectMyself(X, Y: Integer): Boolean;
 
-    function GetDropItems(X, Y: Integer;
-                             var inames: string;
-                             var MaxWidth: Integer): pTDropItem;
+    function GetDropItems(X, Y: Integer; var inames: string; var MaxWidth: Integer): pTDropItem;
 
     function GetXYDropItems(nX, nY: Integer): pTDropItem;
 
-    procedure GetXYDropItemsList(nX, nY: Integer;
-                                    var ItemList: TList);
+    procedure GetXYDropItemsList(nX, nY: Integer; var ItemList: TList);
 
     function CanHorseRun(sx, sy, ex, ey: Integer): Boolean;
 
@@ -285,22 +251,18 @@ begin
 
   m_DrawOutsideList := TList.Create;
 
-//  m_DrawIndex := 0;
-
 {$IFDEF DEBUG}
   MemoLog := TMemo.Create(frmMain.Owner);
   with MemoLog do begin
     Parent := frmMain;
     BorderStyle := bsNone;
     Visible := FALSE;
-//     Visible := True;
     Ctl3D := True;
     Left := 0;
     Top := 250;
     Width := 300;
     Height := 150;
   end;
-  //2004/05/17
 {$ENDIF}
 
   m_dwMoveTime := GetTickCount;
@@ -350,9 +312,8 @@ var
   WriteBuffer: PWord;
 begin
   Result := False;
-  //更新
   m_MapSurface := TDXRenderTargetTexture.Create(g_DXCanvas);
-  m_MapSurface.Size := Point(g_FScreenWidth, g_FScreenHeight);
+  m_MapSurface.Size := Point(g_FScreenWidth + 10 * UNITX, g_FScreenHeight + 10 * UNITY);
   m_MapSurface.Active := True;
   if not m_MapSurface.Active then
     exit;
@@ -383,6 +344,7 @@ begin
     Try
       for Y := 0 to m_HealthBarSurface.Size.Y - 1 do
       begin
+        // 好像没有用到 WriteBuffer 变量
         WriteBuffer := PWord(Integer(DXAccessInfo.Bits) + (DXAccessInfo.Pitch * Y));
         for X := 0 to m_HealthBarSurface.Size.X - 1 do
         begin
@@ -474,7 +436,7 @@ begin
     TActor(m_ActorList[i]).LoadSurface;
 end;
 
-procedure TPlayScene.ClearActors; //肺弊酒眶父 荤侩
+procedure TPlayScene.ClearActors;
 var
   i: Integer;
 begin
@@ -496,7 +458,6 @@ begin
   g_NPCTarget := nil;
   g_MagicLockTarget := nil;
 
-  //付过档 檬扁拳 秦具窃.
   for i := 0 to m_EffectList.count - 1 do
     TMagicEff(m_EffectList[i]).Free;
   m_EffectList.Clear;
@@ -521,16 +482,11 @@ begin
       m_ActorList.Delete(i);
     end;
   end;
-  //m_MsgList.Clear;
   g_TargetCret := nil;
   g_FocusCret := nil;
   g_MagicTarget := nil;
   g_NPCTarget := nil;
   g_MagicLockTarget := nil;
-  //
-  {for i := 0 to m_GroundEffectList.count - 1 do
-    TMagicEff(m_GroundEffectList[i]).Free;
-  m_GroundEffectList.Clear;      }
   for i := 0 to m_EffectList.count - 1 do
     TMagicEff(m_EffectList[i]).Free;
   m_EffectList.Clear;
@@ -541,64 +497,50 @@ begin
   m_FlyList.Clear;
 end;
 
-{---------------------- Draw Map -----------------------}
 // 绘制地板地图
 procedure TPlayScene.DrawTileMap(Sender: TObject);
 var
-  i, j, nY, nX, nImgNumber, unitXOffset, unitYOffset: Integer;
+  i, j, nY, nX, bkIndex, midIndex: Integer;
   dsurface: TDirectDrawSurface;
 begin
   // 如果地图的宽高没有变化，那么跳过绘制
   with Map do
-    if (m_ClientRect.Left = m_OldClientRect.Left) and (m_ClientRect.Top = m_OldClientRect.Top) then
-      Exit;
+    if (m_ClientRect.Left = m_OldClientRect.Left) and (m_ClientRect.Top = m_OldClientRect.Top) then Exit;
 
   // 记录当前地图的客户端矩形为旧版本
   Map.m_OldClientRect := Map.m_ClientRect;
 
-  // 这个判断没什么意义，可能之前是为了加锁，但现在毫无意义
-  if not g_boDrawTileMap then
-    Exit;
+  // 这个判断没什么意义
+  if not g_boDrawTileMap then Exit;
 
+  // 地图地板
   with Map.m_ClientRect do
   begin
-//    if g_FScreenHeight = DEF_SCREEN_HEIGHT then nY := -UNITY * 1
-//    else nY := -UNITY * 4;
-    nY := -UNITY;
-
-    //从地图顶部到下部
+    nY := - 1 * UNITY;
     for j := (Top - Map.m_nBlockTop - 1) to (Bottom - Map.m_nBlockTop + 1) do
     begin
-//      if g_FScreenWidth = DEF_SCREEN_WIDTH then nX := AAX + 28 - UNITX * 2
-//      else nX := AAX + 14 - UNITX * 4;
-      nX := - UNITX;
-      //从左边到右边
-      for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do
+      if (j >= 0) and (j < 3 * LOGICALMAPUNIT) and (j mod 2 = 0) then
       begin
-        unitXOffset := LOGICALMAPUNIT * 3;
-        unitYOffset := LOGICALMAPUNIT * 3;
-        if (i >= 0) and (i < unitXOffset) and (j >= 0) and (j < unitYOffset) then
+        nX := - 2 * UNITX + g_FScreenXOrigin mod UNITX + UNITX div 2;
+        for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do
         begin
-          nImgNumber := (Map.m_MArr[i, j].wBkImg and $7FFF);
-          if nImgNumber > 0 then
+          if (i >= 0) and (i < 3 * LOGICALMAPUNIT) and (i mod 2 = 0) then
           begin
-            if (i mod 2 = 0) and (j mod 2 = 0) then
+            bkIndex := (Map.m_MArr[i, j].wBkImg and $7FFF);
+            if bkIndex > 0 then
             begin
-              nImgNumber := nImgNumber - 1;
-              { if (nImgNumber > 24980) and (g_WMyTilesImages.boInitialize) then dsurface := g_WMyTilesImages.Images[nImgNumber - 24981]
-               else      }
-              if Map.m_MArr[i, j].btBkIndex = 1 then dsurface := g_WTiles2Images.Images[nImgNumber]
-              else dsurface := g_WTilesImages.Images[nImgNumber];
-              if dsurface <> nil then
+              bkIndex := bkIndex - 1;
+              if Map.m_MArr[i, j].btBkIndex = 1 then
               begin
-                //Jacky 显示地图内容
-                //DrawLine(DSurface);
+                dsurface := g_WTiles2Images.Images[bkIndex]
+              end else
+                dsurface := g_WTilesImages.Images[bkIndex];
+              if dsurface <> nil then
                 m_MapSurface.Draw(nX, nY, dsurface.ClientRect, dsurface, FALSE);
-              end;
             end;
           end;
+          Inc(nX, UNITX);
         end;
-        Inc(nX, UNITX);
       end;
       Inc(nY, UNITY);
     end;
@@ -608,45 +550,51 @@ begin
   //显示地上的草   比如比齐安全区的草
   with Map.m_ClientRect do
   begin
-    if g_FScreenHeight = DEF_SCREEN_HEIGHT then nY := -UNITY * 1
-    else nY := -UNITY * 4;
+    nY := - 1 * UNITY;
     for j := (Top - Map.m_nBlockTop - 1) to (Bottom - Map.m_nBlockTop + 1) do
     begin
-      if g_FScreenWidth = DEF_SCREEN_WIDTH then nX := AAX + 28 - UNITX * 2
-      else nX := AAX + 14 - UNITX * 4;
-      for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do
+      if (j >= 0) and (j < 3 * LOGICALMAPUNIT) then
       begin
-        if (i >= 0) and (i < LOGICALMAPUNIT * 3) and (j >= 0) and (j < LOGICALMAPUNIT * 3) then
+        nX := - 2 * UNITX + g_FScreenXOrigin mod UNITX + UNITX div 2;
+        for i := (Left - Map.m_nBlockLeft - 2) to (Right - Map.m_nBlockLeft + 1) do
         begin
-          nImgNumber := Map.m_MArr[i, j].wMidImg;
-          if nImgNumber > 0 then
+          if (i >= 0) and (i < 3 * LOGICALMAPUNIT) then
           begin
-            nImgNumber := nImgNumber - 1;
-            if Map.m_MArr[i, j].btSmIndex = 1 then dsurface := g_WSmTiles2Images.Images[nImgNumber]
-            else dsurface := g_WSmTilesImages.Images[nImgNumber];
-            if dsurface <> nil then
-              m_MapSurface.Draw(nX, nY, dsurface.ClientRect, dsurface, True);
+            midIndex := Map.m_MArr[i, j].wMidImg;
+            if midIndex > 0 then
+            begin
+              midIndex := midIndex - 1;
+              if Map.m_MArr[i, j].btSmIndex = 1 then
+              begin
+                dsurface := g_WSmTiles2Images.Images[midIndex]
+              end else
+                dsurface := g_WSmTilesImages.Images[midIndex];
+              if dsurface <> nil then
+                m_MapSurface.Draw(nX, nY, dsurface.ClientRect, dsurface, True);
+            end;
           end;
+          Inc(nX, UNITX);
         end;
-        Inc(nX, UNITX);
       end;
       Inc(nY, UNITY);
     end;
   end;
+
 end;
 
 procedure TPlayScene.BeginScene();
+// 检测重叠对象
 function CheckOverlappedObject(myrc, obrc: TRect): Boolean;
 begin
-  if (obrc.Right > myrc.Left) and (obrc.Left < myrc.Right) and
-  (obrc.Bottom > myrc.Top) and (obrc.Top < myrc.Bottom) then
+  if (obrc.Right > myrc.Left) and (obrc.Left < myrc.Right)
+  and (obrc.Bottom > myrc.Top) and (obrc.Top < myrc.Bottom) then
     Result := True
   else
     Result := FALSE;
 end;
 
 var
-  i: Integer;
+  i, rectXOffset, rectYOffset: Integer;
   movetick: Boolean;
   Actor: TActor;
   meff: TMagicEff;
@@ -689,7 +637,6 @@ begin
     if m_nAniCount > 100000 then
       m_nAniCount := 0;
   end;
-
   // 循环当前可视范围内的玩家列表，处理相关操作
   try
     i := 0;
@@ -698,15 +645,12 @@ begin
       // 如果索引超出玩家数量，则跳出循环
       if i >= m_ActorList.count then
         break;
-
       // 开始处理玩家操作
       Actor := m_ActorList[i];
-
       // 如果移动计时可用，或玩家本身不检测速度
       if movetick or Actor.m_boNoCheckSpeed then
         // 则设定此玩家不锁定结束帧
         Actor.m_boLockEndFrame := FALSE;
-
       // 如果玩家不锁定结束帧
       if not Actor.m_boLockEndFrame then
       begin
@@ -716,19 +660,16 @@ begin
           // 那么通过指定步数和变化状态信号值，尝试移动玩家
           if Actor.Move(m_nMoveStepCount, boChange) then
           begin
-            //悼扁拳秦辑 框流烙
             m_boPlayChange := m_boPlayChange or boChange;
             Inc(i);
             continue;
           end;
         Actor.Run;
-        //m_boPlayChange := Actor.Run or m_boPlayChange; //
         if Actor <> g_MySelf then
           Actor.ProcHurryMsg;
       end;
       if Actor = g_MySelf then
         Actor.ProcHurryMsg;
-      //
       if Actor.m_nWaitForRecogId <> 0 then
       begin
         if Actor.IsIdle then
@@ -742,7 +683,6 @@ begin
       end;
       if Actor.m_boDelActor then
       begin
-        //actor.Free;
         ClearMissionList(Actor);
         g_FreeActorList.Add(Actor);
         m_ActorList.Delete(i);
@@ -763,9 +703,7 @@ begin
   except
     DebugOutStr('101');
   end;
-
   m_boPlayChange := m_boPlayChange or (GetTickCount > m_dwPlayChangeTick);
-
   try
     i := 0;
     while True do
@@ -777,7 +715,6 @@ begin
       begin
         if not meff.Run then
         begin
-          //付过瓤苞
           meff.Free;
           m_EffectList.Delete(i);
           continue;
@@ -795,7 +732,6 @@ begin
       begin
         if not meff.Run then
         begin
-          //档尝,拳混殿 朝酒啊绰巴
           meff.Free;
           m_FlyList.Delete(i);
           continue;
@@ -803,34 +739,27 @@ begin
       end;
       Inc(i);
     end;
-
     EventMan.Execute;
   except
     DebugOutStr('102');
   end;
-
-  //if not g_boCanDraw then Exit;
-
+  // 由于 MapSurface 是分辨率增加了 10 单位的宽高
+  // 而这里的算法与屏幕分辨率相差 4--6 个单位
+  // 因此可以保证在客户端矩形在 MapSurface 与分辨率之间绘制
+  rectXOffset := g_FScreenXOrigin div UNITX + 3;
+  rectYOffset := g_FScreenYOrigin div UNITY + 1;
   try
     with Map.m_ClientRect do
     begin
-      Left := g_MySelf.m_nRx - 13;
-      Top := g_MySelf.m_nRy - 15;
-      Right := g_MySelf.m_nRx + 13;
-      Bottom := g_MySelf.m_nRy + 13;
+      Left := g_MySelf.m_nRx - rectXOffset;
+      Top := g_MySelf.m_nRy - rectYOffset - 2;
+      Right := g_MySelf.m_nRx + rectXOffset;
+      Bottom := g_MySelf.m_nRy + rectYOffset;
     end;
-
-
     Map.UpdateMapPos(g_MySelf.m_nRx, g_MySelf.m_nRy);
-
-      //m_ObjSurface.Fill(0);   //更新
-
-      //DrawTileMap;
-
   except
     DebugOutStr('104');
   end;
-
 end;
 
 procedure TPlayScene.PlayDrawCenterMsg();
@@ -849,9 +778,6 @@ begin
       g_CenterMsgList.Delete(I);
     end;
   end;
-  //nHeight := g_FScreenHeight div 2;
-  //nHeight := _MIN(5, g_CenterMsgList.Count) * 20 div 2 - 20 + nHeight;
-  //NameTexture.
   n := 0;
 {$IF Var_Interface = Var_Mir2}
   nHeight := g_FScreenHeight - 220;
@@ -908,15 +834,6 @@ var
   rc: TRect;
   infoMsg: string;
 begin
-  {if CurrentScene <> nil then
-    CurrentScene.PlayScene(MSurface);
-
-  if (g_MySelf = nil) or (not g_boCanDraw) or (not PlayScene.m_boPlayChange) then Exit;  }
-
-  //if CurrentScene = PlayScene then begin
-  //with m_ObjSurface do begin
-  //赣府困俊 眉仿 钎矫 秦具 窍绰 巴甸
-  //with PlayScene do begin
   k := 0;
   while True do
   begin
@@ -930,7 +847,7 @@ begin
       (abs(g_MySelf.m_nCurrX - actor.m_nCurrX) > MAXLEFT2) or
       (g_MySelf.m_nCurrY - actor.m_nCurrY > MAXTOP2) or
       (Actor.m_nSayX = 0) or
-      (g_MySelf.m_nCurrY - actor.m_nCurrY < (MAXTOP3 + 4)) then
+      (g_MySelf.m_nCurrY - actor.m_nCurrY < (MAXTOP3 + 1)) then
       begin
         Inc(k);
         Continue;
@@ -941,26 +858,9 @@ begin
       actor.m_nShowY := 22
     else
       actor.m_nShowY := 6;
-    //Actor.m_boOpenHealth := True; //显示血条
+
     ax := 800;
-
-    {if g_SetupInfo.boShowName and (g_FocusCret <> actor) and (Actor.m_UserNameSurface <> nil) then begin
-      if actor = g_MySelf then begin
-        if not g_boSelectMyself then begin
-          m_ObjSurface.Draw(actor.m_nSayX - Actor.m_UserNameSurface.Width div 2,
-            actor.m_nSayY + 30 - 1,
-            Actor.m_UserNameSurface.ClientRect,
-            Actor.m_UserNameSurface, Actor.m_NameColor or $FF000000, fxBlend);
-        end;
-      end
-      else begin
-        m_ObjSurface.Draw(actor.m_nSayX - Actor.m_UserNameSurface.Width div 2,
-          actor.m_nSayY + 30 - 1,
-          Actor.m_UserNameSurface.ClientRect,
-          Actor.m_UserNameSurface, Actor.m_NameColor or $FF000000, fxBlend);
-      end;
-    end;      }
-
+    // 摆摊
     if (actor.m_btRace = 0) and (actor.m_boShop) and (not Actor.m_boDeath) then
     begin
       if Actor.m_UserShopSurface <> nil then
@@ -969,22 +869,22 @@ begin
         DrawWindow(m_ObjSurface, Actor.m_nSayX - Actor.m_UserShopSurface.Width div 2,
                     Actor.m_nSayY - actor.m_nShowY - 1, Actor.m_UserShopSurface);
       end;
-      //Continue;
-    end
-    else begin
+    end else
+    begin
       //显示人物血量(数字显示)
-      // II := 0;
       if (not Actor.m_boDeath) and (Actor.m_boShowHealthBar) then
       begin
         if actor = g_MySelf then
         begin
           Inc(actor.m_nShowY, 3);
-          d := g_WMain3Images.Images[HEALTHBAR_BLACK];
+          // 生命条
+          d := g_WMain99Images.Images[HEALTHBAR_BLACK];
           if d <> nil then
           begin
             ax := Actor.m_nSayX - d.Width div 2;
             m_ObjSurface.Draw(ax, Actor.m_nSayY - actor.m_nShowY - 1, d.ClientRect, d, True);
           end;
+          // 蓝条
           d := g_WMain99Images.Images[0];
           if d <> nil then
           begin
@@ -993,14 +893,14 @@ begin
             rc.Bottom := 4;
             if Actor.m_Abil.MaxMP > 0 then
               rc.Right := Round((rc.Right - rc.Left) / Actor.m_Abil.MaxMP * Actor.m_Abil.MP);
-            m_ObjSurface.Draw(Actor.m_nSayX - d.Width div 2, Actor.m_nSayY - actor.m_nShowY - 1 + 1, rc, d, True);
+            ax := Actor.m_nSayX - d.Width div 2;
+            m_ObjSurface.Draw(ax, Actor.m_nSayY - actor.m_nShowY - 1 + 1, rc, d, True);
           end;
-          //target.m_btRaceServer = RC_NPC
         end;
 
         //画人物的“血”（头上的一个横杠）
         Inc(actor.m_nShowY, 4);
-        d := g_WMain3Images.Images[HEALTHBAR_BLACK];
+        d := g_WMain99Images.Images[HEALTHBAR_BLACK];
         if d <> nil then
         begin
           ax := Actor.m_nSayX - d.Width div 2;
@@ -1026,27 +926,24 @@ begin
 
       if (Actor.m_Abil.MaxHP > 1) and (not Actor.m_boDeath) and (Actor.m_boShowHealthBar) then
       begin
-        //SetBkMode(Canvas.Handle, TRANSPARENT);
         Inc(actor.m_nShowY, 12);
         infoMsg := IntToStr(actor.m_Abil.HP) + '/' + IntToStr(actor.m_Abil.MaxHP);
         nx := actor.m_nSayX - g_DXCanvas.TextWidth(infoMsg) div 2;
         g_DXCanvas.TextOut(nx, actor.m_nSayY - actor.m_nShowY, clWhite, infoMsg);
-        //Canvas.Release;
         if Actor.m_Group <> nil then
         begin
+          // 队员标识
           d := g_WMain99Images.Images[179];
           if d <> nil then
           begin
             nx := nx - d.Width - 5;
             if nx > ax then
               nx := ax;
-            m_ObjSurface.Draw(nx,
-                               actor.m_nSayY - actor.m_nShowY,
-                               d.ClientRect,
-                               d, True);
+            m_ObjSurface.Draw(nx, actor.m_nSayY - actor.m_nShowY, d.ClientRect, d, True);
           end;
         end;
       end;
+      // 头顶人物称号
       if (not Actor.m_boDeath) and (Actor.m_btStrengthenIdx in [1..10]) then
       begin
         nx := 1015 + Actor.m_btStrengthenIdx * 15 + (GetTickCount - Actor.m_dwStrengthenTick) div 100 mod 15;
@@ -1059,25 +956,15 @@ begin
         end;
       end;
 
-      {if (Actor = g_MySelf) and g_boAutoMoveing then begin
-        d := g_WMain99Images.Images[940 + GetTickCount div 50 mod 15];
-        if d <> nil then begin
-          Inc(actor.m_nShowY, d.Height);
-          m_ObjSurface.Draw(Actor.m_nSayX - d.Width div 2,
-            actor.m_nSayY - actor.m_nShowY ,
-            d.ClientRect,
-            d, True);
-        end;
-      end;     }
-
       for i := Low(TIconInfos) to High(TIconInfos) do
       begin
-        if (actor.m_IconInfo[i].btFrame = 0) { or (actor.m_IconInfo[i].wIndex < Low(g_ClientImages))} or (actor.m_IconInfo[i].wIndex > High(g_ClientImages)) then
+        if (actor.m_IconInfo[i].btFrame = 0) or (actor.m_IconInfo[i].wIndex > High(g_ClientImages)) then
           Continue;
         if GetTickCount() - actor.m_IconInfoShow[i].dwFrameTick >= (actor.m_IconInfo[i].wFrameTime * 10) then
         begin
           actor.m_IconInfoShow[i].dwFrameTick := GetTickCount();
-          if (actor.m_IconInfoShow[i].dwCurrentFrame < actor.m_IconInfo[i].wStart) or (Integer(actor.m_IconInfoShow[i].dwCurrentFrame) >= actor.m_IconInfo[i].wStart + actor.m_IconInfo[i].btFrame - 1) then
+          if (actor.m_IconInfoShow[i].dwCurrentFrame < actor.m_IconInfo[i].wStart) or
+          (Integer(actor.m_IconInfoShow[i].dwCurrentFrame) >= actor.m_IconInfo[i].wStart + actor.m_IconInfo[i].btFrame - 1) then
             actor.m_IconInfoShow[i].dwCurrentFrame := actor.m_IconInfo[i].wStart
           else
             actor.m_IconInfoShow[i].dwCurrentFrame := actor.m_IconInfoShow[i].dwCurrentFrame + 1;
@@ -1089,13 +976,10 @@ begin
           m_ObjSurface.Draw(Actor.m_nSayX - actor.m_IconInfo[i].nX,
                              actor.m_nSayY - actor.m_nShowY - d.Height + 2 - actor.m_IconInfo[i].nY,
                              d.ClientRect, d, True);
-          {Inc(actor.m_nShowY, d.Height + 2);
-          m_ObjSurface.Draw(Actor.m_nSayX - d.Width div 2 + actor.m_IconInfo[i].nX,
-            actor.m_nSayY - actor.m_nShowY - actor.m_IconInfo[i].nY,
-            d.ClientRect, d, True);}
         end;
       end;
 
+      // 头顶任务标识
       if (actor.m_btRace = 50) then
       begin
         with Actor as TNPCActor do
@@ -1134,10 +1018,12 @@ begin
     Actor.DrawStruck(m_ObjSurface);
     Inc(k);
   end;
-  //end;
 {$IF Var_Interface =  Var_Default}
   if m_OperateHintSurface <> nil then
-    m_ObjSurface.Draw(g_FScreenWidth - OLD_SCREEN_WIDTH + OPERATEHINTX, g_FScreenHeight - OLD_SCREEN_HEIGHT + OPERATEHINTY, m_OperateHintSurface.ClientRect, m_OperateHintSurface, True);
+    m_ObjSurface.Draw(g_FScreenWidth - OLD_SCREEN_WIDTH + OPERATEHINTX,
+                       g_FScreenHeight - OLD_SCREEN_HEIGHT + OPERATEHINTY,
+                       m_OperateHintSurface.ClientRect,
+                       m_OperateHintSurface, True);
 {$IFEND}
 
   if (g_FocusCret <> nil) and IsValidActor(g_FocusCret) then
@@ -1172,8 +1058,6 @@ begin
                  g_MySelf.m_NameColor, clBlack,
                  uname);
   end;
-  //end;
-//end
 end;
 
 //画游戏正式场景
@@ -1221,13 +1105,11 @@ var
     ay, idx, drawingbottomline: Integer;
   dsurface, d: TDirectDrawSurface;
   blend, movetick: Boolean;
-  //myrc, obrc: TRect;
   DropItem: pTDropItem;
   evn: TClEvent;
   Actor: TActor;
   meff: TMagicEff;
   msgstr: string;
-  //ShowItem: pTShowItem;
   nFColor, nBColor: Integer;
   TestTick1: LongWord;
   NameTexture, HintTexture: TDXImageTexture;
@@ -1235,17 +1117,6 @@ var
 begin
   LastForm := lf_Play;
   drawingbottomline := g_FScreenHeight;
-
-  {if Map.m_boNewMap then
-  
-  m_ObjSurface.Draw(0, 0,
-    Rect(UNITX * 4 + g_MySelf.m_nShiftX,
-    UNITY * 4 + g_MySelf.m_nShiftY,
-    UNITX * 4 + g_MySelf.m_nShiftX + MAPSURFACEWIDTH,
-    UNITY * 4 + g_MySelf.m_nShiftY + MAPSURFACEHEIGHT),
-    m_MapSurface,
-    FALSE)
-  else      }
 {$IF Var_Interface = Var_Mir2}
   m_ObjSurface.Draw(0, 0,
                      Rect(UNITX * 4 + g_MySelf.m_nShiftX,
@@ -1254,13 +1125,8 @@ begin
                            UNITY * 5 + g_MySelf.m_nShiftY + g_FScreenHeight),
                      m_MapSurface,
                      FALSE);
-  //defx := -UNITX * 3 - g_MySelf.m_nShiftX + AAX + 14;
-  if g_FScreenWidth = 1024 then defx := -UNITX * 4 - g_MySelf.m_nShiftX + AAX + 28
-  else defx := -UNITX * 6 - g_MySelf.m_nShiftX + AAX + 14;
-
-  if g_FScreenHeight = 768 then defy := -UNITY * 4 - g_MySelf.m_nShiftY
-  else defy := -UNITY * 7 - g_MySelf.m_nShiftY;
-
+  defx := -UNITX * 4 - g_MySelf.m_nShiftX + g_FScreenXOrigin mod UNITX + UNITX div 2;
+  defy := -UNITY * 4 - g_MySelf.m_nShiftY;
 {$ELSE}
   m_ObjSurface.Draw(0, 0,
   Rect(UNITX * 4 + g_MySelf.m_nShiftX,
@@ -1278,18 +1144,8 @@ begin
 
 {$IFEND}
 
-  {m_ObjSurface.Draw(0, 0,
-      Rect(100,
-      100,
-      MAPSURFACEWIDTH + 100,
-      MAPSURFACEHEIGHT + 100),
-      m_MapSurface,
-      FALSE);   }
-
-
   m_nDefXX := defx;
   m_nDefYY := defy;
-  //  aaa := GetTickCount;
   nIndex := 0;
   try
     m := defy - UNITY;
@@ -1309,7 +1165,8 @@ begin
     for i := EventMan.EventList.Count - 1 downto 0 do
     begin
       evn := TClEvent(EventMan.EventList[i]);
-      if (abs(evn.m_nX - g_MySelf.m_nCurrX) > 15) and (abs(evn.m_nY - g_MySelf.m_nCurrY) > 15) and (not evn.m_boClient)
+      // 如果新增分辨率，记得计算一下这里是否在允许的范围内
+      if (abs(evn.m_nX - g_MySelf.m_nCurrX) > 20) and (abs(evn.m_nY - g_MySelf.m_nCurrY) > 20) and (not evn.m_boClient)
       then
       begin
         evn.Free;
@@ -1328,6 +1185,7 @@ begin
     for i := g_DropedItemList.Count - 1 downto 0 do
     begin
       DropItem := PTDropItem(g_DropedItemList[i]);
+      // 如果新增分辨率，记得计算一下这里是否在允许的范围内
       if (abs(DropItem.X - g_MySelf.m_nCurrX) > 20) and (abs(DropItem.Y - g_MySelf.m_nCurrY) > 20) then
       begin
         DisopseDropItem(DropItem, 0);
@@ -1411,11 +1269,8 @@ begin
             end;
             if (Map.m_MArr[i, j].btDoorOffset and $80) > 0 then
             begin
-              //凯覆
               if (Map.m_MArr[i, j].btDoorIndex and $7F) > 0 then
-                  //巩栏肺 钎矫等 巴父
                 fridx := fridx + (Map.m_MArr[i, j].btDoorOffset and $7F);
-              //凯赴 巩
             end;
             fridx := fridx - 1;
             // 取图片
@@ -1432,7 +1287,6 @@ begin
                 else begin
                   if mmm < drawingbottomline then
                   begin
-                    //阂鞘夸窍霸 弊府绰 巴阑 乔窃
                     DrawBlend(m_ObjSurface, n + ax - 2, mmm, DSurface, 1);
                   end;
                 end;
@@ -1448,7 +1302,6 @@ begin
                 else begin
                   if mmm < drawingbottomline then
                   begin
-                    //阂鞘夸窍霸 弊府绰 巴阑 乔窃
                     m_ObjSurface.Draw(n, mmm, DSurface.ClientRect, DSurface, TRUE)
                   end;
                 end;
@@ -1463,7 +1316,6 @@ begin
                 else begin
                   if mmm < drawingbottomline then
                   begin
-                    //阂鞘夸窍霸 弊府绰 巴阑 乔窃
                     m_ObjSurface.Draw(n, mmm, DSurface.ClientRect, DSurface, TRUE)
                   end;
                 end;
@@ -1502,27 +1354,21 @@ begin
             if DropItem <> nil then
             begin
               d := GetDnItemImg(DropItem.Looks);
-              //d := FrmMain.GetWDnItemImg(DropItem.Looks);
               if d <> nil then
               begin
                 ix := (DropItem.x - Map.m_ClientRect.Left) * UNITX + defx + SOFFX; // + actor.ShiftX;
                 iy := m; // + actor.ShiftY;
                 if DropItem = g_FocusItem then
                 begin
-                  DrawEffect(m_ObjSurface, ix + HALFX - (d.Width div 2), iy + HALFY - (d.Height div 2), d, ceBright,
-                              False);
+                  DrawEffect(m_ObjSurface, ix + HALFX - (d.Width div 2), iy + HALFY - (d.Height div 2), d, ceBright, False);
                 end
                 else begin
-                  m_ObjSurface.Draw(ix + HALFX - (d.Width div 2),
-                                     iy + HALFY - (d.Height div 2),
-                                     d.ClientRect,
-                                     d, TRUE);
+                  m_ObjSurface.Draw(ix + HALFX - (d.Width div 2), iy + HALFY - (d.Height div 2), d.ClientRect, d, TRUE);
                 end;
               end;
             end;
           end;
         end;
-        //m_DrawArray[k].ItemList.Clear;
         nIndex := 9;
         for ii := 0 to m_DrawArray[k].ShopActorList.Count - 1 do
         begin
@@ -1561,7 +1407,6 @@ begin
             end;
           end;
         end;
-        //m_DrawArray[k].ActorList.Clear;
         nIndex := 11;
         for ii := 0 to m_DrawArray[k].MagicEffList.Count - 1 do
         begin
@@ -1569,7 +1414,6 @@ begin
           meff.DrawEff(m_ObjSurface);
         end;
       end;
-      //
       Inc(m, UNITY);
     end;
     nIndex := 12;
@@ -1578,15 +1422,6 @@ begin
       actor := m_DrawOutsideList[i];
       actor.DrawChr(m_ObjSurface, actor.m_nDrawX, actor.m_nDrawY, FALSE, True);
     end;
-
-
-      //顶官蹿俊 弊妨瘤绰 付过
-      {for k := m_GroundEffectList.Count - 1 downto 0 do begin
-        meff := TMagicEff(m_GroundEffectList[k]);
-        //if j = (meff.Ry - Map.BlockTop) then begin
-        meff.DrawEff(m_ObjSurface);
-
-      end;   }
       //显示地面物品名称
       //NameTexture := nil;
       //if g_boDrawDropItem then begin
@@ -1631,8 +1466,7 @@ begin
               else
                 DropItem.BoFlash := FALSE;
             end;
-            if (DropItem <> g_FocusItem) and
-            (DropItem.Filtr.boShow or (g_SetupInfo.boShowItemName and g_boCtrlDown)) then
+            if (DropItem <> g_FocusItem) and (DropItem.Filtr.boShow or (g_SetupInfo.boShowItemName and g_boCtrlDown)) then
             begin
               NameTexture.TextOutEx(ix + HALFX - DropItem.Width div 2,
                                      iy + HALFY - DropItem.Height * 2,
@@ -1665,7 +1499,7 @@ begin
             if (Actor = g_MySelf) or ((Actor.m_btRace <> RCC_USERHUMAN) and Actor.m_boDeath) or
             (abs(g_MySelf.m_nCurrX - actor.m_nCurrX) > MAXLEFT2) or
             (g_MySelf.m_nCurrY - actor.m_nCurrY > MAXTOP2) or
-            (g_MySelf.m_nCurrY - actor.m_nCurrY < (MAXTOP3 + 4)) or
+            (g_MySelf.m_nCurrY - actor.m_nCurrY < (MAXTOP3 + 1)) or
             (Actor.m_nSayX = 0) or
             ((not Actor.m_boShowName) and (not g_SetupInfo.boShowNameMon)) or
             ((Actor.m_boShowName) and (not g_SetupInfo.boShowName)) then
@@ -1735,21 +1569,10 @@ begin
                                Actor.m_NameColor,
                                Actor.m_sDescUserName + '\' + Actor.m_UserName, False);
                 end else begin
-                  {if Actor.m_btWuXin in [1..5] then begin
-                    NameTexture.TextOutEx(Actor.m_nSayX - 12,
-                        Actor.m_nSayY + 30 - 6,
-                        '[' + GetWuXinName(Actor.m_btWuXin) + ']',
-                        GetWuXinColor(Actor.m_btWuXin));
-                    NameTexture.TextOutEx(Actor.m_nSayX - Actor.m_NameWidth div 2,
-                        Actor.m_nSayY + 30 + 6,
-                        Actor.m_UserName,
-                        Actor.m_NameColor);
-                  end else begin  }
                   NameTexture.TextOutEx(Actor.m_nSayX - Actor.m_NameWidth div 2,
                                          Actor.m_nSayY + 30,
                                          Actor.m_UserName,
                                          Actor.m_NameColor);
-                  //end;
                 end;
               end;
             end;
@@ -1767,7 +1590,7 @@ begin
     try
         //**** 画隐身状态
       if not g_boCheckBadMapMode then
-        if g_MySelf.m_nState and $00800000 = 0 then //捧疙捞 酒聪搁
+        if g_MySelf.m_nState and $00800000 = 0 then
           g_MySelf.DrawChr(m_ObjSurface, (g_MySelf.m_nRx - Map.m_ClientRect.Left)
           * UNITX + defx, (g_MySelf.m_nRy - Map.m_ClientRect.Top - 1) * UNITY +
           defy, True, FALSE);
@@ -1776,8 +1599,7 @@ begin
       if (g_FocusCret <> nil) then
       begin
         if IsValidActor(g_FocusCret) and (g_FocusCret <> g_MySelf) then
-            //            if (actor.m_btRace <> 81) or (FocusCret.State and $00800000 = 0) then //Jacky
-          if (g_FocusCret.m_nState and $00800000 = 0) then //Jacky
+          if (g_FocusCret.m_nState and $00800000 = 0) then
             g_FocusCret.DrawChr(m_ObjSurface,
                                  (g_FocusCret.m_nRx - Map.m_ClientRect.Left) * UNITX + defx,
                                  (g_FocusCret.m_nRy - Map.m_ClientRect.Top - 1) * UNITY + defy,
@@ -1787,7 +1609,7 @@ begin
       if (g_MagicTarget <> nil) then
       begin
         if IsValidActor(g_MagicTarget) and (g_MagicTarget <> g_MySelf) then
-          if g_MagicTarget.m_nState and $00800000 = 0 then //捧疙捞 酒聪搁
+          if g_MagicTarget.m_nState and $00800000 = 0 then
             g_MagicTarget.DrawChr(m_ObjSurface,
                                    (g_MagicTarget.m_nRx - Map.m_ClientRect.Left) * UNITX + defx,
                                    (g_MagicTarget.m_nRy - Map.m_ClientRect.Top - 1) * UNITY + defy,
@@ -1837,10 +1659,6 @@ begin
   end;
   try
     PlayDrawScreen;
-      //if g_MySelf.m_boDeath then //人物死亡，显示黑白画面
-      //DrawEffect(0, 0, m_ObjSurface.Width, m_ObjSurface.Height, m_ObjSurface, ceGrayScale);
-
-      //MSurface.Draw(SOFFX, SOFFY, m_ObjSurface.ClientRect, m_ObjSurface, FALSE);
   except
     DebugOutStr('111');
   end;
@@ -2537,14 +2355,16 @@ begin
 end;
 
 procedure TPlayScene.ScreenXYfromMCXY(cx, cy: Integer; var sx, sy: Integer);
+var
+  dx,dy: Integer;
 begin
   if g_MySelf = nil then Exit;
 {$IF Var_Interface = Var_Mir2}
-  if g_FScreenWidth = 1024 then sx := (cx - g_MySelf.m_nRx) * UNITX + 476 + UNITX div 2 - g_MySelf.m_nShiftX
-  else sx := (cx - g_MySelf.m_nRx) * UNITX + 364 + UNITX div 2 - g_MySelf.m_nShiftX;
+    dx := g_FScreenWidth div 2 - 36;
+    sx := (cx - g_MySelf.m_nRx) * UNITX + dx + UNITX div 2 - g_MySelf.m_nShiftX;
 
-  if g_FScreenHeight = 768 then sy := (cy - g_MySelf.m_nRy) * UNITY + 320 + UNITY div 2 - g_MySelf.m_nShiftY
-  else sy := (cy - g_MySelf.m_nRy) * UNITY + 224 + UNITY div 2 - g_MySelf.m_nShiftY;
+    dy := g_FScreenHeight div 2 - 66;
+    sy := (cy - g_MySelf.m_nRy) * UNITY + dy + UNITY div 2 - g_MySelf.m_nShiftY;
 {$ELSE}
   if g_FScreenWidth = 1024 then sx := (cx - g_MySelf.m_nRx) * UNITX + 476 + UNITX div 2 - g_MySelf.m_nShiftX
   else sx := (cx - g_MySelf.m_nRx) * UNITX + 364 + UNITX div 2 - g_MySelf.m_nShiftX;
@@ -2557,14 +2377,15 @@ end;
 //屏幕座标 mx, my转换成ccx, ccy地图座标
 
 procedure TPlayScene.CXYfromMouseXY(mx, my: Integer; var ccx, ccy: Integer);
+var
+  sx,sy: Integer;
 begin
   if g_MySelf = nil then Exit;
 {$IF Var_Interface = Var_Mir2}
-  if g_FScreenWidth = 1024 then ccx := Round((mx - 476 + g_MySelf.m_nShiftX - UNITX div 2) / UNITX) + g_MySelf.m_nRx
-  else ccx := Round((mx - 364 + g_MySelf.m_nShiftX - UNITX div 2) / UNITX) + g_MySelf.m_nRx;
-
-  if g_FScreenHeight = 768 then ccy := Round((my - 320 + g_MySelf.m_nShiftY - UNITY div 2) / UNITY) + g_MySelf.m_nRy
-  else ccy := Round((my - 224 + g_MySelf.m_nShiftY - UNITY div 2) / UNITY) + g_MySelf.m_nRy;
+  sx := g_FScreenWidth div 2 - 36;
+  ccx := Round((mx - sx + g_MySelf.m_nShiftX - UNITX div 2) / UNITX) + g_MySelf.m_nRx;
+  sy := g_FScreenHeight div 2 - 66;
+  ccy := Round((my - sy + g_MySelf.m_nShiftY - UNITY div 2) / UNITY) + g_MySelf.m_nRy;
 {$ELSE}
   if g_FScreenWidth = 1024 then ccx := Round((mx - 476 + g_MySelf.m_nShiftX - UNITX div 2) / UNITX) + g_MySelf.m_nRx
   else ccx := Round((mx - 364 + g_MySelf.m_nShiftX - UNITX div 2) / UNITX) + g_MySelf.m_nRx;
@@ -2575,7 +2396,7 @@ begin
 
 end;
 
-//拳搁谅钎肺 某腐磐, 侨伎 窜困肺 急琶..
+//以图像坐标和像素为单位选择…
 
 function TPlayScene.GetCharacter(X, Y, wantsel: Integer; var nowsel: Integer;
                                     liveonly: Boolean): TActor;
@@ -2596,7 +2417,7 @@ begin
         begin
           if a.m_nCurrY = k then
           begin
-            //歹 承篮 裹困肺 急琶登霸
+            //选择的范围会更广
             dx := (a.m_nRx - Map.m_ClientRect.Left) * UNITX + m_nDefXX + a.m_nPx + a.m_nShiftX;
             dy := (a.m_nRy - Map.m_ClientRect.Top - 1) * UNITY + m_nDefYY + a.m_nPy + a.m_nShiftY;
             if a.CheckSelect(X - dx, Y - dy) then
@@ -2670,7 +2491,7 @@ begin
   begin
     if g_MySelf.m_nCurrY = k then
     begin
-      //歹 承篮 裹困肺 急琶登霸
+      //选择的范围会更广
       dx := (g_MySelf.m_nRx - Map.m_ClientRect.Left) * UNITX + m_nDefXX + g_MySelf.m_nPx + g_MySelf.m_nShiftX;
       dy := (g_MySelf.m_nRy - Map.m_ClientRect.Top - 1) * UNITY + m_nDefYY + g_MySelf.m_nPy + g_MySelf.m_nShiftY;
       if g_MySelf.CheckSelect(X - dx, Y - dy) then
@@ -2687,18 +2508,13 @@ end;
 //取得指定座标地面物品
 // x,y 为屏幕座标
 function TPlayScene.GetDropItems(X, Y: Integer; var inames: string; var MaxWidth: Integer): pTDropItem;
-//拳搁谅钎肺 酒捞袍
 var
-  i, ccx, ccy, ssx, ssy {, dx, dy}, nWidth: Integer;
+  i, ccx, ccy, ssx, ssy, nWidth: Integer;
   DropItem: pTDropItem;
-    //S: TDirectDrawSurface;
-    //  c: byte;
 begin
   Result := nil;
   CXYfromMouseXY(X, Y, ccx, ccy);
   ScreenXYfromMCXY(ccx, ccy, ssx, ssy);
-  //  dx := X - ssx;
-  //  dy := Y - ssy;
   inames := '';
   MaxWidth := 0;
   for i := 0 to g_DropedItemList.count - 1 do
@@ -2706,16 +2522,11 @@ begin
     DropItem := pTDropItem(g_DropedItemList[i]);
     if (DropItem.X = ccx) and (DropItem.Y = ccy) then
     begin
-      {S := GetDnItemImg(DropItem.looks); // 不检查物品是否有外观图片
-      if S = nil then
-        continue;     }
       if Result = nil then
         Result := DropItem;
       nWidth := g_DXCanvas.TextWidth(DropItem.name);
       if nWidth > MaxWidth then MaxWidth := nWidth;
       inames := inames + DropItem.name + '\';
-      //break;
-      //end;
     end;
   end;
 end;
@@ -3643,10 +3454,6 @@ begin
 end;
 
 {------------------------- Msg -------------------------}
-
-//皋技瘤甫 滚欺傅窍绰 捞蜡绰 ?
-//某腐磐狼 皋技瘤 滚欺俊 皋技瘤啊 巢酒 乐绰 惑怕俊辑
-//促澜 皋技瘤啊 贸府登搁 救登扁 锭巩烙.
 
 procedure TPlayScene.SendMsg(ident, chrid, X, Y, cdir, Feature, State: Integer; str: string; btSIdx, btWuXin: Integer);
 var

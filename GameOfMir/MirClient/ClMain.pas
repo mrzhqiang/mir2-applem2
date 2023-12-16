@@ -57,8 +57,6 @@ stdcall;
     TimerTest: TTimer;
     PackENRSA: TRSA;
 
-    procedure DXDrawInitialize(Sender: TObject);
-
     procedure FormCreate(Sender: TObject);
 
     procedure FormDestroy(Sender: TObject);
@@ -879,8 +877,8 @@ begin
     end;
   else
     begin
-      g_FScreenWidth := OLD_SCREEN_WIDTH;
-      g_FScreenHeight := OLD_SCREEN_HEIGHT;
+      g_FScreenWidth := DEF_SCREEN_WIDTH;
+      g_FScreenHeight := DEF_SCREEN_HEIGHT;
     end;
   end;
 
@@ -1607,16 +1605,14 @@ begin
 //          m_Point.X := 0;
 //          m_Point.Y := 0;
 //        end else begin
-      Left := (Screen.width - ClientWidth) div 2;
+      Left := (Screen.Width - ClientWidth) div 2;
       Top := (Screen.Height - ClientHeight) div 2 - 40;
+      // HWND_NOTOPMOST 值为-2，将窗口置于所有非顶层窗口之上（即在所有顶层窗口之后）。如果窗口已经是非顶层窗口则该标志不起作用。
+      // SWP_SHOWWINDOW：显示窗口
       SetWindowPos(handle, HWND_NOTOPMOST, left, top, width, height, SWP_SHOWWINDOW);
 //        end;
     end;
   end;
-end;
-
-procedure TfrmMain.DXDrawInitialize(Sender: TObject);
-begin
 end;
 
 procedure TfrmMain.DXDrawFinalize(Sender: TObject);
@@ -1717,7 +1713,7 @@ begin
     g_ServerInfo[0].sAddrs := '127.0.0.1';
     g_ServerInfo[0].sPort := '7000';
     g_ServerInfo[1].sName := '兰达尔第一季v1.0';
-    g_ServerInfo[1].sAddrs := 'randall.mrzhqiang.cn';
+    g_ServerInfo[1].sAddrs := '121.37.13.127';
     g_ServerInfo[1].sPort := '7000';
 {$ENDIF}
 

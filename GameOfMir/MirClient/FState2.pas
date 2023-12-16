@@ -1560,14 +1560,14 @@ begin
   dbtnGameSetup.Top := 21;
 {$IF Var_Interface = Var_Mir2}
   dbtnSelectChr.SetImgIndex(g_WMain99Images, 1855);
-  dbtnSelectChr.Left := g_FScreenWidth - 266;
+  dbtnSelectChr.Left := FrmDlg.DBottom.Width - 266;
   dbtnSelectChr.Top := 104;
   if dbtnSelectChr.DParent <> nil then dbtnSelectChr.DParent.DelChild(dbtnSelectChr);
   dbtnSelectChr.DParent := FrmDlg.DBottom;
   FrmDlg.DBottom.AddChild(dbtnSelectChr);
   dbtnSelectChr.OnMouseMove := FrmDlg.DMyStateMouseMove;
   dbtnExitGame.SetImgIndex(g_WMain99Images, 1857);
-  dbtnExitGame.Left := g_FScreenWidth - 236;
+  dbtnExitGame.Left := FrmDlg.DBottom.Width - 236;
   dbtnExitGame.Top := 104;
   if dbtnExitGame.DParent <> nil then dbtnExitGame.DParent.DelChild(dbtnExitGame);
   dbtnExitGame.DParent := FrmDlg.DBottom;

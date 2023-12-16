@@ -17,14 +17,6 @@ type
   end;
   TPathMapArray = array of array of TPathMapCell; // 路径图存储数组
 
-  {TMapHeader = packed record // 传奇地图数据头结构 52
-    Width: word; //2
-    Height: word; //2
-    Title: array[1..16] of char; //标题      16
-    UpdateDate: TDateTime; //8
-    Reserved: array[0..23] of char; //保留
-  end;    }
-
   TMapPrjInfo = record
     ident: string[16];
     ColCount: Integer;
@@ -48,32 +40,29 @@ type
     Reserved: array[0..23] of Char;
   end;
 
-
-
   TOldMapInfo = packed record
     wBkImg: Word;
     wMidImg: Word;
     wFrImg: Word;
-    btDoorIndex: byte; //$80 (巩娄), 巩狼 侥喊 牢郸胶
-    btDoorOffset: byte; //摧腮 巩狼 弊覆狼 惑措 困摹, $80 (凯覆/摧塞(扁夯))
-    btAniFrame: byte; //$80(Draw Alpha) +  橇贰烙 荐
+    btDoorIndex: byte;
+    btDoorOffset: byte;
+    btAniFrame: byte;
     btAniTick: byte;
-    btArea: byte; //瘤开 沥焊
-    btLight: byte; //0..1..4 堡盔 瓤苞
+    btArea: byte;
+    btLight: byte;
   end;
   pTOldMapInfo = ^TOldMapInfo;
-  //TMapBuf = array of array of TMapBlock; //传奇地图存储数组
 
   TMapInfo = record
     wBkImg: Word;
     wMidImg: Word;
     wFrImg: Word;
-    btDoorIndex: byte; //$80 (巩娄), 巩狼 侥喊 牢郸胶
-    btDoorOffset: byte; //摧腮 巩狼 弊覆狼 惑措 困摹, $80 (凯覆/摧塞(扁夯))
-    btAniFrame: byte; //$80(Draw Alpha) +  橇贰烙 荐
+    btDoorIndex: byte; //$80（门扇），门的标识指标
+    btDoorOffset: byte; //关闭门图片的相对位置，$80（打开-关闭（默认））
+    btAniFrame: byte; //$80（绘制 Alpha）+ 帧数
     btAniTick: byte;
-    btArea: byte; //瘤开 沥焊
-    btLight: byte; //0..1..4 堡盔 瓤苞
+    btArea: byte; //关于该地区
+    btLight: byte; //0..1..4 灯光效果
     btBkIndex: Byte;
     btSmIndex: Byte;
   end;
@@ -112,11 +101,6 @@ type
 
   TGetCostFunc = function(X, Y, Direction: Integer; PathWidth: Integer = 0): Integer;
 
-  {TMapLoading = class(TThread) //寻路类
-  protected
-    procedure Execute; override;
-  end;   }
-
   TPathMap = class //寻路类
   public
     PathMapArray: TPathMapArray;
@@ -146,16 +130,12 @@ type
     MapHeader: TMapHeader;
     MapData: array[0..1000 * 1000 - 1] of TMapInfo;
     MapTerrain: array[0..1000, 0..1000] of Boolean;
-    //MapData: TMapData;
-
     Title: string;
     boNewMap: Boolean;
-    //MapLoad: TMapLoading;
     constructor Create;
     destructor Destroy; override;
     property Path: TPath read FPath write FPath;
 
-    //function LoadMap(): Boolean;
     procedure LoadFileData(sFileName: string);
     function TerrainType(nX, nY: Integer): Boolean;
     procedure SetTerrainType(nX, nY: Integer; boFlag: Boolean);
@@ -168,28 +148,28 @@ type
   end;
 
   TWaveCell = record //路线点
-    X, Y: Integer; //
-    Cost: Integer; //
+    X, Y: Integer;
+    Cost: Integer;
     Direction: Integer;
   end;
 
   TWave = class //路线类
   private
     FData: array of TWaveCell;
-    FPos: Integer; //
-    FCount: Integer; //
+    FPos: Integer;
+    FCount: Integer;
     FMinCost: Integer;
     function GetItem: TWaveCell;
   public
-    property Item: TWaveCell read GetItem; //
-    property MinCost: Integer read FMinCost; // Cost
+    property Item: TWaveCell read GetItem;
+    property MinCost: Integer read FMinCost;
 
     constructor Create;
     destructor Destroy; override;
-    procedure Add(NewX, NewY, NewCost, NewDirection: Integer); //
-    procedure Clear; //FCount
-    function Start: Boolean; //
-    function Next: Boolean; //
+    procedure Add(NewX, NewY, NewCost, NewDirection: Integer);
+    procedure Clear;
+    function Start: Boolean;
+    function Next: Boolean;
   end;
 
 const
@@ -211,33 +191,33 @@ implementation
 
 constructor TWave.Create;
 begin
-  Clear; //
+  Clear;
 end;
 
 destructor TWave.Destroy;
 begin
-  FData := nil; //
+  FData := nil;
   inherited Destroy;
 end;
 
 function TWave.GetItem: TWaveCell;
 begin
-  Result := FData[FPos]; //
+  Result := FData[FPos];
 end;
 
 procedure TWave.Add(NewX, NewY, NewCost, NewDirection: Integer);
 begin
-  if FCount >= Length(FData) then //
-    SetLength(FData, Length(FData) + 30); //
+  if FCount >= Length(FData) then
+    SetLength(FData, Length(FData) + 30);
   with FData[FCount] do begin
     X := NewX;
     Y := NewY;
     Cost := NewCost;
     Direction := NewDirection;
   end;
-  if NewCost < FMinCost then //NewCost
+  if NewCost < FMinCost then
     FMinCost := NewCost;
-  Inc(FCount); //
+  Inc(FCount);
 end;
 
 procedure TWave.Clear;
@@ -249,13 +229,13 @@ end;
 
 function TWave.Start: Boolean;
 begin
-  FPos := 0; //
-  Result := (FCount > 0); //
+  FPos := 0;
+  Result := (FCount > 0);
 end;
 
 function TWave.Next: Boolean;
 begin
-  Inc(FPos); //
+  Inc(FPos);
   Result := (FPos < FCount); // false,
 end;
 
@@ -268,8 +248,8 @@ function TPathMap.FindPath(MapWidthin, MapHeightin: Integer; StartX, StartY,
   StopX, StopY: Integer;
   pGetCostFunc: TGetCostFunc): TPath;
 begin
-  MapWidth := MapWidthin; //
-  MapHeight := MapHeightin; //
+  MapWidth := MapWidthin;
+  MapHeight := MapHeightin;
   GetCostFunc := pGetCostFunc;
   PathMapArray := FillPathMap(StartX, StartY, StopX, StopY);
   Result := FindPathOnMap(StopX, StopY);
@@ -301,7 +281,7 @@ procedure TPathMap.MakePathMap(MapWidthin, MapHeightin: Integer; StartX, StartY:
   pGetCostFunc: TGetCostFunc);
 begin
   MapWidth := MapWidthin;
-  MapHeight := MapHeightin; //
+  MapHeight := MapHeightin;
   GetCostFunc := pGetCostFunc;
   PathMapArray := FillPathMap(StartX, StartY, -1, -1);
 end;
@@ -344,9 +324,9 @@ var
   Finished: Boolean;
   I: TWaveCell;
 
-  procedure PreparePathMap; //初始化PathMapArray
+  procedure PreparePathMap;
   var
-    X, Y: Integer; //
+    X, Y: Integer;
   begin
     SetLength(Result, MapHeight, MapWidth);
     for Y := 0 to (MapHeight - 1) do
@@ -365,11 +345,11 @@ var
       Y := OldWave.Item.Y + DirToDY(D);
       C := GetCost(X, Y, D);
       if (C >= 0) and (Result[Y, X].Distance < 0) then
-        NewWave.Add(X, Y, C, D); //
+        NewWave.Add(X, Y, C, D);
     end;
   end;
 
-  procedure ExchangeWaves; //
+  procedure ExchangeWaves;
   var
     W: TWave;
   begin
@@ -385,11 +365,11 @@ begin
   NewWave := TWave.Create;
   Result[Y1, X1].Distance := 0; // 起点Distance:=0
   OldWave.Add(X1, Y1, 0, 0); //将起点加入OldWave
-  TestNeighbours; //
+  TestNeighbours;
 
   Finished := ((X1 = X2) and (Y1 = Y2)); //检验是否到达终点
   while not Finished do begin
-    ExchangeWaves; //
+    ExchangeWaves;
     if not OldWave.Start then
       Break;
     repeat
@@ -406,13 +386,12 @@ begin
         // 此点 Distance:=上一个点Distance+1
 
         Result[I.Y, I.X].Direction := I.Direction;
-        //
         Finished := ((I.X = X2) and (I.Y = Y2)); //检验是否到达终点
         if Finished then
           Break;
         TestNeighbours;
       end;
-    until not OldWave.Next; //
+    until not OldWave.Next;
   end; // OldWave;
   NewWave.Free;
   OldWave.Free;
@@ -426,70 +405,22 @@ begin
   else
     Result := GetCostFunc(X, Y, Direction, PathWidth);
 end;
- {
-function TLegendMap.LoadMap(): Boolean;
-begin
-  Result := True;
-  if g_LegendMapRun then exit;
-  if g_LegendMapName <> Title then begin
-    Title := g_LegendMapName;
-    g_LegendMapRun := True;
-    MapLoad := TMapLoading.Create(True);
-    MapLoad.FreeOnTerminate := True;
-    MapLoad.Resume;
-  end;
-  g_LegendMapName := '';
-end;
-
-procedure TMapLoading.Execute;
-var
-  aMapFile: TFileStream;
-  i, j: Integer;
-  MapBuf: TMapBlock;
-begin
-  with g_LegendMap do begin
-    aMapFile := TFileStream.Create(Title, fmOpenRead  or fmShareDenyNone);
-    try
-      aMapFile.Read(MapHeader, sizeof(TMapHeader)); //
-      MapWidth := MapHeader.Width;
-      MapHeight := MapHeader.Height;
-      SetLength(MapData, MapWidth, MapHeight);
-      for i := 0 to MapHeader.width - 1 do
-        for j := 0 to MapHeader.height - 1 do begin
-          aMapFile.Read(MapBuf, sizeof(MapBuf));
-          if ((MapBuf.wBkImg and $8000) + (MapBuf.wFrImg and $8000)) = 0 then
-            MapData[i, j].TerrainType := True //标识为平地
-          else
-            MapData[i, j].TerrainType := False; //标识为障碍物
-        end;
-    except
-      aMapFile.Free;
-    end;
-    aMapFile.Free;
-  end;
-  PostMessage(g_FrmMainWinHandle, WM_USER + 1004, 0, 0);
-  inherited;
-end;       }
 
 constructor TLegendMap.Create;
 begin
   inherited Create();
   Title := '';
   FillChar(MapTerrain[0, 0], SizeOf(MapTerrain), True);
-  //Priority := tpLower;
 end;
 
 destructor TLegendMap.Destroy;
 begin
   FPath := nil;
-  //MapData := nil;
   inherited;
 end;
 
-
 function TLegendMap.FindPath(StopX, StopY: Integer): TPath;
 begin
-  //if g_LegendMapRun then exit;
   Result := FindPathOnMap(StopX, StopY);
 end;
 
@@ -512,7 +443,6 @@ end;
 
 function TLegendMap.FindPath(StartX, StartY, StopX, StopY, PathSpace: Integer): TPath;
 begin
-  //if g_LegendMapRun then exit;
   PathWidth := PathSpace;
   PathMapArray := FillPathMap(StartX, StartY, StopX, StopY);
   Result := FindPathOnMap(StopX, StopY);
@@ -527,7 +457,6 @@ end;
 function TLegendMap.GetCost(X, Y, Direction: Integer): Integer;
 var
   cost: Integer;
-  //  sel : Integer;
 begin
   Direction := (Direction and 7);
   if (X < 0) or (X >= MapWidth) or (Y < 0) or (Y >= MapHeight) then
@@ -547,7 +476,6 @@ begin
     if ((Direction and 1) = 1) and (Result > 0) then // 如果是斜方向,则COST增加
       Result := Result + (Result shr 1); //应为Result*sqt(2),此处近似为1.5
   end;
-
 end;
 
 procedure TLegendMap.LoadFileData(sFileName: string);
@@ -569,7 +497,7 @@ begin
       boENMap := (ENMapHeader.Title = 'Map 2010 Ver 1.0');
       boNewMap := False;
       if boENMap then begin
-        MapHeader.wWidth := ENMapHeader.Width xor $AA38;
+        MapHeader.wWidth := ENMapHeader.Width xor $AA38; // 1010101000111000
         MapHeader.wHeight := ENMapHeader.Height xor $AA38;
       end else begin
         Move(ENMapHeader, MapHeader, SizeOf(MapHeader));
@@ -580,11 +508,14 @@ begin
       MapWidth := MapHeader.wWidth;
       MapHeight := MapHeader.wHeight;
 
-
       if (MapWidth <= 1000) and (MapHeight <= 1000) and (MapWidth > 0) and (MapHeight > 0) then begin
         if boENMap then begin
+          // 设置 ENMapData 数组的长度为 宽 * 高
           SetLength(ENMapData, MapWidth * MapHeight);
+          // 从 ENMapData 0 位置开始读取数据，数据的数量为 ENMapData 的长度 * TENMapInfo 的字节大小
+          // 也就是说，将地图文件的所有数据加载到类型为 TENMapInfo 的 ENMapData 数组中
           aMapFile.Read(ENMapData[0], Length(ENMapData) * SizeOf(TENMapInfo));
+          // 遍历 ENMapData 数据，从低位到高位，实际上相当于按 块 读取地图数据，每一块都是 TENMapInfo 类
           for I := Low(ENMapData) to High(ENMapData) do begin
             MapData[i].wBkImg := ENMapData[i].BkImg xor $AA38;
             if (ENMapData[i].BkImgNot xor $AA38) = $2000 then
@@ -646,9 +577,5 @@ begin
     end;
   end;
 end;
-
-{ TMapLoading }
-
-
 
 end.

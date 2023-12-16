@@ -7,7 +7,7 @@ uses
   Share;
 
 const
-  FILE_NAME = '.\Randall.ini';
+  FILE_NAME = '.\randall.ini';
   MIR2_SETUP_SECTION = 'Mir2Setup';
   BIT_DEPTH_KEY = 'BitDepth';
   DISPLAY_SIZE_KEY = 'DisplaySize';
@@ -29,28 +29,27 @@ uses IniFiles;
 
 procedure loadData();
 var
-  ini: TIniFile;
-  boBitDepth: Boolean;
+  iniFile: TIniFile;
+  bitDepth: Boolean;
 begin
-  ini := TIniFile.Create(FILE_NAME);
+  iniFile := TIniFile.Create(FILE_NAME);
   // true 表示 32 位颜色，否则是 16 位颜色
-  boBITDEPTH := True;
+  bitDepth := True;
   try
-    if ini <> nil then
+    if iniFile <> nil then
     begin
-      boBITDEPTH := ini.ReadBool(MIR2_SETUP_SECTION, BIT_DEPTH_KEY, boBITDEPTH);
-      g_FScreenMode := ini.ReadInteger(MIR2_SETUP_SECTION, DISPLAY_SIZE_KEY, g_FScreenMode);
-      g_btMP3Volume := ini.ReadInteger(MIR2_SETUP_SECTION, MUSIC_VOLUME_KEY, g_btMP3Volume);
-      g_btSoundVolume := ini.ReadInteger(MIR2_SETUP_SECTION, SOUND_VOLUME_KEY, g_btSoundVolume);
-      g_boBGSound := ini.ReadBool(MIR2_SETUP_SECTION, MUSIC_OPEN_KEY, g_boBGSound);
-      g_boSound := ini.ReadBool(MIR2_SETUP_SECTION, SOUND_OPEN_KEY, g_boSound);
-
-      if boBitDepth then g_BitCount := 32 else g_BitCount := 16;
+      bitDepth := iniFile.ReadBool(MIR2_SETUP_SECTION, BIT_DEPTH_KEY, bitDepth);
+      g_FScreenMode := iniFile.ReadInteger(MIR2_SETUP_SECTION, DISPLAY_SIZE_KEY, g_FScreenMode);
+      g_btMP3Volume := iniFile.ReadInteger(MIR2_SETUP_SECTION, MUSIC_VOLUME_KEY, g_btMP3Volume);
+      g_btSoundVolume := iniFile.ReadInteger(MIR2_SETUP_SECTION, SOUND_VOLUME_KEY, g_btSoundVolume);
+      g_boBGSound := iniFile.ReadBool(MIR2_SETUP_SECTION, MUSIC_OPEN_KEY, g_boBGSound);
+      g_boSound := iniFile.ReadBool(MIR2_SETUP_SECTION, SOUND_OPEN_KEY, g_boSound);
+      if bitDepth then g_BitCount := 32 else g_BitCount := 16;
     end;
   finally
-    if ini <> nil then
+    if iniFile <> nil then
     begin
-      ini.Free;
+      iniFile.Free;
     end;
   end;
 end;

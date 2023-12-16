@@ -3472,7 +3472,13 @@ var
     dwCheckTime: 0;
     nPullulatePointRate: 10000;
 
-    nSendRefMsgRange: 12;
+    // 可见范围：以屏幕中心点为主，找到最大的地图坐标
+    // 目前以 1600x900 分辨率为主
+    // 1600 / 48 / 2 = 16
+    //  900 / 32 / 2 = 14
+    // 设置为 18 是为了发现更多的游戏信息
+    // 同时可以满足 DRAWLISTCOUNT 大小限制
+    nSendRefMsgRange: 18;
     boDecLampDura: True;
     boHungerSystem: False;
     boHungerDecHP: False;

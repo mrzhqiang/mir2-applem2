@@ -903,12 +903,12 @@ const
 {$IF Var_Interface = Var_Mir2}
   DEFMERCHANTMAXHEIGHT = 140;
   DEFMERCHANTMAXWIDTH = 354;
-  DEFMDLGMAXWIDTH = 354;
+  DEFMDLGMAXWIDTH = 1024;
   MDLGMAXHEIGHT = 1024;
 {$ELSE}
   DEFMERCHANTMAXHEIGHT = 306;
   DEFMERCHANTMAXWIDTH = 242;
-  DEFMDLGMAXWIDTH = 242;
+  DEFMDLGMAXWIDTH = 1024;
   MDLGMAXHEIGHT = 1024;
 {$IFEND}
 
@@ -1158,8 +1158,7 @@ begin
     //DMessageDlg('该功能尚未正式开放！敬请期待！', []);
 end;
 
-procedure TFrmDlg.DBottom2DirectPaint(Sender: TObject;
-  dsurface: TDXTexture);
+procedure TFrmDlg.DBottom2DirectPaint(Sender: TObject; dsurface: TDXTexture);
 var
   d: TDXTexture;
   ax, ay: integer;
@@ -1240,7 +1239,7 @@ const
 {$IFEND}
 var
   d: TDXTexture;
-  ax, ay: integer;
+  ax, ay, awidth: integer;
 {$IF Var_Interface = Var_Mir2}
   rc: TRect;
   r: Extended;
@@ -1271,22 +1270,22 @@ begin
     // 底部物品栏 1、2、3、4、5、6 格子编号
     d := g_WMain99Images.Images[1822];
     if d <> nil then
-        dsurface.Draw( 283, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin - 120, ay + 80, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1823];
     if d <> nil then
-        dsurface.Draw(326, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin - 76, ay + 80, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1824];
     if d <> nil then
-        dsurface.Draw(370, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin - 32, ay + 80, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1825];
     if d <> nil then
-        dsurface.Draw(414, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin + 12, ay + 80, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1826];
     if d <> nil then
-        dsurface.Draw(457, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin + 56, ay + 80, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1827];
     if d <> nil then
-        dsurface.Draw(502, ay + 79, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin + 100, ay + 80, d.ClientRect, d, True);
     // 服务器时间
     d := nil;
     case HourOf(g_ServerDateTime) of
@@ -1296,7 +1295,7 @@ begin
       19..23: d := g_WMain99Images.Images[1861]; //晚上
     end;
     if d <> nil then
-      dsurface.Draw(g_FScreenWidth - 52, ay + 79, d.ClientRect, d, FALSE);
+      dsurface.Draw(g_FScreenWidth - ax - 52, ay + 79, d.ClientRect, d, FALSE);
 
     if g_MySelf <> nil then begin
       // 左侧 HP MP 状态球
@@ -1306,14 +1305,14 @@ begin
           if d <> nil then begin
             rc := d.ClientRect;
             rc.Right := d.ClientRect.Right - 2;
-            dsurface.Draw(38, ay + 90, rc, d, FALSE);
+            dsurface.Draw(ax + 38, ay + 90, rc, d, FALSE);
           end;
           d := g_WMain99Images.Images[1865];
           if d <> nil then begin
             rc := d.ClientRect;
             rc.Right := d.ClientRect.Right - 2;
             rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
-            dsurface.Draw(38, ay + 90 + rc.Top, rc, d, FALSE);
+            dsurface.Draw(ax + 38, ay + 90 + rc.Top, rc, d, FALSE);
           end;
         end else begin
           d := g_WMain99Images.Images[1863];
@@ -1322,13 +1321,13 @@ begin
             rc := d.ClientRect;
             rc.Right := d.ClientRect.Right div 2 - 1;
             rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
-            dsurface.Draw(40, ay + 91 + rc.Top, rc, d, FALSE);
+            dsurface.Draw(ax + 40, ay + 91 + rc.Top, rc, d, FALSE);
             //MP 图形
             rc := d.ClientRect;
             rc.Left := d.ClientRect.Right div 2 + 1;
             rc.Right := d.ClientRect.Right - 1;
             rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxMP * (g_MySelf.m_Abil.MaxMP - g_MySelf.m_Abil.MP));
-            dsurface.Draw(40 + rc.Left, ay + 91 + rc.Top, rc, d, FALSE);
+            dsurface.Draw(ax + 40 + rc.Left, ay + 91 + rc.Top, rc, d, FALSE);
           end;
         end;
       end;
@@ -1346,13 +1345,13 @@ begin
           else
             rc.Right := 0;
           rc.Right := _MIN(rc.Right, d.Width);
-          dsurface.Draw(g_FScreenWidth - 134, g_FScreenHeight - 73, rc, d, FALSE);
+          dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 73, rc, d, FALSE);
           //背包重量条
           rc := d.ClientRect;
           if g_nDander > 0 then begin
             rc.Right := _MIN(Round(rc.Right / (10000 / g_nDander)), rc.Right);
             rc.Right := _MIN(rc.Right, d.Width);
-            dsurface.Draw(g_FScreenWidth - 134, g_FScreenHeight - 40, rc, d, FALSE);
+            dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 40, rc, d, FALSE);
           end;
         end;
       end;
@@ -1370,17 +1369,17 @@ begin
     //
     with g_DXCanvas do begin
       if DBTAttackMode.Tag in [Low(AttackModeName)..High(AttackModeName)] then
-        TextOut(g_FScreenWidth - 152, ay + 113, clWhite, AttackModeName[DBTAttackMode.Tag]);
+        TextOut(g_FScreenWidth - ax - 152, ay + 113, clWhite, AttackModeName[DBTAttackMode.Tag]);
 
-      TextOut(g_FScreenWidth - 128, ay + 230, clWhite, FormatDateTime('HH:MM:SS', g_ServerDateTime));
+      TextOut(g_FScreenWidth - ax - 128, ay + 230, clWhite, FormatDateTime('HH:MM:SS', g_ServerDateTime));
       // todo 单位化 HP MP 显示
       sStr := IntToStr(g_MySelf.m_Abil.HP) + '/' + IntToStr(g_MySelf.m_Abil.MaxHP); 
       TextOut(ax + 56 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
       sStr := IntToStr(g_MySelf.m_Abil.MP) + '/' + IntToStr(g_MySelf.m_Abil.MaxMP); 
       TextOut(ax + 118 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
       sStr := IntToStr(g_MySelf.m_Abil.Level); 
-      TextOut(g_FScreenWidth - 121 - TextWidth(sStr) div 2, ay + 146, clWhite, sStr);
-      TextOut(8, g_FScreenHeight - 16, clWhite, g_sMapTitle + ' ' + IntToStr(g_MySelf.m_nCurrX) + ':' + IntToStr(g_MySelf.m_nCurrY));
+      TextOut(g_FScreenWidth - ax - 121 - TextWidth(sStr) div 2, ay + 146, clWhite, sStr);
+      TextOut(ax + 20, g_FScreenHeight - 16, clWhite, g_sMapTitle + ' ' + IntToStr(g_MySelf.m_nCurrX) + ':' + IntToStr(g_MySelf.m_nCurrY));
     end;
 {$IFEND}
   end;
@@ -1447,6 +1446,7 @@ begin
   Dec(X, DBottom.Left);
   ShowMsg := '';
   nLeft := g_FScreenWidth - 160;
+  // TODO 适配大分辨率
   if (x >= nLeft) and (x <= nLeft + 105) and (y >= 172) and (y <= 172 + 26) then begin
     x := nLeft;
     Y := 192;
@@ -12189,12 +12189,12 @@ begin
   // 以下按钮必须以客户端的中间点为坐标原点，
   DscStart.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_START);
   // 开始按钮，X 轴居中，Y 轴
-  DscStart.Left := Share.getLayoutX(DscStart.Width);
-  DscStart.Top := Share.getSupportY(458);
+  DscStart.Left := Share.getLayoutX(DscStart.Width) + 8;
+  DscStart.Top := Share.getSupportY(456);
   DscStart.OnDirectPaint := DMyStateDirectPaint;
   DscNewChr.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_NEW);
   DscNewChr.Left := Share.getLayoutX(DscNewChr.Width);
-  DscNewChr.Top := Share.getSupportY(486);
+  DscNewChr.Top := Share.getSupportY(488);
   DscNewChr.OnDirectPaint := DMyStateDirectPaint;
   DscEraseChr.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_DELETE);
   DscEraseChr.Left := Share.getLayoutX(DscEraseChr.Width);
@@ -12205,8 +12205,8 @@ begin
   DscCredits.Top := Share.getSupportY(527);
   DscCredits.OnDirectPaint := DMyStateDirectPaint;
   DscExit.SetImgIndex(g_WMain99Images, Resource.BTN_SELECT_ROLE_EXIT);
-  DscExit.Left := Share.getLayoutX(DscExit.Width);
-  DscExit.Top := Share.getSupportY(547);
+  DscExit.Left := Share.getLayoutX(DscExit.Width) + 8;
+  DscExit.Top := Share.getSupportY(545);
   DscExit.OnDirectPaint := DMyStateDirectPaint;
 
   DscSelect1.SetImgIndex(g_WMain99Images, BTN_SELECT_ROLE_LEFT_NORMAL);
@@ -12426,45 +12426,43 @@ begin
 // 没有 800x600 分辨率，所以不需要 1615 这种底部状态栏了
     i := 1614;
 
+// 1024*251
   d := g_WMain99Images.Images[i];
   if d <> nil then begin
     DBottom.SetImgIndex(g_WMain99Images, i);
-    DBottom.Left :=  Share.getLayoutX(d.Width);
+    DBottom.Left := Share.getLayoutX(d.Width);
     DBottom.Top := g_FScreenHeight - d.Height;
   end;
 
-  if g_FScreenWidth = LARGE_SCREEN_WIDTH then
-    DUserKeyGrid1.Left := -127 + g_FScreenXOrigin
-  else
-    DUserKeyGrid1.Left := -115 + g_FScreenXOrigin;
-  DUserKeyGrid1.Top := 59;
-  DUserKeyGrid1.Width := 252;
-  DUserKeyGrid1.Height := 30;
-  DUserKeyGrid1.ColWidth := 32;
-  DUserKeyGrid1.RowHeight := 30;
+// 以中心点X坐标为基准，左移宽度一半的像素，表示居中对齐，注意，由于是相对坐标，需要减去 DBottom.Left
+  DUserKeyGrid1.Left := g_FScreenXOrigin - DBottom.Left - 254 div 2;
+  DUserKeyGrid1.Top := 54;
+  DUserKeyGrid1.Width := 254;
+  DUserKeyGrid1.Height := 36;
+  DUserKeyGrid1.ColWidth := 36;
+  DUserKeyGrid1.RowHeight := 36;
   DUserKeyGrid1.ColCount := 6;
-  DUserKeyGrid1.ColOffset := 12;
+  DUserKeyGrid1.ColOffset := 8;
 
+  // 这个应该是剑侠客户端的快捷键
   DUserKeyGrid2.Left := 65;
   DUserKeyGrid2.Top := 7;
   DUserKeyGrid2.Width := 332;
   DUserKeyGrid2.Height := 38;
-
+  // 这个应该是剑侠客户端的底部栏
   d := g_WMain99Images.Images[11];
   if d <> nil then begin
     DBottom2.SetImgIndex(g_WMain99Images, 11);
     DBottom2.Left := 390;
     DBottom2.Top := -d.Height;
   end;
-
+  // 剑侠客户端-攻击模式
   DBTAttackMode.SetImgIndex(g_WMain99Images, 493);
   DBTAttackMode.Top := 32;
   DBTAttackMode.Left := 510;
-
   DWndAttackModeList.SetImgIndex(g_WMain99Images, 492);
   DWndAttackModeList.Top := 54;
   DWndAttackModeList.Left := 508;
-
   DBTAttackModeAll.SetImgIndex(g_WMain99Images, 493);
   DBTAttackModeAll.Top := 3;
   DBTAttackModeAll.Left := 2;
@@ -12487,84 +12485,60 @@ begin
   DBTAttackModePK.Top := 3 + 6 * 24;
   DBTAttackModePK.Left := 2;
 
-
-  {
-  DBTCheck2.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck2.Left := -348;
-  DBTCheck2.Top := -348;
-  DBTCheck3.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck3.Left := -348;
-  DBTCheck3.Top := -348;
-  DBTCheck4.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck4.Left := -348;
-  DBTCheck4.Top := -348;
-  DBTCheck5.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck5.Left := -348;
-  DBTCheck5.Top := -348;
-  DBTCheck6.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck6.Left := -348;
-  DBTCheck6.Top := -348;
-  DBTCheck7.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck7.Left := -348;
-  DBTCheck7.Top := -348;
-  DBTCheck8.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck8.Left := -348;
-  DBTCheck8.Top := -348;
-  DBTCheck9.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck9.Left := -348;
-  DBTCheck9.Top := -348;
-  DBTCheck10.SetImgIndex(g_WMain99Images, 378);
-  DBTCheck10.Left := -348;
-  DBTCheck10.Top := -348;  }
-
+  // 人物、背包、技能、音量，注意这里是相对于 DBottom 的 Left 和 Top 坐标
   DMyState.SetImgIndex(g_WMain99Images, 1916);
-  DMyState.Left := g_FScreenWidth - 157;
-  DMyState.Top := 61;
+  DMyState.Left := g_FScreenXOrigin - DBottom.Left + 355;
+  DMyState.Top := 62;
   DMyState.ClickCount := csStone;
-  // fixme 补丁位置不对导致鼠标移动和点击不到对应的按钮
   DMyBag.SetImgIndex(g_WMain99Images, 1917);
-  DMyBag.Left := g_FScreenWidth - 118;
-  DMyBag.Top := 41;
+  DMyBag.Left := g_FScreenXOrigin - DBottom.Left + 394;
+  DMyBag.Top := 42;
   DMyBag.ClickCount := csStone;
   DMyMagic.SetImgIndex(g_WMain99Images, 1918);
-  DMyMagic.Left := g_FScreenWidth - 78;
-  DMyMagic.Top := 21;
+  DMyMagic.Left := g_FScreenXOrigin - DBottom.Left + 434;
+  DMyMagic.Top := 22;
   DMyMagic.ClickCount := csStone;
   DBotMusic.SetImgIndex(g_WMain99Images, 1919);
-  DBotMusic.Left := g_FScreenWidth - 36;
-  DBotMusic.Top := 11;
+  DBotMusic.Left := g_FScreenXOrigin - DBottom.Left + 476;
+  DBotMusic.Top := 12;
   DBotMusic.Visible := True;
 
-
-
+  // 小地图
   DBotMiniMap.SetImgIndex(g_WMain99Images, 1922);
   DBotMiniMap.Left := 209;
   DBotMiniMap.Top := 104;
   DBotMiniMap.Visible := True;
+  // 交易
   DBotTrade.SetImgIndex(g_WMain99Images, 1924);
   DBotTrade.Left := 209 + 30 * 1;
   DBotTrade.Top := 104;
   DBotTrade.OnDirectPaint := DButRenewChrDirectPaint;
+  // 行会
   DBotGuild.SetImgIndex(g_WMain99Images, 1926);
   DBotGuild.Left := 209 + 30 * 2;
   DBotGuild.Top := 104;
   DBotGuild.OnDirectPaint := DButRenewChrDirectPaint;
+  // 组队
   DBotGroup.SetImgIndex(g_WMain99Images, 1920);
   DBotGroup.Left := 209 + 30 * 3;
   DBotGroup.Top := 104;
   DBotGroup.OnDirectPaint := DButRenewChrDirectPaint;
+  // 人际关系（好友）
   DBotFriend.SetImgIndex(g_WMain99Images, 2140);
   DBotFriend.Left := 209 + 30 * 4;
   DBotFriend.Top := 104;
   DBotFriend.OnDirectPaint := DButRenewChrDirectPaint;
+  // 任务记录
   DBotSort.SetImgIndex(g_WMain99Images, 1931);
   DBotSort.Left := 209 + 30 * 5;
   DBotSort.Top := 104;
   DBotSort.OnDirectPaint := DButRenewChrDirectPaint;
+  // 游戏设置
   DOption.SetImgIndex(g_WMain99Images, 2040);
   DOption.Left := 209 + 30 * 8;
   DOption.Top := 104;
   DOption.OnDirectPaint := DButRenewChrDirectPaint;
+  // 排行榜
   DButtonTop.SetImgIndex(g_WMain99Images, 2142);
   DButtonTop.Left := 209 + 30 * 6;
   DButtonTop.Top := 104;
@@ -12574,7 +12548,7 @@ begin
   DBottom.AddChild(DButtonTop);
   DButtonTop.OnDirectPaint := DButRenewChrDirectPaint;
   DBottom2.Visible := False;
-
+  // 骑马
   DBTTakeHorse.SetImgIndex(g_WMain99Images, 1632);
   DBTTakeHorse.Left := 209 + 30 * 7;
   DBTTakeHorse.Top := 104;
@@ -12583,29 +12557,28 @@ begin
   DBTTakeHorse.OnMouseMove := DMyStateMouseMove;
   DBottom.AddChild(DBTTakeHorse);
   DBTTakeHorse.OnDirectPaint := DButRenewChrDirectPaint;
-
+  // 属性点
   DBotAddAbil.SetImgIndex(g_WMain99Images, 1928);
   DBotAddAbil.Left := 209 + 30 * 9;
   DBotAddAbil.Top := 104;
   DBotAddAbil.Visible := True;
-
-
+  // 商铺
   DTopShop.SetImgIndex(g_WMain99Images, 2220);
-  DTopShop.Left := g_FScreenWidth - 46;
-  DTopShop.Top := 204;
+  DTopShop.Left := DBottom.Width - 50;
+  DTopShop.Top := 200;
   if DTopShop.DParent <> nil then DTopShop.DParent.DelChild(DTopShop);
   DTopShop.DParent := DBottom;
   DTopShop.OnMouseMove := DMyStateMouseMove;
   DBottom.AddChild(DTopShop);
-
+  // 帮助
   DTopHelp.SetImgIndex(g_WMain99Images, 2042);
-  DTopHelp.Left := g_FScreenWidth - 199;
+  DTopHelp.Left := DBottom.Width - 199;
   DTopHelp.Top := 59;
   if DTopHelp.DParent <> nil then DTopHelp.DParent.DelChild(DTopHelp);
   DTopHelp.DParent := DBottom;
   DTopHelp.OnMouseMove := DMyStateMouseMove;
   DBottom.AddChild(DTopHelp);
-
+  // 邮箱
   DTopEMail.SetImgIndex(g_WMain99Images, 2045);
   DTopEMail.Left := 170;
   DTopEMail.Top := 60;
@@ -12613,9 +12586,9 @@ begin
   DTopEMail.DParent := DBottom;
   DTopEMail.OnMouseMove := DMyStateMouseMove;
   DBottom.AddChild(DTopEMail);
-
+  // 表情
   DBTFace.SetImgIndex(g_WMain99Images, 1634);
-  DBTFace.Left := g_FScreenWidth - 228;
+  DBTFace.Left := DBottom.Width - 228;
   DBTFace.Top := 229;
   if DBTFace.DParent <> nil then DBTFace.DParent.DelChild(DBTFace);
   DBTFace.DParent := DBottom;
@@ -12633,7 +12606,7 @@ begin
 
   DSayUpDown.SetImgIndex(g_WMain99Images, 2202);
   DSayUpDown.Top := 118;
-  DSayUpDown.Left := g_FScreenWidth - 203;
+  DSayUpDown.Left := DBottom.Width - 203;
   DSayUpDown.Height := 112;
 
   DSayUpDown.UpButton.SetImgIndex(g_WMain99Images, 2203);
@@ -12643,7 +12616,7 @@ begin
   DEditChat.Left := 208;
   DEditChat.Top := 230;
   DEditChat.Height := 16;
-  DEditChat.Width := g_FScreenWidth - 436;
+  DEditChat.Width := DBottom.Width - 436;
 //  if g_FScreenWidth = BASE_WIDTH then
     DEditChat.MaxLength := 70;
 //  else
@@ -12652,7 +12625,7 @@ begin
 
   DBotWndSay.Left := 209;
   DBotWndSay.Top := 118;
-  DBotWndSay.Width := g_FScreenWidth - 414;
+  DBotWndSay.Width := DBottom.Width - 414;
   DBotWndSay.Height := 112;
   DBotWndSay.Visible := True;
 

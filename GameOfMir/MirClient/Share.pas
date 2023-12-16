@@ -11,16 +11,17 @@ const
   DEF_FONT_SIZE = 10;
   // 屏幕颜色位数
   DEF_COLOR_BIT = 32;
-  // 屏幕模式：旧屏幕、默认屏幕、大屏
-  OLD_SCREEN_MODE = 0;
-  DEF_SCREEN_MODE = 1;
-  LARGE_SCREEN_MODE = 2;
+  // 屏幕模式：默认屏幕、大屏
+//  OLD_SCREEN_MODE = 0;
+  DEF_SCREEN_MODE = 0;
+  LARGE_SCREEN_MODE = 1;
   // 旧客户端的屏幕分辨率：以此为基础不用重新调整坐标，增加一个适配坐标即可
+  // fixme 已废弃
   OLD_SCREEN_WIDTH = 800;
   OLD_SCREEN_HEIGHT = 600;
   // 默认屏幕分辨率
-  DEF_SCREEN_WIDTH = 1280;
-  DEF_SCREEN_HEIGHT = 720;
+  DEF_SCREEN_WIDTH = 1024;
+  DEF_SCREEN_HEIGHT = 768;
   // 大屏幕分辨率
   LARGE_SCREEN_WIDTH = 1600;
   LARGE_SCREEN_HEIGHT = 900;
@@ -28,9 +29,13 @@ const
   // 调试开关——FIXME 需要确定是否有用
   DEBUG = 0;
 
-  MAXLEFT2 = 10;
-  MAXTOP2 = 10;
-  MAXTOP3 = -14;
+  // 1024/2/48 = 10..32
+  // 768/2/32 = 12
+  // 1600/2/48 = 16..32
+  // 900/2/32 = 14..2
+  MAXLEFT2 = 16;
+  MAXTOP2 = 14;
+  MAXTOP3 = -16;
 
   BGSURFACECOLOR = 8;
 

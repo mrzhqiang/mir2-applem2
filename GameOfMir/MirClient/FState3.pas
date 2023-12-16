@@ -2820,6 +2820,8 @@ begin
   g_boBGSound := not DDGSMp3Close.Checked;
   g_boSound := not DDGSMusicClose.Checked;
   g_Sound.Volume := g_btSoundVolume;
+  g_BitCount := ClMain.HGE.System_GetState(HGE_SCREENBPP);
+  g_FScreenMode := DDGSXY.ItemIndex;
 
   if not g_boSound then SilenceSound;
   if g_boBGSound and (g_btMP3Volume > 0) then begin
@@ -6305,7 +6307,7 @@ begin
   DDGSXY.left := 85;
   DDGSXY.top := 57;
   DDGSXY.Height := 16;
-  DDGSXY.width := 108;
+  DDGSXY.width := 128;
   DDGSXY.UpDown.SetImgIndex(g_WMain99Images, 120);
   DDGSXY.UpDown.UpButton.SetImgIndex(g_WMain99Images, 108);
   DDGSXY.UpDown.DownButton.SetImgIndex(g_WMain99Images, 111);

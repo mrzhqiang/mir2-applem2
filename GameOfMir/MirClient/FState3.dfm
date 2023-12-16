@@ -1683,9 +1683,8 @@ object FrmDlg3: TFrmDlg3
     ShowCount = 5
     ShowHeight = 18
     Item.Strings = (
-      '800'#215'600['#40664#35748']'
-      '1024'#215'600['#23485#23631']'
-      '1024'#215'768['#25512#33616']')
+      '1024'#215'768['#40664#35748']'
+      '1600'#215'900['#25512#33616']')
     ItemIndex = -1
   end
   object DDGSDisplay: TDComboBox
