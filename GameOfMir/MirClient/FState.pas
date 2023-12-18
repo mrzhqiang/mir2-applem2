@@ -1353,6 +1353,16 @@ begin
             rc.Right := _MIN(rc.Right, d.Width);
             dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 40, rc, d, FALSE);
           end;
+          {if g_MySelf.m_Abil.Weight > 0 then
+            r := g_MySelf.m_Abil.MaxWeight / g_MySelf.m_Abil.Weight
+          else
+            r := 0;
+          if r > 0 then
+            rc.Right := Round(rc.Right / r)
+          else
+            rc.Right := 0;
+          rc.Right := _MIN(rc.Right, d.Width);
+          dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 40, rc, d, FALSE);}
         end;
       end;
     end;
@@ -1445,8 +1455,7 @@ begin
   Dec(Y, DBottom.Top);
   Dec(X, DBottom.Left);
   ShowMsg := '';
-  nLeft := g_FScreenWidth - 160;
-  // TODO 适配大分辨率
+  nLeft := DBottom.Width - 160;
   if (x >= nLeft) and (x <= nLeft + 105) and (y >= 172) and (y <= 172 + 26) then begin
     x := nLeft;
     Y := 192;
@@ -1456,6 +1465,7 @@ begin
     x := nLeft;
     Y := 228;
     ShowMsg := '成长点：' + IntToStr(g_nDander) + '/10000';
+//    ShowMsg := '负重：' + IntToStr(g_MySelf.m_Abil.Weight) + '/' + IntToStr(g_MySelf.m_Abil.MaxWeight);
   end;
   if ShowMsg <> '' then
     DScreen.ShowHint(DBottom.SurfaceX(DBottom.Left + X), DBottom.SurfaceY(DBottom.Top + Y), ShowMsg, clWhite, False, Integer(Sender));
