@@ -16,7 +16,6 @@ const
   DEF_SCREEN_MODE = 0;
   LARGE_SCREEN_MODE = 1;
   // 旧客户端的屏幕分辨率：以此为基础不用重新调整坐标，增加一个适配坐标即可
-  // fixme 已废弃
   OLD_SCREEN_WIDTH = 800;
   OLD_SCREEN_HEIGHT = 600;
   // 默认屏幕分辨率

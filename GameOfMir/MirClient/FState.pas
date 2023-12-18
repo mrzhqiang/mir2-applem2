@@ -6655,7 +6655,7 @@ var
   ax, ay: integer;
   MapDesc: pTMapDesc;
   str: string;
-  nWidth, nHeight: Integer;
+  w, nWidth, nHeight: Integer;
 begin
   with Sender as TDWindow do begin
     if g_MySelf = nil then
@@ -6797,8 +6797,7 @@ begin
           end;
           d := g_WMain99Images.Images[btColor];
           if d <> nil then
-            dsurface.Draw(mx - d.Width div 2, my - d.Height div 2,
-              d.ClientRect, d, True);
+            dsurface.Draw(mx - d.Width div 2, my - d.Height div 2, d.ClientRect, d, True);
         end;
 
       if not m_boViewBlink then begin
@@ -6806,12 +6805,11 @@ begin
         my := dc.Top + Trunc(g_MySelf.m_nCurrY * (nHeight / rc.Bottom));
         d := g_WMain99Images.Images[70];
         if d <> nil then
-          dsurface.Draw(mx - d.Width div 2, my - d.Height div 2,
-            d.ClientRect, d, True);
+          dsurface.Draw(mx - d.Width div 2, my - d.Height div 2, d.ClientRect, d, True);
       end;
       if cx > -1 then begin
         str := IntToStr(cx) + ',' + IntToStr(cy);
-        g_DXCanvas.TextOut(ax + 96 - g_DXCanvas.TextWidth(str) div 2, ay + 146, $8CEFF7, str);
+        g_DXCanvas.TextOut(ax, ay + nHeight - g_DXCanvas.TextHeight(str), $8CEFF7, str);
         
         mx := dc.Left + Trunc((cX * 48) * (nWidth / rc.Right)) div 32;
         my := dc.Top + Trunc(cY * (nHeight / rc.Bottom)) + 2;
@@ -6830,8 +6828,10 @@ begin
 
       mx := (g_MySelf.m_nCurrX * 48) div 32;
       my := (g_MySelf.m_nCurrY * 32) div 32;
-      rc.Left := _MAX(0, mx - 64);
-      rc.Top := _MAX(0, my - 64);
+      // 按分辨率比例扩大小地图的范围
+      w := Round(g_FScreenWidth * 64 / DEF_SCREEN_WIDTH);
+      rc.Left := _MAX(0, mx - w);
+      rc.Top := _MAX(0, my - w);
       if d = nil then begin
         rc.Right := rc.Left + Width;
         rc.Bottom := rc.Top + Height;
@@ -6958,12 +6958,16 @@ begin
           end;
           d := g_WMain99Images.Images[btColor];
           if d <> nil then
+          begin
             dsurface.Draw(mx - d.Width div 2, my - d.Height div 2, d.ClientRect, d, True);
+            // NPC 显示名称有时候过于重叠，影响观感，所以注释了这行代码
+//            g_DXCanvas.TextOut(mx - g_DXCanvas.TextWidth(actor.m_UserName) div 2, my - d.Height - g_DXCanvas.TextHeight(actor.m_UserName), $8CEFF7, actor.m_UserName);
+          end;
         end;
 
       if not m_boViewBlink then begin
-        mx := ax + (g_MySelf.m_nCurrX * 48) div 32 - rc.Left + 2;
-        my := ay + (g_MySelf.m_nCurrY * 32) div 32 - rc.Top - 2;
+        mx := ax + w + 2;
+        my := ay + w - 2;
         //dsurface.Pixels[mx + 2, my - 2] := clRed;
         d := g_WMain99Images.Images[70];
         if d <> nil then
@@ -6972,7 +6976,7 @@ begin
 
       if cx > -1 then begin
         str := IntToStr(cx) + ',' + IntToStr(cy);
-        g_DXCanvas.TextOut(ax + 64 - g_DXCanvas.TextWidth(str) div 2, ay + 114, $8CEFF7, str);
+        g_DXCanvas.TextOut(ax, ay + Height - g_DXCanvas.TextHeight(str), $8CEFF7, str);
         mx := ax + (cX * 48) div 32 - rc.Left;
         my := ay + (cY * 32) div 32 - rc.Top;
         d := g_WMain99Images.Images[71];
@@ -7142,6 +7146,7 @@ var
   ax, ay: integer;
   MapDesc: pTMapDesc;
   str: string;
+  w: Integer;
 begin
   with Sender as TDWindow do begin
     if g_MySelf = nil then
@@ -7170,8 +7175,10 @@ begin
 
     mx := (g_MySelf.m_nCurrX * 48) div 32;
     my := (g_MySelf.m_nCurrY * 32) div 32;
-    rc.Left := _MAX(0, mx - 64);
-    rc.Top := _MAX(0, my - 64);
+    // 按分辨率比例扩大小地图的范围
+    w := Round(g_FScreenWidth * 64 / DEF_SCREEN_WIDTH);
+    rc.Left := _MAX(0, mx - w);
+    rc.Top := _MAX(0, my - w);
     if d = nil then begin
       rc.Right := rc.Left + Width;
       rc.Bottom := rc.Top + Height;
@@ -7179,7 +7186,6 @@ begin
     else begin
       rc.Right := _MIN(d.ClientRect.Right, rc.Left + Width);
       rc.Bottom := _MIN(d.ClientRect.Bottom, rc.Top + Height);
-
     end;
 
     if g_nMiniMapX >= 0 then begin
@@ -7299,8 +7305,8 @@ begin
       end;
 
     if not m_boViewBlink then begin
-      mx := ax + (g_MySelf.m_nCurrX * 48) div 32 - rc.Left + 2;
-      my := ay + (g_MySelf.m_nCurrY * 32) div 32 - rc.Top - 2;
+      mx := ax + w + 2;
+      my := ay + w - 2;
       //dsurface.Pixels[mx + 2, my - 2] := clRed;
       d := g_WMain99Images.Images[70];
       if d <> nil then
@@ -14946,8 +14952,8 @@ begin
 
   DMiniMap.Left := 0;
   DMiniMap.Top := 0;
-  DMiniMap.Width := 192;
-  DMiniMap.Height := 160;
+  DMiniMap.Width := Round(g_FScreenWidth * 192 / DEF_SCREEN_WIDTH);
+  DMiniMap.Height := Round(g_FScreenWidth * 160 / DEF_SCREEN_WIDTH);
   DMiniMap.CreateSurface(nil);
 
   DMerchantDlg.Surface.Size := Point(DEFMDLGMAXWIDTH, MDLGMAXHEIGHT);
@@ -15810,26 +15816,32 @@ begin
 end;
 
 procedure TFrmDlg.SetMiniMapSize(flag: Byte);
+var
+  w, h: Integer;
 begin
   g_nMiniMapOldX := -1;
   case flag of
     0: DMiniMap.Visible := False;
     1:
       begin
+        w := Round(g_FScreenWidth * 128 / DEF_SCREEN_WIDTH);
+        h := Round(g_FScreenWidth * 128 / DEF_SCREEN_WIDTH);
         DMiniMap.Visible := True;
-        DMiniMap.Left := g_FScreenWidth - 128;
+        DMiniMap.Left := g_FScreenWidth - w;
         DMiniMap.Top := 0;
-        DMiniMap.Width := 128;
-        DMiniMap.Height := 128;
+        DMiniMap.Width := w;
+        DMiniMap.Height := h;
         //DMiniMap.CreateSurface(nil);
       end;
     2:
       begin
+        w := Round(g_FScreenWidth * 192 / DEF_SCREEN_WIDTH);
+        h := Round(g_FScreenWidth * 160 / DEF_SCREEN_WIDTH);
         DMiniMap.Visible := True;
-        DMiniMap.Left := g_FScreenWidth - 192;
+        DMiniMap.Left := g_FScreenWidth - w;
         DMiniMap.Top := 0;
-        DMiniMap.Width := 192;
-        DMiniMap.Height := 160;
+        DMiniMap.Width := w;
+        DMiniMap.Height := h;
         //DMiniMap.CreateSurface(nil);
       end;
     3:
