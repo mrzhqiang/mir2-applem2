@@ -1020,10 +1020,7 @@ procedure TFrmDlg.DBotMiniMapClick(Sender: TObject; X, Y: Integer);
 var
   d: TDXTexture;
 begin
-{  if GetTickCount < TDControl(Sender).AppendTick then begin
-    Exit;
-  end;
-  TDControl(Sender).AppendTick := GetTickCount + 1000;  }
+  boMaxMinimapShow := True;
   if not DMiniMap.Visible then begin
     if g_nMiniMapIndex > 10000 then
       d := g_WUIBImages.Images[g_nMiniMapIndex - 10000]
@@ -1032,6 +1029,7 @@ begin
     else
       d := g_WMMapImages.Images[g_nMiniMapIndex];
     if d = nil then begin
+      boMaxMinimapShow := False;
       DScreen.AddSysMsg('没有可用地图.', $32F4);
       Exit;
     end;
@@ -5592,6 +5590,7 @@ var
   MapDesc: pTMapDesc;
   nWidth, nHeight: Integer;
 begin
+  boMaxMinimapShow := True;
   with Sender as TDWindow do begin
     if g_MySelf = nil then
       exit;
@@ -5607,6 +5606,7 @@ begin
       d := g_WMMapImages.Images[g_nMiniMapIndex];
     //d := g_WMMapImages.Images[g_nMiniMapIndex];
     if d = nil then begin
+      boMaxMinimapShow := False;
       DMaxMiniMap.Visible := False;
       exit;
     end;
@@ -5804,27 +5804,24 @@ begin
       dsurface.Draw(ax, ay, d.ClientRect, d, False);
 
     with g_DXCanvas do begin
-      //SetBkMode(Handle, TRANSPARENT);
-      //Font.Color := clWhite;
       TextOut(ax + 162 - TextWidth(g_sMapTitle) div 2, ay + 14, g_sMapTitle, clWhite);
       if (g_nMiniMapMaxMosX <> g_MySelf.m_nCurrX) or (g_nMiniMapMaxMosY <> g_MySelf.m_nCurrY) then begin
-        TextOut(ax + 315, ay + 14, IntToStr(g_MySelf.m_nCurrX) + ',' +
-          IntToStr(g_MySelf.m_nCurrY) + '  ->  ' + IntToStr(g_nMiniMapMaxMosX)
+        TextOut(ax + 310, ay + 14, IntToStr(g_MySelf.m_nCurrX) + ',' +
+          IntToStr(g_MySelf.m_nCurrY) + ' -> ' + IntToStr(g_nMiniMapMaxMosX)
           + ',' + IntToStr(g_nMiniMapMaxMosY), clWhite);
       end
       else begin
-        TextOut(ax + 315, ay + 14, IntToStr(g_MySelf.m_nCurrX) + ',' +
-          IntToStr(g_MySelf.m_nCurrY) + '  ->  0,0', clWhite);
+        TextOut(ax + 310, ay + 14, IntToStr(g_MySelf.m_nCurrX) + ',' +
+          IntToStr(g_MySelf.m_nCurrY) + ' -> 0,0', clWhite);
       end;
       if g_nMiniMapMoseX <> -1 then begin
         TextOut(ax + 520, ay + 14, IntToStr(g_nMiniMapMoseX)
-          + ',' + IntToStr(g_nMiniMapMoseY) + '  正在移动，剩余 ' +
+          + ',' + IntToStr(g_nMiniMapMoseY) + ' 正在移动，剩余 ' +
           IntToStr(High(g_nMiniMapPath)) + ' 步', clWhite);
       end
       else begin
-        TextOut(ax + 520, ay + 14, '0,0  尚未设置目的地，点击地图设置', clWhite);
+        TextOut(ax + 520, ay + 14, '0,0 尚未设置目的地，点击地图设置', clWhite);
       end;
-      //Release;
     end;
   end;
 end;
@@ -6574,8 +6571,8 @@ begin
   d := g_WMain99Images.Images[30];
   if d <> nil then begin
     DMsgDlg.SetImgIndex(g_WMain99Images, 30);
-    DMsgDlg.Left := (BASE_WIDTH - d.Width) div 2;
-    DMsgDlg.Top := (BASE_HEIGHT - d.Height) div 2;
+    DMsgDlg.Left := (OLD_SCREEN_WIDTH - d.Width) div 2;
+    DMsgDlg.Top := (OLD_SCREEN_HEIGHT - d.Height) div 2;
     msglx := 36;
     msgly := 44;
     lx := 148;
@@ -6657,6 +6654,7 @@ var
   str: string;
   w, nWidth, nHeight: Integer;
 begin
+  boMaxMinimapShow := True;
   with Sender as TDWindow do begin
     if g_MySelf = nil then
       exit;
@@ -6673,6 +6671,7 @@ begin
     else
       d := g_WMMapImages.Images[g_nMiniMapIndex];
     if d = nil then begin
+      boMaxMinimapShow := False;
       Visible := False;
       exit;
     end;
@@ -11988,8 +11987,8 @@ begin
   d := g_WMain99Images.Images[30];
   if d <> nil then begin
     DWndHint.SetImgIndex(g_WMain99Images, 30);
-    DWndHint.Left := (BASE_WIDTH - d.Width) div 2;
-    DWndHint.Top := (BASE_HEIGHT - d.Height) div 2;
+    DWndHint.Left := (OLD_SCREEN_WIDTH - d.Width) div 2;
+    DWndHint.Top := (OLD_SCREEN_HEIGHT - d.Height) div 2;
   end;
 
   DBTHintClose.SetImgIndex(g_WMain99Images, 24);
@@ -12064,8 +12063,8 @@ begin
   d := g_WMain99Images.Images[31];
   if d <> nil then begin
     DLogin.SetImgIndex(g_WMain99Images, 31);
-    DLogin.Left := (BASE_WIDTH - d.Width) div 2;
-    DLogin.Top := (BASE_HEIGHT - d.Height) div 2;
+    DLogin.Left := (OLD_SCREEN_WIDTH - d.Width) div 2;
+    DLogin.Top := (OLD_SCREEN_HEIGHT - d.Height) div 2;
   end;
   DLoginOk.SetImgIndex(g_WMain99Images, 24);
   DLoginOk.Left := 46;
@@ -12139,8 +12138,8 @@ begin
   d := g_WMain99Images.Images[32];
   if d <> nil then begin
     DNewAccount.SetImgIndex(g_WMain99Images, 32);
-    DNewAccount.Left := (BASE_WIDTH - d.Width) div 2;
-    DNewAccount.Top := (BASE_HEIGHT - d.Height) div 2;
+    DNewAccount.Left := (OLD_SCREEN_WIDTH - d.Width) div 2;
+    DNewAccount.Top := (OLD_SCREEN_HEIGHT - d.Height) div 2;
   end;
 
   DNewAccountOk.SetImgIndex(g_WMain99Images, 13);
@@ -12172,8 +12171,8 @@ begin
   d := g_WMain99Images.Images[33];
   if d <> nil then begin
     DChgPw.SetImgIndex(g_WMain99Images, 33);
-    DChgPw.Left := (BASE_WIDTH - d.Width) div 2;
-    DChgPw.Top := (BASE_HEIGHT - d.Height) div 2;
+    DChgPw.Left := (OLD_SCREEN_WIDTH - d.Width) div 2;
+    DChgPw.Top := (OLD_SCREEN_HEIGHT - d.Height) div 2;
   end;
   DChgpwOk.SetImgIndex(g_WMain99Images, 24);
   DChgpwOk.Left := 44;
@@ -12633,7 +12632,7 @@ begin
   DEditChat.Top := 230;
   DEditChat.Height := 16;
   DEditChat.Width := DBottom.Width - 436;
-//  if g_FScreenWidth = BASE_WIDTH then
+//  if g_FScreenWidth = OLD_SCREEN_WIDTH then
     DEditChat.MaxLength := 70;
 //  else
 //    DEditChat.MaxLength := 96;
