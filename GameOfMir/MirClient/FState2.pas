@@ -2744,8 +2744,7 @@ begin
   end;
 end;
 
-procedure TFrmDlg2.DGroupMember1MouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
+procedure TFrmDlg2.DGroupMember1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 var
   nHintX, nHintY: Integer;
   smsg: string;
@@ -2759,23 +2758,20 @@ begin
     if AppendData <> nil then begin                   
       GroupMember := AppendData;
       sMsg := '';
-      sMsg := sMsg + '人物名称: <' + GroupMember.ClientGroup.UserName + ' /FCOLOR=' + IntToStr(GetRGB(255)) + '>\';
-      sMsg := sMsg + '等    级: ' + IntToStr(GroupMember.ClientGroup.Level) + ' 级\';
-      sMsg := sMsg + Format('血 量 值: %d/%d\', [GroupMember.ClientGroup.HP, GroupMember.ClientGroup.MaxHP]);
-      sMsg := sMsg + Format('魔 法 值: %d/%d\', [GroupMember.ClientGroup.MP, GroupMember.ClientGroup.MaxMP]);
+      sMsg := sMsg + '名称: <' + GroupMember.ClientGroup.UserName + ' /FCOLOR=' + IntToStr(GetRGB(255)) + '>\';
+      sMsg := sMsg + '等级: ' + IntToStr(GroupMember.ClientGroup.Level) + ' 级\';
+      sMsg := sMsg + Format('H  P: %d/%d\', [GroupMember.ClientGroup.HP, GroupMember.ClientGroup.MaxHP]);
+      sMsg := sMsg + Format('M  P: %d/%d\', [GroupMember.ClientGroup.MP, GroupMember.ClientGroup.MaxMP]);
       if g_boUseWuXin then begin
-        sMsg := sMsg + '五行属性: <' + GetWuXinName(GroupMember.ClientGroup.WuXin) + ' /FCOLOR=' + IntToStr(GetWuXinColor(GroupMember.ClientGroup.WuXin)) + '>\'
+        sMsg := sMsg + '五行: <' + GetWuXinName(GroupMember.ClientGroup.WuXin) + ' /FCOLOR=' + IntToStr(GetWuXinColor(GroupMember.ClientGroup.WuXin)) + '>\'
       end;
-
-      //sMsg := sMsg + '五行等级: ' + IntToStr(GroupMember.ClientGroup.WuXinLevel) + ' 级\';
-      if GroupMember.isScreen <> nil then
-        sMsg := sMsg + '当前位置: ' + IntToStr(TActor(GroupMember.isScreen).m_nCurrX) + ',' +
-          IntToStr(TActor(GroupMember.isScreen).m_nCurrY) + '\'
+      {if GroupMember.isScreen <> nil then
+        sMsg := sMsg + '位置: 你的附近\'
+      else }
+      if (GroupMember.ClientGroup.mapName <> '') and (GroupMember.ClientGroup.cX > 0) and (GroupMember.ClientGroup.cY > 0) then
+        sMsg := sMsg + '位置: ' + GroupMember.ClientGroup.mapName + '(' + IntToStr(GroupMember.ClientGroup.cX) + ',' + IntToStr(GroupMember.ClientGroup.cY) + ')\'
       else
-        sMsg := sMsg + '当前位置: 九屏范围之外\';
-
-      //nHintX := SurfaceX(Left);
-      //nHintY := SurfaceY(Top + (y - Top) + 30);
+        sMsg := sMsg + '位置: 未知地点\';
       nHintX := SurfaceX(Left) + DParent.SurfaceX(DParent.Left) + LocalX(X - Left);
       nHintY := SurfaceY(Top) + DParent.SurfaceY(DParent.Top) + LocalY(Y - Top) + 30;
       DScreen.ShowHint(nHintX, nHintY, smsg, clWhite, False, Integer(Sender));

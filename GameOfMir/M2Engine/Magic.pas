@@ -1522,6 +1522,8 @@ begin
               if m_PEnvir.MoveToMovingObject(m_nCurrX, m_nCurrY, PlayObject, nTargetX, nTargetY, True) > 0 then begin
                 m_nCurrX := nTargetX;
                 m_nCurrY := nTargetY;
+                // 2023-12-21 新增：发送队友位置
+                TPlayObject(PlayObject).SendGroupMsg(PlayObject, SM_GROUPINFO1, Integer(PlayObject), 0, 0, 0, 'GROUP_POSITION');
                 GetStartType();
                 boMove := True;
                 boTrain := True;

@@ -748,8 +748,7 @@ begin
   end;
 end;
 
-function TEnvirnoment.GetMapCellInfo(nX, nY: Integer; var MapCellInfo:
-  pTMapCellinfo): Boolean;
+function TEnvirnoment.GetMapCellInfo(nX, nY: Integer; var MapCellInfo: pTMapCellinfo): Boolean;
 begin
   if (nX >= 0) and (nX < m_nWidth) and (nY >= 0) and (nY < m_nHeight) then begin
     MapCellInfo := @MapCellArray[nX * m_nHeight + nY];

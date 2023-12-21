@@ -13234,16 +13234,23 @@ begin
     begin
       if Msg.Ident = SM_GROUPINFO1 then
       begin
-        GroupMember.ClientGroup.HP := Msg.Param;
-        GroupMember.ClientGroup.MP := Msg.tag;
-        GroupMember.ClientGroup.MaxHP := Msg.Series;
-        GroupMember.ClientGroup.MaxMP := StrToIntDef(bodystr, GroupMember.ClientGroup.MaxMP);
-        if (GroupMember.isScreen <> nil) and (TActor(GroupMember.isScreen).m_Group = GroupMember) then
+        if (Msg.Series = 0) and (bodystr <> '') then begin
+          GroupMember.ClientGroup.cX := Msg.Param;
+          GroupMember.ClientGroup.cY := Msg.tag;
+          GroupMember.ClientGroup.mapName := bodystr;
+        end
+        else
         begin
-          TActor(GroupMember.isScreen).m_Abil.HP := Msg.Param;
-          TActor(GroupMember.isScreen).m_Abil.MaxHP := Msg.Series;
+          GroupMember.ClientGroup.HP := Msg.Param;
+          GroupMember.ClientGroup.MP := Msg.tag;
+          GroupMember.ClientGroup.MaxHP := Msg.Series;
+          GroupMember.ClientGroup.MaxMP := StrToIntDef(bodystr, GroupMember.ClientGroup.MaxMP);
+          if (GroupMember.isScreen <> nil) and (TActor(GroupMember.isScreen).m_Group = GroupMember) then
+          begin
+            TActor(GroupMember.isScreen).m_Abil.HP := Msg.Param;
+            TActor(GroupMember.isScreen).m_Abil.MaxHP := Msg.Series;
+          end;
         end;
-
       end
       else if Msg.Ident = SM_GROUPINFO2 then
       begin

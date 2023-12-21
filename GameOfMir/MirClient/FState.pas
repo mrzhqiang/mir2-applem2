@@ -1237,7 +1237,7 @@ const
 {$IFEND}
 var
   d: TDXTexture;
-  ax, ay, awidth: integer;
+  ax, ay: integer;
 {$IF Var_Interface = Var_Mir2}
   rc: TRect;
   r: Extended;
@@ -5583,6 +5583,7 @@ var
   mx, my, i: integer;
   rc, dc: TRect;
   actor: TActor;
+  GroupMember: pTGroupMember;
   cX, cY: integer;
   btColor: Byte;
   boMove: Boolean;
@@ -5721,8 +5722,23 @@ begin
         end;
         d := g_WMain99Images.Images[btColor];
         if d <> nil then
-          dsurface.Draw(mx - d.Width div 2, my - d.Height div 2,
-            d.ClientRect, d, True);
+          dsurface.Draw(mx - d.Width div 2, my - d.Height div 2, d.ClientRect, d, True);
+      end;
+
+      // 显示队友在全景地图上的位置
+    if g_GroupMembers.Count > 0 then
+      for I := 0 to g_GroupMembers.Count - 1 do begin
+        GroupMember := g_GroupMembers.Items[I];
+        // 队友不是自己，且在同一地图上，才显示在全景地图中
+        if (GroupMember.ClientGroup.UserID <> g_MySelf.m_nRecogId) and (GroupMember.ClientGroup.mapName = g_sMapTitle) then
+        begin
+          mx := dc.Left + Trunc((GroupMember.ClientGroup.cX * 48) * (nWidth / rc.Right)) div 32;
+          my := dc.Top + Trunc(GroupMember.ClientGroup.cY * (nHeight / rc.Bottom));
+          g_DXCanvas.TextOut(mx + 5, my - 8, $32F4, GroupMember.ClientGroup.UserName);
+          d := g_WMain99Images.Images[179];
+          if d <> nil then
+            dsurface.Draw(mx - d.Width div 2, my - d.Height div 2, d.ClientRect, d, True);
+        end;
       end;
 
     if not m_boViewBlink then begin
@@ -6959,8 +6975,6 @@ begin
           if d <> nil then
           begin
             dsurface.Draw(mx - d.Width div 2, my - d.Height div 2, d.ClientRect, d, True);
-            // NPC 显示名称有时候过于重叠，影响观感，所以注释了这行代码
-//            g_DXCanvas.TextOut(mx - g_DXCanvas.TextWidth(actor.m_UserName) div 2, my - d.Height - g_DXCanvas.TextHeight(actor.m_UserName), $8CEFF7, actor.m_UserName);
           end;
         end;
 
@@ -7511,8 +7525,6 @@ begin
 end;
 
 procedure TFrmDlg.DMyStateClick(Sender: TObject; X, Y: Integer);
-var
-  ini: TIniFile;
 begin
 
   if Sender = DOption then begin
@@ -15800,7 +15812,7 @@ begin
     DGrpAddMem.Visible := boGroup;
     DGrpDelMem.Visible := boGroup;
     DGroupExit.Visible := True;
-{$IF Var_Interface =  Var_Default}
+//{$IF Var_Interface =  Var_Default}
     FrmDlg2.DWndGroup.Visible := True;
     FrmDlg2.DWndGroupMember.Visible := True;
     FrmDlg2.DGroupMember1.Visible := g_GroupMembers.Count > 1;
@@ -15810,7 +15822,7 @@ begin
     FrmDlg2.DGroupMember5.Visible := g_GroupMembers.Count > 5;
     FrmDlg2.DGroupMember6.Visible := g_GroupMembers.Count > 6;
     FrmDlg2.DGroupMember7.Visible := g_GroupMembers.Count > 7;
-{$IFEND}
+//{$IFEND}
   end;
 end;
 

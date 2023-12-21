@@ -506,7 +506,7 @@ $80000000  }
   SM_ALIVE = 5022;//复活??复活戒指
   SM_MOVEFAIL = 5023;//移动失败,走动或跑动
   SM_HIDE = 5024;//隐身?
-  SM_DISAPPEAR = 5025;//地上物品消失
+  SM_DISAPPEAR = 5025;//地上物品消失、包括人物消失
   SM_STRUCK = 5026; //受攻击
   SM_DEATH = 5027;//正常死亡
   SM_SKELETON = 5028;//尸体
@@ -1771,12 +1771,12 @@ type
   TClientGroup = packed record
     UserName: string[ActorNameLen];
     UserID: Integer;
-
     WuXin: Byte;
-    //WuXinLevel: byte;
     Level: Word;
     HP, MP, MaxHP, MaxMP: Word;
     btJob, btSex: Byte;
+    mapName: string[16];
+    cX,cY: Word;
   end;
 
   pTClientEMailHeader = ^TClientEMailHeader;

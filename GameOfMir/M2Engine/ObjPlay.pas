@@ -3746,6 +3746,8 @@ begin
     end;
     if m_boChangeMap or ((m_nCurrX = nX) and (m_nCurrY = nY)) then
       Result := True;
+    // 2023-12-21 新增：发送队友位置
+    TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
     Dec(m_nHealthTick, 60);
     Dec(m_nSpellTick, 10);
     m_nSpellTick := _MAX(0, m_nSpellTick);
@@ -12720,6 +12722,10 @@ begin
   if ClientRunXY(ProcessMsg.wIdent, ProcessMsg.nParam1 {x},
     ProcessMsg.nParam2 {y}, ProcessMsg.boLateDelivery, dwDelayTime) then begin
     m_dwActionTick := GetTickCount;
+    if (TBaseObject(ProcessMsg.BaseObject).m_btRaceServer = RC_PLAYOBJECT) and (TBaseObject(ProcessMsg.BaseObject).m_GroupOwner <> nil) then begin
+      // 2023-12-21 新增：发送队友位置
+      TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
+    end;
     SendActionGood();
     //Inc(n5F8);
   end
@@ -12937,6 +12943,10 @@ begin //如果正在发送延时消息,则过滤一切客户端来源消息
   if ClientWalkXY(ProcessMsg.wIdent, ProcessMsg.nParam1 {x},
     ProcessMsg.nParam2 {y}, ProcessMsg.boLateDelivery, dwDelayTime) then begin
     m_dwActionTick := GetTickCount;
+    if (TBaseObject(ProcessMsg.BaseObject).m_btRaceServer = RC_PLAYOBJECT) and (TBaseObject(ProcessMsg.BaseObject).m_GroupOwner <> nil) then begin
+      // 2023-12-21 新增：发送队友位置
+      TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
+    end;
     SendActionGood();
     //Inc(n5F8);
   end
@@ -13490,8 +13500,9 @@ begin
   end;
 end;
 
-procedure TPlayObject.SendRefGroupMsg(BaseObject: TPlayObject; wIdent: Word;
-  nRecog: Integer; nParam, nTag, nSeries: Word; sMsg: string);
+  // 不在同一地图，或者在同一地图但处于视线之外时，发送组队消息
+procedure TPlayObject.SendRefGroupMsg(BaseObject: TPlayObject;
+  wIdent: Word; nRecog: Integer; nParam, nTag, nSeries: Word; sMsg: string);
 var
   i: Integer;
   PlayObject: TPlayObject;
@@ -13503,21 +13514,17 @@ begin
         ((BaseObject.m_PEnvir <> m_PEnvir) or
         (Abs(BaseObject.m_nCurrX - PlayObject.m_nCurrX) > g_Config.nSendRefMsgRange) or
         (Abs(BaseObject.m_nCurrY - PlayObject.m_nCurrY) > g_Config.nSendRefMsgRange)) then begin
-        if wident = SM_GROUPINFO2 then begin
-          PlayObject.SendDefMsg(BaseObject, wIdent,
-            Integer(BaseObject),
-            BaseObject.m_Abil.Level,
-            0,
-            BaseObject.m_WAbil.MaxMP, '');
-        end
+        if wident = SM_GROUPINFO2 then
+          PlayObject.SendDefMsg(BaseObject, wIdent, Integer(BaseObject), BaseObject.m_Abil.Level, 0, BaseObject.m_WAbil.MaxMP, '')
         else
           PlayObject.SendDefMsg(BaseObject, wIdent, nRecog, nParam, nTag, nSeries, sMsg);
       end;
     end;
 end;
 
-procedure TPlayObject.SendGroupMsg(BaseObject: TPlayObject; wIdent: Word;
-  nRecog: Integer; nParam, nTag, nSeries: Word; sMsg: string);
+  // 在任意位置时，发生组队消息
+procedure TPlayObject.SendGroupMsg(BaseObject: TPlayObject;
+  wIdent: Word; nRecog: Integer; nParam, nTag, nSeries: Word; sMsg: string);
 var
   i: Integer;
   PlayObject: TPlayObject;
@@ -13526,14 +13533,10 @@ begin
     for i := 0 to m_GroupOwner.m_GroupMembers.Count - 1 do begin
       PlayObject := TPlayObject(m_GroupOwner.m_GroupMembers.Objects[i]);
       if PlayObject <> BaseObject then begin
-        if wident = SM_GROUPINFO2 then begin
-          PlayObject.SendDefMsg(BaseObject,
-            wIdent,
-            Integer(BaseObject),
-            BaseObject.m_Abil.Level,
-            0,
-            BaseObject.m_WAbil.MaxMP, '');
-        end
+        if wident = SM_GROUPINFO2 then
+          PlayObject.SendDefMsg(BaseObject, wIdent, Integer(BaseObject), BaseObject.m_Abil.Level, 0, BaseObject.m_WAbil.MaxMP, '')
+        else if {(BaseObject.m_PEnvir = m_PEnvir) and }(sMsg = 'GROUP_POSITION') then
+          PlayObject.SendDefMsg(BaseObject, wIdent, nRecog, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 0, BaseObject.m_PEnvir.sMapDesc)
         else
           PlayObject.SendDefMsg(BaseObject, wIdent, nRecog, nParam, nTag, nSeries, sMsg);
       end;
@@ -13550,8 +13553,7 @@ begin
     for i := 0 to m_GroupOwner.m_GroupMembers.Count - 1 do begin
       PlayObject := TPlayObject(m_GroupOwner.m_GroupMembers.Objects[i]);
       if PlayObject <> BaseObject then begin
-        PlayObject.SendDefSocket(BaseObject, wIdent, nRecog, nParam, nTag,
-          nSeries, sMsg);
+        PlayObject.SendDefSocket(BaseObject, wIdent, nRecog, nParam, nTag, nSeries, sMsg);
       end;
     end;
 end;
@@ -13578,6 +13580,9 @@ begin
       ClientGroup.MaxMP := PlayObject.m_WAbil.MaxMP;
       ClientGroup.btJob := PlayObject.m_btJob;
       ClientGroup.btSex := PlayObject.m_btGender;
+      ClientGroup.mapName := PlayObject.m_sMapName;
+      ClientGroup.cX := PlayObject.m_nCurrX;
+      ClientGroup.cY := PlayObject.m_nCurrY;
       //ClientGroup.NameColor := GetCharColor(PlayObject);
       sSENDMSG := sSENDMSG + EncodeBuffer(@ClientGroup, SizeOf(ClientGroup)) + '/';
     end;
@@ -13743,6 +13748,9 @@ begin
           m_nCurrY := nY;
           GetStartType();
           SendRefMsg(RM_RUSH, nDir, m_nCurrX, m_nCurrY, 0, '');
+          // TODO 可能需要发队友位置
+           // 2023-12-21 新增：发送队友位置
+//          TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
           bo35 := False;
           Result := True;
         end;
@@ -13759,6 +13767,9 @@ begin
         m_nCurrY := nY;
         GetStartType();
         SendRefMsg(RM_RUSH, nDir, m_nCurrX, m_nCurrY, 0, '');
+        // TODO 可能需要发队友位置
+        // 2023-12-21 新增：发送队友位置
+//          TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
         Dec(n28);
       end
       else begin
@@ -15018,6 +15029,9 @@ begin
   ClientGroup.MaxMP := m_WAbil.MaxMP;
   ClientGroup.btJob := m_btJob;
   ClientGroup.btSex := m_btGender;
+  ClientGroup.mapName := m_sMapName;
+  ClientGroup.cX := m_nCurrX;
+  ClientGroup.cY := m_nCurrY;
   SendGroupSocket(Self, SM_GROUPADDMEM_OK, Integer(Self), 0, 0, 0, EncodeBuffer(@ClientGroup, SizeOf(ClientGroup)));
   {SendGroupText(m_sCharName + ' 加入小组.');
   if PlayObject.m_GroupClass then
