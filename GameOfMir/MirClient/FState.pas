@@ -1268,22 +1268,22 @@ begin
     // 底部物品栏 1、2、3、4、5、6 格子编号
     d := g_WMain99Images.Images[1822];
     if d <> nil then
-        dsurface.Draw(g_FScreenXOrigin - 120, ay + 80, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin - 128, ay + 58, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1823];
     if d <> nil then
-        dsurface.Draw(g_FScreenXOrigin - 76, ay + 80, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin - 84, ay + 58, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1824];
     if d <> nil then
-        dsurface.Draw(g_FScreenXOrigin - 32, ay + 80, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin - 40, ay + 58, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1825];
     if d <> nil then
-        dsurface.Draw(g_FScreenXOrigin + 12, ay + 80, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin + 4, ay + 58, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1826];
     if d <> nil then
-        dsurface.Draw(g_FScreenXOrigin + 56, ay + 80, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin + 48, ay + 58, d.ClientRect, d, True);
     d := g_WMain99Images.Images[1827];
     if d <> nil then
-        dsurface.Draw(g_FScreenXOrigin + 100, ay + 80, d.ClientRect, d, True);
+        dsurface.Draw(g_FScreenXOrigin + 92, ay + 58, d.ClientRect, d, True);
     // 服务器时间
     d := nil;
     case HourOf(g_ServerDateTime) of
@@ -5576,6 +5576,7 @@ begin
   end;
 end;
 
+  // 全景地图渲染
 procedure TFrmDlg.DMaxMap792DirectPaint(Sender: TObject;
   dsurface: TDXTexture);
 var
@@ -9876,7 +9877,7 @@ begin
     end
     else if Sender = DGrpCheckGroup then begin
       ShowMsg := '开启后任何人想邀请你组队，都必需先经过你的同意\';
-      ShowMsg := ShowMsg + '邀请组队确认提示将出现在<小地图下方/FCOLOR=$FFFF>！';
+      ShowMsg := ShowMsg + '邀请组队确认提示将出现在<头顶上方/FCOLOR=$FFFF>！';
     end
     else if Sender = DCBGroupItemDef then begin
       ShowMsg := '以常规方式分配队友捡取的物品\';
@@ -12765,35 +12766,37 @@ begin
 {$IFEND}
 
   DBTCheck1.SetImgIndex(g_WMain99Images, 378);
+  // Left 在 RefCheckButtonXY 中会自动计算，不需要在这里修改
   DBTCheck1.Left := 380;
-  DBTCheck1.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  // Top 默认继承 DBottom.Top 的位置，需要抹平之后，再计算显示在头顶的位置
+  DBTCheck1.Top := - DBottom.Top + g_FScreenYOrigin - 180;
   DBTCheck2.SetImgIndex(g_WMain99Images, 379);
   DBTCheck2.Left := 380;
-  DBTCheck2.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck2.Top := DBTCheck1.Top;
   DBTCheck3.SetImgIndex(g_WMain99Images, 381);
   DBTCheck3.Left := 380;
-  DBTCheck3.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck3.Top := DBTCheck1.Top;
   DBTCheck4.SetImgIndex(g_WMain99Images, 382);
   DBTCheck4.Left := 380;
-  DBTCheck4.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck4.Top := DBTCheck1.Top;
   DBTCheck5.SetImgIndex(g_WMain99Images, 384);
   DBTCheck5.Left := 380;
-  DBTCheck5.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck5.Top := DBTCheck1.Top;
   DBTCheck6.SetImgIndex(g_WMain99Images, 385);
   DBTCheck6.Left := 380;
-  DBTCheck6.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck6.Top := DBTCheck1.Top;
   DBTCheck7.SetImgIndex(g_WMain99Images, 387);
   DBTCheck7.Left := 380;
-  DBTCheck7.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck7.Top := DBTCheck1.Top;
   DBTCheck8.SetImgIndex(g_WMain99Images, 388);
   DBTCheck8.Left := 380;
-  DBTCheck8.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck8.Top := DBTCheck1.Top;
   DBTCheck9.SetImgIndex(g_WMain99Images, 390);
   DBTCheck9.Left := 380;
-  DBTCheck9.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck9.Top := DBTCheck1.Top;
   DBTCheck10.SetImgIndex(g_WMain99Images, 391);
   DBTCheck10.Left := 380;
-  DBTCheck10.Top := -(DBottom.Top - 162){$IF Var_Interface = Var_Mir2} - 61{$IFEND};
+  DBTCheck10.Top := DBTCheck1.Top;
 
   dwndWhisperName.Left := 15;
   dwndWhisperName.Top := 391;
@@ -15418,16 +15421,16 @@ begin
   i := g_QuestMsgList.Count * 32;
   if g_QuestMsgList.Count > 0 then
     Inc(i, 2 * (g_QuestMsgList.Count - 1));
-  DBTCheck1.Left := g_FScreenXOrigin - i div 2 - DBottom.Left - 9;
-  DBTCheck2.Left := DBTCheck1.Left + 32 + 2;
-  DBTCheck3.Left := DBTCheck2.Left + 32 + 2;
-  DBTCheck4.Left := DBTCheck3.Left + 32 + 2;
-  DBTCheck5.Left := DBTCheck4.Left + 32 + 2;
-  DBTCheck6.Left := DBTCheck5.Left + 32 + 2;
-  DBTCheck7.Left := DBTCheck6.Left + 32 + 2;
-  DBTCheck8.Left := DBTCheck7.Left + 32 + 2;
-  DBTCheck9.Left := DBTCheck8.Left + 32 + 2;
-  DBTCheck10.Left := DBTCheck9.Left + 32 + 2;
+  DBTCheck1.Left := g_FScreenXOrigin - i div 2 - DBottom.Left;
+  DBTCheck2.Left := DBTCheck1.Left + 32;
+  DBTCheck3.Left := DBTCheck2.Left + 32;
+  DBTCheck4.Left := DBTCheck3.Left + 32;
+  DBTCheck5.Left := DBTCheck4.Left + 32;
+  DBTCheck6.Left := DBTCheck5.Left + 32;
+  DBTCheck7.Left := DBTCheck6.Left + 32;
+  DBTCheck8.Left := DBTCheck7.Left + 32;
+  DBTCheck9.Left := DBTCheck8.Left + 32;
+  DBTCheck10.Left := DBTCheck9.Left + 32;
 end;
 
 procedure TFrmDlg.ClearGoodsList;
