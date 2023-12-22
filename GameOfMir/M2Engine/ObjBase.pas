@@ -3240,6 +3240,8 @@ begin
         m_dwMapMoveTick := GetTickCount();
         m_boChangeMap := True;
         Result := True;
+        // 2023-12-21 新增：发送队友位置
+        TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
         GetStartType();
         if m_btRaceServer = RC_PLAYOBJECT then
           with Self as TPlayObject do begin
@@ -8201,6 +8203,8 @@ begin
 {$IFEND}
       m_dwMapMoveTick := GetTickCount();
       if m_btRaceServer = RC_PLAYOBJECT then begin
+        // 2023-12-21 新增：发送队友位置
+        TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
         with TPlayObject(Self) do begin
           GetStartType(); //刷新人物当前所在位置的状态
 
