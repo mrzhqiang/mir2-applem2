@@ -3422,7 +3422,7 @@ var
     nBuildGuildPrice: 1000000;
     nGuildWarPrice: 30000;
     nMakeDurgPrice: 100;
-    nHumanMaxGold: 10000000;
+    nHumanMaxGold: 2000000000;
     nHumanTryModeMaxGold: 100000;
     nTryModeLevel: 7;
     boTryModeUseStorage: False;

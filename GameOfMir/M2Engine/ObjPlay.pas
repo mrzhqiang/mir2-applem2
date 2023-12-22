@@ -4474,8 +4474,7 @@ procedure TPlayObject.ClientPickUpItem(ProcessMsg: pTProcessMessage; var boResul
                 nAddCount := nCount;
               if PlayList[i].IncGold(nAddCount) then begin
                 if g_boGameLogGold then //004C5E8C
-                  AddGameLog(PlayList[i], LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayList[i].m_nGold, '0',
-                    '+', IntToStr(nAddCount), '捡取', nil);
+                  AddGameLog(PlayList[i], LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayList[i].m_nGold, '0', '+', IntToStr(nAddCount), '捡取', nil);
                 PlayList[i].GoldChanged;
                 Result := True;
               end
@@ -4490,8 +4489,7 @@ procedure TPlayObject.ClientPickUpItem(ProcessMsg: pTProcessMessage; var boResul
 
           if PlayObject.IncGold(nAddCount) then begin
             if g_boGameLogGold then //004C5E8C
-              AddGameLog(PlayObject, LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayObject.m_nGold, '0',
-                '+', IntToStr(nAddCount), '捡取', nil);
+              AddGameLog(PlayObject, LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayObject.m_nGold, '0', '+', IntToStr(nAddCount), '捡取', nil);
             PlayObject.GoldChanged;
             Result := True;
           end;
@@ -4506,8 +4504,7 @@ procedure TPlayObject.ClientPickUpItem(ProcessMsg: pTProcessMessage; var boResul
           if PlayObject.IncGold(MapItem.Count) then begin
             SendRefMsg(RM_ITEMHIDE, 1, Integer(MapItem), m_nCurrX, m_nCurrY, '');
             if g_boGameLogGold then //004C5E8C
-              AddGameLog(PlayObject, LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayObject.m_nGold, '0',
-                '+', IntToStr(MapItem.Count), '捡取', nil);
+              AddGameLog(PlayObject, LOG_GOLDCHANGED, sSTRING_GOLDNAME, 0, PlayObject.m_nGold, '0', '+', IntToStr(MapItem.Count), '捡取', nil);
             PlayObject.GoldChanged;
             DisPose(MapItem);
             ItemName := sSTRING_GOLDNAME;
@@ -6915,8 +6912,8 @@ begin
     if m_MagicArr[SKILL_SHOWHP] <> nil then
       sub_4C713C(m_MagicArr[SKILL_SHOWHP]);
 
-    if (m_nGold > g_Config.nHumanMaxGold * 2) and (g_Config.nHumanMaxGold > 0) then
-      m_nGold := g_Config.nHumanMaxGold * 2;
+    if (m_nGold > g_Config.nHumanMaxGold) and (g_Config.nHumanMaxGold > 0) then
+      m_nGold := g_Config.nHumanMaxGold;
 
     case m_btAttatckMode of
       HAM_ALL: SysMsg(sAttackModeOfAll, c_Green, t_Hint); //[攻击模式: 全体攻击]
@@ -7137,8 +7134,8 @@ begin
     if m_MagicArr[SKILL_SHOWHP] <> nil then
       sub_4C713C(m_MagicArr[SKILL_SHOWHP]);
 
-    if (m_nGold > g_Config.nHumanMaxGold * 2) and (g_Config.nHumanMaxGold > 0) then
-      m_nGold := g_Config.nHumanMaxGold * 2;
+    if (m_nGold > g_Config.nHumanMaxGold) and (g_Config.nHumanMaxGold > 0) then
+      m_nGold := g_Config.nHumanMaxGold;
 
     case m_btAttatckMode of
       HAM_ALL: SysMsg(sAttackModeOfAll, c_Green, t_Hint); //[攻击模式: 全体攻击]
