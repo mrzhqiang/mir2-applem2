@@ -13577,7 +13577,7 @@ begin
       ClientGroup.MaxMP := PlayObject.m_WAbil.MaxMP;
       ClientGroup.btJob := PlayObject.m_btJob;
       ClientGroup.btSex := PlayObject.m_btGender;
-      ClientGroup.mapName := PlayObject.m_sMapName;
+      ClientGroup.mapName := PlayObject.m_PEnvir.sMapDesc;
       ClientGroup.cX := PlayObject.m_nCurrX;
       ClientGroup.cY := PlayObject.m_nCurrY;
       //ClientGroup.NameColor := GetCharColor(PlayObject);
@@ -15026,7 +15026,7 @@ begin
   ClientGroup.MaxMP := m_WAbil.MaxMP;
   ClientGroup.btJob := m_btJob;
   ClientGroup.btSex := m_btGender;
-  ClientGroup.mapName := m_sMapName;
+  ClientGroup.mapName := m_PEnvir.sMapDesc;
   ClientGroup.cX := m_nCurrX;
   ClientGroup.cY := m_nCurrY;
   SendGroupSocket(Self, SM_GROUPADDMEM_OK, Integer(Self), 0, 0, 0, EncodeBuffer(@ClientGroup, SizeOf(ClientGroup)));
