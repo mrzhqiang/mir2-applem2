@@ -3241,7 +3241,7 @@ begin
         m_boChangeMap := True;
         Result := True;
         // 2023-12-21 新增：发送队友位置
-        TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
+        TPlayObject(Self).SendGroupMsg(TPlayObject(Self), SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
         GetStartType();
         if m_btRaceServer = RC_PLAYOBJECT then
           with Self as TPlayObject do begin
@@ -7327,17 +7327,6 @@ begin
       m_WAbil.MP := _MIN(m_WAbil.MaxMP, m_WAbil.MP);
     end;
   end;
-  //限制最高属性
-  {m_WAbil.AC := MakeLong(_MIN(MAXHUMPOWER, LoWord(m_WAbil.AC)),
-    _MIN(MAXHUMPOWER, HiWord(m_WAbil.AC)));
-  m_WAbil.MAC := MakeLong(_MIN(MAXHUMPOWER, LoWord(m_WAbil.MAC)),
-    _MIN(MAXHUMPOWER, HiWord(m_WAbil.MAC)));
-  m_WAbil.DC := MakeLong(_MIN(MAXHUMPOWER, LoWord(m_WAbil.DC)),
-    _MIN(MAXHUMPOWER, HiWord(m_WAbil.DC)));
-  m_WAbil.MC := MakeLong(_MIN(MAXHUMPOWER, LoWord(m_WAbil.MC)),
-    _MIN(MAXHUMPOWER, HiWord(m_WAbil.MC)));
-  m_WAbil.SC := MakeLong(_MIN(MAXHUMPOWER, LoWord(m_WAbil.SC)),
-    _MIN(MAXHUMPOWER, HiWord(m_WAbil.SC))); }
 end;
 
 procedure TBaseObject.BreakOpenHealth();
@@ -8204,7 +8193,7 @@ begin
       m_dwMapMoveTick := GetTickCount();
       if m_btRaceServer = RC_PLAYOBJECT then begin
         // 2023-12-21 新增：发送队友位置
-        TPlayObject(Self).SendGroupMsg(Self, SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
+        TPlayObject(Self).SendGroupMsg(TPlayObject(Self), SM_GROUPINFO1, Integer(Self), 0, 0, 0, 'GROUP_POSITION');
         with TPlayObject(Self) do begin
           GetStartType(); //刷新人物当前所在位置的状态
 

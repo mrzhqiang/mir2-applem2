@@ -1580,27 +1580,8 @@ begin
 end;
 
 procedure TFrmDB.QMangeNPC();
-{var
-  sScriptFile: string;
-  sScritpDir: string;
-  SaveList: TStringList;
-  sShowFile: string;   }
 begin
   try
-    {sScriptFile := g_Config.sEnvirDir2 + 'MapQuest_def\' + 'QManage.txt';
-    sShowFile := ReplaceChar(sScriptFile, '\', '/');
-    sScritpDir := g_Config.sEnvirDir2 + 'MapQuest_def\';
-    if not DirectoryExists(sScritpDir) then
-      mkdir(PChar(sScritpDir));
-
-    if not MyFileExists(sScriptFile) then begin
-      SaveList := TStringList.Create;
-      SaveList.Add(';此脚为登录脚本，人物每次登录时都会执行此脚本，所有人物初始设置都可以放在此脚本中。');
-      SaveList.Add(';修改脚本内容，可用@ReloadManage命令重新加载该脚本，不须重启程序。');
-      SaveList.SaveToFile(sScriptFile);
-      SaveList.Free;
-    end;
-    if MyFileExists(sScriptFile) then begin }
     g_ManageNPC := TMerchant.Create;
     g_ManageNPC.m_sMapName := '0';
     g_ManageNPC.m_nCurrX := 0;
@@ -1614,10 +1595,6 @@ begin
     g_ManageNPC.m_boIsHide := True;
     g_ManageNPC.m_boIsQuest := False;
     UserEngine.QuestNPCList.Add(g_ManageNPC);
-    {end
-    else begin
-      g_ManageNPC := nil;
-    end;  }
   except
     g_ManageNPC := nil;
   end;
@@ -3248,11 +3225,14 @@ var
     end;
   end;
 
+  // 初始化变量
   procedure InitializeVariable(sLabel: string; var sMsg: string);
   var
     sLabel2, s14: string;
   begin
+    // 忽略大小写，则统一转为大写字母
     sLabel2 := UpperCase(sLabel);
+    // 服务器名称
     if sLabel2 = sVAR_SERVERNAME then begin
       sMsg := AnsiReplaceText(sMsg, '<' + sLabel + '>', tVAR_SERVERNAME);
     end
@@ -4036,6 +4016,12 @@ var
                 if nIndex in [Low(FStdModeFunc)..High(FStdModeFunc)] then
                   FStdModeFunc[nIndex] := nIdx;
               end
+              else if CompareLStr(sLabel, SICONBUTTON, Length(SICONBUTTON)) then begin
+                sIdx := Copy(sLabel, Length(SICONBUTTON) + 1, Length(SICONBUTTON));
+                nIndex := StrToIntDef(sIdx, -1);
+                if nIndex in [Low(FIconButton)..High(FIconButton)] then
+                  FIconButton[nIndex] := nIdx;
+              end
               else if CompareLStr(sLabel, SPLAYLEVELUPEX, Length(SPLAYLEVELUPEX)) then begin
                 sIdx := Copy(sLabel, Length(SPLAYLEVELUPEX) + 1, Length(SPLAYLEVELUPEX));
                 nIndex := StrToIntDef(sIdx, -1);
@@ -4084,6 +4070,7 @@ var
     end;
   end;
 
+  // 初始化过程：找到 <> 中间的内容，如果以 $ 开头，则转为初始化变量
   function InitializeProcedure(sMsg: string): string;
   var
     nC: Integer;
@@ -4211,6 +4198,8 @@ var
         with NPC as TFunMerchant do begin
           for i := Low(FStdModeFunc) to High(FStdModeFunc) do
             FStdModeFunc[i] := -1;
+          for i := Low(FIconButton) to High(FIconButton) do
+            FIconButton[i] := -1;
           for i := Low(FPlayLevelUp) to High(FPlayLevelUp) do
             FPlayLevelUp[i] := -1;
           for i := Low(FUserCmd) to High(FUserCmd) do
@@ -4275,6 +4264,7 @@ var
       DeCodeStringList(LoadStrList);
       sLabel := '[' + sLabel + ']';
       bo1D := False;
+      // 遍历要调用的文件内容，找到对应的 [sLabel] 文本，读取其中的 {} 包裹的内容，插入到 List 中
       for i := 0 to LoadStrList.Count - 1 do begin
         s18 := Trim(LoadStrList.Strings[i]);
         if s18 <> '' then begin
@@ -4361,9 +4351,12 @@ var
         MainOutMessage('#CALL调用死循环 ' + sLoadName);
         break;
       end;
+      // 按行获取内容，去掉前后空格
       s14 := Trim(LoadList.Strings[i]);
+      // 如果发现有调用其他脚本的指令，则加载其他脚本内容到 LoadList 中
       if (s14 <> '') and (s14[1] = '#') and (CompareLStr(s14, '#CALL', Length('#CALL'))) then begin
         Inc(Ing);
+        // s1C == [] 中间的内容，Result 则是 ] 后面的内容
         s14 := ArrestStringEx(s14, '[', ']', s1C);
         s20 := Trim(s1C);
         s18 := Trim(s14);
@@ -4386,11 +4379,14 @@ var
         else
           CallNameList.AddObject(s20 + '*' + s18, nil);
         if g_Config.boCanNewCall then begin
+          // 将指定文件的脚本内容加载到 LoadList 中，不包含 {}
+          // 注意，这里会将内容插入到 I + 1 的位置，然后重新读取 I + 1 的内容，检测是否有循环 #CALL
           if not LoadCallScript(s34, s18, I + 1, LoadList) then begin
             MainOutMessage('脚本错误, load fail: ' + s20 + ' ' + s18);
           end;
         end
         else begin
+          // 旧的 call 方式是使用 goto 跳转到指定的位置；新方式则是把指定内容追加到 call 的位置
           if LoadOldCallScript(s34, s18, LoadList) then begin
             LoadList.Strings[i] := '#ACT';
             LoadList.Insert(i + 1, 'goto ' + s18);
@@ -4403,7 +4399,7 @@ var
     end;
     CallNameList.Free;
   end;
-
+  // 目前没看到 Defines 目录，可能这里用得少，也可能完全没用
   function LoadDefineInfo(var LoadList: TStringList; var List: TList): string;
   var
     i: Integer;
@@ -4445,18 +4441,7 @@ var
       end;
     end;
   end;
-  {function MakeNewScript(): pTScript;
-  var
-    ScriptInfo: pTScript;
-  begin
-    New(ScriptInfo);
-    //ScriptInfo.boQuest := False;
-    //SafeFillChar(ScriptInfo.QuestInfo, SizeOf(TQuestInfo) * 10, #0);
-    nQuestIdx := 0;
-    ScriptInfo.RecordList := TList.Create;
-    NPC.m_ScriptList.Add(ScriptInfo);
-    Result := ScriptInfo;
-  end;   }
+
   function QuestCondition(sText: string; var QuestConditionInfo: pTQuestConditionInfo): Boolean; //00489DDC
   var
     sCmd, sParam1, sParam2, sParam3, sParam4, sParam5, sParam6, sParam7, sParam8, sParam9, sTemp: string;
@@ -4467,6 +4452,7 @@ var
   begin
     Result := False;
     boResult := True;
+    // 解析命令和参数
     sText := GetValidStrCap(sText, sCmd, [' ', #9]);
     if CompareText(sCmd, 'NOT') = 0 then begin
       boResult := False;
@@ -4482,6 +4468,7 @@ var
     sText := GetValidStrCap(sText, sParam8, [' ', #9]);
     sText := GetValidStrCap(sText, sParam9, [' ', #9]);
 
+    // 如果存在 . 调用，则初始化过程（变量）
     sTemp := GetValidStrCap(sCmd, sCmd, ['.']);
     while (sTemp <> '') do begin
       if QuestConditionInfo.TCmdList = nil then
@@ -4492,22 +4479,13 @@ var
 
     sCmd := UpperCase(sCmd);
     nCMDCode := 0;
+    // 检测相关的命令
     if sCmd = sCHECK then begin
       nCMDCode := nCHECK;
-      {ArrestStringEx(sParam1, '[', ']', sParam1);
-      if not IsStringNumber(sParam1) then
-        nCMDCode := 0;
-      if not IsStringNumber(sParam2) then
-        nCMDCode := 0;}
       goto L001;
     end;
     if sCmd = sSC_CHECKMISSION then begin
       nCMDCode := nSC_CHECKMISSION;
-      {ArrestStringEx(sParam1, '[', ']', sParam1);
-      if not IsStringNumber(sParam1) then
-        nCMDCode := 0;
-      if not IsStringNumber(sParam2) then
-        nCMDCode := 0;}
       goto L001;
     end;
     if sCmd = sCHECKPKPOINT then begin
@@ -4542,7 +4520,6 @@ var
       nCMDCode := nCHECKBAGGAGE;
       goto L001;
     end;
-
     if sCmd = sCHECKNAMELIST then begin
       nCMDCode := nCHECKNAMELIST;
       goto L001;
@@ -4551,7 +4528,6 @@ var
       nCMDCode := nSC_HASGUILD;
       goto L001;
     end;
-
     if sCmd = sSC_ISGUILDMASTER then begin
       nCMDCode := nSC_ISGUILDMASTER;
       goto L001;
@@ -4724,10 +4700,6 @@ var
       nCMDCode := nSC_ISDEFENSEGUILD;
       goto L001;
     end;
-    {if sCmd = sSC_ISATTACKALLYGUILD then begin
-      nCMDCode := nSC_ISATTACKALLYGUILD;
-      goto L001;
-    end;   }
     if sCmd = sSC_ISDEFENSEALLYGUILD then begin
       nCMDCode := nSC_ISDEFENSEALLYGUILD;
       goto L001;
@@ -4944,7 +4916,6 @@ var
       nCMDCode := nSC_CHECKECTYPEMONCOUNT;
       goto L001;
     end;
-
     if sCmd = sSC_CHECKMAPQUEST then begin
       nCMDCode := nSC_CHECKMAPQUEST;
       ArrestStringEx(sParam2, '[', ']', sParam2);
@@ -5143,6 +5114,9 @@ var
     L001;
   begin
     Result := False;
+    // #9 水平制表符
+    // 根据空格或水平制表符，切割并找到对应的内容
+    // 如果要用 Java 重构的话，则只需要使用 split 进行切割，变成对应的数组，或者用 Java8 的流进行转换
     sText := GetValidStrCap(sText, sCmd, [' ', #9]);
     sText := GetValidStrCap(sText, sParam1, [' ', #9]);
     sText := GetValidStrCap(sText, sParam2, [' ', #9]);
@@ -6113,18 +6087,9 @@ begin //0048B684
       LoadList.Free;
       Exit;
     end;
-    //    i := 0;
-    //LoadListCall(LoadList);
     LoadScriptcall(sPatch + sScritpName + '.txt', LoadList);
-    {while (True) do begin
-      LoadScriptcall(LoadList);
-      Inc(i);
-      if i >= 10 then break;
-    end;    }
     ScriptNameList.Clear;
-
     DefineList := TList.Create;
-
     s54 := LoadDefineInfo(LoadList, DefineList);
     New(DefineInfo);
     DefineInfo.sName := '@HOME';
@@ -6136,10 +6101,11 @@ begin //0048B684
     for i := 0 to LoadList.Count - 1 do begin
       s34 := Trim(LoadList.Strings[i]);
       if (s34 <> '') then begin
+        // 表示命令的开始
         if (s34[1] = '[') then begin
           bo8D := False;
         end
-        else begin //0048B83F
+        else begin // 这里是命令内容
           if (s34[1] = '#') and
             (CompareLStr(s34, '#IF', Length('#IF')) or
             CompareLStr(s34, '#ACT', Length('#ACT')) or
@@ -6179,9 +6145,8 @@ begin //0048B684
     DefineList.Free;
     //释放常量定义内容
 
-    //Script := nil;
     SayingRecord := nil;
-    //    nQuestIdx := 0;
+    // 商人 NPC 清空状态
     if boFlag then begin
       with NPC as TMerchant do begin
         if m_NewGoodsList.Count > 0 then begin
@@ -6199,10 +6164,10 @@ begin //0048B684
         m_MakeNamesCode := '';
         m_NewGoodsList.Clear;
         m_MakeItemsList.Clear;
-        //m_ItemTypeList.Clear;
         RefSelf();
       end;
     end;
+    // 处理脚本内容
     for i := 0 to LoadList.Count - 1 do begin //0048B9FC
       s34 := Trim(LoadList.Strings[i]);
       if (s34 = '') or (s34[1] = ';') or (s34[1] = '/') then
@@ -6211,14 +6176,15 @@ begin //0048B684
       //全局常量处理
       sText := UserEngine.GetDefiniensConstText(s34);
       s34 := sText;
-      //UserEngine.m_DefiniensConst
       if (n6C = 0) and (boFlag) then begin
         //增加处理NPC可执行命令设置
+        // 就是脚本头预定义的内容，使用 () 包裹起来
         if s34[1] = '(' then begin
           ArrestStringEx(s34, '(', ')', s34);
           if s34 <> '' then begin
             while (s34 <> '') do begin
               s34 := GetValidStr3(s34, s30, [' ', ',', #9]);
+              // TODO 重构为 NPC TMerchant 的方法处理下面的逻辑
               if CompareText(s30, sBUY) = 0 then begin
                 with NPC as TMerchant do
                   m_boBuy := True;
@@ -6244,7 +6210,6 @@ begin //0048B684
                   m_boStorage := True;
                 Continue;
               end;
-
               if CompareText(s30, sREPAIR) = 0 then begin
                 with NPC as TMerchant do
                   m_boRepair := True;
@@ -6331,38 +6296,7 @@ begin //0048B684
         end
       end;
 
-      (* if s34[1] = '{' then begin
-         if CompareLStr(s34, '{Quest', Length('{Quest')) then begin
-           s38 := GetValidStr3(s34, s3C, [' ', '}', #9]);
-           GetValidStr3(s38, s3C, [' ', '}', #9]);
-           n70 := StrToIntDef(s3C, 0);
-           Script := MakeNewScript();
-           Script.nQuest := n70;
-           Inc(n70);
-         end; //0048BBA4
-         if CompareLStr(s34, '{~Quest', Length('{~Quest')) then
-           Continue;
-       end; //0048BBBE    *)
-
-      { if (n6C = 1) and (Script <> nil) and (s34[1] = '#') then begin
-         s38 := GetValidStr3(s34, s3C, ['=', ' ', #9]);
-         Script.boQuest := True;
-         if CompareLStr(s34, '#IF', Length('#IF')) then begin
-           ArrestStringEx(s34, '[', ']', s40);
-           //Script.QuestInfo[nQuestIdx].wFlag := StrToIntDef(s40, 0);
-           GetValidStr3(s38, s44, ['=', ' ', #9]);
-           n24 := StrToIntDef(s44, 0);
-           if n24 <> 0 then
-             n24 := 1;
-           //Script.QuestInfo[nQuestIdx].btValue := n24;
-         end;
-
-         if CompareLStr(s34, '#RAND', Length('#RAND')) then begin
-           //Script.QuestInfo[nQuestIdx].nRandRage := StrToIntDef(s44, 0);
-         end;
-         Continue;
-       end;     }
-
+      // 命令标签处理
       if s34[1] = '[' then begin
         n6C := 10;
         if CompareText(s34, '[goods]') = 0 then begin
@@ -6375,6 +6309,7 @@ begin //0048B684
           Continue;
         end;
         s34 := ArrestStringEx(s34, '[', ']', s74);
+        // 脚本列表为空，添加 @main 命令
         if NPC.m_ScriptList.Count <= 0 then begin
           New(SayingRecord);
           SayingRecord.ProcedureList := TList.Create;
@@ -6383,6 +6318,7 @@ begin //0048B684
           NPC.m_ScriptList.Add(SayingRecord);
           ScriptNameList.Add(SayingRecord.sLabel);
         end;
+        // 检测是否添加 @main 命令，如果没有且当前命令是 @main 则获取对应命令
         if (not boAddMain) and (CompareText(s74, '@main') = 0) then begin
           SayingRecord := NPC.m_ScriptList[0];
           boAddMain := True;
@@ -6390,8 +6326,8 @@ begin //0048B684
         end
         else begin
           boAdd := True;
+          // 拿到标签名称
           if ScriptNameList.IndexOf(FormatLabelStr(s74, boChange)) > -1 then begin
-            //MainOutMessage('脚本重复调用: ' + sScritpFileName + ' ' + s74);
             n6C := 0;
             Continue;
           end;
@@ -6400,19 +6336,24 @@ begin //0048B684
           SayingRecord.sLabel := s74;
         end;
         SayingRecord.boUserWindow := False;
+        // 处理标签后面的自定义对话框参数
         if (s34 <> '') and (s34[1] = '(') then
         begin
           s34 := ArrestStringEx(s34, '(', ')', s74);
           s74 := GetValidStrCap(s74, s48, [',', ' ', #9]);
+          // 编号
           SayingRecord.nResID := StrToIntDef(s48, -1);
           s74 := GetValidStrCap(s74, s48, [',', ' ', #9]);
+          // 窗口宽度
           SayingRecord.nWindowWidth := StrToIntDef(s48, -1);
           s74 := GetValidStrCap(s74, s48, [',', ' ', #9]);
+          // 窗口高度
           SayingRecord.nWindowHeight := StrToIntDef(s48, -1);
           if (SayingRecord.nResID >= 0) and (SayingRecord.nWindowWidth > 0) and (SayingRecord.nWindowHeight > 0) then
             SayingRecord.boUserWindow := True;
         end;
         s34 := GetValidStrCap(s34, s74, [' ', #9]);
+        // fixme 标识符，给力引擎好像把 TRUE 改成了 1
         if CompareText(s74, 'TRUE') = 0 then begin
           SayingRecord.boExtJmp := True;
         end
@@ -6471,6 +6412,7 @@ begin //0048B684
           New(QuestConditionInfo);
           SafeFillChar(QuestConditionInfo^, SizeOf(TQuestConditionInfo), #0);
           QuestConditionInfo.TCmdList := nil;
+          // 解析条件语句
           if QuestCondition(Trim(s34), QuestConditionInfo) then begin
             SayingProcedure.ConditionList.Add(QuestConditionInfo);
           end
@@ -6483,6 +6425,7 @@ begin //0048B684
           New(QuestActionInfo);
           SafeFillChar(QuestActionInfo^, SizeOf(TQuestActionInfo), #0);
           QuestActionInfo.TCmdList := nil;
+          // 解析肯定操作语句
           if QuestAction(Trim(s34), QuestActionInfo) then begin
             SayingProcedure.ActionList.Add(QuestActionInfo);
           end
@@ -6495,6 +6438,7 @@ begin //0048B684
           New(QuestActionInfo);
           SafeFillChar(QuestActionInfo^, SizeOf(TQuestActionInfo), #0);
           QuestActionInfo.TCmdList := nil;
+          // 解析否定操作语句
           if QuestAction(Trim(s34), QuestActionInfo) then begin
             SayingProcedure.ElseActionList.Add(QuestActionInfo);
           end
@@ -6506,6 +6450,7 @@ begin //0048B684
         if (n6C = 14) then
           SayingProcedure.sElseSayMsg := SayingProcedure.sElseSayMsg + sText;
       end;
+      // 制造物品
       if (n6C = 21) and boFlag then begin
         sName := Trim(s34);
         while True do begin
@@ -6531,6 +6476,7 @@ begin //0048B684
           end;
         end;
       end;
+      // 出售物品
       if (n6C = 20) and boFlag then begin
         s34 := GetValidStrCap(s34, s48, [' ', #9]);
         s34 := GetValidStrCap(s34, s4C, [' ', #9]);
@@ -6596,7 +6542,6 @@ begin //0048B684
             m_MakeNamesCode := EncodeBuffer(OutBuf, OutLen);
             FreeMem(OutBuf);
           end;
-
         end;
       end;
     end;
@@ -6609,7 +6554,6 @@ begin //0048B684
   GotoList.Free;
   DelayGotoList.Free;
   PlayDiceList.Free;
-  //Showmessage('OK');
 end;
 
 {

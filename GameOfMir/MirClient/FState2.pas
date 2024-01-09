@@ -146,6 +146,16 @@ type
     dbtnExitGame: TDButton;
     DShopGold: TDButton;
     DShopGrid2: TDGrid;
+    IconButtonLayout: TDWindow;
+    IconButtonAccordion: TDButton;
+    IconButtonList: TDWindow;
+    IconButton1: TDButton;
+    IconButton2: TDButton;
+    IconButton3: TDButton;
+    IconButton4: TDButton;
+    IconButton5: TDButton;
+    IconButton6: TDButton;
+    IconButton7: TDButton;
     procedure DLoginOkSound(Sender: TObject; Clicksound: TClickSound);
     procedure DWndHintInRealArea(Sender: TObject; X, Y: Integer;
       var IsRealArea: Boolean);
@@ -285,6 +295,10 @@ type
     procedure dBtWebCloseDirectPaint(Sender: TObject; dsurface: TDXTexture);
     procedure DUpLoadExitDirectPaint(Sender: TObject; dsurface: TDXTexture);
     procedure DUpLoadTopDirectPaint(Sender: TObject; dsurface: TDXTexture);
+    procedure IconButtonAccordionClicked(Sender: TObject; X, Y: Integer);
+    procedure IconButtonAccordionDirectPaint(Sender: TObject; dsurface: TDXTexture);
+    procedure IconButtonClicked(Sender: TObject; X, Y: Integer);
+    procedure IconButtonDirectPaint(Sender: TObject; dsurface: TDXTexture);
   private
     m_SelectMissionClick: pTMissionClick;
   public
@@ -383,7 +397,6 @@ begin
   EMailNewItem.Item.s.Name := '';
   EMailSelectTick := GetTickCount;
   //提示框
-
   DWndHint.Height := MISSIONHINTHEIGHT;
   DWndHint.Left := g_FScreenWidth + MISSIONHINTX;
   DWndHint.Width := MISSIONHINTWIDTH;
@@ -392,50 +405,119 @@ begin
   FriendMove := -1;
   EMailSelect := -1;
   EMailMove := -1;
+  // 图标按钮布局
+  IconButtonLayout.Left := 24;
+  IconButtonLayout.Top := 24;
+  d := g_WMain99Images.Images[160];
+  if d <> nil then begin
+    // 收起图标按钮
+    IconButtonAccordion.SetImgIndex(g_WMain99Images, 160);
+    IconButtonAccordion.Left := 0;
+    IconButtonAccordion.Top := 0;
+  end;
+  // 图标按钮列表
+  IconButtonList.Left := IconButtonAccordion.Left + IconButtonAccordion.Width + 8;
+  IconButtonList.Top := 0;
+  // 图标1
+  d := g_WUIAserverImages.Images[3];
+  if d <> nil then begin
+    IconButton1.SetImgIndex(g_WUIAserverImages, 3);
+    IconButton1.Left := 0;
+    IconButton1.Top := 0;
+    IconButton1.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  // 图标2
+  d := g_WUIAserverImages.Images[9];
+  if d <> nil then begin
+    IconButton2.SetImgIndex(g_WUIAserverImages, 9);
+    IconButton2.Left := IconButton1.Left + IconButton1.Width + 8;
+    IconButton2.Top := 0;
+    IconButton2.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  // 图标3
+  d := g_WUIAserverImages.Images[15];
+  if d <> nil then begin
+    IconButton3.SetImgIndex(g_WUIAserverImages, 15);
+    IconButton3.Left := IconButton2.Left + IconButton2.Width + 8;
+    IconButton3.Top := 0;
+    IconButton3.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  // 图标4
+  d := g_WUIAserverImages.Images[21];
+  if d <> nil then begin
+    IconButton4.SetImgIndex(g_WUIAserverImages, 21);
+    IconButton4.Left := IconButton3.Left + IconButton3.Width + 8;
+    IconButton4.Top := 0;
+    IconButton4.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  // 图标5
+  d := g_WUIAserverImages.Images[27];
+  if d <> nil then begin
+    IconButton5.SetImgIndex(g_WUIAserverImages, 27);
+    IconButton5.Left := IconButton4.Left + IconButton4.Width + 8;
+    IconButton5.Top := 0;
+    IconButton5.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  // 图标6
+  d := g_WUIAserverImages.Images[33];
+  if d <> nil then begin
+    IconButton6.SetImgIndex(g_WUIAserverImages, 33);
+    IconButton6.Left := IconButton5.Left + IconButton5.Width + 8;
+    IconButton6.Top := 0;
+    IconButton6.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  // 图标7
+  d := g_WUIAserverImages.Images[39];
+  if d <> nil then begin
+    IconButton7.SetImgIndex(g_WUIAserverImages, 39);
+    IconButton7.Left := IconButton6.Left + IconButton6.Width + 8;
+    IconButton7.Top := 0;
+    IconButton7.OnDirectPaint := IconButtonDirectPaint;
+  end;
+  IconButtonList.Width := IconButton7.Left + IconButton7.Width + 8;
+  IconButtonList.Height := 64;
   //队伍信息
   d := g_WMain99Images.Images[170];
   if d <> nil then begin
     DWndGroup.SetImgIndex(g_WMain99Images, 170);
     DWndGroup.Left := 0;
-    DWndGroup.Top := 70;
+    DWndGroup.Top := 100;
   end;
-
   DPopUpMemuGroup.SetImgIndex(g_WMain99Images, 276);
   DPopUpFriend.SetImgIndex(g_WMain99Images, 276);
-  //DPopUpSay.SetImgIndex(g_WMain99Images, 276);
-
+  // 收起队伍信息按钮
   DGroupClose.SetImgIndex(g_WMain99Images, 306);
   DGroupClose.Left := 60;
   DGroupClose.Top := 1;
-
+  // 队员1
   DGroupMember1.SetImgIndex(g_WMain99Images, 180);
   DGroupMember1.Left := 0;
   DGroupMember1.Top := 0;
-
+  // 队员2
   DGroupMember2.SetImgIndex(g_WMain99Images, 180);
   DGroupMember2.Left := 0;
   DGroupMember2.Top := 50;
-
+  // 队员3
   DGroupMember3.SetImgIndex(g_WMain99Images, 180);
   DGroupMember3.Left := 0;
   DGroupMember3.Top := 100;
-
+  // 队员4
   DGroupMember4.SetImgIndex(g_WMain99Images, 180);
   DGroupMember4.Left := 0;
   DGroupMember4.Top := 150;
-
+  // 队员5
   DGroupMember5.SetImgIndex(g_WMain99Images, 180);
   DGroupMember5.Left := 0;
   DGroupMember5.Top := 200;
-
+  // 队员6
   DGroupMember6.SetImgIndex(g_WMain99Images, 180);
   DGroupMember6.Left := 0;
   DGroupMember6.Top := 250;
-
+  // 队员7
   DGroupMember7.SetImgIndex(g_WMain99Images, 180);
   DGroupMember7.Left := 0;
   DGroupMember7.Top := 300;
-
+  // 队伍成员
   DWndGroupMember.SetImgIndex(g_WMain99Images, 170);
   DWndGroupMember.Left := 0;
   DWndGroupMember.Top := 22;
@@ -515,8 +597,6 @@ begin
   DButtonPayment.Left := 52;
   DButtonPayment.Top := 354;
   DButtonPayment.OnDirectPaint := DBotShopCloseDirectPaint;
-
-
 
   DButFront.SetImgIndex(g_WMain99Images, 204);
   DButFront.Left := 538;
@@ -646,7 +726,6 @@ begin
   DShopGrid.Height := 430;  
 {$IFEND}
 
-
   //收件箱
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1644];
@@ -739,7 +818,6 @@ begin
   DUpDownEMail.MoveButton.SetImgIndex(g_WMain99Images, 114);  
 {$IFEND}
 
-
   //问读信件
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1647];
@@ -826,7 +904,6 @@ begin
   DEMailReadUpDown.MoveButton.SetImgIndex(g_WMain99Images, 114);  
 {$IFEND}
 
-
   //写新信件
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1648];
@@ -894,8 +971,6 @@ begin
   DEMailNameComboBox.UpDown.Offset := 1;
   DEMailNameComboBox.UpDown.Normal := True;
 
-
-
 {$ELSE}
   d := g_WMain99Images.Images[555];
   if d <> nil then begin
@@ -955,7 +1030,6 @@ begin
   DEMailNameComboBox.UpDown.DownButton.SetImgIndex(g_WMain99Images, 111);
   DEMailNameComboBox.UpDown.MoveButton.SetImgIndex(g_WMain99Images, 114);
 {$IFEND}
-
 
   //好友系统
 {$IF Var_Interface = Var_Mir2}
@@ -1047,7 +1121,6 @@ begin
 {$IFEND}
 
   //密保卡
-
   d := g_WMain99Images.Images[366];
   if d <> nil then begin
     DMatrixCardWnd.SetImgIndex(g_WMain99Images, 366);
@@ -1169,7 +1242,6 @@ begin
   DUpDownUpLoad.MoveButton.SetImgIndex(g_WMain99Images, 114);  
 {$IFEND}
 
-
   //摆摊界面
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1722];
@@ -1285,7 +1357,6 @@ begin
   DUpDownUserShop.MoveButton.SetImgIndex(g_WMain99Images, 114);
 {$IFEND}
 
-
   //摆摊界面(查看)
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1723];
@@ -1379,7 +1450,6 @@ begin
   DReadShopUpDown.MoveButton.SetImgIndex(g_WMain99Images, 114);
 {$IFEND}
 
-
   //仓库列表
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1728];
@@ -1466,7 +1536,6 @@ begin
   DStorageGrid.Height := 244;  
 {$IFEND}
 
-
   //死亡窗口
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1713];
@@ -1508,7 +1577,6 @@ begin
   dbtnBackCure.Top := 81;  
 {$IFEND}
 
-
   //进度条窗口
 {$IF Var_Interface = Var_Mir2}
   d := g_WMain99Images.Images[1627];
@@ -1525,7 +1593,6 @@ begin
     DWndBar.Top := g_FScreenHeight div 2 + g_FScreenYOrigin div 2 - d.Height div 2 - 10;
   end;
 {$IFEND}
-
 
   //浏览窗口
   {d := g_WMain99Images.Images[576];
@@ -1588,6 +1655,7 @@ end;
 
 procedure TFrmDlg2.InitializeEx();
 begin
+  IconButtonList.CreateSurface(nil);
   DWndGroupMember.CreateSurface(nil);
   DWndHint.CreateSurface(nil);
 end;
@@ -1992,6 +2060,69 @@ begin
   for i := Low(g_MyShopSellItems) to High(g_MyShopSellItems) do begin
     if g_MyShopSellItems[i].ShopItem.Item.s.Name <> '' then
       AdditemBag(g_MyShopSellItems[i].ShopItem.Item, g_MyShopSellItems[i].ShopItem.Index2);
+  end;
+end;
+
+procedure TFrmDlg2.IconButtonAccordionClicked(Sender: TObject; X, Y: Integer);
+begin
+  IconButtonList.Visible := not IconButtonList.Visible;
+end;
+
+procedure TFrmDlg2.IconButtonAccordionDirectPaint(Sender: TObject; dsurface: TDXTexture);
+var
+  texture: TDXTexture;
+  id: Integer;
+begin
+  with Sender as TDButton do
+  begin
+    if IconButtonList.Visible then
+      id := 0
+    else
+      id := 4;
+    if Downed then
+      id := id + 2
+    else if MouseEntry = msIn then
+      id := id + 1;
+    // FaceIndex = 160
+    texture := WLib.Images[FaceIndex + id];
+    if texture <> nil then
+      dsurface.Draw(SurfaceX(Left), SurfaceY(Top), texture.ClientRect(), texture, True);
+  end;
+end;
+
+procedure TFrmDlg2.IconButtonClicked(Sender: TObject; X, Y: Integer);
+begin
+  if Sender = IconButton1 then
+    FrmMain.SendCustomIconClick(0);
+  if Sender = IconButton2 then
+    FrmMain.SendCustomIconClick(1);
+  if Sender = IconButton3 then
+    FrmMain.SendCustomIconClick(2);
+  if Sender = IconButton4 then
+    FrmMain.SendCustomIconClick(3);
+  if Sender = IconButton5 then
+    FrmMain.SendCustomIconClick(4);
+  if Sender = IconButton6 then
+    FrmMain.SendCustomIconClick(5);
+  if Sender = IconButton7 then
+    FrmMain.SendCustomIconClick(6);
+end;
+
+procedure TFrmDlg2.IconButtonDirectPaint(Sender: TObject; dsurface: TDXTexture);
+var
+  texture: TDXTexture;
+  id: Integer;
+begin
+  with Sender as TDButton do
+  begin
+    id := 0;
+    if Downed then
+      id := 2
+    else if MouseEntry = msIn then
+      id := 1;
+    texture := WLib.Images[FaceIndex + id];
+    if texture <> nil then
+      dsurface.Draw(SurfaceX(Left), SurfaceY(Top), texture.ClientRect(), texture, True);
   end;
 end;
 
@@ -2621,21 +2752,10 @@ begin
     else if MouseEntry = msIn then begin
       Inc(idx, 1)
     end;
+    // FaceIndex = 306
     d := WLib.Images[FaceIndex + idx];
     if d <> nil then
       dsurface.Draw(SurfaceX(Left), SurfaceY(Top), d.ClientRect, d, True);
-    {if not d.Downed then begin
-      dd := d.WLib.Images[d.FaceIndex + ADD];
-      if dd <> nil then
-        dsurface.Draw(d.SurfaceX(d.Left), d.SurfaceY(d.Top), dd.ClientRect,
-          dd, TRUE);
-    end
-    else begin
-      dd := d.WLib.Images[d.FaceIndex + 1 + ADD];
-      if dd <> nil then
-        dsurface.Draw(d.SurfaceX(d.Left), d.SurfaceY(d.Top), dd.ClientRect,
-          dd, TRUE);
-    end;      }
   end;
 end;
 
@@ -2682,19 +2802,17 @@ begin
         d := WLib.Images[FaceIndex];
         if d <> nil then
           dsurface.Draw(SurfaceX(Left), SurfaceY(Top), d.ClientRect, d, TRUE);
-        {d := DWndGroupMember.Surface;
-        if d <> nil then begin
-          rect := d.ClientRect;
-          rect.Top := (Tag - 1) * 50;
-          rect.Bottom := rect.Top + 50;
-          dsurface.Draw(SurfaceX(Left), SurfaceY(Top), rect, d, TRUE);
-        end;   }
 
         d := WLib.Images[177];
         if d <> nil then begin
           rect := d.ClientRect;
           if GroupMember.ClientGroup.HP > 0 then
-            r := GroupMember.ClientGroup.MaxHP / GroupMember.ClientGroup.HP
+          begin
+            if (GroupMember.ClientGroup.HP > GroupMember.ClientGroup.MaxHP) then
+              r := 1
+            else
+              r := GroupMember.ClientGroup.MaxHP / GroupMember.ClientGroup.HP;
+          end
           else
             r := 0;
           if r > 0 then
@@ -2709,7 +2827,12 @@ begin
         if d <> nil then begin
           rect := d.ClientRect;
           if GroupMember.ClientGroup.MP > 0 then
-            r := GroupMember.ClientGroup.MaxMP / GroupMember.ClientGroup.MP
+          begin
+            if (GroupMember.ClientGroup.MP > GroupMember.ClientGroup.MaxMP) then
+              r := 1
+            else
+              r := GroupMember.ClientGroup.MaxMP / GroupMember.ClientGroup.MP;
+          end
           else
             r := 0;
           if r > 0 then
@@ -2760,8 +2883,8 @@ begin
       sMsg := '';
       sMsg := sMsg + '名称: <' + GroupMember.ClientGroup.UserName + ' /FCOLOR=' + IntToStr(GetRGB(255)) + '>\';
       sMsg := sMsg + '等级: ' + IntToStr(GroupMember.ClientGroup.Level) + ' 级\';
-      sMsg := sMsg + Format('H  P: %d/%d\', [GroupMember.ClientGroup.HP, GroupMember.ClientGroup.MaxHP]);
-      sMsg := sMsg + Format('M  P: %d/%d\', [GroupMember.ClientGroup.MP, GroupMember.ClientGroup.MaxMP]);
+      sMsg := sMsg + Format('H P: %d/%d\', [GroupMember.ClientGroup.HP, GroupMember.ClientGroup.MaxHP]);
+      sMsg := sMsg + Format('M P: %d/%d\', [GroupMember.ClientGroup.MP, GroupMember.ClientGroup.MaxMP]);
       if g_boUseWuXin then begin
         sMsg := sMsg + '五行: <' + GetWuXinName(GroupMember.ClientGroup.WuXin) + ' /FCOLOR=' + IntToStr(GetWuXinColor(GroupMember.ClientGroup.WuXin)) + '>\'
       end;

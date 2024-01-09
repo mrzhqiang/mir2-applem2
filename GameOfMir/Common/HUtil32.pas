@@ -442,6 +442,11 @@ begin
   Result := True;
 end;
 
+{
+获取有效字符内容 rdstr
+所谓有效字符即双引号包围的内容，或者空白字符包围的内容
+如果还有多余内容则通过 Result 返回
+}
 function CaptureString(Source: string; var rdstr: string): string;
 var
   st, et, c, len, i: Integer;
@@ -455,15 +460,17 @@ begin
   c := 1;
 
   len := Length(Source);
+  // 找到有效字符的位置 c
   while Source[c] = ' ' do
     if c < len then
       Inc(c)
     else
       break;
 
-  if (Source[c] = '"') and (c < len) then
-  begin
-
+  // 如果有效字符以双引号开始，则起始位置为 st = c + 1
+  // 再找到对应的双引号结束位置 et = i - 1
+  // 也就是找到双引号包裹内容的开始位置和结束位置
+  if (Source[c] = '"') and (c < len) then begin
     st := c + 1;
     et := len;
     for i := c + 1 to len do
@@ -478,6 +485,8 @@ begin
   begin
     st := c;
     et := len;
+    // 有效字符不以双引号开始，则遍历有效字符，找到不为空白字符的结束位置
+    // 也就是说，如果没有双引号，则将前后空白忽略
     for i := c to len do
       if Source[i] = ' ' then
       begin
@@ -487,7 +496,9 @@ begin
 
   end;
 
+  // 复制有效字符
   rdstr := Copy(Source, st, (et - st + 1));
+  // 如果还有多余的字符，则返回
   if len >= (et + 2) then
     Result := Copy(Source, et + 2, len - (et + 1))
   else
@@ -1071,7 +1082,10 @@ begin
     Result := '';
   end;
 end;
-
+{
+根据分隔符数组获取有效字符。
+如果 Str 存在任意一个分隔符，则将前面的内容放到 Dest 中，并返回后面的内容。
+}
 function GetValidStr3(Str: string; var Dest: string; const Divider: array of Char): string;
 const
   BUF_SIZE = $7FFF;
@@ -1103,11 +1117,13 @@ begin
     end;
     ArrCount := SizeOf(Divider) div SizeOf(Char);
 
-    while True do
-    begin
-      if Count <= SrcLen then
-      begin
+    // 1. 获取 Str 的 Count 位置上的 Ch 字符
+    // 2. 如果 Ch 字符不在 Divider 中，则将 Ch 字符复制到 Buf 中
+    // 3. 如果 Ch 字符在 Divider 中，则将 Buf 生成为 Dest，并返回后面的内容 
+    while True do begin
+      if Count <= SrcLen then begin
         Ch := Str[Count];
+        // 找到 Divider 中对应 Str 的字符，跳转到 CATCH_DIV
         for i := 0 to ArrCount - 1 do
           if Ch = Divider[i] then
             goto CATCH_DIV;
@@ -1130,15 +1146,15 @@ begin
           if (Count > SrcLen) then
           begin
             Dest := '';
+            // fixme 这里的代码或许有问题，Count 大于 SrcLen 的情况下，Copy 了一个寂寞？
             Result := Copy(Str, Count + 2, SrcLen - 1);
             break;
           end;
         end;
       end
-      else
-      begin
-        if BufCount < BUF_SIZE - 1 then
-        begin
+      else begin
+        // 在 Str 长度内，对 Buf 进行 Ch 赋值一次
+        if BufCount < BUF_SIZE - 1 then begin
           Buf[BufCount] := Ch;
           Inc(BufCount);
         end;

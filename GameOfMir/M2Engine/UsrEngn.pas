@@ -4498,13 +4498,16 @@ begin
   tempstr := sMsg;
   while (True) do begin
     if Pos(']', tempstr) <= 0 then break;
+    // s10 = [] 中间内容
     tempstr := ArrestStringEx(tempstr, '[', ']', s10);
     if s10 = '' then break;
     if s10[1] = '$' then begin
       s10 := Copy(s10, 2, Length(s10) - 1);
+      // 找到对应常量
       nIdx := m_DefiniensConst.IndexOf(s10);
       sStr := '[$' + s10 + ']';
       n10 := Pos(sStr, sMsg);
+      // 将指定内容中的常量进行替换
       if n10 > 0 then begin
         s14 := Copy(sMsg, 1, n10 - 1);
         s18 := Copy(sMsg, Length(sStr) + n10, Length(sMsg));

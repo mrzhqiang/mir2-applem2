@@ -855,6 +855,7 @@ type
     procedure OpenDealDlg;
     procedure CloseDealDlg;
     procedure SetGroupWnd();
+    procedure ShowIconButtonLayout();
     procedure CreateGroup(sChrName: string);
     procedure OpenPlayPopupMemu(AC: TObject; nX, nY: Integer);
     procedure PageChanged;
@@ -12911,7 +12912,7 @@ begin
 
   //ÎïÆ·°ü¹üÀ¸
 {$IF Var_Interface = Var_Mir2}
-  DItemBag.SetImgIndex(g_WMain99Images, 1623);
+  DItemBag.SetImgIndex(g_WMain99Images, 1622);
   DItemBag.Left := 0;
   DItemBag.Top := 0;
 
@@ -15827,6 +15828,14 @@ begin
     FrmDlg2.DGroupMember7.Visible := g_GroupMembers.Count > 7;
 //{$IFEND}
   end;
+end;
+
+procedure TFrmDlg.ShowIconButtonLayout;
+begin
+  if g_MySelf = nil then
+    exit;
+  FrmDlg2.IconButtonLayout.Visible := True;
+  if not FrmDlg2.IconButtonList.Visible then FrmDlg2.IconButtonList.Visible := True;
 end;
 
 procedure TFrmDlg.SetMiniMapSize(flag: Byte);

@@ -1,9 +1,10 @@
 unit MShare;
 
 interface
+
 uses
   Windows, Classes, SysUtils, StrUtils, HGETextures, HGEGUI, ZLIB, DateUtils,
-  WIL, Actor, Grobal2, Share, Graphics, HGECanvas, HGEFonts, HGESounds, 
+  WIL, Actor, Grobal2, Share, Graphics, HGECanvas, HGEFonts, HGESounds,
   FindMapPath, WMFile, Dialogs, MudUtil, DirectXGraphics, SDK, Guaji;
 
 const
@@ -471,6 +472,7 @@ var
   //g_ServerList: TList;
 
   g_GroupMembers: TList; //组成员列表
+  g_CustomIcons: TList; //自定义图标列表
   g_GroupItemMode: Boolean = False; //物品分配模式
   g_SaveItemList: TList;
   g_MenuItemList: TList;

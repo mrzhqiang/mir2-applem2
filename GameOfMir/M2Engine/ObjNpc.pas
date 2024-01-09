@@ -774,6 +774,7 @@ type
   end;
   TFunMerchant = class(TMerchant)
     FStdModeFunc: array[0..MAXAPPENDFUNCCOUNT] of Integer;
+    FIconButton: array[0..6] of Integer;
     FPlayLevelUp: array[0..MAXAPPENDFUNCCOUNT] of Integer;
     FUserCmd: array[0..MAXAPPENDFUNCCOUNT] of Integer;
     FMagSelfFunc: array[0..MAXMAGICFUNCOUNT] of Integer;
@@ -1843,7 +1844,6 @@ begin
   m_boMakeDrug := False;
   m_boPrices := False;
   m_boStorage := False;
-  //m_boGetback := False;
   m_boArmStrengthen := False;
   m_boArmUnseal := False;
   m_boArmRemoveStone := False;
@@ -1853,8 +1853,6 @@ begin
   m_boGetMarry := False;
   m_boGetMaster := False;
 
-  //m_boUpgradenow := False;
-//  m_boGetBackupgnow := False;
   m_boRepair := False;
   m_boS_repair := False;
   m_boGetMarry := False;
@@ -15563,6 +15561,7 @@ constructor TFunMerchant.Create;
 begin
   inherited;
   SafeFillChar(FStdModeFunc[0], SizeOf(FStdModeFunc), 0);
+  SafeFillChar(FIconButton[0], SizeOf(FIconButton), 0);
   SafeFillChar(FPlayLevelUp[0], SizeOf(FPlayLevelUp), 0);
   SafeFillChar(FUserCmd[0], SizeOf(FUserCmd), 0);
   SafeFillChar(FClearMission[0], SizeOf(FClearMission), 0);

@@ -3,8 +3,8 @@ object FrmDlg2: TFrmDlg2
   Top = 0
   BorderStyle = bsNone
   Caption = 'FrmDlg2'
-  ClientHeight = 442
-  ClientWidth = 787
+  ClientHeight = 716
+  ClientWidth = 1082
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2910,5 +2910,215 @@ object FrmDlg2: TFrmDlg2
     OnGridSelect = DShopGrid2GridSelect
     OnGridMouseMove = DShopGrid2GridMouseMove
     OnGridPaint = DShopGrid2GridPaint
+  end
+  object IconButtonLayout: TDWindow
+    Tag = 1
+    Left = 8
+    Top = 448
+    Width = 416
+    Height = 49
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    Caption = #22270#26631#25353#38062#24067#23616
+    Visible = False
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    Floating = False
+    EscExit = False
+    ControlStyle = dsBottom
+  end
+  object IconButtonAccordion: TDButton
+    Left = 15
+    Top = 464
+    Width = 59
+    Height = 21
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnDirectPaint = IconButtonAccordionDirectPaint
+    OnClick = IconButtonAccordionClicked
+    Caption = #22270#26631#25353#38062#25910#36215'/'#23637#24320
+    DParent = IconButtonLayout
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNorm
+    OnClickSound = DLoginOkSound
+  end
+  object IconButtonList: TDWindow
+    Left = 80
+    Top = 448
+    Width = 330
+    Height = 49
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    Caption = #22270#26631#25353#38062#21015#34920
+    DParent = IconButtonLayout
+    Visible = False
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    Floating = False
+    EscExit = False
+    ControlStyle = dsNone
+  end
+  object IconButton1: TDButton
+    Tag = 1
+    Left = 89
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon1'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
+  end
+  object IconButton2: TDButton
+    Tag = 2
+    Left = 135
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon2'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
+  end
+  object IconButton3: TDButton
+    Tag = 3
+    Left = 181
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon3'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
+  end
+  object IconButton4: TDButton
+    Tag = 4
+    Left = 227
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon4'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
+  end
+  object IconButton5: TDButton
+    Tag = 5
+    Left = 273
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon5'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
+  end
+  object IconButton6: TDButton
+    Tag = 6
+    Left = 319
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon6'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
+  end
+  object IconButton7: TDButton
+    Tag = 6
+    Left = 365
+    Top = 462
+    Width = 40
+    Height = 23
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnClick = IconButtonClicked
+    Caption = 'Icon7'
+    DParent = IconButtonList
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    ClickCount = csNone
+    OnClickSound = DLoginOkSound
   end
 end

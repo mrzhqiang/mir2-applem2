@@ -553,6 +553,8 @@ stdcall;
 
     procedure SendShopBuyItem(nIdx, ItemIndex, wIdent, btGameGold: Integer);
 
+    procedure SendCustomIconClick(nIdx: Integer);
+
     procedure SendShopGetPoint(nCount: Integer);
     //procedure SendTaxis(nIdx, nJob, nPage: Integer);
 
@@ -1713,7 +1715,8 @@ begin
     g_ServerInfo[0].sAddrs := '127.0.0.1';
     g_ServerInfo[0].sPort := '7000';
     g_ServerInfo[1].sName := 'À¼´ï¶ûµÚÒ»¼¾v1.0';
-    g_ServerInfo[1].sAddrs := '121.37.13.127';
+//    g_ServerInfo[1].sAddrs := '121.37.13.127';
+    g_ServerInfo[1].sAddrs := '47.106.84.184';
     g_ServerInfo[1].sPort := '7000';
 {$ENDIF}
 
@@ -5539,6 +5542,7 @@ begin
   begin
     DWndHint.Visible := False;
     DWndGroup.Visible := False;
+    IconButtonLayout.Visible := False;
     DShopWin.Visible := False;
     DWinEmail.Visible := False;
     DWinFriend.Visible := False;
@@ -6760,6 +6764,16 @@ var
   DefMsg: TDefaultMessage;
 begin
   DefMsg := MakeDefaultMsg(CM_SHOPBUYITEMBACK, ItemIndex, wIdent, btGameGold, nIdx);
+  SendSocket(EncodeMessage(DefMsg));
+end
+
+;
+
+procedure TfrmMain.SendCustomIconClick(nIdx: Integer);
+var
+  DefMsg: TDefaultMessage;
+begin
+  DefMsg := MakeDefaultMsg(CM_CUSTOM_ICON, nIdx, 0, 0, 0);
   SendSocket(EncodeMessage(DefMsg));
 end
 
@@ -8248,6 +8262,7 @@ begin
       if g_MySelf <> nil then
       begin
         FrmDlg.SetGroupWnd;
+        FrmDlg.ShowIconButtonLayout;
         FMissionTick := GetTickCount + 60 * 1000;
       end;
       g_boBagItemsRead := False;

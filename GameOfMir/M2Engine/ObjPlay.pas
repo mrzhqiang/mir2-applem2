@@ -422,6 +422,7 @@ type
     procedure ClientItemStrengthen(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientItemAbilityMove(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientCompoundItem(ProcessMsg: pTProcessMessage; var boResult: Boolean);
+    procedure ClientCustomIcon(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientUserSellItem(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientUserBuyItem(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientUserBuyReturnItem(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -1401,6 +1402,7 @@ begin
   FServerProcess[CM_SETMAGICKEY] := ClientSetMagicKey;
   FServerProcess[CM_ITEMABILITYMOVE] := ClientItemAbilityMove;
   FServerProcess[CM_COMPOUNDITEM] := ClientCompoundItem;
+  FServerProcess[CM_CUSTOM_ICON] := ClientCustomIcon;
 
 
   FServerProcess[RM_SHOPGETGAMEPOINT] := ServerTradeGameGold;
@@ -6465,6 +6467,19 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TPlayObject.ClientCustomIcon(ProcessMsg: pTProcessMessage; var boResult: Boolean);
+var
+  nIndex: Integer;
+  sSendMsg: string;
+begin
+  sSendMsg := '';
+  nIndex := ProcessMsg.nParam1;
+  if m_boGhost or m_boDeath or (nIndex < 0) or (nIndex > 6) then
+    Exit;
+  if (g_FunctionNPC <> nil) and (nIndex in [Low(g_FunctionNPC.FIconButton)..High(g_FunctionNPC.FIconButton)]) then
+    NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FIconButton[nIndex], False);
 end;
 
 procedure TPlayObject.ClientUserSellItem(ProcessMsg: pTProcessMessage; var boResult: Boolean);

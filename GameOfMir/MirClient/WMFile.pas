@@ -50,6 +50,7 @@ const
 {$ELSE}
   MAINIMAGEFILE99 = DATADIRNAME + 'Prguse.pak';
 {$IFEND}
+  UI_ASERVER_FILE = DATADIRNAME + 'UI_aserver.pak';
   FACEFILE = DATADIRNAME + 'Face.pak';
 
   MUSICFILE = DATADIRNAME + 'Audio.pak';
@@ -195,8 +196,9 @@ const
   Images_UI3 = Images_UI1 + 1;
   Images_DefMagIcon = Images_UI3 + 1;
   Images_DefMagIcon2 = Images_DefMagIcon + 1;
+  Images_UI_Aserver = Images_DefMagIcon2 + 1;
 
-  Images_END = Images_DefMagIcon2;
+  Images_END = Images_UI_Aserver;
 var
   g_WBagItemFiles: array[0..ITEMCOUNT] of string = (
     'Data\Items.wil',
@@ -363,6 +365,7 @@ var
   g_WMain2Images: TWMImages;
   g_WMain3Images: TWMImages;
   g_WMain99Images: TWMImages;
+  g_WUIAserverImages: TWMImages;
   g_WChrSelImages: TWMImages;
   g_WOChrSelImages: TWMImages;
   g_WMMapImages: TWMImages;
@@ -454,6 +457,7 @@ begin
       Images_Prguse2: g_ClientImages[I] := g_WMain2Images;
       Images_Prguse3: g_ClientImages[I] := g_WMain3Images;
       Images_PrguseEx: g_ClientImages[I] := g_WMain99Images;
+      Images_UI_Aserver: g_ClientImages[I] := g_WUIAserverImages;
       Images_Tiles: g_ClientImages[I] := g_WTilesImages;
       Images_Tiles2: g_ClientImages[I] := g_WTiles2Images;
       Images_MyTiles: g_ClientImages[I] := g_WMyTilesImages;
@@ -552,6 +556,7 @@ begin
   g_WMain2Images := CreateWMImages(t_wmM2Def);
   g_WMain3Images := CreateWMImages(t_wmM2Def);
   g_WMain99Images := CreateWMImages(t_wmMyImage);
+  g_WUIAserverImages := CreateWMImages(t_wmMyImage);
   g_WChrSelImages := CreateWMImages(t_wmMyImage);
   g_WOChrSelImages := CreateWMImages(t_wmM2Def);
   g_WMMapImages := CreateWMImages(t_wmM2Def);
@@ -826,6 +831,11 @@ begin
   g_WMain99Images.LibType := ltUseCache;
   g_WMain99Images.Password := password;
   InitializeImage(g_WMain99Images);
+
+  g_WUIAserverImages.FileName := UI_ASERVER_FILE;
+  g_WUIAserverImages.LibType := ltUseCache;
+  g_WUIAserverImages.Password := password;
+  InitializeImage(g_WUIAserverImages);
 
   g_WChrSelImages.FileName := CHRSELIMAGEFILE;
   g_WChrSelImages.LibType := ltUseCache;
