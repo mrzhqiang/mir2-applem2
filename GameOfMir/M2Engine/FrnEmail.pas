@@ -126,7 +126,7 @@ type
     function UserCount: Integer;
     function EMailCount: Integer;
     function IsIdle: Boolean;
-    procedure SendMsg(wIdent: Word; nDBIndex, nParam1, nParam2, nParam3: Integer; sMsg: string; EMailInfo: pTEMailInfo);
+    procedure SendMsg(wIdent: Integer; nDBIndex, nParam1, nParam2, nParam3: Integer; sMsg: string; EMailInfo: pTEMailInfo);
     function SendMail(const AUserName, AText, ATitle: string; AAll: Boolean): Boolean;
   end;
 
@@ -585,7 +585,7 @@ begin
   end;
 end;
 
-procedure TUserEMail.SendMsg(wIdent: Word; nDBIndex, nParam1, nParam2, nParam3: Integer; sMsg: string; EMailInfo: pTEMailInfo);
+procedure TUserEMail.SendMsg(wIdent: Integer; nDBIndex, nParam1, nParam2, nParam3: Integer; sMsg: string; EMailInfo: pTEMailInfo);
 var
   SendMessage: pTEMailSendMessage;
 begin
@@ -785,7 +785,7 @@ begin
                         EMailInfo.Header.sSendName, '+', IntToStr(EMailInfo.nGold), '信件取回', nil);
                     end;
                     EMailInfo.nGold := 0;
-                    PlayObject.SendDefMsg(PlayObject, SM_EMAIL, PlayObject.m_nGold, LoWord(nIndex), HiWord(nIndex), 4, '');
+                    PlayObject.SendDefMsg(PlayObject, SM_EMAIL, PlayObject.m_nGold, nIndex, 0, 4, '');
                   end;
                 end;
               Finally
@@ -848,7 +848,7 @@ begin
     Try
       if (PlayObject <> nil) and (not PlayObject.m_boGhost) then begin
         if sSendMsg <> '' then begin
-          PlayObject.SendDefSocket(PlayObject, SM_EMAIL, nIndex, LoWord(nGold), HiWord(nGold), 1, sSendMsg);
+          PlayObject.SendDefSocket(PlayObject, SM_EMAIL, nIndex, nGold, 0, 1, sSendMsg);
         end else
           PlayObject.SendDefMsg(PlayObject, SM_EMAIL, -1, 0, 0, 1, '');
       end;

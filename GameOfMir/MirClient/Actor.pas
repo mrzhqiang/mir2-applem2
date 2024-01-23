@@ -2428,8 +2428,7 @@ begin
 end;
 
 //角色接收到的消息
-procedure TActor.SendMsg(wIdent: Word; nX, nY, ndir, nFeature, nState: Integer;
-  sStr: string; nSound: Integer);
+procedure TActor.SendMsg(wIdent: Word; nX, nY, ndir, nFeature, nState: Integer; sStr: string; nSound: Integer);
 var
   msg: pTChrMsg;
 begin
@@ -2944,12 +2943,12 @@ begin
       SM_MAGICFIRE:
         if m_CurMagic.ServerMagicCode <> 0 then begin
           m_CurMagic.ServerMagicCode := 111;
-          m_CurMagic.Target := msg.x;
-          if msg.y in [0..MAXMAGICTYPE - 1] then
-            m_CurMagic.EffectType := TMagicType(msg.y); //EffectType
-          m_CurMagic.EffectNumber := msg.dir; //Effect
-          m_CurMagic.TargX := msg.feature;
-          m_CurMagic.TargY := msg.state;
+          m_CurMagic.Target := msg.dir;
+          if msg.feature in [0..MAXMAGICTYPE - 1] then
+            m_CurMagic.EffectType := TMagicType(msg.feature); //EffectType
+          m_CurMagic.EffectNumber := msg.state; //Effect
+          m_CurMagic.TargX := msg.x;
+          m_CurMagic.TargY := msg.y;
           m_CurMagic.Recusion := TRUE;
           fin := TRUE;
                //这里可以显示使用魔法的名称，但是客户端不知道魔法的名称，

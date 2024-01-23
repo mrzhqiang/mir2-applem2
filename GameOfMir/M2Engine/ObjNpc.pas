@@ -1479,7 +1479,7 @@ end;   }
       end;
     end;
     //if sSENDMSG <> '' then
-    User.SendDefSocket(Self, SM_SENDGOODSLIST, Integer(Self), nInt, LoWord(nFlag), HiWord(nFlag), sSENDMSG);
+    User.SendDefSocket(Self, SM_SENDGOODSLIST, Integer(Self), nInt, nFlag, 0, sSENDMSG);
   end;
 
   {procedure SellItem(User: TPlayObject);
@@ -2112,8 +2112,7 @@ begin
     nCheckCode := 16;
     if n1C = 0 then begin
       nCheckCode := 17;
-      PlayObject.SendDefMsg(Self, SM_BUYITEM_SUCCESS, PlayObject.m_nGold, nInt,
-        LoWord(PlayObject.m_nBindGold), HiWord(PlayObject.m_nBindGold), '');
+      PlayObject.SendDefMsg(Self, SM_BUYITEM_SUCCESS, PlayObject.m_nGold, nInt, PlayObject.m_nBindGold, 0, '');
       nCheckCode := 19;
       if Assigned(Goods) and (Goods.nStock > 0) then
         Dec(Goods.nStock)
@@ -2501,8 +2500,7 @@ begin
         Result := True;
       end else    }
       if PlayObject.IncGold(nPrice) then begin
-        PlayObject.SendDefMsg(Self, SM_USERSELLITEM_OK, PlayObject.m_nGold, 0, LoWord(PlayObject.m_nBindGold),
-          HiWord(PlayObject.m_nBindGold), '');
+        PlayObject.SendDefMsg(Self, SM_USERSELLITEM_OK, PlayObject.m_nGold, 0, PlayObject.m_nBindGold, 0, '');
         if (Stditem.NeedIdentify = 1) then
           AddGameLog(PlayObject, LOG_DELITEM, Stditem.Name, UserItem.MakeIndex, UserItem.Dura, m_sCharName,
             '0', '0', '³öÊÛ', UserItem);
@@ -2897,14 +2895,12 @@ begin
       end;
       if boSuperRepair then begin
         UserItem.Dura := UserItem.DuraMax;
-        PlayObject.SendDefMsg(Self, SM_USERREPAIRITEM_OK, PlayObject.m_nGold, LoWord(PlayObject.m_nBindGold),
-          HiWord(PlayObject.m_nBindGold), UserItem.DuraMax, '');
+        PlayObject.SendDefMsg(Self, SM_USERREPAIRITEM_OK, PlayObject.m_nGold, PlayObject.m_nBindGold, 0, UserItem.DuraMax, '');
       end
       else begin
         Dec(UserItem.DuraMax, (UserItem.DuraMax - UserItem.Dura) div g_Config.nRepairItemDecDura);
         UserItem.Dura := UserItem.DuraMax;
-        PlayObject.SendDefMsg(Self, SM_USERREPAIRITEM_OK, PlayObject.m_nGold, LoWord(PlayObject.m_nBindGold),
-          HiWord(PlayObject.m_nBindGold), UserItem.DuraMax, '');
+        PlayObject.SendDefMsg(Self, SM_USERREPAIRITEM_OK, PlayObject.m_nGold, PlayObject.m_nBindGold, 0, UserItem.DuraMax, '');
       end;
       Result := True;
     end
@@ -3833,8 +3829,8 @@ var
   cMethod: Char;
   nOptions: Integer;
   nCount: Integer;
-  pChangeWord: PWord;
-  OldWord, NewWord: Word;
+  pChangeWord: PInteger;
+  OldWord, NewWord: Integer;
 begin
   nCount := StrToIntDef(QuestActionInfo.sParam3, -1);
   nOptions := StrToIntDef(QuestActionInfo.sParam1, -1);
@@ -3860,9 +3856,9 @@ begin
   NewWord := pChangeWord^;
   cMethod := QuestActionInfo.sParam2[1];
   case cMethod of
-    '=': WordChange(NewWord, nCount, INT_SET);
-    '+': WordChange(NewWord, nCount, INT_ADD);
-    '-': WordChange(NewWord, nCount, INT_DEL);
+    '=': IntegerChange(NewWord, nCount, INT_SET);
+    '+': IntegerChange(NewWord, nCount, INT_ADD);
+    '-': IntegerChange(NewWord, nCount, INT_DEL);
   end;
   pChangeWord^ := NewWord;
   if OldWord <> NewWord then begin
@@ -4890,8 +4886,7 @@ var
 begin
   sParam1 := QuestActionInfo.sParam1;
 
-  PlayObject.SendDefMsg(Self, SM_MENU_OK, Integer(PlayObject), 0, 0, 0,
-    GetLineVariableText(PlayObject, sParam1));
+  PlayObject.SendDefMsg(Self, SM_MENU_OK, Integer(PlayObject), 0, 0, 0, GetLineVariableText(PlayObject, sParam1));
 end;
 
 procedure TNormNpc.ActionOfMission(PlayObject: TPlayObject;
@@ -5073,7 +5068,7 @@ begin
             end;
         end;
         PlayObject.SendDelayDefMsg(PlayObject, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-          UserMagic.btLevel, LoWord(UserMagic.nTranPoint), HiWord(UserMagic.nTranPoint), '', 100);
+          UserMagic.btLevel, UserMagic.nTranPoint, 0, '', 100);
         break;
       end;
     end;
@@ -6679,7 +6674,7 @@ procedure TNormNpc.ConditionOfCheckHP(PlayObject: TPlayObject;
 var
   cMethodMin, cMethodMax: Char;
   nMin, nMax: Integer;
-  dwMin, dwMax: Integer; //Jay BigHP
+  dwMin, dwMax: Integer;
   function CheckHigh(): Boolean;
   begin
     Result := False;
@@ -11849,12 +11844,9 @@ begin
   PlayObject.SendMsg(Self,
     RM_PLAYDICE,
     QuestActionInfo.nParam1,
-    MakeLong(MakeWord(PlayObject.m_DyVal[0], PlayObject.m_DyVal[1]),
-    MakeWord(PlayObject.m_DyVal[2], PlayObject.m_DyVal[3])),
-    MakeLong(MakeWord(PlayObject.m_DyVal[4], PlayObject.m_DyVal[5]),
-    MakeWord(PlayObject.m_DyVal[6], PlayObject.m_DyVal[7])),
-    MakeLong(MakeWord(PlayObject.m_DyVal[8], PlayObject.m_DyVal[9]),
-    0),
+    MakeLong(MakeWord(PlayObject.m_DyVal[0], PlayObject.m_DyVal[1]), MakeWord(PlayObject.m_DyVal[2], PlayObject.m_DyVal[3])),
+    MakeLong(MakeWord(PlayObject.m_DyVal[4], PlayObject.m_DyVal[5]), MakeWord(PlayObject.m_DyVal[6], PlayObject.m_DyVal[7])),
+    MakeLong(MakeWord(PlayObject.m_DyVal[8], PlayObject.m_DyVal[9]), 0),
     QuestActionInfo.sParam2);
   bo11 := True;
 end;
@@ -12629,9 +12621,7 @@ begin
   m_nEffigyState := StrToIntDef(QuestActionInfo.sParam1, -1);
   m_nEffigyOffset := QuestActionInfo.nParam2;
   if (OldEffigyState <> m_nEffigyState) or (OldEffigyOffset <> m_nEffigyOffset) then
-    SendRefMsg(RM_DEFMESSAGE, SM_CHANGEEFFIGYSTATE, Integer(Self),
-      LoWord(m_nEffigyState),
-      MakeLong(HiWord(m_nEffigyState), m_nEffigyOffset), '');
+    SendRefMsg(RM_DEFMESSAGE, SM_CHANGEEFFIGYSTATE, Integer(Self), m_nEffigyState, m_nEffigyOffset, '');
 end;
 
 procedure TNormNpc.ActionOfHookItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
@@ -12982,7 +12972,7 @@ var
   ii: integer;
 begin
   for ii := 0 to FList1C.Count - 1 do begin
-    PlayObject.SendDelayMsg(Self, RM_10155, 0, 0, 0, 0, FList1C.Strings[ii], Integer(FList1C.Objects[ii]) + Fn20);
+    PlayObject.SendDelayMsg(Self, RM_10155, 0, 0, 0, 0, 0,FList1C.Strings[ii], Integer(FList1C.Objects[ii]) + Fn20);
     Inc(Fn20, Integer(FList1C.Objects[ii]));
   end;
 end;

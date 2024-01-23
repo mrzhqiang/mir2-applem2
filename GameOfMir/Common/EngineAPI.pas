@@ -387,7 +387,7 @@ function EncodeString(str: string): string;
 function DecodeString(str: string): string;
 function EncodeBuffer(buf: pChar; bufsize: integer): string;
 procedure DecodeBuffer(src: string; buf: PChar; bufsize: integer);
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; wParam, wTag, wSeries: Word): _TDEFAULTMESSAGE;
+function MakeDefaultMsg(wIdent: Integer; nRecog: Integer; wParam, wTag, wSeries: Integer): _TDEFAULTMESSAGE;
 
 implementation
 
@@ -771,7 +771,7 @@ begin
   //pszDest[S.btLen] := #0;
 end;
 
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; wParam, wTag, wSeries: Word): _TDEFAULTMESSAGE;
+function MakeDefaultMsg(wIdent: Integer; nRecog: Integer; wParam, wTag, wSeries: Integer): _TDEFAULTMESSAGE;
 begin
   Result.Recog := nRecog;
   Result.Ident := wIdent;

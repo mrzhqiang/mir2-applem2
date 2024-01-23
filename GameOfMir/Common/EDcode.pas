@@ -14,7 +14,7 @@ const
 
   // 制作默认消息：通过 wIdent（识别符），nRecog（未知），WParam（参数）
   // ，wSeries（系列） 生成
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; WParam, wTag, wSeries: Word): TDefaultMessage;
+function MakeDefaultMsg(wIdent: Integer; nRecog: Integer; WParam, wTag, wSeries: Integer): TDefaultMessage;
   // 对默认消息进行编码，生成字符串
 function EncodeMessage(smsg: TDefaultMessage): string;
   // 对字符串进行解码，生成默认消息
@@ -42,8 +42,7 @@ CONST
 
 {$IFEND}
 
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; WParam, wTag, wSeries:
-  Word): TDefaultMessage;
+function MakeDefaultMsg(wIdent: Integer; nRecog: Integer; WParam, wTag, wSeries: Integer): TDefaultMessage;
 begin
   Result.Recog := nRecog;
   Result.ident := wIdent;

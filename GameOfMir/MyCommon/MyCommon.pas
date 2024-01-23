@@ -14,10 +14,10 @@ type
   PFileVersionInfo = ^TFileVersionInfo;
   TFileVersionInfo = packed record
     sVersion: string[24];
-    wMajor: Word;
-    wMinor: Word;
-    wRelease: Word;
-    wBuild: Word;
+    wMajor: Integer;
+    wMinor: Integer;
+    wRelease: Integer;
+    wBuild: Integer;
   end;
 
   pTTranslate = ^TTranslate;

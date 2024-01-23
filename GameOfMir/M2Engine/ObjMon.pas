@@ -280,7 +280,7 @@ type
   end;
   TElfMonster = class(TMonster)
     boIsFirst: Boolean; //0x558
-    nMasterHP: Word;
+    nMasterHP: Integer;
   private
     procedure AppearNow;
     procedure ResetElfMon;
@@ -692,7 +692,7 @@ begin
           if n1C > 0 then begin
             BaseObject.StruckDamage(n1C, Self);
             BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, n1C,
-              m_WAbil.HP, m_WAbil.MaxHP, Integer(Self), '', 300);
+              m_WAbil.HP, m_WAbil.MaxHP, Integer(Self), 0,'', 300);
             if m_boUsePoison then begin
               if (Random(m_btAntiPoison + 20) = 0) then
                 BaseObject.MakePosion(POISON_DECHEALTH, 30, 1);
@@ -806,7 +806,7 @@ begin
       if n10 > 0 then begin
         BaseObject.StruckDamage(n10, self);
         BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, n10,
-          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '',
+          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'',
           300);
         if Random(BaseObject.m_btAntiPoison + 20) = 0 then begin
           BaseObject.MakePosion(POISON_STONE, 5, 0)
@@ -890,7 +890,7 @@ begin
       if n10 > 0 then begin
         BaseObject.StruckDamage(n10, Self);
         BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, n10,
-          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '',
+          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'',
           300);
       end;
     end;
@@ -1994,7 +1994,7 @@ begin
           if n1C > 0 then begin
             BaseObject.StruckDamage(n1C, Self);
             BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, n1C,
-              m_WAbil.HP, m_WAbil.MaxHP, Integer(Self), '', 300);
+              m_WAbil.HP, m_WAbil.MaxHP, Integer(Self), 0,'', 300);
             if m_boUsePoison then begin
               if (Random(m_btAntiPoison + 20) = 0) then
                 BaseObject.MakePosion(POISON_STONE, g_Config.nAttackPosionTime, g_Config.nAttackPosionTime);
@@ -2289,13 +2289,13 @@ begin
         if Random(10) < 3 then begin
           SendRefMsg(RM_LIGHTING, m_btDirection, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC))) * 2;
-          SendRefMsg(RM_10205, 0, LoWord(Integer(m_TargetCret)), HiWord(Integer(m_TargetCret)), 32, '', 800);
+          SendRefMsg(RM_10205, 0, Integer(m_TargetCret), 0, 32, '', 800);
         end else begin
           SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendRefMsg(RM_10205, 0, LoWord(Integer(m_TargetCret)), HiWord(Integer(m_TargetCret)), 31, '', 400);
+          SendRefMsg(RM_10205, 0, Integer(m_TargetCret), 0, 31, '', 400);
         end;
-        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 3, Integer(m_TargetCret), '', 1000);
+        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 3, Integer(m_TargetCret), '', 1000);
         BreakHolySeizeMode();
       end;
       Result := True;

@@ -329,18 +329,14 @@ begin
     // 如果是自己人（夫妻、师徒、组队、行会等），或开启了全体攻击模式
     if PlayObject.IsProperFriend(BaseObject) then begin
       if BaseObject.m_WAbil.HP < BaseObject.m_WAbil.MaxHP then begin
-        BaseObject.SendDelayMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, '', 800);
+        BaseObject.SendDelayMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, 0, '', 800);
         //BaseObject.SendMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, '');
         BaseObject.MagicQuest(PlayObject, nMagID, mfs_TagEx);
         Result := True;
       end;
       // 如果开启心灵启示，那么可以看到血量的变化
       if PlayObject.m_boAbilSeeHealGauge then
-        PlayObject.SendDefMsg(PlayObject, SM_INSTANCEHEALGUAGE,
-          Integer(BaseObject),
-          BaseObject.m_WAbil.HP,
-          BaseObject.m_WAbil.MaxHP,
-          0, '');
+        PlayObject.SendDefMsg(PlayObject, SM_INSTANCEHEALGUAGE, Integer(BaseObject), BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, 0, '');
     end;
   end;
   BaseObjectList.Free;
@@ -368,7 +364,7 @@ begin
       if (TargeTBaseObject.m_nAntiMagic <= Random(10)) and (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
         (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
         PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-          MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
+          nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '',
           400 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
         TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
         //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
@@ -423,7 +419,7 @@ begin
                                       SmallInt(HiWord(PlayObject.m_WAbil.MC) - LoWord(PlayObject.m_WAbil.MC)) + 1);
           end;
         PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-          MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
+          nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '',
           400 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
         //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
 
@@ -437,7 +433,7 @@ begin
                                          POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower{持续时间},
                                          Integer(PlayObject),
                                          ROUND(nPower * (UserMagic.btLevel + 1) / (UserMagic.MagicInfo.btTrainLv + 1)){减防系数}
-              {UserMagic.btLevel}, '', 800);
+              ,0, '', 800);
 //          TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
         end;
 
@@ -488,17 +484,13 @@ begin
       LoWord(PlayObject.m_WAbil.SC) * 2,
       SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) * 2 + 1);
     if TargeTBaseObject.m_WAbil.HP < TargeTBaseObject.m_WAbil.MaxHP then begin
-      TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, '', 800);
+      TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, 0, '', 800);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       //TargeTBaseObject.SendMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, '');
       Result := True;
     end;
     if PlayObject.m_boAbilSeeHealGauge then
-      PlayObject.SendDefMsg(PlayObject, SM_INSTANCEHEALGUAGE,
-        Integer(TargeTBaseObject),
-        TargeTBaseObject.m_WAbil.HP,
-        TargeTBaseObject.m_WAbil.MaxHP,
-        0, '');
+      PlayObject.SendDefMsg(PlayObject, SM_INSTANCEHEALGUAGE, Integer(TargeTBaseObject), TargeTBaseObject.m_WAbil.HP, TargeTBaseObject.m_WAbil.MaxHP, 0, '');
   end;
 end;
 
@@ -617,8 +609,7 @@ begin
       end;
       {if TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD then
         nPower := ROUND(nPower * 1.5); }
-      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
-        600);
+      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 600);
 
       levelgap := PlayObject.m_Abil.Level - TargeTBaseObject.m_Abil.Level;
       // 2021-01-05 优化为：每级技能 +5% 几率，每 1 个等级差 ±1% 几率
@@ -627,7 +618,7 @@ begin
       // todo 几率值可配置
       if (Random(100) < Round(UserMagic.btLevel * 5 + levelgap)) then begin
           TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_STONE
-              {中毒类型 - 麻痹}, Round(1+Random(UserMagic.btLevel+1)){持续时间}, Integer(PlayObject), 0, '', 600);
+              {中毒类型 - 麻痹}, Round(1+Random(UserMagic.btLevel+1)){持续时间}, Integer(PlayObject), 0, 0, '', 600);
       end;
 
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
@@ -710,7 +701,7 @@ begin
             SmallInt(HiWord(PlayObject.m_WAbil.SC) -
             LoWord(PlayObject.m_WAbil.SC)) + 1);
           end;
-          PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 400);
+          PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 400);
           TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
           if (PlayObject.m_btRaceServer = RC_PLAYOBJECT) and (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
             Result := True;
@@ -722,9 +713,9 @@ begin
               for I := 2 to (_MIN(UserMagic.btLevel, UserMagic.MagicInfo.btTrainLv)+UserMagic.btLevel+2) do begin
                 AroundBase := GetAroundObject(TargeBase);
                 if AroundBase = nil then break;
-                PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(AroundBase.m_nCurrX, AroundBase.m_nCurrY), 2, Integer(AroundBase), '', I * 400);
+                PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, AroundBase.m_nCurrX, AroundBase.m_nCurrY, 2, Integer(AroundBase), '', I * 400);
                 AroundBase.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
-                AroundBase.SendRefMsg(RM_10205, 0, LoWord(Integer(TargeBase)), HiWord(Integer(TargeBase)), 30, '', 400 * I);
+                AroundBase.SendRefMsg(RM_10205, 0, Integer(TargeBase), 0, 30, '', 400 * I);
                 TargeBase := AroundBase;
               end;
             end;
@@ -749,8 +740,7 @@ begin
       // fixme 魔法躲避
       if Random(10) >= TargeTBaseObject.m_nAntiMagic then begin
         if (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
-          PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2,
-            Integer(TargeTBaseObject), '',
+          PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '',
             400 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
           TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
           if (PlayObject.m_btRaceServer = RC_PLAYOBJECT) and (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
@@ -795,8 +785,7 @@ begin
       nPower := PlayObject.GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(PlayObject.m_WAbil.SC),
         SmallInt(HiWord(PlayObject.m_WAbil.SC) - LoWord(PlayObject.m_WAbil.SC)) + 1);
       end;
-      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC2, nPower,
-        MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 600);
+      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC2, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 600);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       //PlayObject.SendDelayMsg(PlayObject, RM_MAGHEALING, 0, nPower, 0, 0, '', 800);
       Result := True;
@@ -844,8 +833,7 @@ begin
       end;
       {if TargeTBaseObject.m_btLifeAttrib = LA_UNDEAD then
         nPower := ROUND(nPower * 1.5); }
-      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-                               MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 600);
+      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 600);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       if g_Config.boPlayObjectReduceMP and (Random(10) < UserMagic.btLevel)then
           // 1/4 当前法力值 -- 1/1 当前法力值
@@ -923,7 +911,7 @@ begin
   if PlayObject.IsProperTargetSKILL_55(PlayObject.m_WAbil.Level, TargeTBaseObject) then begin
     if (Random(10 + UserMagic.btLevel) + UserMagic.btLevel) >= 5 then begin
       PlayObject.GetFrontPosition(nX, nY);
-      TargeTBaseObject.SendDelayMsg(TargeTBaseObject, RM_MONMOVE, 0, 0, nX, nY, '', 1500);
+      TargeTBaseObject.SendDelayMsg(TargeTBaseObject, RM_MONMOVE, 0, 0, nX, nY,0, '', 1500);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       Result := True;
     end;
@@ -1082,11 +1070,8 @@ begin
           PlayObject.SendRefMsg(RM_SPELL, btAmuletType, nTargetX, nTargetY, SKILL_AMYOUNSUL, '');
           if MagLightening(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then begin
             boTrain := True;
-            PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-                                   MakeWord(UserMagic.MagicInfo.btEffectType, btAmuletType),
-                                   MakeLong(nTargetX, nTargetY),
-                                   Integer(TargeTBaseObject),
-                                   '');
+            PlayObject.SendRefMsg(RM_MAGICFIRE, 0, MakeLong(UserMagic.MagicInfo.btEffectType, btAmuletType),
+                                   MakeLong(nTargetX, nTargetY), Integer(TargeTBaseObject), '');
           end
           else
             boSpellFail := True;
@@ -1098,11 +1083,8 @@ begin
           PlayObject.SendRefMsg(RM_SPELL, btAmuletType, nTargetX, nTargetY, SKILL_GROUPAMYOUNSUL, '');
           if MagGroupAmyounsul(PlayObject, UserMagic, nTargetX, nTargetY, TargeTBaseObject) then begin
             boTrain := True;
-            PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-                                   MakeWord(UserMagic.MagicInfo.btEffectType, btAmuletType),
-                                   MakeLong(nTargetX, nTargetY),
-                                   Integer(TargeTBaseObject),
-                                   '');
+            PlayObject.SendRefMsg(RM_MAGICFIRE, 0, MakeLong(UserMagic.MagicInfo.btEffectType, btAmuletType),
+                                   MakeLong(nTargetX, nTargetY), Integer(TargeTBaseObject), '');
           end;
         end;
       end;
@@ -1224,10 +1206,8 @@ begin
         end;
       end;
     SKILL_SPACEMOVE {21}: begin //瞬息移动 00493ADD
-        PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-          MakeWord(UserMagic.MagicInfo.btEffectType,
-          UserMagic.MagicInfo.btEffect), MakeLong(nTargetX, nTargetY),
-          Integer(TargeTBaseObject), '');
+        PlayObject.SendRefMsg(RM_MAGICFIRE, 0, MakeLong(UserMagic.MagicInfo.btEffectType, UserMagic.MagicInfo.btEffect),
+                               MakeLong(nTargetX, nTargetY), Integer(TargeTBaseObject), '');
         boSpellFire := False;
         if MagSaceMove(PlayObject, UserMagic.btLevel) then
           boTrain := True;
@@ -1273,7 +1253,7 @@ begin
           if Random(6) <= (UserMagic.btLevel + 3) then begin
             TargeTBaseObject.m_dwShowHPTick := GetTickCount();
             TargeTBaseObject.m_dwShowHPInterval := GetPower13(GetRPow(PlayObject.m_WAbil.SC) * 2 + 30) * 1000;
-            TargeTBaseObject.SendDelayMsg(TargeTBaseObject, RM_DOOPENHEALTH, 0, 0, 0, 0, '', 1500);
+            TargeTBaseObject.SendDelayMsg(TargeTBaseObject, RM_DOOPENHEALTH, 0, 0, 0, 0, 0, '', 1500);
             TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
             //TargeTBaseObject.SendMsg(TargeTBaseObject, RM_DOOPENHEALTH, 0, 0, 0, 0, '');
             boTrain := True;
@@ -1818,11 +1798,8 @@ begin
   if boSpellFail then
     Exit;
   if boSpellFire then begin
-    PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-      MakeWord(UserMagic.MagicInfo.btEffectType, UserMagic.MagicInfo.btEffect),
-      MakeLong(nTargetX, nTargetY),
-      Integer(TargeTBaseObject),
-      '');
+    PlayObject.SendRefMsg(RM_MAGICFIRE, 0, MakeLong(UserMagic.MagicInfo.btEffectType, UserMagic.MagicInfo.btEffect),
+      MakeLong(nTargetX, nTargetY), Integer(TargeTBaseObject), '');
   end;
   // 9级及以下技能，才需要熟练度
   if (UserMagic.MagicInfo.btTrainLv <= 9) and (UserMagic.btLevel < UserMagic.MagicInfo.btTrainLv)  and (boTrain) then begin
@@ -1830,8 +1807,7 @@ begin
       PlayObject.TrainSkill(UserMagic, Random(3) + 1);
       if not PlayObject.CheckMagicLevelup(UserMagic) then begin
         PlayObject.SendDelayDefMsg(PlayObject, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-          UserMagic.btLevel, LoWord(UserMagic.nTranPoint),
-          HiWord(UserMagic.nTranPoint), '', 1000);
+          UserMagic.btLevel, UserMagic.nTranPoint, 0, '', 1000);
       end;
     end;
   end;
@@ -2179,9 +2155,7 @@ begin
       end;
       if nPower > 0 then begin
         BaseObject.StruckDamage(nPower, PlayObject);
-        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-          MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 2,
-          Integer(BaseObject), '', 200);
+        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 2, Integer(BaseObject), '', 200);
       end;
       if BaseObject.m_btRaceServer >= RC_ANIMAL then
         Result := True;
@@ -2227,7 +2201,7 @@ begin
                 BaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_DECHEALTH
                   {中毒类型 - 绿毒}, nPower, Integer(PlayObject),
                   ROUND(UserMagic.btLevel / 3 * (nPower /
-                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 1000);
+                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel},0, '', 1000);
                 BaseObject.MagicQuest(PlayObject, SKILL_GROUPAMYOUNSUL, mfs_TagEx);
               end;
             2: begin
@@ -2235,7 +2209,7 @@ begin
                 BaseObject.SendDelayMsg(PlayObject, RM_POISON,
                   POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower,
                   Integer(PlayObject), ROUND(UserMagic.btLevel / 3 * (nPower /
-                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 1000);
+                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, 0,'', 1000);
                 BaseObject.MagicQuest(PlayObject, SKILL_GROUPAMYOUNSUL, mfs_TagEx);
               end;
           end;
@@ -2277,7 +2251,7 @@ begin
           if nDamage > 0 then begin
             nDamage := ROUND(nDamage * (g_Config.nDidingPowerRate / 100));
             if nDamage > 0 then begin
-              PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), _MAX(1, UserMagic.btLevel), Integer(BaseObject), '', 200);
+              PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, _MAX(1, UserMagic.btLevel), Integer(BaseObject), '', 200);
               BaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
             end;
           end;
@@ -2306,11 +2280,6 @@ begin
   BaseObjectList := TList.Create;
   nRate := _MAX(1, UserMagic.btLevel);
   PlayObject.GetMapBaseObjects(PlayObject.m_PEnvir, nTargetX, nTargetY, nRate, BaseObjectList);
-  {PlayObject.SendRefMsg(RM_MAGICFIRE, 0,
-    MakeWord(UserMagic.MagicInfo.btEffectType, UserMagic.MagicInfo.btEffect),
-    MakeLong(nTargetX, nTargetY),
-    Integer(TargeTBaseObject),
-    '');      }
 
   for i := 0 to BaseObjectList.Count - 1 do begin
     BaseObject := TBaseObject(BaseObjectList.Items[i]);
@@ -2332,7 +2301,7 @@ begin
         nPower := ROUND(nPower * 1.5);
 
       PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower,
-        MakeLong(nTargetX, nTargetY), nRate, Integer(BaseObject), '', 500);
+        nTargetX, nTargetY, nRate, Integer(BaseObject), '', 500);
       BaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 2, Integer(BaseObject), '');
       //if PlayObject.m_btRaceServer = RC_PLAYMOSTER then Result := True
@@ -2344,7 +2313,7 @@ begin
         //PlayObject.SendRefMsg(RM_10205, 0, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 4 {type}, '');
     end;
   end;
-  PlayObject.SendRefMsg(RM_10205, 0, nTargetX, nTargetY, MakeWord(1, nRate), '', 400);
+  PlayObject.SendRefMsg(RM_10205, 0, nTargetX, nTargetY, MakeLong(1, nRate), '', 400);
   BaseObjectList.Free;
 end;
 
@@ -2393,7 +2362,7 @@ begin //施毒术
                 TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON,
                   POISON_DECHEALTH {中毒类型 - 绿毒}, nPower, Integer(PlayObject),
                   ROUND(UserMagic.btLevel / 3 * (nPower /
-                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 800);
+                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, 0,'', 800);
                 TargeTBaseObject.MagicQuest(PlayObject, SKILL_AMYOUNSUL, mfs_TagEx);
               end;
             2: begin
@@ -2401,7 +2370,7 @@ begin //施毒术
                 TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON,
                   POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower,
                   Integer(PlayObject), ROUND(UserMagic.btLevel / 3 * (nPower /
-                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 800);
+                  g_Config.nAmyOunsulPoint)) {UserMagic.btLevel},0, '', 800);
                 TargeTBaseObject.MagicQuest(PlayObject, SKILL_AMYOUNSUL, mfs_TagEx);
               end;
           end;
@@ -2442,7 +2411,7 @@ begin
     for I := 0 to BaseObjectList.Count - 1 do begin
       TargeBaseObject := TBaseObject(BaseObjectList.Items[i]);
       if PlayObject.IsProperTarget(TargeBaseObject) then begin
-        TargeBaseObject.SendDelayMsg(PlayObject, RM_MAGSTRUCK, 0, nPower, 0, 0, '', 200);
+        TargeBaseObject.SendDelayMsg(PlayObject, RM_MAGSTRUCK, 0, nPower, 0, 0, 0,'', 200);
         TargeBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
         Result := True;
       end;
@@ -2478,7 +2447,7 @@ begin
     nPower := GetAttackPower(GetPower(MPow(UserMagic), UserMagic) + LoWord(m_WAbil.MC),
       SmallInt(HiWord(m_WAbil.MC) - LoWord(m_WAbil.MC)) + 1);
   end;  }
-  PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
+  PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '',
     200 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
   //PlayObject.SendMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
   if (TargeTBaseObject.m_btRaceServer >= RC_ANIMAL) then
@@ -2502,7 +2471,7 @@ begin
       // todo 几率值可配置
 //      if (Random(100) < (12 + UserMagic.btLevel * 6 + levelgap * 3)) then begin
         TargeTBaseObject.SendDelayMsg(PlayObject, RM_POISON, POISON_COBWEB
-            {中毒类型 - 蛛网}, Round(1+Random(UserMagic.btLevel+1)), Integer(PlayObject), 0, '',
+            {中毒类型 - 蛛网}, Round(1+Random(UserMagic.btLevel+1)), Integer(PlayObject), 0, 0, '',
             200 + (abs(PlayObject.m_nCurrX - nTargetX) + abs(PlayObject.m_nCurrY - nTargetY)) div 2 * 20);
 //      end;
 
@@ -2772,7 +2741,7 @@ begin
     for i := 0 to BaseObjectList.Count - 1 do begin
       TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
       if BaseObject.IsProperTarget(TargeTBaseObject) then begin
-        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPowerPoint, MakeLong(nX, nY), 3, Integer(TargeTBaseObject), '', 600);
+        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPowerPoint, nX, nY, 3, Integer(TargeTBaseObject), '', 600);
         TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
         if PlayObject.m_Abil.Level > TargeTBaseObject.m_Abil.Level then begin
           if TargeTBaseObject.m_btRaceServer = RC_PLAYOBJECT then begin
@@ -2783,7 +2752,7 @@ begin
               MakePoisonInfo.nY := nY;
               MakePoisonInfo.nRate := 3;
               MakePoisonInfo.boFastParalysis := g_Config.boSkill70MbFastParalysis;
-              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 600);
+              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 600);
              end;
           end else begin
             if (TargeTBaseObject.m_Master <> nil) and (TargeTBaseObject.m_Master.m_btRaceServer = RC_PLAYOBJECT) then begin
@@ -2794,7 +2763,7 @@ begin
                 MakePoisonInfo.nY := nY;
                 MakePoisonInfo.nRate := 3;
                 MakePoisonInfo.boFastParalysis := g_Config.boSkill70MbFastParalysis;
-                TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 600);
+                TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0,0, '', 600);
               end;
             end else begin
               if g_Config.boSkill70MbAttackMon then begin
@@ -2804,7 +2773,7 @@ begin
                 MakePoisonInfo.nY := nY;
                 MakePoisonInfo.nRate := 3;
                 MakePoisonInfo.boFastParalysis := g_Config.boSkill70MbFastParalysis;
-                TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 600);
+                TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 600);
               end;
             end;
           end;
@@ -2836,7 +2805,7 @@ begin
   for i := 0 to BaseObjectList.Count - 1 do begin
     TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
     if BaseObject.IsProperTarget(TargeTBaseObject) then begin
-      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPowerPoint, MakeLong(nX, nY), 3, Integer(TargeTBaseObject), '', 600);
+      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPowerPoint, nX, nY, 3, Integer(TargeTBaseObject), '', 600);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       if PlayObject.m_Abil.Level > TargeTBaseObject.m_Abil.Level then begin
         if TargeTBaseObject.m_btRaceServer = RC_PLAYOBJECT then begin
@@ -2847,7 +2816,7 @@ begin
             MakePoisonInfo.nY := nY;
             MakePoisonInfo.nRate := 3;
             MakePoisonInfo.boFastParalysis := g_Config.boSkill71MbFastParalysis;
-            TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 600);
+            TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 600);
            end;
         end else begin
           if (TargeTBaseObject.m_Master <> nil) and (TargeTBaseObject.m_Master.m_btRaceServer = RC_PLAYOBJECT) then begin
@@ -2858,7 +2827,7 @@ begin
               MakePoisonInfo.nY := nY;
               MakePoisonInfo.nRate := 3;
               MakePoisonInfo.boFastParalysis := g_Config.boSkill71MbFastParalysis;
-              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 600);
+              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 600);
             end;
           end else begin
             if g_Config.boSkill71MbAttackMon then begin
@@ -2868,7 +2837,7 @@ begin
               MakePoisonInfo.nY := nY;
               MakePoisonInfo.nRate := 3;
               MakePoisonInfo.boFastParalysis := g_Config.boSkill71MbFastParalysis;
-              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 600);
+              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 600);
             end;
           end;
         end;
@@ -2900,7 +2869,7 @@ begin
   for i := 0 to BaseObjectList.Count - 1 do begin
     TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
     if BaseObject.IsProperTarget(TargeTBaseObject) then begin
-      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPowerPoint, MakeLong(nX, nY), 3, Integer(TargeTBaseObject), '', 1200);
+      PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPowerPoint, nX, nY, 3, Integer(TargeTBaseObject), '', 1200);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
       if g_Config.boSkill72Damagearmor then begin
         nPowerPoint := GetPower13(30, UserMagic) + GetRPow(PlayObject.m_WAbil.SC) * 2;
@@ -2910,7 +2879,7 @@ begin
         MakePoisonInfo.nY := nY;
         MakePoisonInfo.nRate := 3;
         TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_DAMAGEARMOR {中毒类型 - 红毒}, nPower, Integer(MakePoisonInfo),
-          ROUND(UserMagic.btLevel / 3 * (nPower / g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 1200);
+          ROUND(UserMagic.btLevel / 3 * (nPower / g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, 0,'', 1200);
       end;
       if g_Config.boSkill72DecHealth then begin
         nPowerPoint := GetPower13(40, UserMagic) + GetRPow(PlayObject.m_WAbil.SC) * 2;
@@ -2920,7 +2889,7 @@ begin
         MakePoisonInfo.nY := nY;
         MakePoisonInfo.nRate := 3;
         TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_DECHEALTH {中毒类型 - 绿毒}, nPower, Integer(MakePoisonInfo),
-          ROUND(UserMagic.btLevel / 3 * (nPower / g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, '', 1200);
+          ROUND(UserMagic.btLevel / 3 * (nPower / g_Config.nAmyOunsulPoint)) {UserMagic.btLevel}, 0,'', 1200);
       end;
 
       if PlayObject.m_Abil.Level > TargeTBaseObject.m_Abil.Level then begin
@@ -2932,7 +2901,7 @@ begin
             MakePoisonInfo.nY := nY;
             MakePoisonInfo.nRate := 3;
             MakePoisonInfo.boFastParalysis := g_Config.boSkill72MbFastParalysis;
-            TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 1200);
+            TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 1200);
            end;
         end else begin
           if (TargeTBaseObject.m_Master <> nil) and (TargeTBaseObject.m_Master.m_btRaceServer = RC_PLAYOBJECT) then begin
@@ -2943,7 +2912,7 @@ begin
               MakePoisonInfo.nY := nY;
               MakePoisonInfo.nRate := 3;
               MakePoisonInfo.boFastParalysis := g_Config.boSkill72MbFastParalysis;
-              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 1200);
+              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 1200);
             end;
           end else begin
             if g_Config.boSkill72MbAttackMon then begin
@@ -2953,7 +2922,7 @@ begin
               MakePoisonInfo.nY := nY;
               MakePoisonInfo.nRate := 3;
               MakePoisonInfo.boFastParalysis := g_Config.boSkill72MbFastParalysis;
-              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, '', 1200);
+              TargeTBaseObject.SendDelayMsg(PlayObject, RM_MAKEPOISON, POISON_STONE {中毒类型 - 麻痹}, nTime, Integer(MakePoisonInfo), 0, 0, '', 1200);
             end;
           end;
 
@@ -3001,7 +2970,7 @@ begin
     TargeTBaseObject := TBaseObject(BaseObjectList.Items[i]);
     if BaseObject.IsProperTarget(TargeTBaseObject) then begin
       BaseObject.SetTargetCreat(TargeTBaseObject);
-      BaseObject.SendDelayMsg(BaseObject, RM_DELAYMAGIC, nPower, MakeLong(nX, nY), nRage, Integer(TargeTBaseObject), '', nTime);
+      BaseObject.SendDelayMsg(BaseObject, RM_DELAYMAGIC, nPower, nX, nY, nRage, Integer(TargeTBaseObject), '', nTime);
       TargeTBaseObject.MagicQuest(BaseObject, nMagID, mfs_TagEx);
       //TargeTBaseObject.SendMsg(BaseObject, RM_MAGSTRUCK, 0, nPower, 0, 0, '');
       Result := True;
@@ -3024,8 +2993,8 @@ begin
       if PlayObject.IsProperTarget(BaseObject) then begin
         BaseObject.MagicQuest(PlayObject, nMagID, mfs_TagEx);
         if boDecMP and g_Config.boSkill66ReduceMP then BaseObject.DamageSpell(nPower div 2);
-        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nX, nY), 2, Integer(BaseObject), '', 1380);
-        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, MakeLong(nX, nY), 2, Integer(BaseObject), '', 2000);
+        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nX, nY, 2, Integer(BaseObject), '', 1380);
+        PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nX, nY, 2, Integer(BaseObject), '', 2000);
         Result := True;
       end;
     end;
@@ -3047,7 +3016,7 @@ begin
       BaseObject.SetTargetCreat(TargeTBaseObject);
       TargeTBaseObject.SendMsg(BaseObject, RM_MAGSTRUCK, 0, nPower, 0, 0, '');
       BaseObject.SendDelayMsg(BaseObject, RM_DELAYMAGIC, nPower,
-        MakeLong(nX, nY), nRage, Integer(TargeTBaseObject), '', 1400);
+        nX, nY, nRage, Integer(TargeTBaseObject), '', 1400);
       Result := True;
     end;
   end;
@@ -3175,7 +3144,7 @@ begin
     if BaseObject.IsProperFriend(TargeTBaseObject) then begin
       if TargeTBaseObject.m_wStatusTimeArr[STATE_TRANSPARENT {0x70}] = 0 then begin //00493287
         TargeTBaseObject.SendDelayMsg(TargeTBaseObject, RM_TRANSPARENT, 0,
-          nHTime, 0, 0, '', 800);
+          nHTime, 0, 0, 0, '', 800);
         TargeTBaseObject.MagicQuest(BaseObject, nMagID, mfs_TagEx);
         //TargeTBaseObject.SendMsg(TargeTBaseObject, RM_TRANSPARENT, 0, nHTime, 0, 0, '');
         Result := True;
@@ -3212,7 +3181,7 @@ begin
         (abs(TargeTBaseObject.m_nCurrX - nTargetX) <= 1) and
         (abs(TargeTBaseObject.m_nCurrY - nTargetY) <= 1) then begin
         BaseObject.SendDelayMsg(BaseObject, RM_DELAYMAGIC, nPower div 3,
-          MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '', 600);
+          nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 600);
         TargeTBaseObject.MagicQuest(BaseObject, nMagID, mfs_TagEx);
         if (Random(2) + (BaseObject.m_Abil.Level - 1)) >
           TargeTBaseObject.m_Abil.Level then begin
@@ -3229,13 +3198,12 @@ begin
               TargeTBaseObject.SetLastHiter(BaseObject);
               nPower := TargeTBaseObject.GetMagStruckDamage(BaseObject, nPower);
               BaseObject.SendDelayMsg(BaseObject, RM_DELAYMAGIC, nPower,
-                MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '',
-                600);
+                nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 600);
               //BaseObject.SendMsg(BaseObject, RM_DELAYMAGIC, nPower, MakeLong(nTargetX, nTargetY), 2, Integer(TargeTBaseObject), '');
               if not TargeTBaseObject.m_boUnParalysis then
                 TargeTBaseObject.SendDelayMsg(BaseObject, RM_POISON, POISON_STONE
                   {中毒类型 - 麻痹}, nPower div g_Config.nMabMabeHitMabeTimeRate
-                  {20}+ Random(nLevel), Integer(BaseObject), nLevel, '', 650);
+                  {20}+ Random(nLevel), Integer(BaseObject), nLevel,0, '', 650);
               //TargeTBaseObject.SendDelayMsg(BaseObject, RM_POISON, POISON_STONE {中毒类型 - 麻痹}, nPower div g_Config.nMabMabeHitMabeTimeRate {20} + Random(nLevel), Integer(BaseObject), nLevel, '', 10);
             end;
             Result := True;

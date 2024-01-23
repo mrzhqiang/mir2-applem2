@@ -698,7 +698,7 @@ type
     function IncGold(tGold: Integer): Boolean;//增加金币
     procedure IncGameGold(nGameGold: Integer);
     procedure SendSocket(DefMsg: pTDefaultMessage; sMsg: string); virtual;
-    procedure SendDefMessage(wIdent: Word; nRecog: Integer; nParam, nTag, nSeries: Word; sMsg: string);
+    procedure SendDefMessage(wIdent: Integer; nRecog: Integer; nParam, nTag, nSeries: Integer; sMsg: string);
     function IsEnoughBag(): Boolean;//包裹是否满
     procedure SendAddItem(UserItem: pTUserItem);
     procedure SendDelItems(UserItem: pTUserItem);
@@ -1857,23 +1857,7 @@ resourcestring
     '[Exception] TPlayObject::Run -> Operate 2 # %s Ident:%d Sender:%d wP:%d nP1:%d nP2:%d np3:%d Msg:%s Check:%d';
   sExceptionMsg3 = '[Exception] TPlayObject::Run -> GetHighHuman';
   sExceptionMsg4 = '[Exception] TPlayObject::Run -> ClearObj';
-begin {
-  var
-    i: Integer;
-    SendMessage: pTSendMessage;
-  begin
-    Result := False;
-    EnterCriticalSection(ProcessMsgCriticalSection);
-    try
-      i := 0;
-      Msg.wIdent := 0;
-      while m_MsgList.Count > i do begin
-        SendMessage := m_MsgList.Items[i];
-        if (SendMessage.dwDeliveryTime <> 0) and (GetTickCount < SendMessage.dwDeliveryTime) then begin
-          Inc(i);
-          Continue;
-        end;
-        m_MsgList.Delete(i);}
+begin
   if not (m_boMapApoise or m_boEmergencyClose or m_boKickFlag or m_boSoftClose) then begin
     if ((GetTickCount - m_dwMapApoiseTick) > 120 * 1000) then begin
       m_boEmergencyClose := True;
@@ -1891,6 +1875,7 @@ begin {
             ProcessMsg.nParam1 := SendMessage.nParam1;
             ProcessMsg.nParam2 := SendMessage.nParam2;
             ProcessMsg.nParam3 := SendMessage.nParam3;
+            ProcessMsg.nParam4 := SendMessage.nParam4;
             ProcessMsg.BaseObject := SendMessage.BaseObject;
             ProcessMsg.dwDeliveryTime := SendMessage.dwDeliveryTime;
             ProcessMsg.boLateDelivery := SendMessage.boLateDelivery;
@@ -3162,8 +3147,7 @@ begin
                   Dispose(RemoveItem);
                   RemoveItem := nil;
                   nBack := 1;
-                  SendDefMessage(SM_REMOVESTONE_BACK, nBack, LoWord(UserItem.MakeIndex),
-                    HiWord(UserItem.MakeIndex), nIdx, '');
+                  SendDefMessage(SM_REMOVESTONE_BACK, nBack, UserItem.MakeIndex, 0, nIdx, '');
                   Exit;
                 end
                 else begin
@@ -3347,6 +3331,7 @@ begin
     if CretInNearXY(BaseObject, m_nCurrX, m_nCurrY) then begin
       if (BaseObject.m_btRaceServer = RC_BOX) and (not BaseObject.m_boGhost) and (not BaseObject.m_boDeath) then begin
         m_boClickOpenBox := True;
+        // FIXME 注意越界问题
         m_dwClickOpenBoxTime := GetTickCount + BaseObject.m_WAbil.MaxHP * 1000;
         m_ClickBoxObject := BaseObject;
         if m_ClickBoxObject.m_btRaceImg = 26 then
@@ -4182,9 +4167,7 @@ begin
                     TrainSkill(UserMagic, Random(3) + 1);
                     if not CheckMagicLevelup(UserMagic) then begin
                       SendDelayDefMsg(Self, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-                        UserMagic.btLevel,
-                        LoWord(UserMagic.nTranPoint),
-                        HiWord(UserMagic.nTranPoint), '', 1000);
+                        UserMagic.btLevel, UserMagic.nTranPoint, 0, '', 1000);
                     end;
                   end;
                 end;
@@ -4215,9 +4198,7 @@ begin
                     TrainSkill(UserMagic, Random(3) + 1);
                     if not CheckMagicLevelup(UserMagic) then begin
                       SendDelayDefMsg(Self, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-                        UserMagic.btLevel,
-                        LoWord(UserMagic.nTranPoint),
-                        HiWord(UserMagic.nTranPoint), '', 1000);
+                        UserMagic.btLevel, UserMagic.nTranPoint, 0, '', 1000);
                     end;
                   end;
                 end;
@@ -4818,7 +4799,7 @@ begin
           m_UseItems[u_House].dwMaxExp := g_Config.HorseLevelExp[m_UseItems[u_House].btLevel];
           boLevelUp := True;
         end;
-        SendDefMsg(Self, SM_WINEXP, m_UseItems[u_House].dwExp, LoWord(dwExp), HiWord(dwExp), 1, '');
+        SendDefMsg(Self, SM_WINEXP, m_UseItems[u_House].dwExp, dwExp, 0, 1, '');
         if boLevelUp then begin
           SendUpdateItem(@m_UseItems[u_House]);
           SendDefMsg(Self, SM_WINEXP, m_UseItems[u_House].btLevel, 0, 0, 2, '');
@@ -4837,7 +4818,7 @@ var
 begin
   if m_Abil.Exp < 4200000000 then Inc(m_Abil.Exp, dwExp);
   AddBodyLuck(dwExp * 0.002);
-  SendDefMsg(Self, SM_WINEXP, m_Abil.Exp, LoWord(dwExp), HiWord(dwExp), 0, '');
+  SendDefMsg(Self, SM_WINEXP, m_Abil.Exp, dwExp, 0, 0, '');
   boUp := False;
   while (m_Abil.Exp >= m_Abil.MaxExp) and (m_Abil.Level < g_Config.nLimitExpLevel) do begin
     Dec(m_Abil.Exp, m_Abil.MaxExp);
@@ -5037,8 +5018,7 @@ begin
   //end;
 end;
 
-procedure TPlayObject.SendDefMessage(wIdent: Word; nRecog: Integer; nParam,
-  nTag, nSeries: Word; sMsg: string); //004CAD6C
+procedure TPlayObject.SendDefMessage(wIdent: Integer; nRecog: Integer; nParam, nTag, nSeries: Integer; sMsg: string); //004CAD6C
 begin
   m_DefMsg := MakeDefaultMsg(wIdent, nRecog, nParam, nTag, nSeries);
   if sMsg <> '' then
@@ -5739,11 +5719,11 @@ begin
         end;
       end;
       if sSendMsg <> '' then begin
-        m_DefMsg := MakeDefaultMsg(SM_ITEMSTRENGTHEN, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nBack);
+        m_DefMsg := MakeDefaultMsg(SM_ITEMSTRENGTHEN, m_nGold, m_nBindGold, m_nBindGold, nBack);
         SendSocket(@m_DefMsg, sSENDMSG);
       end
       else
-        SendDefMessage(SM_ITEMSTRENGTHEN, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nBack, '');
+        SendDefMessage(SM_ITEMSTRENGTHEN, m_nGold, m_nBindGold, m_nBindGold, nBack, '');
     except
       on E: Exception do begin
         MainOutMessage('[Exception] TPlayObject -> ClientItemStrengthen ' + IntToStr(nBack));
@@ -6458,7 +6438,7 @@ begin
             m_ItemList.Add(vUserItem[i]);
         end;
       end;
-      SendDefMessage(SM_COMPOUNDITEM, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), nBack, sSendMsg);
+      SendDefMessage(SM_COMPOUNDITEM, m_nGold, m_nGameGold, 0, nBack, sSendMsg);
       end;
     except
       on E: Exception do begin
@@ -6573,7 +6553,7 @@ begin
               if (Stditem.NeedIdentify = 1) then
                 AddGameLog(Self, LOG_ADDITEM, Stditem.Name, UserItem.MakeIndex, UserItem.Dura, NPC.m_sCharName,
                   '0', '0', '回购', UserItem);
-              SendDefMessage(SM_BUYRETURNITEM_OK, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nIdx, '');
+              SendDefMessage(SM_BUYRETURNITEM_OK, m_nGold, m_nBindGold, 0, nIdx, '');
               exit;
             end
             else
@@ -7249,7 +7229,7 @@ var
 begin
   ClientNakedInfo.NakedAbil := m_NakedAbil;
   ClientNakedInfo.NakedAddInfo := g_Config.NakedAddInfo;
-  m_DefMsg := MakeDefaultMsg(SM_NAKEDABILITY, m_nNakedCount, LoWord(m_nNakedBackCount), HiWord(m_nNakedBackCount), 0);
+  m_DefMsg := MakeDefaultMsg(SM_NAKEDABILITY, m_nNakedCount, m_nNakedBackCount, m_nNakedBackCount, 0);
   SendSocket(@m_DefMsg, EncodeBuffer(@ClientNakedInfo, SizeOf(ClientNakedInfo)));
 end;
 
@@ -7325,8 +7305,7 @@ begin
     sStr := g_Config.sGameGoldName
   else
     sStr := ''; 
-  SendDefMessage(SM_GAMEGOLDNAME, m_nGameGold, LoWord(m_nGamePoint), HiWord(m_nGamePoint),
-    m_nPullulation div MIDPULLULATION, sStr);
+  SendDefMessage(SM_GAMEGOLDNAME, m_nGameGold, m_nGamePoint, 0, m_nPullulation div MIDPULLULATION, sStr);
 end;
 
 procedure TPlayObject.SendLogon;
@@ -7343,7 +7322,7 @@ begin
   MessageBodyWL.lTag2 := MakeLong(m_nPullulation div MIDPULLULATION, 0);
   SendSocket(@m_DefMsg, EncodeBuffer(@MessageBodyWL, SizeOf(TMessageBodyWL)));
   nRecog := GetFeatureToLong();
-  SendDefMessage(SM_FEATURECHANGED, Integer(Self), LoWord(nRecog), HiWord(nRecog), GetFeatureEx, IntToStr(m_btStrengthenName));
+  SendDefMessage(SM_FEATURECHANGED, Integer(Self), nRecog, 0, GetFeatureEx, IntToStr(m_btStrengthenName));
   SplitDateTime.DateTime := Now;
   SendDefMessage(SM_SERVERTIME, SplitDateTime.nInt, SplitDateTime.wWord, SplitDateTime.wWord2, 0, '');
   SendAbilityMoveSet;
@@ -7390,9 +7369,9 @@ label
 begin
   if not m_boStorageOpen[0] or m_boStorageLock then
     exit;
-  nItemIdx := MakeLong(ProcessMsg.nParam2, ProcessMsg.nParam3);
-  nIdx := LoByte(ProcessMsg.wParam);
-  nGirdIdx := HiByte(ProcessMsg.wParam);
+  nItemIdx := ProcessMsg.nParam2;
+  nIdx := LoWord(ProcessMsg.wParam);
+  nGirdIdx := HiWord(ProcessMsg.wParam);
   if not g_Config.boTryModeUseStorage then begin
     SysMsg(g_sTryModeCanotUseStorage, c_Red, t_Hint);
     goto StorageFail;
@@ -7444,9 +7423,9 @@ label
 begin
   if not m_boStorageOpen[0] or m_boStorageLock then
     exit;
-  nItemIdx := MakeLong(ProcessMsg.nParam2, ProcessMsg.nParam3);
-  nIdx := LoByte(ProcessMsg.wParam);
-  nGirdIdx := HiByte(ProcessMsg.wParam);
+  nItemIdx := ProcessMsg.nParam2;
+  nIdx := LoWord(ProcessMsg.wParam);
+  nGirdIdx := HiWord(ProcessMsg.wParam);
   if not g_Config.boTryModeUseStorage then begin
     SysMsg(g_sTryModeCanotUseStorage, c_Red, t_Hint);
     goto StorageFail;
@@ -8058,14 +8037,12 @@ begin
     if m_boStorageLock then
       SendDefMsg(Self, SM_MENU_OK, Integer(Self), 0, 0, 0, '仓库已被锁定，暂时无法使用！')
     else
-      SendDefMsg(Self, SM_GETBACKPASSWORD, CM_GETBACKSTORAGEPASS, 12, 1, 0,
-        '仓库已上锁，请输入仓库密码！');
+      SendDefMsg(Self, SM_GETBACKPASSWORD, CM_GETBACKSTORAGEPASS, 12, 1, 0, '仓库已上锁，请输入仓库密码！');
   end
   else begin
     SendDefSocket(Self, SM_STORAGEINFO, m_nStorageGold,
-      MakeWord(Byte(m_boStorageOpen[1]), Byte(m_boStorageOpen[2])),
-      MakeWord(Byte(m_boStorageOpen[3]), Byte(m_boStorageOpen[4])), 0,
-      EncodeBuffer(@m_dwStorageTime[1], SizeOf(TDateTime) * 4));
+      MakeLong(MakeWord(Byte(m_boStorageOpen[1]), Byte(m_boStorageOpen[2])), MakeWord(Byte(m_boStorageOpen[3]), Byte(m_boStorageOpen[4]))),
+      0, 0, EncodeBuffer(@m_dwStorageTime[1], SizeOf(TDateTime) * 4));
   end;
 end;
 
@@ -8849,7 +8826,7 @@ begin
     STATUS_EXP: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          SendDefMsg(Self, SM_STATUSMODE, m_dwKillMonExpRateTime, LoWord(m_nKillMonExpRate), HiWord(m_nKillMonExpRate), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, m_dwKillMonExpRateTime, m_nKillMonExpRate, 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -8860,7 +8837,7 @@ begin
     STATUS_POW: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          SendDefMsg(Self, SM_STATUSMODE, m_dwPowerRateTime, LoWord(m_nPowerRate), HiWord(m_nPowerRate), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, m_dwPowerRateTime, m_nPowerRate, 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -8872,10 +8849,10 @@ begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
           if m_boSC then
-            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[2] - GetTickCount) div 1000, LoWord(m_wStatusArrValue[2] + 2), HiWord(m_wStatusArrValue[2] + 2), nStatus, '')
+            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[2] - GetTickCount) div 1000, m_wStatusArrValue[2] + 2, 0, nStatus, '')
           else begin
             nPower := -m_wStatusArrValue[2]; 
-            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[2] - GetTickCount) div 1000, LoWord(nPower), HiWord(nPower), nStatus, '');
+            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[2] - GetTickCount) div 1000, nPower, 0, nStatus, '');
           end;
 
         end else begin
@@ -8890,7 +8867,7 @@ begin
           m_boStatusModeArr[nStatus] := True;
 //          nPower := 2 + (m_Abil.Level div 7);
           nPower := 10 + (m_wStatusTimeArr[STATE_DEFENCEUP] div 10);
-          SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[STATE_DEFENCEUP], LoWord(nPower), HiWord(nPower), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[STATE_DEFENCEUP], nPower, 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -8902,10 +8879,10 @@ begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
           if m_boDC then
-            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[0] - GetTickCount) div 1000, LoWord(m_wStatusArrValue[0] + 2), HiWord(m_wStatusArrValue[0] + 2), nStatus, '')
+            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[0] - GetTickCount) div 1000, m_wStatusArrValue[0] + 2, 0, nStatus, '')
           else begin
             nPower := -m_wStatusArrValue[0]; 
-            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[0] - GetTickCount) div 1000, LoWord(nPower), HiWord(nPower), nStatus, '')
+            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[0] - GetTickCount) div 1000, nPower, 0, nStatus, '')
           end;
         end else begin
           if m_boStatusModeArr[nStatus] then begin
@@ -8940,10 +8917,10 @@ begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
           if m_boMC then
-            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[1] - GetTickCount) div 1000, LoWord(m_wStatusArrValue[1] + 2), HiWord(m_wStatusArrValue[1] + 2), nStatus, '')
+            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[1] - GetTickCount) div 1000, m_wStatusArrValue[1] + 2, 0, nStatus, '')
           else begin
             nPower := -m_wStatusArrValue[1];
-            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[1] - GetTickCount) div 1000, LoWord(nPower), HiWord(nPower), nStatus, '')
+            SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[1] - GetTickCount) div 1000, nPower, 0, nStatus, '')
           end;
         end else begin
           if m_boStatusModeArr[nStatus] then begin
@@ -8955,7 +8932,7 @@ begin
     STATUS_MP: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[5] - GetTickCount) div 1000, LoWord(m_wStatusArrValue[5]), HiWord(m_wStatusArrValue[5]), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[5] - GetTickCount) div 1000, m_wStatusArrValue[5], 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -8968,7 +8945,7 @@ begin
           m_boStatusModeArr[nStatus] := True;
 //          nPower := 2 + (m_Abil.Level div 7);
           nPower := 10 + (m_wStatusTimeArr[STATE_MAGDEFENCEUP] div (10+m_Abil.Level));
-          SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[STATE_MAGDEFENCEUP], LoWord(nPower), HiWord(nPower), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[STATE_MAGDEFENCEUP], nPower, 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -8979,7 +8956,7 @@ begin
     STATUS_HP: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[4] - GetTickCount) div 1000, LoWord(m_wStatusArrValue[4]), HiWord(m_wStatusArrValue[4]), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, (m_dwStatusArrTimeOutTick[4] - GetTickCount) div 1000, m_wStatusArrValue[4], 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -8990,7 +8967,7 @@ begin
     STATUS_DAMAGEARMOR: begin
         if boMode then begin
           m_boStatusModeArr[nStatus] := True;
-          SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[POISON_DAMAGEARMOR], LoWord(g_Config.nPosionDamagarmor), HiWord(g_Config.nPosionDamagarmor), nStatus, '');
+          SendDefMsg(Self, SM_STATUSMODE, m_wStatusTimeArr[POISON_DAMAGEARMOR], g_Config.nPosionDamagarmor, 0, nStatus, '');
         end else begin
           if m_boStatusModeArr[nStatus] then begin
             m_boStatusModeArr[nStatus] := False;
@@ -9282,7 +9259,7 @@ var
   i: integer;
   Targe: TBaseObject;
   nMaxLevel: integer;
-  nAddHP: Word;
+  nAddHP: Integer;
 begin
   if not g_Config.boCloseWuXin then begin
     if BaseObject = nil then begin
@@ -9313,8 +9290,8 @@ begin
           end;
         end;
         if nMaxlevel > 0 then begin
-          m_AddHP := _MIN(High(Word), Round(m_Abil.MaxHP * (nMaxLevel / 200)));
-          nAddHP := _MIN(High(Word), m_OldHP + m_AddHP);
+          m_AddHP := _MIN(MaxInt, Round(m_Abil.MaxHP * (nMaxLevel / 200)));
+          nAddHP := _MIN(MaxInt, m_OldHP + m_AddHP);
         end;
       end;
       if nAddHP <> m_WAbil.MaxHP then begin
@@ -9726,7 +9703,7 @@ begin
   //禁止取回放入交易栏内的金币
   nGold := Processmsg.nParam1;
   if nGold < 0 then begin
-    SendDefMessage(SM_DEALCHGGOLD_FAIL, m_nDealGolds, LoWord(m_nGold), HiWord(m_nGold), 0, '');
+    SendDefMessage(SM_DEALCHGGOLD_FAIL, m_nDealGolds, m_nGold, 0, 0, '');
     Exit;
   end;
   bo09 := False;
@@ -9736,7 +9713,7 @@ begin
       if (m_nGold + m_nDealGolds) >= nGold then begin
         m_nGold := (m_nGold + m_nDealGolds) - nGold;
         m_nDealGolds := nGold;
-        SendDefMessage(SM_DEALCHGGOLD_OK, m_nDealGolds, LoWord(m_nGold), HiWord(m_nGold), 0, '');
+        SendDefMessage(SM_DEALCHGGOLD_OK, m_nDealGolds, m_nGold, 0, 0, '');
         TPlayObject(m_DealCreat).SendDefMessage(SM_DEALREMOTECHGGOLD, m_nDealGolds, 0, 0, 0, '');
         m_DealCreat.m_DealLastTick := GetTickCount();
         bo09 := True;
@@ -9745,7 +9722,7 @@ begin
     end;
   end;
   if not bo09 then begin
-    SendDefMessage(SM_DEALCHGGOLD_FAIL, m_nDealGolds, LoWord(m_nGold), HiWord(m_nGold), 0, '');
+    SendDefMessage(SM_DEALCHGGOLD_FAIL, m_nDealGolds, m_nGold, 0, 0, '');
   end;
 end;
 
@@ -10150,19 +10127,19 @@ begin
     end; // pGold <> nil
     if boAutoOK and boAutoMake and (nAutoMaxCount > 1) then begin
       if sSendMsg <> '' then begin
-        m_DefMsg := MakeDefaultMsg(SM_MAKEDRUG_AUTO, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nAutoMaxCount);
+        m_DefMsg := MakeDefaultMsg(SM_MAKEDRUG_AUTO, m_nGold, m_nBindGold, m_nBindGold, nAutoMaxCount);
         SendSocket(@m_DefMsg, sSENDMSG);
       end
       else
-        SendDefMessage(SM_MAKEDRUG_AUTO, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nAutoMaxCount, '');
+        SendDefMessage(SM_MAKEDRUG_AUTO, m_nGold, m_nBindGold, m_nBindGold, nAutoMaxCount, '');
     end
     else begin
       if sSendMsg <> '' then begin
-        m_DefMsg := MakeDefaultMsg(SM_MAKEDRUG, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nBack);
+        m_DefMsg := MakeDefaultMsg(SM_MAKEDRUG, m_nGold, m_nBindGold, m_nBindGold, nBack);
         SendSocket(@m_DefMsg, sSENDMSG);
       end
       else
-        SendDefMessage(SM_MAKEDRUG, m_nGold, LoWord(m_nBindGold), HiWord(m_nBindGold), nBack, '');
+        SendDefMessage(SM_MAKEDRUG, m_nGold, m_nBindGold, m_nBindGold, nBack, '');
     end;
   except
     on E: Exception do begin
@@ -10326,13 +10303,13 @@ begin
         end;
         if sSendMsg <> '' then begin
           if StoneUserItem <> nil then
-            m_DefMsg := MakeDefaultMsg(SM_BAGUSEITEM, StoneUserItem.Dura, LoWord(nStoneDelIndex), HiWord(nStoneDelIndex), nBack)
+            m_DefMsg := MakeDefaultMsg(SM_BAGUSEITEM, StoneUserItem.Dura, nStoneDelIndex, nStoneDelIndex, nBack)
           else
-            m_DefMsg := MakeDefaultMsg(SM_BAGUSEITEM, -1, LoWord(nStoneDelIndex), HiWord(nStoneDelIndex), nBack);
+            m_DefMsg := MakeDefaultMsg(SM_BAGUSEITEM, -1, nStoneDelIndex, nStoneDelIndex, nBack);
           SendSocket(@m_DefMsg, sSENDMSG);
         end
         else
-          SendDefMessage(SM_BAGUSEITEM, -1, LoWord(nStoneDelIndex), HiWord(nStoneDelIndex), nBack, '');
+          SendDefMessage(SM_BAGUSEITEM, -1, nStoneDelIndex, nStoneDelIndex, nBack, '');
       finally
         if StoneUserItem <> nil then
           m_ItemList.Add(StoneUserItem);
@@ -10755,7 +10732,7 @@ begin
     RecalcBagCount;
     m_boShoping := False;
     SendRefMsg(RM_USEROPENSHOP, 0, Integer(Self), 0, 0, '');
-    SendDefMessage(SM_USERSHOPCHANGE, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), 0, '');
+    SendDefMessage(SM_USERSHOPCHANGE, m_nGold, m_nGameGold, 0, 0, '');
   end;
 
 end;
@@ -10785,7 +10762,7 @@ begin
     if not m_boShoping then begin
       if not InSafeZone then begin
         SendDefMsg(g_ManageNPC, SM_MENU_OK, Integer(Self), 0, 0, 0, '只能在安全区内进行摆摊操作！');
-        SendDefMessage(SM_USERSHOPCHANGE, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), 0, '');
+        SendDefMessage(SM_USERSHOPCHANGE, m_nGold, m_nGameGold, 0, 0, '');
         Exit;
       end;
       if g_Config.boDisableDeal or Self.m_PEnvir.m_boNODEAL then begin
@@ -10794,7 +10771,7 @@ begin
       end;
       if not m_PEnvir.m_boShop then begin
         SendDefMsg(g_ManageNPC, SM_MENU_OK, Integer(Self), 0, 0, 0, '当前地图不允许进行摆摊操作！');
-        SendDefMessage(SM_USERSHOPCHANGE, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), 0, '');
+        SendDefMessage(SM_USERSHOPCHANGE, m_nGold, m_nGameGold, 0, 0, '');
         Exit;
       end;
       sMsg := ProcessMsg.sMsg;
@@ -10804,7 +10781,7 @@ begin
         if m_sShopTitle <> '' then begin
           if CheckFilterShop(m_sShopTitle) then begin
             SendDefMsg(g_ManageNPC, SM_MENU_OK, Integer(Self), 0, 0, 0, '摊位标题包含禁止使用字符！');
-            SendDefMessage(SM_USERSHOPCHANGE, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), 0, '');
+            SendDefMessage(SM_USERSHOPCHANGE, m_nGold, m_nGameGold, 0, 0, '');
             Exit;
           end;
           while True do begin
@@ -10898,12 +10875,9 @@ begin
             //else
             m_btDirection := 5;
             RecalcBagCount;
-            SendDefMessage(SM_USERSHOPCHANGE, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold),
-              MakeWord(m_btShopLevel + 1, Integer(m_boShopLeft)), '');
-            SendDefMessage(SM_USERSHOPGOLDCHANGE, m_nShopGold, LoWord(m_nShopGameGold), HiWord(m_nShopGameGold), 0,
-              '');
-            SendRefMsg(RM_USEROPENSHOP, 1, Integer(Self), MakeWord(m_btShopLevel + 1, Integer(m_boShopLeft)), 0,
-              EncodeString(m_sShopTitle));
+            SendDefMessage(SM_USERSHOPCHANGE, m_nGold, m_nGameGold, 0, MakeWord(m_btShopLevel + 1, Integer(m_boShopLeft)), '');
+            SendDefMessage(SM_USERSHOPGOLDCHANGE, m_nShopGold, m_nShopGameGold, 0, 0, '');
+            SendRefMsg(RM_USEROPENSHOP, 1, Integer(Self), m_btShopLevel + 1, Integer(m_boShopLeft), EncodeString(m_sShopTitle));
             exit;
           end;
         end;
@@ -10932,7 +10906,7 @@ begin
       m_boShoping := False;
       SendRefMsg(RM_USEROPENSHOP, 0, Integer(Self), 0, 0, '');
     end;
-    SendDefMessage(SM_USERSHOPCHANGE, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), nBack, '');
+    SendDefMessage(SM_USERSHOPCHANGE, m_nGold, m_nGameGold, 0, nBack, '');
   except
     on E: Exception do begin
       MainOutMessage(sExceptionMsg);
@@ -10976,8 +10950,7 @@ begin
     end;
     GameGoldChanged;
     NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FGotoLable[NGETLARGESSGOLD_OK], False);
-    SendDefMsg(g_FunctionNPC, SM_MENU_OK, Integer(Self), 0, 0, 0, '[领取成功]：恭喜您，成功领取了 ' + IntToStr(nGold) +
-      sSTRING_GAMEGOLD);
+    SendDefMsg(g_FunctionNPC, SM_MENU_OK, Integer(Self), 0, 0, 0, '[领取成功]：恭喜您，成功领取了 ' + IntToStr(nGold) + sSTRING_GAMEGOLD);
   end
   else
     NpcGotoLable(g_FunctionNPC, g_FunctionNPC.FGotoLable[NGETLARGESSGOLD_FAIL], False);
@@ -11011,8 +10984,7 @@ begin
       ClientMyShopBuyItem.wCount := UserShopBuyItem.wCount;
       sSendMsg := sSendMsg + EncodeBuffer(@ClientMyShopBuyItem, SizeOf(ClientMyShopBuyItem)) + '/';
     end;
-    m_DefMsg := MakeDefaultMsg(SM_GETUSERSHOPLIST_OFFLINE, m_nShopGameGold, LoWord(m_nShopGold),
-      HiWord(m_nShopGold), MakeWord(m_btShopLevel + 1, Integer(m_boShopLeft)));
+    m_DefMsg := MakeDefaultMsg(SM_GETUSERSHOPLIST_OFFLINE, m_nShopGameGold, m_nShopGold, m_btShopLevel, Integer(m_boShopLeft));
     SendSocket(@m_DefMsg, sSendMsg);
   end;
 end;
@@ -11149,8 +11121,7 @@ begin
                       if Stditem.NeedIdentify = 1 then
                         AddGameLog(PlayObject, LOG_DELITEM, StdItem.Name, UserShopSellItem.UserItem.MakeIndex, 0,
                           m_sCharName, '0', '0', '摆摊', UserShopSellItem.UserItem);
-                      PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, UserShopSellItem.UserItem.MakeIndex,
-                        0, nCount, 1, m_sCharname);
+                      PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, UserShopSellItem.UserItem.MakeIndex, 0, nCount, 1, m_sCharname);
                       PlayObject.m_ShopSellItemList.Delete(I);
                       Dispose(UserShopSellItem.UserItem);
                       Dispose(UserShopSellItem);
@@ -11164,8 +11135,7 @@ begin
                           UserShopSellItem.UserItem.Dura, m_sCharName,
                           '-', IntToStr(nCount), '摆摊', UserShopSellItem.UserItem);
 
-                      PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, UserShopSellItem.UserItem.MakeIndex,
-                        UserShopSellItem.UserItem.Dura, nCount, 1, m_sCharname);
+                      PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, UserShopSellItem.UserItem.MakeIndex, UserShopSellItem.UserItem.Dura, nCount, 1, m_sCharname);
                     end;
 
                     if nID = 2 then begin
@@ -11201,8 +11171,7 @@ begin
                           m_sCharName, '+', IntToStr(nMoneyEx), '摆摊', nil);
                       end;
                     end;
-                    PlayObject.SendDefMsg(PlayObject, SM_USERSHOPGOLDCHANGE, PlayObject.m_nShopGold,
-                      LoWord(PlayObject.m_nShopGameGold), HiWord(PlayObject.m_nShopGameGold), 0, '');
+                    PlayObject.SendDefMsg(PlayObject, SM_USERSHOPGOLDCHANGE, PlayObject.m_nShopGold, PlayObject.m_nShopGameGold, 0, 0, '');
                     nBack := 5; //购买成功
                     PlayObject.m_dwSaveRcdTick := 0; //Jason 新增交易完成立既保存数据
                     m_dwSaveRcdTick := 0; //Jason 新增交易完成立既保存数据
@@ -11266,8 +11235,7 @@ begin
                       if (nMoneyEx > 0) and (g_Config.nPersonShopBuyRate in [1 .. 99]) then
                         nMoneyEx := _MAX(Round(nMoneyEx * (100 - g_Config.nPersonShopBuyRate) / 100), 1);
                       IntegerChange(pPlayGold^, nMoneyEx, INT_ADD);
-                      PlayObject.SendDefMsg(PlayObject, SM_USERSHOPGOLDCHANGE, PlayObject.m_nShopGold,
-                        LoWord(PlayObject.m_nShopGameGold), HiWord(PlayObject.m_nShopGameGold), 0, '');
+                      PlayObject.SendDefMsg(PlayObject, SM_USERSHOPGOLDCHANGE, PlayObject.m_nShopGold, PlayObject.m_nShopGameGold, 0, 0, '');
 
                       if UserShopBuyItem.boGameGold then begin
                         if g_boGameLogGameGold then begin
@@ -11317,15 +11285,13 @@ begin
                       end;
 
                       if (not boSuperposition) or (nCount >= UserShopBuyItem.wCount) then begin
-                        PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, nCount, 0, ProcessMsg.wParam, 2,
-                          m_sCharname);
+                        PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, nCount, 0, ProcessMsg.wParam, 2, m_sCharname);
                         PlayObject.m_ShopBuyItemList.Delete(I);
                         Dispose(UserShopBuyItem);
                       end
                       else begin
                         Dec(UserShopBuyItem.wCount, nCount);
-                        PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, nCount,
-                          UserShopBuyItem.wCount, ProcessMsg.wParam, 2, m_sCharname);
+                        PlayObject.SendDefMsg(PlayObject, SM_USERSHOPITEMCHANGE, nCount, UserShopBuyItem.wCount, ProcessMsg.wParam, 2, m_sCharname);
                       end;
 
                       nBack := 15; //出售成功
@@ -11344,7 +11310,7 @@ begin
             end;
           end;
         end;
-        SendDefMessage(SM_BUYUSERSHOP, m_nGold, LoWord(m_nGameGold), HiWord(m_nGameGold), nBack, sCount);
+        SendDefMessage(SM_BUYUSERSHOP, m_nGold, m_nGameGold, 0, nBack, sCount);
       end;
       PlayObject.CheckShopingClose();
       //新增检测摆摊卖完自动收摊！
@@ -11404,22 +11370,13 @@ end;              }
 
 procedure TPlayObject.ServerDefSocket(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 begin
-  m_DefMsg := MakeDefaultMsg(ProcessMsg.wParam,
-    ProcessMsg.nParam1,
-    ProcessMsg.nParam2,
-    LoWord(ProcessMsg.nParam3),
-    HiWord(ProcessMsg.nParam3));
+  m_DefMsg := MakeDefaultMsg(ProcessMsg.wParam, ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3, ProcessMsg.nParam4);
   SendSocket(@m_DefMsg, ProcessMsg.sMsg);
 end;
 
 procedure TPlayObject.ServerDefMessage(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 begin
-  SendDefMessage(ProcessMsg.wParam,
-    ProcessMsg.nParam1,
-    ProcessMsg.nParam2,
-    LoWord(ProcessMsg.nParam3),
-    HiWord(ProcessMsg.nParam3),
-    ProcessMsg.sMsg);
+  SendDefMessage(ProcessMsg.wParam, ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3, ProcessMsg.nParam4, ProcessMsg.sMsg);
 end;
 
 procedure TPlayObject.ServerShowEffect(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -11435,7 +11392,7 @@ end;
 procedure TPlayObject.ServerUserShop(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 begin
   if ProcessMsg.BaseObject <> Self then
-    m_DefMsg := MakeDefaultMsg(SM_USEROPENSHOP, ProcessMsg.nParam1, ProcessMsg.nParam2, 0, ProcessMsg.wParam);
+    m_DefMsg := MakeDefaultMsg(SM_USEROPENSHOP, ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3, ProcessMsg.wParam);
   SendSocket(@m_DefMsg, ProcessMsg.sMsg);
 end;
 
@@ -11459,11 +11416,7 @@ var
   CharDesc: TCharDesc;
 begin
   if (ProcessMsg.nParam1 <> 0) and (ProcessMsg.nParam2 <> 0) then begin
-    m_DefMsg := MakeDefaultMsg(SM_CHANGEFACE,
-      ProcessMsg.nParam1,
-      LoWord(ProcessMsg.nParam2),
-      HiWord(ProcessMsg.nParam2),
-      0);
+    m_DefMsg := MakeDefaultMsg(SM_CHANGEFACE, ProcessMsg.nParam1, ProcessMsg.nParam2, 0, 0);
     CharDesc.feature := TBaseObject(ProcessMsg.nParam2).GetFeature(Self);
     CharDesc.Status := TBaseObject(ProcessMsg.nParam2).m_nCharStatus;
     CharDesc.btStrengthenIdx := TBaseObject(ProcessMsg.nParam2).m_btStrengthenName;
@@ -11805,12 +11758,7 @@ end;
 
 procedure TPlayObject.ServerFeatureChanged(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 begin
-  SendDefMessage(SM_FEATURECHANGED,
-    Integer(ProcessMsg.BaseObject),
-    LoWord(ProcessMsg.nParam1),
-    HiWord(ProcessMsg.nParam1),
-    ProcessMsg.wParam,
-    ProcessMsg.sMsg);
+  SendDefMessage(SM_FEATURECHANGED, Integer(ProcessMsg.BaseObject), ProcessMsg.nParam1, 0, ProcessMsg.wParam, ProcessMsg.sMsg);
 end;
 
 procedure TPlayObject.ServerIconInfo(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -12231,8 +12179,7 @@ begin
         nObjCount := TBaseObject(ProcessMsg.BaseObject).GetFeatureToLong();
         SendDefMessage(SM_FEATURECHANGED,
           Integer(ProcessMsg.BaseObject),
-          LoWord(nObjCount),
-          HiWord(nObjCount),
+          nObjCount, 0,
           TBaseObject(ProcessMsg.BaseObject).GetFeatureEx,
           IntToStr(TBaseObject(ProcessMsg.BaseObject).m_btStrengthenName));
       end;
@@ -12464,7 +12411,7 @@ begin
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 MagicHit Count: %d Time: %d', [m_nMagicHitCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam, ProcessMsg.nParam1, ProcessMsg.nParam2,
-        ProcessMsg.nParam3, '', dwDelayTime * 2);
+        ProcessMsg.nParam3, ProcessMsg.nParam4, '', dwDelayTime * 2);
       boResult := False;
     end;
     (*if dwDelayTime = 0 then begin
@@ -12560,7 +12507,7 @@ begin
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 Butch Count: %d Time: %d', [m_nButchCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,
+        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,ProcessMsg.nParam4,
         '', dwDelayTime * 2);
       boResult := False;
     end;
@@ -12570,14 +12517,12 @@ end;
 procedure TPlayObject.ClientAttack(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 var
   dwDelayTime: LongWord;
-  //  nMsgCount: Integer;
 begin
   if (not m_boMapApoise) then
     exit; //如果客户端地图未准备好,不允许
   if m_boDealing then
     DealCancel();
   //设置五行活动时间
-  //m_dwIsGetWuXinExpTime := GetTickCount + g_Config.dwGetWuXinExpTick;
   if (m_boHitDelay and (not ProcessMsg.boLateDelivery)) then begin
     Inc(m_nHitCount, g_Config.nMaxHitMsgCount * 2);
     CheckSpeedCount(m_nHitCount, '攻击[多倍]');
@@ -12588,7 +12533,6 @@ begin
     ProcessMsg.boLateDelivery, dwDelayTime) then begin
     m_dwActionTick := GetTickCount;
     SendActionGood();
-    //Inc(n5F8);
   end
   else begin
     if dwDelayTime = 0 then begin
@@ -12602,56 +12546,10 @@ begin
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 Hit Count: %d Time: %d', [m_nHitCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3, '',
+        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3, ProcessMsg.nParam4, '',
         dwDelayTime * 2);
       boResult := False;
     end;
-    (*if dwDelayTime = 0 then begin
-      SendActionFail();
-    end
-    else begin
-      nMsgCount := GetHitMsgCount();
-      if nMsgCount >= g_Config.nMaxHitMsgCount then begin
-        Inc(m_nOverSpeedCount);
-        if m_nOverSpeedCount > g_Config.nOverSpeedKickCount then begin
-          if g_Config.boKickOverSpeed then begin
-            SysMsg(g_sKickClientUserMsg
-              {'请勿使用非法软件.'}, c_Red,
-              t_Hint);
-            m_boEmergencyClose := True;
-            m_boPlayOffLine := False;
-          end;
-          if g_Config.boViewHackMessage then begin
-            //MainOutMessage('[攻击超速] ' + m_sCharName + ' Time: ' + IntToStr(dwDelayTime) + ' Count: '+ IntToStr(nMsgCount));
-            MainOutMessage(format(g_sHitOverSpeed, [m_sCharName,
-              dwDelayTime, nMsgCount]));
-          end;
-        end;
-        //如果超速则发送攻击失败信息
-        SendActionFail();
-      end
-      else begin
-        if (dwDelayTime > g_Config.dwDropOverSpeed) and
-          (g_Config.btSpeedControlMode = 1) and m_boFilterAction then begin
-          SendActionGood();
-          if m_boTestSpeedMode then
-            SysMsg(format('速度异常 Ident: %d Time: %d',
-              [ProcessMsg.wIdent, dwDelayTime]), c_Red, t_Hint);
-        end
-        else begin
-          if m_boTestSpeedMode then begin
-            //SysMsg(format('操作延迟 Ident: %d Time: %d',[ProcessMsg.wIdent,dwDelayTime]),c_Red,t_Hint);
-            SysMsg('操作延迟 Ident: ' + IntToStr(ProcessMsg.wIdent) +
-              ' Time: ' + IntToStr(dwDelayTime), c_Red, t_Hint);
-          end;
-          SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-            ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,
-            '',
-            dwDelayTime);
-          boResult := False;
-        end;
-      end;
-    end; *)
   end;
 end;
 
@@ -12754,7 +12652,7 @@ begin
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 Run Count: %d Time: %d', [m_nRunCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-        ProcessMsg.nParam1, ProcessMsg.nParam2, CM_RUN, '',
+        ProcessMsg.nParam1, ProcessMsg.nParam2, CM_RUN, ProcessMsg.nParam4, '',
         dwDelayTime * 2);
       boResult := False;
     end;
@@ -12834,7 +12732,7 @@ begin
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 Run Count: %d Time: %d', [m_nRunCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-        ProcessMsg.nParam1, ProcessMsg.nParam2, CM_RUN, '',
+        ProcessMsg.nParam1, ProcessMsg.nParam2, CM_RUN, ProcessMsg.nParam4, '',
         dwDelayTime * 2);
       boResult := False;
     end;
@@ -12973,8 +12871,8 @@ begin //如果正在发送延时消息,则过滤一切客户端来源消息
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 Walk Count: %d Time: %d', [m_nWalkCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,
-        '', dwDelayTime * 2);
+        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,ProcessMsg.nParam4,
+                    '', dwDelayTime * 2);
       boResult := False;
     end;
     (* nMsgCount := GetWalkMsgCount();
@@ -13056,8 +12954,8 @@ begin
       if m_boTestSpeedMode then
         SysMsg(format('操作延迟 Turn Count: %d Time: %d', [m_nTurnCount, dwDelayTime]), c_Red, t_Hint);
       SendDelayMsg(Self, ProcessMsg.wIdent, ProcessMsg.wParam,
-        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,
-        '', dwDelayTime * 2);
+        ProcessMsg.nParam1, ProcessMsg.nParam2, ProcessMsg.nParam3,ProcessMsg.nParam4,
+                    '', dwDelayTime * 2);
       boResult := False;
     end;
     (*if dwDelayTime = 0 then begin
@@ -13705,7 +13603,7 @@ begin
         nPower,
         PoseCreate.m_WAbil.HP,
         PoseCreate.m_WAbil.MaxHP,
-        Integer(Self),
+        Integer(Self),0,
         '', 300);
       if PoseCreate.m_btRaceServer <> RC_PLAYOBJECT then begin
         PoseCreate.SendMsg(PoseCreate,
@@ -13800,8 +13698,7 @@ begin
     n20 := Random((n24 + 1) * 10) + ((n24 + 1) * 10);
     n20 := BaseObject_34.GetHitStruckDamage(Self, n20);
     BaseObject_34.StruckDamage(n20, Self);
-    BaseObject_34.SendRefMsg(RM_STRUCK, n20, BaseObject_34.m_WAbil.HP,
-      BaseObject_34.m_WAbil.MaxHP, Integer(Self), '');
+    BaseObject_34.SendRefMsg(RM_STRUCK, n20, BaseObject_34.m_WAbil.HP, BaseObject_34.m_WAbil.MaxHP, Integer(Self), '');
     if BaseObject_34.m_btRaceServer <> RC_PLAYOBJECT then begin
       BaseObject_34.SendMsg(BaseObject_34, RM_STRUCK, n20,
         BaseObject_34.m_WAbil.HP, BaseObject_34.m_WAbil.MaxHP, Integer(Self), '');
@@ -14303,8 +14200,7 @@ begin
               BaseObject.m_btSlaveExpLevel := 7;
               BaseObject.RecalcAbilitys;
               BaseObject.RefNameColor;
-              BaseObject.SendRefMsg(RM_SHOWEFFECT, EFFECT_BEACON_2, Integer(BaseObject),
-                BaseObject.m_nCurrX, BaseObject.m_nCurrY, '');
+              BaseObject.SendRefMsg(RM_SHOWEFFECT, EFFECT_BEACON_2, Integer(BaseObject), BaseObject.m_nCurrX, BaseObject.m_nCurrY, '');
               SysMsg(g_sSlaveLevelUp, c_Blue, t_Hint);
               break;
             end;
@@ -14440,6 +14336,7 @@ begin
           if StdItem.nDC > 0 then begin
             m_boDC := True;
             m_wStatusArrValue[0 {0x218}] := StdItem.nDC;
+                    // FIXME 注意越界问题
             m_dwStatusArrTimeOutTick[0 {0x220}] := GetTickCount + StdItem.nMAC2 * 1000;
             SysMsg('攻击力增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_DC, True);
@@ -14448,6 +14345,7 @@ begin
           if StdItem.nMC > 0 then begin
             m_boMC := True;
             m_wStatusArrValue[1 {0x219}] := StdItem.nMC;
+                    // FIXME 注意越界问题
             m_dwStatusArrTimeOutTick[1 {0x224}] := GetTickCount + StdItem.nMAC2 * 1000;
             SysMsg('魔法力增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_MC, True);
@@ -14456,6 +14354,7 @@ begin
           if StdItem.nSC > 0 then begin
             m_boSC := True;
             m_wStatusArrValue[2 {0x21A}] := StdItem.nSC;
+                    // FIXME 注意越界问题
             m_dwStatusArrTimeOutTick[2 {0x228}] := GetTickCount + StdItem.nMAC2 * 1000;
             SysMsg('道术增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_SC, True);
@@ -14464,6 +14363,7 @@ begin
           if StdItem.nAC2 > 0 then begin
             m_boHitSpeed := True;
             m_wStatusArrValue[3 ] := StdItem.nAC2;
+                    // FIXME 注意越界问题
             m_dwStatusArrTimeOutTick[3 ] := GetTickCount + StdItem.nMAC2 * 1000;
             SysMsg('攻击速度增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             bo06 := True;
@@ -14471,6 +14371,7 @@ begin
           if StdItem.nAC > 0 then begin
             m_boAC := True;
             m_wStatusArrValue[4 {0x21C}] := StdItem.nAC;
+                    // FIXME 注意越界问题
             m_dwStatusArrTimeOutTick[4 {0x230}] := GetTickCount + StdItem.nMAC2 * 1000;
             SysMsg('生命值增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_HP, True);
@@ -14479,6 +14380,7 @@ begin
           if StdItem.nMAC > 0 then begin
             m_boMAC := True;
             m_wStatusArrValue[5 {0x21D}] := StdItem.nMAC;
+                    // FIXME 注意越界问题
             m_dwStatusArrTimeOutTick[5 {0x234}] := GetTickCount + StdItem.nMAC2 * 1000;
             SysMsg('魔法值增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_MP, True);
@@ -15054,13 +14956,12 @@ end;
 
 procedure TPlayObject.GameGirdChanged;
 begin
-  SendDefMsg(Self, SM_GAMEGOLDNAME3, m_nGameGird, 0, LoWord(m_CustomVariable[0]), HiWord(m_CustomVariable[0]), '');
+  SendDefMsg(Self, SM_GAMEGOLDNAME3, m_nGameGird, 0, m_CustomVariable[0], 0, '');
 end;
 
 procedure TPlayObject.DiamondChanged;
 begin
-  SendDefMsg(Self, SM_GAMEGOLDNAME2, m_nGameDiamond, m_nPkPoint,
-    LoWord(m_nCreditPoint), HiWord(m_nCreditPoint), '');
+  SendDefMsg(Self, SM_GAMEGOLDNAME2, m_nGameDiamond, m_nPkPoint, m_nCreditPoint, 0, '');
 end;
 
 function TPlayObject.AbilityUp(UserMagic: pTUserMagic): Boolean;
@@ -15426,7 +15327,7 @@ var
   boHorseItem: Boolean;
 begin
   NPC := TNormNPC(GetSelectNPC(Integer(m_ClickNPC)));
-  boSuperRepair := LoByte(ProcessMsg.wParam) = 1;
+  boSuperRepair := LoWord(ProcessMsg.wParam) = 1;
   if (NPC = nil) or (not (NPC is TMerchant)) then
   begin
     SendDefMsg(Self, SM_USERREPAIRITEM_FAIL, 1, 0, 0, 0, '');
@@ -15442,7 +15343,7 @@ begin
     if not TMerchant(NPC).m_borepair then
       exit;
   end;
-  nInt := MakeLong(ProcessMsg.nParam2, ProcessMsg.nParam3);
+  nInt := ProcessMsg.nParam2;
   if nInt = 0 then begin
     boGoldChange := False;
     for I := Low(m_UseItems) to High(m_UseItems) do begin
@@ -15513,7 +15414,7 @@ begin
   end
   else begin
     boHorseItem := False;
-    btUseItem := HiByte(ProcessMsg.wParam);
+    btUseItem := HiWord(ProcessMsg.wParam);
     UserItem := nil;
     bo19 := False;
     if btUseItem in [Low(m_UseItems)..High(m_UseItems)] then begin
@@ -16074,8 +15975,7 @@ begin
             else begin
               if m_btOpenIndex in [Low(m_BoxGoldInfo)..High(m_BoxGoldInfo)] then
                 SendDefMessage(SM_OPENBOXINFO, m_BoxGoldInfo[m_btOpenIndex].nGold,
-                  LoWord(m_BoxGoldInfo[m_btOpenIndex].nGameGold),
-                  HiWord(m_BoxGoldInfo[m_btOpenIndex].nGameGold), 2, '')
+                  m_BoxGoldInfo[m_btOpenIndex].nGameGold, 0, 2, '')
               else
                 SendDefMessage(SM_OPENBOXINFO, 0, 0, 0, 2, '');
             end;
@@ -16202,8 +16102,7 @@ begin
         m_BoxItems.Peculiar[2] := pTBoxItemInfo(BoxInfo.ItemList[4][Random(BoxInfo.ItemList[4].Count)])^;
         m_btOpenIndex := 0;
         m_boOpenBox := True;
-        m_DefMsg := MakeDefaultMsg(SM_OPENBOX, m_BoxGoldInfo[0].nGold,
-          LoWord(m_BoxGoldInfo[0].nGameGold), HiWord(m_BoxGoldInfo[0].nGameGold), m_btOpenIndex);
+        m_DefMsg := MakeDefaultMsg(SM_OPENBOX, m_BoxGoldInfo[0].nGold, m_BoxGoldInfo[0].nGameGold, 0, m_btOpenIndex);
         SendSocket(@m_DefMsg, EncodeBuffer(@m_BoxItems, SizeOf(m_BoxItems)));
         Result := True;
       end;
@@ -16888,17 +16787,14 @@ begin
               nCheckCode := 61;
               if TPlayObject(BaseObject).m_boShoping then begin
                 SendDefSocket(Self, SM_USEROPENSHOP, Integer(BaseObject),
-                  MakeWord(TPlayObject(BaseObject).m_btShopLevel + 1, Integer(TPlayObject(BaseObject).m_boShopLeft)),
-                  0, 1,
+                  TPlayObject(BaseObject).m_btShopLevel + 1, Integer(TPlayObject(BaseObject).m_boShopLeft), 1,
                   EncodeString(TPlayObject(BaseObject).m_sShopTitle));
               end;
             end
             else if BaseObject.m_btRaceServer = RC_NPC then begin
               if TNormNpc(BaseObject).m_nEffigyState <> -1 then begin
-                SendDefMsg(Self, SM_CHANGEEFFIGYSTATE,
-                  Integer(BaseObject),
-                  LoWord(TNormNpc(BaseObject).m_nEffigyState),
-                  HiWord(TNormNpc(BaseObject).m_nEffigyState),
+                SendDefMsg(Self, SM_CHANGEEFFIGYSTATE, Integer(BaseObject),
+                  TNormNpc(BaseObject).m_nEffigyState, 0,
                   TNormNpc(BaseObject).m_nEffigyOffset, '');
               end;
             end;
@@ -18117,7 +18013,7 @@ function TPlayObject._Attack(var wHitMode: Word; AttackTarget: TBaseObject): Boo
             nSecPwr,
             BaseObject.m_WAbil.HP,
             BaseObject.m_WAbil.MaxHP,
-            Integer(Self),
+            Integer(Self),0,
             '', 200);
           if BaseObject.m_btRaceServer <> RC_PLAYOBJECT then begin
             BaseObject.SendMsg(BaseObject,
@@ -18481,7 +18377,7 @@ begin
       AttackTarget.OrdinaryAttack(Self);
       nCheckCode := 602;
       AttackTarget.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower,
-        AttackTarget.m_WAbil.HP, AttackTarget.m_WAbil.MaxHP, Integer(Self), '', nDelayTime);
+        AttackTarget.m_WAbil.HP, AttackTarget.m_WAbil.MaxHP, Integer(Self), 0,'', nDelayTime);
       nCheckCode := 603;
 
       //麻痹
@@ -18512,8 +18408,7 @@ begin
         if not CheckMagicLevelup(m_MagicArr[SKILL_ONESWORD]) then begin
           nCheckCode := 609;
           SendDelayDefMsg(Self, SM_MAGIC_LVEXP, m_MagicArr[SKILL_ONESWORD].MagicInfo.wMagicId,
-            m_MagicArr[SKILL_ONESWORD].btLevel, LoWord(m_MagicArr[SKILL_ONESWORD].nTranPoint),
-            HiWord(m_MagicArr[SKILL_ONESWORD].nTranPoint), '', 3000);
+            m_MagicArr[SKILL_ONESWORD].btLevel, m_MagicArr[SKILL_ONESWORD].nTranPoint, 0, '', 3000);
         end;
         nCheckCode := 610;
       end;
@@ -18533,8 +18428,7 @@ begin
         if not CheckMagicLevelup(m_MagicArr[SKILL_ILKWANG]) then begin
           nCheckCode := 609;
           SendDelayDefMsg(Self, SM_MAGIC_LVEXP, m_MagicArr[SKILL_ILKWANG].MagicInfo.wMagicId,
-            m_MagicArr[SKILL_ILKWANG].btLevel, LoWord(m_MagicArr[SKILL_ILKWANG].nTranPoint),
-            HiWord(m_MagicArr[SKILL_ILKWANG].nTranPoint), '', 3000);
+            m_MagicArr[SKILL_ILKWANG].btLevel, m_MagicArr[SKILL_ILKWANG].nTranPoint, 0, '', 3000);
         end;
         nCheckCode := 610;
       end;
@@ -18545,8 +18439,7 @@ begin
         TrainSkill(m_MagicArr[nMagID], 1);
         if not CheckMagicLevelup(m_MagicArr[nMagID]) then begin
           SendDelayDefMsg(Self, SM_MAGIC_LVEXP, m_MagicArr[nMagID].MagicInfo.wMagicId,
-            m_MagicArr[nMagID].btLevel, LoWord(m_MagicArr[nMagID].nTranPoint),
-            HiWord(m_MagicArr[nMagID].nTranPoint), '', 3000);
+            m_MagicArr[nMagID].btLevel, m_MagicArr[nMagID].nTranPoint, 0, '', 3000);
         end;
       end;
 

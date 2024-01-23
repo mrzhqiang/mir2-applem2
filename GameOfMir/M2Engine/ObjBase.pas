@@ -105,9 +105,9 @@ type
     m_WAbil: TAbility; //0x198
     m_AddAbil: TAddAbility; //0x1C0
     m_TempAddAbil: TAddAbility;
-    m_AddHP: Word;
-    m_OldHP: Word;
-    m_NotOnHorseHP: Word;
+    m_AddHP: Integer;
+    m_OldHP: Integer;
+    m_NotOnHorseHP: Integer;
     m_nViewRange: Integer; //0x1E4   //可视范围大小
     m_wStatusTimeArr: TStatusTime; //0x60
     m_dwStatusArrTick: array[0..MAX_STATUS_ATTRIBUTE - 1] of LongWord; //0x1E8
@@ -460,43 +460,34 @@ type
     procedure ChangeStatusMode(nStatus: Integer; boMode: Boolean); virtual;
     //function GetWuXinLevelExp(nLevel: Integer): LongWord;
     procedure DuraChange(idx, Dura, DuraMax: Integer);
-    procedure SendUpdateDelayMsg(BaseObject: TBaseObject; wIdent, wParam: Word;
+    procedure SendUpdateDelayMsg(BaseObject: TBaseObject; wIdent, wParam: Integer;
       lParam1, lParam2, lParam3: Integer; sMsg: string; dwDelay: LongWord); virtual;
-    procedure SendMsg(BaseObject: TBaseObject; wIdent, wParam: Word; nParam1,
+    procedure SendMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; nParam1,
       nParam2, nParam3: Integer; sMsg: string); { virtual;  }
 
-    procedure SendUpdateDelayDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string; dwDelay: LongWord);
-    procedure SendDelayDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string; dwDelay: LongWord);
-    procedure SendFirstDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string);
-    procedure SendUpdateDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string);
-    procedure SendDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string);
-    procedure SendDefSocket(BaseObject: TBaseObject; wIdent: Word;
-      Recog: Integer; Param, tag, Series: Word; sMsg: string);
-    procedure SendFirstMsg(BaseObject: TBaseObject; wIdent, wParam: Word;
-      lParam1, lParam2, lParam3: Integer; sMsg: string); virtual;
-    procedure SendDelayMsg(BaseObject: TBaseObject; wIdent, wParam: Word;
-      lParam1, lParam2, lParam3: Integer; sMsg: string; dwDelay: LongWord); virtual;
-    procedure SendRefMsg(wIdent, wParam: Word; nParam1, nParam2, nParam3:
-      Integer; sMsg: string; dwDelay: LongWord = 0);
-    procedure SendUpdateMsg(BaseObject: TBaseObject; wIdent, wParam: Word;
-      lParam1, lParam2, lParam3: Integer; sMsg: string); virtual;
-    {procedure SendActionMsg(BaseObject: TBaseObject; wIdent, wParam: Word;
-      lParam1, lParam2, lParam3: Integer; sMsg: string); }
-    procedure SendAttackMsg(wIdent, wSendIdent: Word; btDir: Byte; nX, nY: Integer);
+    procedure SendUpdateDelayDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer;
+      Param, tag, Series: Integer; sMsg: string; dwDelay: LongWord);
+    procedure SendDelayDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer;
+      Param, tag, Series: Integer; sMsg: string; dwDelay: LongWord);
+    procedure SendFirstDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer;
+      Param, tag, Series: Integer; sMsg: string);
+    procedure SendUpdateDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer;
+      Param, tag, Series: Integer; sMsg: string);
+    procedure SendDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string);
+    procedure SendDefSocket(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string);
+    procedure SendFirstMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3: Integer; sMsg: string); virtual;
+    procedure SendDelayMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3, lParam4: Integer; sMsg: string; dwDelay: LongWord); virtual;
+    procedure SendRefMsg(wIdent, wParam: Integer; nParam1, nParam2, nParam3: Integer; sMsg: string; dwDelay: LongWord = 0);
+    procedure SendUpdateMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3: Integer; sMsg: string); virtual;
+    procedure SendAttackMsg(wIdent, wSendIdent: Integer; btDir: Byte; nX, nY: Integer);
     procedure SysMsg(sMsg: string; MsgColor: TMsgColor; MsgType: TMsgType = t_Hint);
     procedure MenuMsg(sMsg: string);
     procedure SysDelayMsg(sMsg: string; MsgColor: TMsgColor; MsgType: TMsgType; nDelayTime: LongWord);
     procedure SysHintMsg(sMsg: string; MsgColor: TMsgColor);
     procedure MonsterSayMsg(AttackBaseObject: TBaseObject; MonStatus: TMonStatus);
-   // function IsVisibleHuman(): Boolean;
     procedure RecalcLevelAbilitys;
     function PKLevel(): Integer;
-    function GetFeatureEx: Word;
+    function GetFeatureEx: Integer;
     procedure MeltTargetAll;
 
     procedure SendAbility;
@@ -1459,18 +1450,18 @@ begin
   StdItemA := StdItem^;
   if not ItemUnit.GetItemAddValue(m_btWuXin, Item, StdItemA) then exit;
 
-  AddAbility.AC := _MIN(High(Word), AddAbility.AC + StdItemA.nAC);
-  AddAbility.AC2 := _MIN(High(Word), AddAbility.AC2 + StdItemA.nAC2);
-  AddAbility.MAC := _MIN(High(Word), AddAbility.MAC + StdItemA.nMAC);
-  AddAbility.MAC2 := _MIN(High(Word), AddAbility.MAC2 + StdItemA.nMAC2);
-  AddAbility.DC := _MIN(High(Word), AddAbility.DC + StdItemA.nDC);
-  AddAbility.DC2 := _MIN(High(Word), AddAbility.DC2 + StdItemA.nDC2);
-  AddAbility.MC := _MIN(High(Word), AddAbility.MC + StdItemA.nMC);
-  AddAbility.MC2 := _MIN(High(Word), AddAbility.MC2 + StdItemA.nMC2);
-  AddAbility.SC := _MIN(High(Word), AddAbility.SC + StdItemA.nSC);
-  AddAbility.SC2 := _MIN(High(Word), AddAbility.SC2 + StdItemA.nSC2);
-  AddAbility.HP := _MIN(High(Word), AddAbility.HP + StdItemA.HP);
-  AddAbility.MP := _MIN(High(Word), AddAbility.MP + StdItemA.MP);
+  AddAbility.AC := _MIN(High(Integer), AddAbility.AC + StdItemA.nAC);
+  AddAbility.AC2 := _MIN(High(Integer), AddAbility.AC2 + StdItemA.nAC2);
+  AddAbility.MAC := _MIN(High(Integer), AddAbility.MAC + StdItemA.nMAC);
+  AddAbility.MAC2 := _MIN(High(Integer), AddAbility.MAC2 + StdItemA.nMAC2);
+  AddAbility.DC := _MIN(High(Integer), AddAbility.DC + StdItemA.nDC);
+  AddAbility.DC2 := _MIN(High(Integer), AddAbility.DC2 + StdItemA.nDC2);
+  AddAbility.MC := _MIN(High(Integer), AddAbility.MC + StdItemA.nMC);
+  AddAbility.MC2 := _MIN(High(Integer), AddAbility.MC2 + StdItemA.nMC2);
+  AddAbility.SC := _MIN(High(Integer), AddAbility.SC + StdItemA.nSC);
+  AddAbility.SC2 := _MIN(High(Integer), AddAbility.SC2 + StdItemA.nSC2);
+  AddAbility.HP := _MIN(High(Integer), AddAbility.HP + StdItemA.HP);
+  AddAbility.MP := _MIN(High(Integer), AddAbility.MP + StdItemA.MP);
 
   Inc(AddAbility.wAddAttack, StdItemA.AddAttack); //准确
   Inc(AddAbility.wDelDamage, StdItemA.DelDamage); //准确
@@ -1817,9 +1808,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendFirstMsg(BaseObject: TBaseObject; wIdent, wParam:
-  Word;
-  lParam1, lParam2, lParam3: Integer; sMsg: string);
+procedure TBaseObject.SendFirstMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3: Integer; sMsg: string);
 var
   SendMessage: pTSendMessage;
 begin
@@ -1852,8 +1841,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendDelayDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string; dwDelay: LongWord);
+procedure TBaseObject.SendDelayDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string; dwDelay: LongWord);
 var
   SendMessage: pTSendMessage;
 begin
@@ -1865,7 +1853,8 @@ begin
       SendMessage.wParam := wIdent;
       SendMessage.nParam1 := Recog;
       SendMessage.nParam2 := Param;
-      SendMessage.nParam3 := MakeLong(tag, Series);
+      SendMessage.nParam3 := tag;
+      SendMessage.nParam4 := Series;
       SendMessage.dwDeliveryTime := GetTickCount + dwDelay;
       SendMessage.BaseObject := BaseObject;
       SendMessage.boLateDelivery := False;
@@ -1887,8 +1876,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendUpdateDelayDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string; dwDelay: LongWord);
+procedure TBaseObject.SendUpdateDelayDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string; dwDelay: LongWord);
 var
   SendMessage: pTSendMessage;
   i: Integer;
@@ -1914,8 +1902,7 @@ begin
   SendDelayDefMsg(BaseObject, wIdent, Recog, Param, tag, Series, sMsg, dwDelay);
 end;
 
-procedure TBaseObject.SendFirstDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string);
+procedure TBaseObject.SendFirstDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string);
 var
   SendMessage: pTSendMessage;
 begin
@@ -1927,7 +1914,8 @@ begin
       SendMessage.wParam := wIdent;
       SendMessage.nParam1 := Recog;
       SendMessage.nParam2 := Param;
-      SendMessage.nParam3 := MakeLong(tag, Series);
+      SendMessage.nParam3 := tag;
+      SendMessage.nParam4 := Series;
       SendMessage.dwDeliveryTime := 0;
       SendMessage.BaseObject := BaseObject;
       SendMessage.boLateDelivery := False;
@@ -1949,8 +1937,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendUpdateDefMsg(BaseObject: TBaseObject; wIdent: Word; Recog: Integer;
-      Param, tag, Series: Word; sMsg: string);
+procedure TBaseObject.SendUpdateDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string);
 var
   SendMessage: pTSendMessage;
   i: Integer;
@@ -1976,8 +1963,7 @@ begin
   SendDefMsg(BaseObject, wIdent, Recog, Param, Tag, Series, sMsg);
 end;
 
-procedure TBaseObject.SendDefMsg(BaseObject: TBaseObject; wIdent: Word;
-  Recog: Integer; Param, tag, Series: Word; sMsg: string);
+procedure TBaseObject.SendDefMsg(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string);
 var
   SendMessage: pTSendMessage;
 begin
@@ -1989,7 +1975,8 @@ begin
       SendMessage.wParam := wIdent;
       SendMessage.nParam1 := Recog;
       SendMessage.nParam2 := Param;
-      SendMessage.nParam3 := MakeLong(tag, Series);
+      SendMessage.nParam3 := tag;
+      SendMessage.nParam4 := Series;
       SendMessage.dwDeliveryTime := 0;
       SendMessage.BaseObject := BaseObject;
       SendMessage.boLateDelivery := False;
@@ -2011,8 +1998,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendDefSocket(BaseObject: TBaseObject; wIdent: Word;
-  Recog: Integer; Param, tag, Series: Word; sMsg: string);
+procedure TBaseObject.SendDefSocket(BaseObject: TBaseObject; wIdent: Integer; Recog: Integer; Param, tag, Series: Integer; sMsg: string);
 var
   SendMessage: pTSendMessage;
 begin
@@ -2024,7 +2010,8 @@ begin
       SendMessage.wParam := wIdent;
       SendMessage.nParam1 := Recog;
       SendMessage.nParam2 := Param;
-      SendMessage.nParam3 := MakeLong(tag, Series);
+      SendMessage.nParam3 := tag;
+      SendMessage.nParam4 := Series;
       SendMessage.dwDeliveryTime := 0;
       SendMessage.BaseObject := BaseObject;
       SendMessage.boLateDelivery := False;
@@ -2046,8 +2033,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendMsg(BaseObject: TBaseObject; wIdent, wParam: Word;
-  nParam1, nParam2, nParam3: Integer; sMsg: string); //004B865C
+procedure TBaseObject.SendMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; nParam1, nParam2, nParam3: Integer; sMsg: string); //004B865C
 var
   SendMessage: pTSendMessage;
 begin
@@ -2092,9 +2078,7 @@ end;
     7 空消息
     8 延迟时间——飞行时长、固定生效间隔
     }
-procedure TBaseObject.SendDelayMsg(BaseObject: TBaseObject; wIdent,
-  wParam: Word; lParam1, lParam2, lParam3: Integer; sMsg: string;
-  dwDelay: LongWord);
+procedure TBaseObject.SendDelayMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3, lParam4: Integer; sMsg: string; dwDelay: LongWord);
 var
   SendMessage: pTSendMessage;
 begin
@@ -2107,6 +2091,7 @@ begin
       SendMessage.nParam1 := lParam1;
       SendMessage.nParam2 := lParam2;
       SendMessage.nParam3 := lParam3;
+      SendMessage.nParam4 := lParam4;
       SendMessage.dwDeliveryTime := GetTickCount + dwDelay;
       SendMessage.BaseObject := BaseObject;
       SendMessage.boLateDelivery := True;
@@ -2128,9 +2113,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.SendUpdateDelayMsg(BaseObject: TBaseObject; wIdent,
-  wParam: Word; lParam1, lParam2, lParam3: Integer; sMsg: string;
-  dwDelay: LongWord);
+procedure TBaseObject.SendUpdateDelayMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3: Integer; sMsg: string; dwDelay: LongWord);
 var
   SendMessage: pTSendMessage;
   i: Integer;
@@ -2154,13 +2137,10 @@ begin
   finally
     LeaveCriticalSection(ProcessMsgCriticalSection);
   end;
-  SendDelayMsg(BaseObject, wIdent, wParam, lParam1, lParam2, lParam3, sMsg,
-    dwDelay);
+  SendDelayMsg(BaseObject, wIdent, wParam, lParam1, lParam2, lParam3, 0, sMsg, dwDelay);
 end;
 
-procedure TBaseObject.SendUpdateMsg(BaseObject: TBaseObject; wIdent, wParam:
-  Word;
-  lParam1, lParam2, lParam3: Integer; sMsg: string);
+procedure TBaseObject.SendUpdateMsg(BaseObject: TBaseObject; wIdent, wParam: Integer; lParam1, lParam2, lParam3: Integer; sMsg: string);
 var
   SendMessage: pTSendMessage;
   i: Integer;
@@ -2209,6 +2189,7 @@ begin
       Msg.nParam1 := SendMessage.nParam1;
       Msg.nParam2 := SendMessage.nParam2;
       Msg.nParam3 := SendMessage.nParam3;
+      Msg.nParam4 := SendMessage.nParam4;
       Msg.BaseObject := SendMessage.BaseObject;
       Msg.dwDeliveryTime := SendMessage.dwDeliveryTime;
       Msg.boLateDelivery := SendMessage.boLateDelivery;
@@ -2268,7 +2249,7 @@ begin
   Result := True;
 end;
 
-procedure TBaseObject.SendRefMsg(wIdent, wParam: Word; nParam1, nParam2, nParam3: Integer; sMsg: string; dwDelay: LongWord);
+procedure TBaseObject.SendRefMsg(wIdent, wParam: Integer; nParam1, nParam2, nParam3: Integer; sMsg: string; dwDelay: LongWord);
 var
   ii, nC: Integer;
   nCX, nCY, nLX, nLY, nHX, nHY: Integer;
@@ -2288,7 +2269,7 @@ begin
   //if m_boObMode or m_boFixedHideMode then exit;
   //01/21 增加，原来直接不发信息，如果隐身模式则只发送信息给自己
   if m_boObMode or m_boFixedHideMode  then begin
-    if dwDelay > 0 then SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg, dwDelay)
+    if dwDelay > 0 then SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, 0, sMsg, dwDelay)
     else SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
     Exit;
   end;
@@ -2325,7 +2306,7 @@ begin
                           if (BaseObject.m_btRaceServer = RC_PLAYOBJECT)  then begin
                             //if BaseObject.m_boMapApoise then begin
                               if dwDelay > 0 then
-                                BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg, dwDelay)
+                                BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, 0,sMsg, dwDelay)
                               else
                                 BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
                               //BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
@@ -2337,7 +2318,7 @@ begin
                             if (wIdent = RM_STRUCK) or (wIdent = RM_HEAR) or
                               (wIdent = RM_DEATH) or (wIdent = RM_CHARSTATUSCHANGED) then begin
                               if dwDelay > 0 then
-                                BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg, dwDelay)
+                                BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, 0,sMsg, dwDelay)
                               else
                                 BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
                               //BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
@@ -2374,7 +2355,7 @@ begin
         (abs(BaseObject.m_nCurrY - m_nCurrY) <= g_Config.nSendRefMsgRange) then begin
         if (BaseObject.m_btRaceServer = RC_PLAYOBJECT) then begin
           //if BaseObject.m_boMapApoise then begin
-            if dwDelay > 0 then BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg, dwDelay)
+            if dwDelay > 0 then BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, 0,sMsg, dwDelay)
             else BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
             //BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
           //end;
@@ -2382,7 +2363,7 @@ begin
         else if BaseObject.m_boWantRefMsg then begin
           if (wIdent = RM_STRUCK) or (wIdent = RM_HEAR) or (wIdent = RM_DEATH) or (wIdent = RM_CHARSTATUSCHANGED) then
           begin
-            if dwDelay > 0 then BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg, dwDelay)
+            if dwDelay > 0 then BaseObject.SendDelayMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, 0,sMsg, dwDelay)
             else BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
             //BaseObject.SendMsg(Self, wIdent, wParam, nParam1, nParam2, nParam3, sMsg);
           end;
@@ -2763,7 +2744,7 @@ begin
   Result := GetFeature(nil);
 end;
 
-function TBaseObject.GetFeatureEx(): Word;
+function TBaseObject.GetFeatureEx(): Integer;
 begin
   if m_boOnHorse then begin
     Result := MakeWord(m_btHorseType, m_btDressEffType);
@@ -3224,7 +3205,6 @@ begin
       DisappearA();
       ClearViewRange;
 
-      //SendDefMsg(Self, SM_CLEAROBJECTS, 0, 0, 0, 0, '');
       m_PEnvir := Envir;
       m_sMapName := Envir.sMapName;
       m_nCurrX := nDMapX;
@@ -3349,28 +3329,28 @@ begin
   
   if cv_Mir2 in TPlayObject(Self).m_ClientVersion then begin
     case MsgColor of
-      c_Green: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btGreenMsgFColor, g_Config.btGreenMsgBColor, 0, sMsg, nDelayTime);
-      c_Blue: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btBlueMsgFColor, g_Config.btBlueMsgBColor, 0, sMsg, nDelayTime);
+      c_Green: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btGreenMsgFColor, g_Config.btGreenMsgBColor, 0, 0, sMsg, nDelayTime);
+      c_Blue: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btBlueMsgFColor, g_Config.btBlueMsgBColor, 0, 0, sMsg, nDelayTime);
     else
       begin
         case MsgType of
-          t_Cust: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btCustMsgFColor, g_Config.btCustMsgBColor, 0, sMsg, nDelayTime);
-          t_Cudt: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btCudtMsgFColor, g_Config.btCudtMsgBColor, 0, sMsg, nDelayTime);
+          t_Cust: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btCustMsgFColor, g_Config.btCustMsgBColor, 0,0, sMsg, nDelayTime);
+          t_Cudt: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btCudtMsgFColor, g_Config.btCudtMsgBColor, 0,0, sMsg, nDelayTime);
         else
-          SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btRedMsgFColor, g_Config.btRedMsgBColor, 0, sMsg, nDelayTime);
+          SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.btRedMsgFColor, g_Config.btRedMsgBColor, 0, 0, sMsg, nDelayTime);
         end;
       end;
     end;
   end else begin
     case MsgColor of
-      c_Green: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nGreenMsgFColor, g_Config.nGreenMsgBColor, 0, sMsg, nDelayTime);
-      c_Blue: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nBlueMsgFColor, g_Config.nBlueMsgBColor, 0, sMsg, nDelayTime);
+      c_Green: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nGreenMsgFColor, g_Config.nGreenMsgBColor, 0,0, sMsg, nDelayTime);
+      c_Blue: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nBlueMsgFColor, g_Config.nBlueMsgBColor, 0,0, sMsg, nDelayTime);
     else begin
         case MsgType of
-          t_Cust: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nCustMsgFColor, g_Config.nCustMsgBColor, 0, sMsg, nDelayTime);
-          t_Cudt: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nCudtMsgFColor,  g_Config.nCudtMsgBColor, 0, sMsg, nDelayTime);
+          t_Cust: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nCustMsgFColor, g_Config.nCustMsgBColor, 0,0, sMsg, nDelayTime);
+          t_Cudt: SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nCudtMsgFColor,  g_Config.nCudtMsgBColor, 0,0, sMsg, nDelayTime);
         else
-          SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nRedMsgFColor, g_Config.nRedMsgBColor, 0, sMsg, nDelayTime);
+          SendDelayMsg(Self, RM_SYSMESSAGE, 0, g_Config.nRedMsgFColor, g_Config.nRedMsgBColor, 0,0, sMsg, nDelayTime);
         end;
       end;
     end;
@@ -4386,8 +4366,7 @@ begin
   with Self as TPlayObject do begin
     m_WAbil.Exp := m_Abil.Exp;
     m_WAbil.MaxExp := m_Abil.MaxExp;
-    SendDefSocket(Self, SM_ABILITY, m_nGold, MakeWord(m_btJob, 99),
-      LoWord(m_nBindGold), HiWord(m_nBindGold), EncodeBuffer(@m_WAbil, SizeOf(m_WAbil)));
+    SendDefSocket(Self, SM_ABILITY, m_nGold, MakeWord(m_btJob, 99), m_nBindGold, 0, EncodeBuffer(@m_WAbil, SizeOf(m_WAbil)));
   end;
 end;
 
@@ -4400,11 +4379,10 @@ begin
   ClientAppendSubAbility.nParam1 := MakeLong(MakeWord(m_btAddWuXinAttack, m_btDelWuXinAttack), MakeWord(m_btDeadliness, 0));
   ClientAppendSubAbility.nParam2 := TPlayObject(Self).m_nGameGird;
   ClientAppendSubAbility.nParam3 := TPlayObject(Self).m_CustomVariable[0];
-  SendDefSocket(Self, SM_SUBABILITY,
-    MakeLong(MakeWord(m_nAntiMagic, m_btWuXin), MakeWord(m_btAddAttack, m_btDelDamage)),
-    MakeWord(m_btHitPoint, m_btSpeedPoint),
-    MakeWord(m_btAntiPoison, m_nPoisonRecover),
-    MakeWord(m_nHealthRecover, m_nSpellRecover),
+  SendDefSocket(Self, SM_SUBABILITY, MakeLong(MakeWord(m_nAntiMagic, m_btWuXin), MakeWord(m_btAddAttack, m_btDelDamage)),
+                 MakeLong(MakeWord(m_btHitPoint, 0), MakeWord(m_btSpeedPoint, 0)),
+                 MakeLong(MakeWord(m_btAntiPoison, 0), MakeWord(m_nPoisonRecover, 0)),
+                 MakeLong(MakeWord(m_nHealthRecover, 0), MakeWord(m_nSpellRecover, 0)),
     EncodeBuffer(@ClientAppendSubAbility, SizeOf(ClientAppendSubAbility)));
 end;
 
@@ -4635,8 +4613,7 @@ begin
   end;
 end;
 
-procedure TBaseObject.TrainSkill(UserMagic: pTUserMagic;
-  nTranPoint: Integer);
+procedure TBaseObject.TrainSkill(UserMagic: pTUserMagic; nTranPoint: Integer);
 begin
   if m_boFastTrain then
     nTranPoint := nTranPoint * 3;
@@ -4660,8 +4637,8 @@ begin
     if (UserMagic.MagicInfo.btTrainLv > UserMagic.btLevel) then begin
       Dec(UserMagic.nTranPoint, UserMagic.MagicInfo.MaxTrain[n10]);
       Inc(UserMagic.btLevel);
-      SendUpdateDelayDefMsg(Self, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-          UserMagic.btLevel, LoWord(UserMagic.nTranPoint), HiWord(UserMagic.nTranPoint), '', 800);
+      SendUpdateDelayDefMsg(Self, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId, UserMagic.btLevel,
+                             UserMagic.nTranPoint, 0, '', 800);
       sub_4C713C(UserMagic);
     end
     else begin
@@ -4716,7 +4693,7 @@ begin
       AttackTarget.StruckDamage(nPower, Self);
       nCheckCode := 602;
       AttackTarget.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, AttackTarget.m_WAbil.HP,
-        AttackTarget.m_WAbil.MaxHP, Integer(Self), '', 200);
+        AttackTarget.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
       nCheckCode := 603;
 
       //麻痹
@@ -4752,7 +4729,7 @@ begin
   end;
 end;      
 
-procedure TBaseObject.SendAttackMsg(wIdent, wSendIdent: Word; btDir: Byte; nX, nY: Integer);
+procedure TBaseObject.SendAttackMsg(wIdent, wSendIdent: Integer; btDir: Byte; nX, nY: Integer);
 begin
   SendRefMsg(wIdent, btDir, nX, nY, wSendIdent, '');
 end;
@@ -4894,8 +4871,7 @@ begin
           PlayObject.TrainSkill(UserMagic, Random(3) + 1);
           if not PlayObject.CheckMagicLevelup(UserMagic) then begin
             PlayObject.SendDelayDefMsg(PlayObject, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-              UserMagic.btLevel, LoWord(UserMagic.nTranPoint),
-              HiWord(UserMagic.nTranPoint), '', 1000);
+              UserMagic.btLevel, UserMagic.nTranPoint, 0, '', 1000);
           end;
         end;
       end;
@@ -5812,12 +5788,12 @@ begin
   case m_btJob of
     2: begin
         //m_Abil.MaxHP:=_MIN(High(Word),14 + ROUND((nLevel / 6 + 2.5) * nLevel));
-        m_Abil.MaxHP := _MIN(High(Word), 14 + ROUND(((nLevel /
+        m_Abil.MaxHP := _MIN(MaxInt, 14 + ROUND(((nLevel /
           g_Config.nLevelValueOfTaosHP + g_Config.nLevelValueOfTaosHPRate) *
           nLevel)));
 
         //m_Abil.MaxMP:=_MIN(High(Word),13 + ROUND((nLevel / 8)* 2.2 * nLevel));
-        m_Abil.MaxMP := _MIN(High(Word), 13 + ROUND(((nLevel /
+        m_Abil.MaxMP := _MIN(MaxInt, 13 + ROUND(((nLevel /
           g_Config.nLevelValueOfTaosMP) * 2.2 * nLevel)));
 
         m_Abil.MaxWeight := 50 + ROUND((nLevel / 4) * nLevel);
@@ -5835,11 +5811,11 @@ begin
       end;
     1: begin
         //m_Abil.MaxHP:=_MIN(High(Word),14 + ROUND((nLevel / 15 + 1.8) * nLevel));
-        m_Abil.MaxHP := _MIN(High(Word), 14 + ROUND(((nLevel /
+        m_Abil.MaxHP := _MIN(MaxInt, 14 + ROUND(((nLevel /
           g_Config.nLevelValueOfWizardHP + g_Config.nLevelValueOfWizardHPRate) *
           nLevel)));
 
-        m_Abil.MaxMP := _MIN(High(Word), 13 + ROUND((nLevel / 5 + 2) * 2.2 *
+        m_Abil.MaxMP := _MIN(High(Integer), 13 + ROUND((nLevel / 5 + 2) * 2.2 *
           nLevel));
         m_Abil.MaxWeight := 50 + ROUND((nLevel / 5) * nLevel);
         m_Abil.MaxWearWeight := 15 + ROUND((nLevel / 100) * nLevel);
@@ -5854,12 +5830,12 @@ begin
       end;
     0: begin
         //m_Abil.MaxHP:=_MIN(High(Word),14 + ROUND((nLevel / 4.0 + 4.5 + nLevel / 20) * nLevel));
-        m_Abil.MaxHP := _MIN(High(Word), 14 + ROUND(((nLevel /
+        m_Abil.MaxHP := _MIN(MaxInt, 14 + ROUND(((nLevel /
           g_Config.nLevelValueOfWarrHP + g_Config.nLevelValueOfWarrHPRate +
           nLevel
           / 20) * nLevel)));
 
-        m_Abil.MaxMP := _MIN(High(Word), 11 + ROUND(nLevel * 3.5));
+        m_Abil.MaxMP := _MIN(MaxInt, 11 + ROUND(nLevel * 3.5));
         m_Abil.MaxWeight := 50 + ROUND((nLevel / 3) * nLevel);
         m_Abil.MaxWearWeight := 15 + ROUND((nLevel / 20) * nLevel);
         m_Abil.MaxHandWeight := 12 + ROUND((nLevel / 13) * nLevel);
@@ -6429,7 +6405,7 @@ begin
             acpwr := ROUND(magpwr * 1.5)
           else
             acpwr := magpwr;
-          BaseObject.SendDelayMsg(Self, RM_MAGSTRUCK, 0, acpwr, 0, 0, '', 600);
+          BaseObject.SendDelayMsg(Self, RM_MAGSTRUCK, 0, acpwr, 0, 0, 0, '', 600);
           BaseObject.MagicQuest(Self, nMagID, mfs_TagEx);
           //BaseObject.SendMsg(Self, RM_MAGSTRUCK, 0, acpwr, 0, 0, '');
           Inc(tCount);
@@ -6520,18 +6496,14 @@ end;
 procedure TBaseObject.GoldChanged();
 begin
   if m_btRaceServer = RC_PLAYOBJECT then begin
-    SendUpdateDefMsg(Self, SM_GOLDCHANGED, m_nGold,
-      LoWord(TPlayObject(Self).m_nBindGold),
-      HiWord(TPlayObject(Self).m_nBindGold), 0, '');
+    SendUpdateDefMsg(Self, SM_GOLDCHANGED, m_nGold, TPlayObject(Self).m_nBindGold, 0, 0, '');
   end;
 end;
 
 procedure TBaseObject.GoldPointChanged();
 begin
   if m_btRaceServer = RC_PLAYOBJECT then begin
-    SendUpdateDefMsg(Self, SM_GOLDPOINTCHANGED, m_nGold,
-      LoWord(TPlayObject(Self).m_nGamePoint),
-      HiWord(TPlayObject(Self).m_nGamePoint), 0, '');
+    SendUpdateDefMsg(Self, SM_GOLDPOINTCHANGED, m_nGold, TPlayObject(Self).m_nGamePoint, 0, 0, '');
   end;
 end;
 
@@ -7162,8 +7134,8 @@ begin
 
   
 
-  m_WAbil.MaxHP := _MIN(High(Word),  Round((m_AddAbil.btHPorMPRate / 100 + 1) * m_Abil.MaxHP + m_AddAbil.HP + m_NakedAddAbil.nHP));
-  m_WAbil.MaxMP := _MIN(High(Word), Round((m_AddAbil.btHPorMPRate / 100 + 1) * m_Abil.MaxMP + m_AddAbil.MP));
+  m_WAbil.MaxHP := _MIN(MaxInt,  Round((m_AddAbil.btHPorMPRate / 100 + 1) * m_Abil.MaxHP + m_AddAbil.HP + m_NakedAddAbil.nHP));
+  m_WAbil.MaxMP := _MIN(MaxInt, Round((m_AddAbil.btHPorMPRate / 100 + 1) * m_Abil.MaxMP + m_AddAbil.MP));
 
   m_WAbil.AC := MakeLong(m_AddAbil.AC + LoWord(m_Abil.AC) + m_NakedAddAbil.nAc, m_AddAbil.AC2 + HiWord(m_Abil.AC));
   m_WAbil.MAC := MakeLong(m_AddAbil.MAC + LoWord(m_Abil.MAC) + m_NakedAddAbil.nMAc, m_AddAbil.MAC2 + HiWord(m_Abil.MAC));
@@ -7234,16 +7206,16 @@ begin
 
   if m_wStatusArrValue[4] > 0 then begin //  if n21C > 0 then
     if m_boMaxHP then
-      m_WAbil.MaxHP := _MIN(High(Word), m_WAbil.MaxHP + m_wStatusArrValue[4])
+      m_WAbil.MaxHP := _MIN(MaxInt, m_WAbil.MaxHP + m_wStatusArrValue[4])
     else
-      m_WAbil.MaxHP := _MIN(High(Word), m_WAbil.MaxHP - m_wStatusArrValue[4]);
+      m_WAbil.MaxHP := _MIN(MaxInt, m_WAbil.MaxHP - m_wStatusArrValue[4]);
   end;
 
   if m_wStatusArrValue[5] > 0 then begin
     if m_boMaxMP then
-      m_WAbil.MaxMP := _MIN(High(Word), m_WAbil.MaxMP + m_wStatusArrValue[5])
+      m_WAbil.MaxMP := _MIN(MaxInt, m_WAbil.MaxMP + m_wStatusArrValue[5])
     else
-      m_WAbil.MaxMP := _MIN(High(Word), m_WAbil.MaxMP - m_wStatusArrValue[5]);
+      m_WAbil.MaxMP := _MIN(MaxInt, m_WAbil.MaxMP - m_wStatusArrValue[5]);
   end;
 
   //火球和治俞戒指取消
@@ -7269,7 +7241,7 @@ begin
       m_nMoXieSuite := m_WAbil.MaxMP - 1;
     Dec(m_WAbil.MaxMP, m_nMoXieSuite);
     //Inc(m_WAbil.MaxHP,m_nMoXieSuite);
-    m_WAbil.MaxHP := _MIN(High(Word), m_WAbil.MaxHP + m_nMoXieSuite);
+    m_WAbil.MaxHP := _MIN(MaxInt, m_WAbil.MaxHP + m_nMoXieSuite);
   end;
 
   if m_btRaceServer = RC_PLAYOBJECT then begin
@@ -7283,7 +7255,7 @@ begin
 
 
   m_OldHP := m_WAbil.MaxHP;
-  m_WAbil.MaxHP := _MIN(High(Word), m_WAbil.MaxHP + m_AddHP);
+  m_WAbil.MaxHP := _MIN(MaxInt, m_WAbil.MaxHP + m_AddHP);
 
   m_WAbil.HP := _MIN(m_WAbil.MaxHP, m_WAbil.HP);
   m_WAbil.MP := _MIN(m_WAbil.MaxMP, m_WAbil.MP);
@@ -8322,10 +8294,10 @@ begin
         end;
       RM_DELAYMAGIC: begin
           nPower := ProcessMsg.wParam;
-          nTargetX := LoWord(ProcessMsg.nParam1);
-          nTargetY := HiWord(ProcessMsg.nParam1);
-          nRage := ProcessMsg.nParam2;
-          TargeTBaseObject := TBaseObject(ProcessMsg.nParam3);
+          nTargetX := ProcessMsg.nParam1;
+          nTargetY := ProcessMsg.nParam2;
+          nRage := ProcessMsg.nParam3;
+          TargeTBaseObject := TBaseObject(ProcessMsg.nParam4);
           if (TargeTBaseObject <> nil) and (TargeTBaseObject.GetMagStruckDamage(Self, nPower) > 0) then begin
 
             SetTargetCreat(TargeTBaseObject);
@@ -8338,10 +8310,10 @@ begin
         end;
       RM_DELAYMAGIC2: begin
           nPower := ProcessMsg.wParam;
-          nTargetX := LoWord(ProcessMsg.nParam1);
-          nTargetY := HiWord(ProcessMsg.nParam1);
-          nRage := ProcessMsg.nParam2;
-          TargeTBaseObject := TBaseObject(ProcessMsg.nParam3);
+          nTargetX := ProcessMsg.nParam1;
+          nTargetY := ProcessMsg.nParam2;
+          nRage := ProcessMsg.nParam3;
+          TargeTBaseObject := TBaseObject(ProcessMsg.nParam4);
           if (TargeTBaseObject <> nil) and (TargeTBaseObject.GetMagStruckDamage(Self, nPower) > 0) then begin
             SetTargetCreat(TargeTBaseObject);
             if TargeTBaseObject.m_btRaceServer >= RC_ANIMAL then
@@ -8942,7 +8914,7 @@ begin
       if nDamage > 0 then begin
         BaseObject.StruckDamage(nDamage, Self);
         BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0, '', 200);
       end;
     end;
   end;

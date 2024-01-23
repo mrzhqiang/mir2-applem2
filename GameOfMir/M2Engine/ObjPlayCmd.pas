@@ -2424,9 +2424,7 @@ begin
       if CompareText(UserMagic.MagicInfo.sMagicName, sSkillName) = 0 then begin
         UserMagic.btLevel := nLevel;
         TempPlayObject.SendDefMsg(TempPlayObject, SM_MAGIC_LVEXP, UserMagic.MagicInfo.wMagicId,
-          UserMagic.btLevel,
-          LoWord(UserMagic.nTranPoint),
-          HiWord(UserMagic.nTranPoint), '');
+          UserMagic.btLevel, UserMagic.nTranPoint, UserMagic.nTranPoint, '');
         TempPlayObject.SysMsg(format('%s的修改炼等级为%d', [sSkillName, nLevel]), c_Green, t_Hint);
         SysMsg(format('%s的技能%s修炼等级为%d', [sHumanName, sSkillName, nLevel]), c_Green, t_Hint);
         break;

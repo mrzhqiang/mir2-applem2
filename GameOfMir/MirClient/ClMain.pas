@@ -3846,7 +3846,7 @@ begin
   Actor := PlayScene.FindActor(who);
   if Actor <> nil then
   begin
-    Actor.SendMsg(SM_MAGICFIRE, target {111magid}, efftype, effnum, targetx, targety, '', sound);
+    Actor.SendMsg(SM_MAGICFIRE, targetx, targety, target {111magid}, efftype, effnum, '', sound);
     if g_nFireCount < g_nSpellCount then
       Inc(g_nFireCount);
   end;
@@ -6525,7 +6525,7 @@ procedure TfrmMain.SendSpellMsg(ident, X, Y, dir, target: Integer);
 var
   Msg: TDefaultMessage;
 begin
-  Msg := MakeDefaultMsg(ident, MakeLong(X, Y), Loword(target), dir, Hiword(target));
+  Msg := MakeDefaultMsg(ident, X, Y, dir, target);
   SendSocket(EncodeMessage(Msg));
   ActionLock := True;
   ActionLockTime := GetTickCount;
@@ -6815,7 +6815,7 @@ procedure TfrmMain.SendRepairItem(merchant, itemindex: Integer; wFlag: Word);
 var
   Msg: TDefaultMessage;
 begin
-  Msg := MakeDefaultMsg(CM_USERREPAIRITEM, merchant, Loword(itemindex), Hiword(itemindex), wFlag);
+  Msg := MakeDefaultMsg(CM_USERREPAIRITEM, merchant, itemindex, 0, wFlag);
   SendSocket(EncodeMessage(Msg));
 end
 
@@ -6826,7 +6826,7 @@ procedure TfrmMain.SendStorageItem(merchant, itemindex, nIdx: Integer {; itemnam
 var
   Msg: TDefaultMessage;
 begin
-  Msg := MakeDefaultMsg(CM_USERSTORAGEITEM, merchant, Loword(itemindex), Hiword(itemindex), nIdx);
+  Msg := MakeDefaultMsg(CM_USERSTORAGEITEM, merchant, itemindex, 0, nIdx);
   SendSocket(EncodeMessage(Msg) {+ EncodeString(itemname)});
 end
 
@@ -6865,7 +6865,7 @@ procedure TfrmMain.SendTakeBackStorageItem(merchant, itemserverindex, nIdx: Inte
 var
   Msg: TDefaultMessage;
 begin
-  Msg := MakeDefaultMsg(CM_USERTAKEBACKSTORAGEITEM, merchant, Loword(itemserverindex), Hiword(itemserverindex), nIdx);
+  Msg := MakeDefaultMsg(CM_USERTAKEBACKSTORAGEITEM, merchant, itemserverindex, 0, nIdx);
   SendSocket(EncodeMessage(Msg));
 end
 
@@ -8279,7 +8279,7 @@ begin
     SM_NAKEDABILITY:
     begin
       g_nNakedCount := Msg.Recog;
-      g_nNakedBackCount := MakeLong(Msg.Param, Msg.tag);
+      g_nNakedBackCount := Msg.Param;
       if body <> '' then
       begin
         DecodeBuffer(body, @g_ClientNakedInfo, SizeOf(g_ClientNakedInfo));
@@ -8483,8 +8483,7 @@ begin
     begin
       if Msg.Recog <> g_MySelf.m_nRecogId then
       begin
-        PlayScene.SendMsg(Msg.ident, Msg.Recog, Msg.param {x}, Msg.tag {y}, 0,
-                           0, 0, '')
+        PlayScene.SendMsg(Msg.ident, Msg.Recog, Msg.param {x}, Msg.tag {y}, 0, 0, 0, '')
       end;
     end;
 
@@ -8594,7 +8593,7 @@ begin
     begin
       Actor := PlayScene.FindActor(Msg.Recog);
       if Actor <> nil then
-        Actor.SetEffigyState(MakeLong(Msg.Param, Msg.tag), Msg.Series);
+        Actor.SetEffigyState(Msg.Param, Msg.tag);
     end;
     SM_SITDOWN:
     begin
@@ -8740,7 +8739,7 @@ begin
     SM_ITEMSTRENGTHEN:
     begin
       g_MySelf.m_nGold := msg.recog;
-      g_nBindGold := MakeLong(msg.Param, msg.tag);
+      g_nBindGold := msg.Param;
       FrmDlg3.ClientStrengthenItems(Msg.Series, body);
     end;
     SM_ITEMABILITYMOVE:
@@ -8751,19 +8750,19 @@ begin
     SM_COMPOUNDITEM:
     begin
       g_MySelf.m_nGold := msg.recog;
-      g_MySelf.m_nGameGold := MakeLong(msg.Param, msg.tag);
+      g_MySelf.m_nGameGold := msg.Param;
       FrmDlg4.ClientCompoundItem(Msg.Series, DeCodeString(body));
     end;
     SM_MAKEDRUG:
     begin
       g_MySelf.m_nGold := msg.recog;
-      g_nBindGold := MakeLong(msg.Param, msg.tag);
+      g_nBindGold := msg.Param;
       FrmDlg3.ClientMakeItems(Msg.Series, 1, body);
     end;
     SM_MAKEDRUG_AUTO:
     begin
       g_MySelf.m_nGold := msg.recog;
-      g_nBindGold := MakeLong(msg.Param, msg.tag);
+      g_nBindGold := msg.Param;
       FrmDlg3.ClientMakeItems(-8, Msg.Series, body);
     end;
     SM_BAGUSEITEM:
@@ -8873,7 +8872,7 @@ begin
         g_MySelf.m_nGold := Msg.Recog;
         g_MySelf.m_btJob := Msg.param;
         FrmDlg.RefJobMagic(Msg.param);
-        g_nBindGold := MakeLong(Msg.tag, Msg.series);
+        g_nBindGold := Msg.tag;
         DecodeBuffer(body, @g_MySelf.m_Abil, sizeof(TAbility));
 {$IF Var_Interface =  Var_Default}
         if g_MySelf.m_Abil.Level < 2 then ShowInterface(True);
@@ -8886,12 +8885,12 @@ begin
       if g_MySelf <> nil then
       begin
         DecodeBuffer(body, @ClientAppendSubAbility, Sizeof(ClientAppendSubAbility));
-        g_nMyHitPoint := Lobyte(Msg.param);
-        g_nMySpeedPoint := Hibyte(Msg.param);
-        g_nMyAntiPoison := Lobyte(Msg.tag);
-        g_nMyPoisonRecover := Hibyte(Msg.tag);
-        g_nMyHealthRecover := Lobyte(Msg.series);
-        g_nMySpellRecover := Hibyte(Msg.series);
+        g_nMyHitPoint := Lobyte(LoWord(Msg.param));
+        g_nMySpeedPoint := Lobyte(HiWord(Msg.param));
+        g_nMyAntiPoison := Lobyte(LoWord(Msg.tag));
+        g_nMyPoisonRecover := Lobyte(HiWord(Msg.tag));
+        g_nMyHealthRecover := Lobyte(LoWord(Msg.series));
+        g_nMySpellRecover := Lobyte(HiWord(Msg.series));
         g_nMyAntiMagic := Lobyte(LoWord(Msg.Recog));
         g_MySelf.m_btWuXin := Hibyte(LoWord(Msg.Recog));
         g_nMyAddAttack := Lobyte(HiWord(Msg.Recog));
@@ -8906,7 +8905,7 @@ begin
     SM_GAMEGOLDNAME3:
     begin
       g_nGameGird := Msg.Recog;
-      g_nLiterary := MakeLong(Msg.tag, Msg.Series);
+      g_nLiterary := Msg.tag;
     end;
       {SM_SUBABILITY2: begin
         if g_MySelf <> nil then begin
@@ -8949,18 +8948,18 @@ begin
           g_UseItems[u_House].UserItem.dwExp := Msg.recog;
           if g_SetupInfo.boGetExpFiltrate then
           begin
-            if LongWord(MakeLong(msg.Param, msg.Tag)) > g_SetupInfo.nExpFiltrateCount then
-              DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(MakeLong(msg.Param, msg.Tag))) + '<CE> 点坐骑经验值', cllime); //$32F4
+            if LongWord(msg.Param) > g_SetupInfo.nExpFiltrateCount then
+              DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(msg.Param)) + '<CE> 点坐骑经验值', cllime); //$32F4
           end else
-            DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(MakeLong(msg.Param, msg.Tag))) + '<CE> 点坐骑经验值', cllime); //$32F4
+            DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(msg.Param)) + '<CE> 点坐骑经验值', cllime); //$32F4
         end else begin
           g_MySelf.m_Abil.Exp := Msg.Recog;
           if g_SetupInfo.boGetExpFiltrate then
           begin
             if LongWord(MakeLong(msg.Param, msg.Tag)) > g_SetupInfo.nExpFiltrateCount then
-              DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(MakeLong(msg.Param, msg.Tag))) + '<CE> 点经验值', cllime); //$32F4
+              DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(msg.Param)) + '<CE> 点经验值', cllime); //$32F4
           end else
-            DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(MakeLong(msg.Param, msg.Tag))) + '<CE> 点经验值', cllime); //$32F4
+            DScreen.AddSysMsg('获得 <CO$FFFF>' + IntToStr(LongWord(msg.Param)) + '<CE> 点经验值', cllime); //$32F4
         end;
     end;
 
@@ -9058,7 +9057,7 @@ begin
       if Actor <> nil then
       begin
         DecodeBuffer(body, @desc, sizeof(TCharDesc));
-        Actor.m_nWaitForRecogId := MakeLong(Msg.param, Msg.tag);
+        Actor.m_nWaitForRecogId := Msg.param;
         Actor.m_nWaitForFeature := desc.Feature;
         Actor.m_nWaitForStatus := desc.Status;
         Actor.m_btStrengthenIdx := desc.btStrengthenIdx;
@@ -9220,8 +9219,7 @@ begin
     SM_DISAPPEAR:
     begin
       if g_MySelf.m_nRecogId <> Msg.Recog then
-        PlayScene.SendMsg(SM_HIDE, Msg.Recog, Msg.param {x}, Msg.tag {y}, 0,
-                           0, 0, '');
+        PlayScene.SendMsg(SM_HIDE, Msg.Recog, Msg.param {x}, Msg.tag {y}, 0, 0, 0, '');
     end;
 
     SM_DIGUP:
@@ -9450,7 +9448,7 @@ begin
           end;
           PlaySoundEx(bmg_Repair);
           FrmDlg4.FRemoveStoneIdx := Msg.Series;
-          FrmDlg4.FRemoveStoneIndex := MakeLong(Msg.Param, Msg.tag);
+          FrmDlg4.FRemoveStoneIndex := Msg.Param;
           FrmDlg4.FRemoveStoneShowEffect := True;
           FrmDlg4.FRemoveStoneShowEffectIdx := 0;
           FrmDlg4.DItemRemoveItems.AppendTick := GetTickCount;
@@ -9472,8 +9470,8 @@ begin
         if Actor.m_boShop then
         begin
           Actor.m_sShopTitle := DecodeString(body);
-          Actor.m_btShopIdx := LoByte(msg.Param) - 1;
-          Actor.m_boShopLeft := HiByte(msg.Param) <> 0;
+          Actor.m_btShopIdx := Byte(msg.Param) - 1;
+          Actor.m_boShopLeft := msg.Tag <> 0;
           if Actor.m_boShopLeft then
             Actor.m_btDir := 1
           else
@@ -9497,7 +9495,7 @@ begin
     SM_BUYUSERSHOP:
     begin
       g_MySelf.m_nGold := Msg.Recog;
-      g_MySelf.m_nGameGold := MakeLong(Msg.Param, Msg.tag);
+      g_MySelf.m_nGameGold := Msg.Param;
       case Msg.Series of
         11: FrmDlg.DMessageDlg('[出售失败]: 对方已完成对该物品的收购.', []);
         12: FrmDlg.DMessageDlg('[出售失败]: 对方店铺的' + g_sGameGoldName + '不足.', []);
@@ -9632,7 +9630,7 @@ begin
       if g_MySelf <> nil then
       begin
         g_MySelf.m_nGold := Msg.Recog;
-        g_MySelf.m_nGameGold := MakeLong(Msg.Param, Msg.tag);
+        g_MySelf.m_nGameGold := Msg.Param;
         with FrmDlg2 do
         begin
           DUserShopOpen.Enabled := True;
@@ -9667,7 +9665,7 @@ begin
     SM_USERSHOPGOLDCHANGE:
     begin
       g_MyShopGold := Msg.Recog;
-      g_MyShopGameGold := MakeLong(Msg.Param, Msg.tag);
+      g_MyShopGameGold := Msg.Param;
     end;
       { SM_EXCHGTAKEON_OK: ;
      SM_EXCHGTAKEON_FAIL: ;   }
@@ -9692,12 +9690,12 @@ begin
       end;
       g_MySelf.m_nGold := Msg.Recog;
       //g_MySelf.m_nGameGold := MakeLong(Msg.param, Msg.tag);
-      if MakeLong(Msg.param, Msg.tag) > g_nBindGold then
+      if Msg.param > g_nBindGold then
       begin
         DScreen.AddSysMsg('获得 <CO$FFFF>' + g_sBindGoldName + ' ' +
-        IntToStr(MakeLong(Msg.param, Msg.tag) - g_nBindGold) + '<CE>', cllime);
+        IntToStr(Msg.param - g_nBindGold) + '<CE>', cllime);
       end;
-      g_nBindGold := MakeLong(Msg.param, Msg.tag);
+      g_nBindGold := Msg.param;
     end;
     SM_GOLDPOINTCHANGED:
     begin
@@ -9707,29 +9705,16 @@ begin
         DScreen.AddSysMsg('获得 <CO$FFFF>' + g_sGoldName + ' ' + IntToStr(Msg.Recog - g_MySelf.m_nGold) + '<CE>', cllime);
       end;
       g_MySelf.m_nGold := Msg.Recog;
-      g_MySelf.m_nGamePoint := MakeLong(Msg.param, Msg.tag);
+      g_MySelf.m_nGamePoint := Msg.param;
     end;
     SM_FEATURECHANGED:
     begin
-      PlayScene.SendMsg(Msg.ident, Msg.Recog, 0, 0, 0, MakeLong(Msg.param,
-                                                                 Msg.tag), MakeLong(Msg.series, 0), '', StrToIntDef(DecodeString(body), -1));
+      PlayScene.SendMsg(Msg.ident, Msg.Recog, 0, 0, 0, Msg.param, Msg.series, '', StrToIntDef(DecodeString(body), -1));
     end;
     SM_CHARSTATUSCHANGED:
     begin
-      PlayScene.SendMsg(Msg.ident, Msg.Recog, 0, 0, 0, MakeLong(Msg.param,
-                                                                 Msg.tag), Msg.series, '');
-      {PlayScene.MemoLog.Lines.Add(IntToStr(MakeLong(Msg.param,
-          Msg.tag)));  }
+      PlayScene.SendMsg(Msg.ident, Msg.Recog, 0, 0, 0, Msg.param, Msg.series, '');
     end;
-      {SM_CLEAROBJECTS: begin
-        PlayScene.CleanObjects;
-        g_boMapMoving := True; //
-        //g_boMapInitialize := True;
-        g_btMapinitializePos := 0;
-        g_boMapApoise := True;
-        PlayMp3('', False);
-      end;   }
-
     SM_EAT_OK:
     begin
       if Msg.Recog > 0 then
@@ -9824,8 +9809,7 @@ begin
     end;
     SM_MAGIC_LVEXP:
     begin
-      ClientGetMagicLvExp(Msg.Recog {magid}, Msg.param {lv}, MakeLong(Msg.tag,
-                                                                       Msg.series));
+      ClientGetMagicLvExp(Msg.Recog {magid}, Msg.param {lv}, Msg.tag);
     end;
     SM_DURACHANGE:
     begin
@@ -9849,7 +9833,7 @@ begin
     end;
     SM_SENDGOODSLIST:
     begin
-      ClientGetSendGoodsList(Msg.Recog, Msg.Param, MakeLong(Msg.tag, Msg.Series), body);
+      ClientGetSendGoodsList(Msg.Recog, Msg.Param, Msg.tag, body);
     end;
     SM_COMPOUNDINFOS:
     begin
@@ -9872,7 +9856,7 @@ begin
     SM_BUYRETURNITEM_OK:
     begin
       g_MySelf.m_nGold := Msg.Recog;
-      g_nBindGold := MakeLong(Msg.Param, Msg.tag);
+      g_nBindGold := Msg.Param;
       SoundUtil.PlaySound(s_money);
       if (msg.Series < FrmDlg.NpcReturnItemList.Count) then
       begin
@@ -9895,7 +9879,7 @@ begin
       SoundUtil.PlaySound(s_money);
       FrmDlg.LastestClickTime := GetTickCount;
       g_MySelf.m_nGold := Msg.Recog;
-      g_nBindGold := MakeLong(Msg.tag, Msg.series);
+      g_nBindGold := Msg.tag;
       new(pcu);
       pcu^ := g_SellDlgItemSellWait.Item;
       FrmDlg.NpcReturnItemList.Insert(0, pcu);
@@ -9912,7 +9896,7 @@ begin
       if Msg.Series in [Low(g_StatusInfoArr)..High(g_StatusInfoArr)] then
       begin
         g_StatusInfoArr[Msg.Series].dwTime := Msg.Recog * 1000;
-        g_StatusInfoArr[Msg.Series].nPower := MakeLong(Msg.Param, Msg.tag);
+        g_StatusInfoArr[Msg.Series].nPower := Msg.Param;
         if Msg.Recog > 0 then
         begin
           for I := 0 to g_StatusInfoList.Count - 1 do
@@ -9965,7 +9949,7 @@ begin
         g_MySelf.m_nGold := Msg.Recog;
         g_SellDlgItemSellWait.Item.UserItem.Dura := Msg.Series;
         g_SellDlgItemSellWait.Item.UserItem.DuraMax := Msg.Series;
-        g_nBindGold := MakeLong(Msg.Param, Msg.tag);
+        g_nBindGold := Msg.Param;
         g_boItemMoving := True;
         g_MovingItem := g_SellDlgItemSellWait;
         FrmDlg.CancelItemMoving;
@@ -10022,7 +10006,7 @@ begin
     begin
       FrmDlg.LastestClickTime := GetTickCount;
       g_MySelf.m_nGold := Msg.Recog;
-      g_nBindGold := MakeLong(Msg.tag, Msg.series);
+      g_nBindGold := Msg.tag;
       g_SellDlgItemSellWait.Item.S.name := '';
     end;
     SM_BUYITEM_FAIL:
@@ -10265,13 +10249,13 @@ begin
     SM_DEALCHGGOLD_OK:
     begin
       g_nDealGold := Msg.Recog;
-      g_MySelf.m_nGold := MakeLong(Msg.param, Msg.tag);
+      g_MySelf.m_nGold := Msg.param;
       g_dwDealActionTick := GetTickCount;
     end;
     SM_DEALCHGGOLD_FAIL:
     begin
       g_nDealGold := Msg.Recog;
-      g_MySelf.m_nGold := MakeLong(Msg.param, Msg.tag);
+      g_MySelf.m_nGold := Msg.param;
       g_dwDealActionTick := GetTickCount;
     end;
     SM_DEALREMOTECHGGOLD:
@@ -10318,10 +10302,10 @@ begin
     begin
       g_nStorageGold := Msg.Recog;
       g_boStorageOpen[0] := True;
-      g_boStorageOpen[1] := LoByte(msg.Param) = 1;
-      g_boStorageOpen[2] := HiByte(msg.Param) = 1;
-      g_boStorageOpen[3] := LoByte(msg.tag) = 1;
-      g_boStorageOpen[4] := HiByte(msg.tag) = 1;
+      g_boStorageOpen[1] := LoByte(LoWord(msg.Param)) = 1;
+      g_boStorageOpen[2] := HiByte(LoWord(msg.Param)) = 1;
+      g_boStorageOpen[3] := LoByte(HiWord(msg.Param)) = 1;
+      g_boStorageOpen[4] := HiByte(HiWord(msg.Param)) = 1;
       if body <> '' then
         DecodeBuffer(body, @g_dwStorageTime[1], SizeOf(TDateTime) * 4);
       FrmDlg2.DStorageDlg.Visible := True;
@@ -10645,7 +10629,7 @@ begin
         -5: FrmDlg.DMessageDlg('赠送失败，你所赠送的对像背包空间不够。', [mbOk]);
         -6:
         begin
-          i := MakeLong(Msg.Param, Msg.tag);
+          i := Msg.Param;
           FrmDlg.DMessageDlg(Format('[对换成功]: 获得%d%s和%d%s', [i, g_sGameGoldName, i, g_sGameDiamondName]),
                               [mbOK]);
         end;
@@ -10693,7 +10677,7 @@ begin
         begin
           FrmDlg3.OpenGetItem := True;
           FrmDlg3.OpenBoxGold := Msg.Recog;
-          FrmDlg3.OpenBoxGameGold := MakeLong(Msg.Param, Msg.tag);
+          FrmDlg3.OpenBoxGameGold := Msg.Param;
           FrmDlg3.OpenBoxShowEffect := True;
           FrmDlg3.OpenBoxEffectIdx := 0;
           FrmDlg3.OpenBoxEffectTick := GetTickCount + 150;
@@ -11420,7 +11404,7 @@ begin
   if g_MySelf = nil then exit;
 
   g_MySelf.m_nGameGold := Msg.Recog;
-  g_MySelf.m_nGamePoint := MakeLong(Msg.param, Msg.tag);
+  g_MySelf.m_nGamePoint := Msg.param;
   g_nDander := msg.Series;
 end
 
@@ -11708,7 +11692,7 @@ begin
           begin
             body := GetValidStrEx(body, str, ['/']);
             EMailInfo.sText := DecodeString(body);
-            EMailInfo.nGold := MakeLong(Msg.Param, Msg.tag);
+            EMailInfo.nGold := Msg.Param;
             if str <> '' then
             begin
               DecodeItem(str, @EMailInfo.Item.UserItem);
@@ -11773,7 +11757,7 @@ begin
       FrmDlg2.EMailSelectTick := 0;
       if (Msg.Recog >= 0) then
       begin
-        nIndex := MakeLong(Msg.Param, Msg.tag);
+        nIndex := Msg.Param;
         for I := 0 to g_EMailList.Count - 1 do
         begin
           EMailInfo := pTEMailInfo(g_EMailList.Objects[i]);
@@ -12144,10 +12128,10 @@ begin
     g_MySelf.m_boShop := True;
     g_MyShopTitle := DecodeString(str);
     g_MySelf.m_sShopTitle := g_MyShopTitle;
-    g_MyShopGold := MakeLong(Msg.Param, Msg.tag);
+    g_MyShopGold := Msg.Param;
     g_MyShopGameGold := Msg.Recog;
-    g_MySelf.m_btShopIdx := LoByte(msg.Series) - 1;
-    g_MySelf.m_boShopLeft := HiByte(msg.Series) <> 0;
+    g_MySelf.m_btShopIdx := Msg.tag;
+    g_MySelf.m_boShopLeft := msg.Series <> 0;
     if g_MySelf.m_boShopLeft then
       g_MySelf.m_btDir := 1
     else
@@ -12280,7 +12264,7 @@ begin
   with FrmDlg3 do
   begin
     OpenBoxGold := Msg.Recog;
-    OpenBoxGameGold := MakeLong(Msg.Param, Msg.tag);
+    OpenBoxGameGold := Msg.Param;
     OpenBoxIndex := Msg.Series;
     OpenBoxSelectIndex := 0;
     OpenGetItemIndex := 0;
@@ -14225,7 +14209,7 @@ begin
     30:
     begin
       Targe := PlayScene.FindActor(nActor);
-      Around := PlayScene.FindActor(MakeLong(nX, nY));
+      Around := PlayScene.FindActor(nX);
       if (Around <> nil) and (Targe <> nil) then
       begin
         PlayScene.NewMagic(Around, 111, 59, Around.m_nCurrX, Around.m_nCurrY, Targe.m_nCurrX, Targe.m_nCurrY,
@@ -14236,7 +14220,7 @@ begin
     end;
     31:
     begin
-      Targe := PlayScene.FindActor(MakeLong(nX, nY));
+      Targe := PlayScene.FindActor(nX);
       Around := PlayScene.FindActor(nActor);
       if (Around <> nil) and (Targe <> nil) then
       begin
@@ -14247,7 +14231,7 @@ begin
     end;
     32:
     begin
-      Targe := PlayScene.FindActor(MakeLong(nX, nY));
+      Targe := PlayScene.FindActor(nX);
       Around := PlayScene.FindActor(nActor);
       if (Around <> nil) and (Targe <> nil) then
       begin
@@ -14258,13 +14242,13 @@ begin
     end;
   else
   begin
-    case LoByte(nType) of
+    case LoWord(nType) of
       1:
       begin
-        nSX := nX - HiByte(nType);
-        nSY := nY - HiByte(nType);
-        nEX := nX + HiByte(nType);
-        nEY := nY + HiByte(nType);
+        nSX := nX - HiWord(nType);
+        nSY := nY - HiWord(nType);
+        nEX := nX + HiWord(nType);
+        nEY := nY + HiWord(nType);
         for I := nSY to nEY do
         begin
           if (I - nSY) mod 2 <> 0 then Continue;

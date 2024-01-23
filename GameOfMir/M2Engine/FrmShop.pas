@@ -876,7 +876,7 @@ begin
       end;
       PlayObject.GameGoldChanged;
       PlayObject.DiamondChanged;
-      PlayObject.SendDefMessage(SM_CLIENTBUYITEM, -6, LoWord(nTradeCount), HiWord(nTradeCount), 0, '');
+      PlayObject.SendDefMessage(SM_CLIENTBUYITEM, -6, nTradeCount, 0, 0, '');
     end else begin
       AddGameLog(PlayObject, LOG_GAMEPOINTCHANGED, sSTRING_GAMEPOINT, nParam1, nTradeCount,
           'ÉÌÆÌ', '¿Û³ý', 'Ê§°Ü', '¶Ô»» ID=' + sBack, nil);

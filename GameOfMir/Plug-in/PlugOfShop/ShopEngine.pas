@@ -488,7 +488,7 @@ begin
         IDSrv_GameGoldChange(PlayObject, nGoldCount);
       end;
       TBaseObject_GameGoldChanged(PlayObject);
-      TPlayObject_SendDefMessage(PlayObject, SM_CLIENTBUYITEM, -6, LoWord(nCount), HiWord(nCount), 0, '');
+      TPlayObject_SendDefMessage(PlayObject, SM_CLIENTBUYITEM, -6, nCount, 0, 0, '');
       exit;
     end else begin
       AddGameDataLog(PlayObject, LOG_GAMEGOLDCHANGED, sSTRING_GAMEGOLD, 1,

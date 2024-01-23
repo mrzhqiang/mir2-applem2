@@ -15,7 +15,7 @@ function EncodeString(str: string): string;
 function DecodeString(str: string): string;
 function EncodeBuffer(Buf: PChar; bufsize: Integer): string;
 procedure DecodeBuffer(Src: string; Buf: PChar; bufsize: Integer);
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; WParam, wTag, wSeries: Word): TDefaultMessage;
+function MakeDefaultMsg(wIdent: Integer; nRecog: Integer; WParam, wTag, wSeries: Integer): TDefaultMessage;
 function EncodeLongBuffer(Buf: PChar; bufsize: Integer): string;
 procedure DecodeLongBuffer(Src: string; Buf: PChar; bufsize: Integer);
 
@@ -33,8 +33,7 @@ implementation
 const
   BITMASKS = $AA;
 
-function MakeDefaultMsg(wIdent: Word; nRecog: Integer; WParam, wTag, wSeries:
-  Word): TDefaultMessage;
+function MakeDefaultMsg(wIdent: Integer; nRecog: Integer; WParam, wTag, wSeries: Integer): TDefaultMessage;
 begin
   Result.Recog := nRecog;
   Result.ident := wIdent;

@@ -64,13 +64,13 @@ type
   pTRecallMigic=^TRecallMigic;
 
   TNakedAbility=record 
-    DC: Word;
-    MC: Word;
-    SC: Word;
-    AC: Word;
-    MAC: Word;
-    HP: Word;
-    MP: Word;
+    DC: Integer;
+    MC: Integer;
+    SC: Integer;
+    AC: Integer;
+    MAC: Integer;
+    HP: Integer;
+    MP: Integer;
     Hit: Word;
     Speed: Word;
     X2: Word;

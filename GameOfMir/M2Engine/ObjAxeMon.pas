@@ -62,7 +62,7 @@ begin
     if nDamage > 0 then begin
       Target.StruckDamage(nDamage, Self);
       Target.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-        Target.m_WAbil.HP, Target.m_WAbil.MaxHP, Integer(Self), '',
+        Target.m_WAbil.HP, Target.m_WAbil.MaxHP, Integer(Self),0, '',
         _MAX(abs(m_nCurrX - Target.m_nCurrX), abs(m_nCurrY - Target.m_nCurrY)) * 50 + 600);
     end;
     SendRefMsg(RM_FLYAXE, m_btDirection, m_nCurrX, m_nCurrY, Integer(Target), '');
@@ -270,7 +270,7 @@ begin
     if nDamage > 0 then begin
       Target.StruckDamage(nDamage, Self);
       Target.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-        Target.m_WAbil.HP, Target.m_WAbil.MaxHP, Integer(Self), '',
+        Target.m_WAbil.HP, Target.m_WAbil.MaxHP, Integer(Self),0, '',
         _MAX(abs(m_nCurrX - Target.m_nCurrX), abs(m_nCurrY - Target.m_nCurrY)) * 50 + 600);
     end;
     SendRefMsg(RM_FLYAXE, m_btDirection, m_nCurrX, m_nCurrY, Integer(Target), '');

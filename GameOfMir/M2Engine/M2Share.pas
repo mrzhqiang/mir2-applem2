@@ -27,9 +27,6 @@ const
 
   MAXSAYITEMCOUNT = 1000;
 
-  // 注意：如果修改了人物字段信息，这里也需要同步改动，避免出现数据异常
-  SIZEOFTHUMAN = 66197;
-
   MAXGMMAKEITEMNUM = 2000000000;
 
   ET_STONEMINE = 11;
@@ -2807,26 +2804,26 @@ type
 
 {$IF OEMVER = OEM775}
   TLevelInfo = record
-    wHP: Word;
-    wMP: Word;
+    wHP: Integer;
+    wMP: Integer;
     dwExp: LongWord;
-    wAC: Word;
-    wMaxAC: Word;
-    wACLimit: Word;
-    wMAC: Word;
-    wMaxMAC: Word;
-    wMACLimit: Word;
-    wDC: Word;
-    wMaxDC: Word;
-    wDCLimit: Word;
-    dwDCExp: LongWord;
-    wMC: Word;
-    wMaxMC: Word;
-    wMCLimit: Word;
-    dwMCExp: LongWord;
-    wSC: Word;
-    wMaxSC: Word;
-    wSCLimit: Word;
+    wAC: Integer;
+    wMaxAC: Integer;
+    wACLimit: Integer;
+    wMAC: Integer;
+    wMaxMAC: Integer;
+    wMACLimit: Integer;
+    wDC: Integer;
+    wMaxDC: Integer;
+    wDCLimit: Integer;
+    dwDCExp: Integer;
+    wMC: Integer;
+    wMaxMC: Integer;
+    wMCLimit: Integer;
+    dwMCExp: Integer;
+    wSC: Integer;
+    wMaxSC: Integer;
+    wSCLimit: Integer;
     dwSCExp: LongWord;
   end;
 

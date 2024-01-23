@@ -157,7 +157,7 @@ begin
       RM_10101, nPower,
       AttackTarget.m_WAbil.HP,
       AttackTarget.m_WAbil.MaxHP,
-      Integer(Self), '', 200);
+      Integer(Self), 0,'', 200);
 
     if not AttackTarget.m_boUnParalysis and
       m_boParalysis and
@@ -266,7 +266,7 @@ begin
               BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK),
                 RM_10101, nDamage,
                 BaseObject.m_WAbil.HP,
-                BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                BaseObject.m_WAbil.MaxHP, Integer(Self),0, '', 200);
             end;
           end;
         end;
@@ -303,7 +303,7 @@ begin
             if nDamage > 0 then begin
               BaseObject.StruckDamage(nDamage, Self);
               BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP,
-                BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                BaseObject.m_WAbil.MaxHP, Integer(Self),0, '', 200);
             end;
           end;
         end;
@@ -319,7 +319,7 @@ begin
               if nDamage > 0 then begin
                 BaseObject.StruckDamage(nDamage, Self);
                 BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP,
-                  BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                  BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
               end;
             end;
           end;
@@ -379,7 +379,7 @@ begin
           if nDamage > 0 then begin
             BaseObject.StruckDamage(nDamage, Self);
             BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP,
-              BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+              BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
           end;
         end;
       end;
@@ -438,7 +438,7 @@ begin
           if nDamage > 0 then begin
             BaseObject.StruckDamage(nDamage, Self);
             BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP,
-              BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+              BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
           end;
         end;
       end;
@@ -504,7 +504,7 @@ begin
                   if nDamage > 0 then begin
                     BaseObject.StruckDamage(nDamage, Self);
                     BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP,
-                      BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                      BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
                   end;
                 end;
               end;
@@ -577,7 +577,7 @@ begin
                         if nDamage > 0 then begin
                           BaseObject.StruckDamage(nDamage, Self);
                           BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP,
-                            BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                            BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
                         end;
                         if (Random(m_btAntiPoison + 20) = 0) then
                           BaseObject.MakePosion(POISON_STONE, g_Config.nAttackPosionTime, g_Config.nAttackPosionTime);
@@ -628,7 +628,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 5, Integer(m_TargetCret), '',
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 5, Integer(m_TargetCret), '',
             1000 + (abs(m_TargetCret.m_nCurrX - m_nCurrX) + abs(m_TargetCret.m_nCurrY - m_nCurrY)) div 2 * 20);
           SendRefMsg(RM_MONMAGIC, 7, Integer(m_TargetCret), m_nCurrX, m_nCurrY, '', 600);
           BreakHolySeizeMode();
@@ -654,7 +654,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 5, Integer(m_TargetCret), '',
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 5, Integer(m_TargetCret), '',
             1000 + (abs(m_TargetCret.m_nCurrX - m_nCurrX) + abs(m_TargetCret.m_nCurrY - m_nCurrY)) div 2 * 20);
           SendRefMsg(RM_MONMAGIC, 8, Integer(m_TargetCret), m_nCurrX, m_nCurrY, '', 600);
           BreakHolySeizeMode();
@@ -759,7 +759,7 @@ begin
                   if (BaseObject <> nil) and (not BaseObject.m_boGhost) and (not BaseObject.m_boDeath) and
                     IsProperTarget(BaseObject) and (not BaseObject.m_boHideMode or m_boCoolEye) then
                   begin
-                      SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 3, Integer(BaseObject), '', 500);
+                      SendDelayMsg(Self, RM_DELAYMAGIC, nPower, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 3, Integer(BaseObject), '', 500);
                   end;
                 end;
               end;
@@ -797,7 +797,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 3, Integer(m_TargetCret), '', 400);
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 3, Integer(m_TargetCret), '', 400);
           SendRefMsg(RM_10205, 0, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 14, '', 300);
           BreakHolySeizeMode();
         end;
@@ -839,7 +839,7 @@ begin
                   if nDamage > 0 then begin
                     BaseObject.StruckDamage(nDamage, Self);
                     BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                      BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                      BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
                   end;
                 end;
               end;
@@ -884,11 +884,11 @@ begin
               if nDamage > 0 then begin
                 BaseObject.StruckDamage(nDamage, Self);
                 BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                  BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                  BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
               end;
               if BaseObject.m_wStatusTimeArr[POISON_DECHEALTH] <= 0 then begin
                 BaseObject.SendDelayMsg(Self, RM_POISON, POISON_DECHEALTH, nPower, Integer(Self),
-                  ROUND(nPower / g_Config.nAmyOunsulPoint), '', 400);
+                  ROUND(nPower / g_Config.nAmyOunsulPoint), 0,'', 400);
               end;
             end;
           end;
@@ -909,7 +909,7 @@ begin
                       if nDamage > 0 then begin
                         BaseObject.StruckDamage(nDamage, Self);
                         BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                          BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
                       end;
                     end;
                   end;
@@ -1000,7 +1000,7 @@ begin
         m_dwTargetFocusTick := GetTickCount();
         SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
         nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 3, Integer(m_TargetCret), '', 400);
+        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 3, Integer(m_TargetCret), '', 400);
 
         SendRefMsg(RM_10205, 0, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 21, '', 360);
         BreakHolySeizeMode();
@@ -1042,7 +1042,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 3, Integer(m_TargetCret), '', 400);
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 3, Integer(m_TargetCret), '', 400);
           SendRefMsg(RM_10205, 0, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 22, '', 360);
           BreakHolySeizeMode();
         end;
@@ -1067,7 +1067,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 5, Integer(m_TargetCret), '',
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 5, Integer(m_TargetCret), '',
             1000 + (abs(m_TargetCret.m_nCurrX - m_nCurrX) + abs(m_TargetCret.m_nCurrY - m_nCurrY)) div 2 * 20);
           SendRefMsg(RM_MONMAGIC, 1, Integer(m_TargetCret), m_nCurrX, m_nCurrY, '', 600);
           BreakHolySeizeMode();
@@ -1100,7 +1100,7 @@ begin
             if (BaseObject <> nil) and (not BaseObject.m_boGhost) and (not BaseObject.m_boDeath) and
               IsProperTarget(BaseObject) and (not BaseObject.m_boHideMode or m_boCoolEye) then
             begin
-              SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 5, Integer(BaseObject), '', 700);
+              SendDelayMsg(Self, RM_DELAYMAGIC, nPower, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 5, Integer(BaseObject), '', 700);
               SendRefMsg(RM_10205, 0, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 24, '', 600);
             end;
           end;
@@ -1118,7 +1118,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendAttackMsg(RM_HIT, SM_HIT_3, m_btDirection, m_nCurrX, m_nCurrY);
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 5, Integer(m_TargetCret), '', 700);
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 5, Integer(m_TargetCret), '', 700);
           SendRefMsg(RM_10205, 0, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 23, '', 600);
           BreakHolySeizeMode();
         end;
@@ -1142,7 +1142,7 @@ begin
         m_dwTargetFocusTick := GetTickCount();
         SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
         nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 5, Integer(m_TargetCret), '',
+        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 5, Integer(m_TargetCret), '',
           800 + (abs(m_TargetCret.m_nCurrX - m_nCurrX) + abs(m_TargetCret.m_nCurrY - m_nCurrY)) div 2 * 20);
         SendRefMsg(RM_MONMAGIC, 2, Integer(m_TargetCret), m_nCurrX, m_nCurrY, '', 600);
         BreakHolySeizeMode();
@@ -1172,7 +1172,7 @@ begin
         m_dwTargetFocusTick := GetTickCount();
         SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
         nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 5, Integer(m_TargetCret), '',
+        SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 5, Integer(m_TargetCret), '',
           800 + (abs(m_TargetCret.m_nCurrX - m_nCurrX) + abs(m_TargetCret.m_nCurrY - m_nCurrY)) div 2 * 20);
         SendRefMsg(RM_MONMAGIC, 3, Integer(m_TargetCret), m_nCurrX, m_nCurrY, '', 600);
         BreakHolySeizeMode();
@@ -1224,7 +1224,7 @@ begin
                   if nDamage > 0 then begin
                     BaseObject.StruckDamage(nDamage, Self);
                     BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                      BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                      BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
                   end;
                 end;
               end;
@@ -1278,7 +1278,7 @@ begin
                     if (BaseObject <> nil) and (not BaseObject.m_boGhost) and (not BaseObject.m_boDeath) and
                       IsProperTarget(BaseObject) and (not BaseObject.m_boHideMode or m_boCoolEye) then
                     begin
-                      SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 3, Integer(BaseObject), '',
+                      SendDelayMsg(Self, RM_DELAYMAGIC, nPower, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 3, Integer(BaseObject), '',
                         800 + (abs(BaseObject.m_nCurrX - m_nCurrX) + abs(BaseObject.m_nCurrY - m_nCurrY)) div 2 * 20);
                     end;
                   end;
@@ -1327,7 +1327,7 @@ begin
                     if nDamage > 0 then begin
                       BaseObject.StruckDamage(nDamage, Self);
                       BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                        BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 500);
+                        BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 500);
                     end;
                   end;
                 end;
@@ -1359,7 +1359,7 @@ begin
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
           SendRefMsg(RM_MONMAGIC, 5, Integer(m_TargetCret), m_nCurrX, m_nCurrY, '', 400);
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 3, Integer(m_TargetCret), '',
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 3, Integer(m_TargetCret), '',
             800 + (abs(m_TargetCret.m_nCurrX - m_nCurrX) + abs(m_TargetCret.m_nCurrY - m_nCurrY)) div 2 * 20);
           BreakHolySeizeMode();
         end;
@@ -1400,7 +1400,7 @@ begin
               if nDamage > 0 then begin
                 BaseObject.StruckDamage(nDamage, Self);
                 BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage, BaseObject.m_WAbil.HP,
-                  BaseObject.m_WAbil.MaxHP, Integer(Self), '', 400);
+                  BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 400);
               end;
             end;
           end;
@@ -1450,7 +1450,7 @@ begin
         if nPower > 0 then begin
           m_TargetCret.StruckDamage(nPower, Self);
           m_TargetCret.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower,
-            m_TargetCret.m_WAbil.HP, m_TargetCret.m_WAbil.MaxHP, Integer(Self), '', 200);
+            m_TargetCret.m_WAbil.HP, m_TargetCret.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
         end;
         SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
         BreakHolySeizeMode();
@@ -1499,7 +1499,7 @@ begin
                     if nDamage > 0 then begin
                       BaseObject.StruckDamage(nDamage, Self);
                       BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                        BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 400);
+                        BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 400);
                     end;
                   end;
                 end;
@@ -1558,7 +1558,7 @@ begin
                     if nDamage > 0 then begin
                       BaseObject.StruckDamage(nDamage, Self);
                       BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                        BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 600);
+                        BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 600);
                     end;
                   end;
                 end;
@@ -1615,7 +1615,7 @@ begin
         if nDamage > 0 then begin
           m_TargetCret.StruckDamage(nDamage, Self);
           m_TargetCret.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-            m_TargetCret.m_WAbil.HP, m_TargetCret.m_WAbil.MaxHP, Integer(Self), '', 800);
+            m_TargetCret.m_WAbil.HP, m_TargetCret.m_WAbil.MaxHP, Integer(Self), 0,'', 800);
         end;
         BreakHolySeizeMode();
         Exit;
@@ -1639,7 +1639,7 @@ begin
           m_dwTargetFocusTick := GetTickCount();
           SendRefMsg(RM_LIGHTING, nDir, 0, 0, Integer(m_TargetCret), '');
           nPower := GetAttackPower(LoWord(m_WAbil.DC), SmallInt(HiWord(m_WAbil.DC) - LoWord(m_WAbil.DC)));
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY), 3, Integer(m_TargetCret), '', 400);
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, 3, Integer(m_TargetCret), '', 400);
           SendRefMsg(RM_10205, 0, m_TargetCret.m_nCurrX, m_TargetCret.m_nCurrY, nMagId, '', 360);
           BreakHolySeizeMode();
         end;
@@ -1714,7 +1714,7 @@ begin
           if nPower > 0 then begin
             m_TargetCret.StruckDamage(nPower, Self);
             m_TargetCret.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower,
-              m_TargetCret.m_WAbil.HP, m_TargetCret.m_WAbil.MaxHP, Integer(Self), '', 200);
+              m_TargetCret.m_WAbil.HP, m_TargetCret.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
           end;
         end else
           Attack(m_TargetCret, bt06); //FFED
@@ -1753,7 +1753,7 @@ begin
         if nDamage > 0 then begin
           m_TargetCret.StruckDamage(nDamage, Self);
           m_TargetCret.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage, m_TargetCret.m_WAbil.HP,
-            m_TargetCret.m_WAbil.MaxHP, Integer(Self), '', 200);
+            m_TargetCret.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
         end;
         if not m_boDeliriaOK then SendRefMsg(RM_LIGHTING, m_btDirection, 0, 0, Integer(m_TargetCret), '')
         else SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
@@ -1791,7 +1791,7 @@ begin
         if nDamage > 0 then begin
           m_TargetCret.StruckDamage(nDamage, Self);
           m_TargetCret.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage, m_TargetCret.m_WAbil.HP,
-            m_TargetCret.m_WAbil.MaxHP, Integer(Self), '', 500);
+            m_TargetCret.m_WAbil.MaxHP, Integer(Self), 0,'', 500);
         end;
         if not m_boDeliriaOK then begin
           SendRefMsg(RM_LIGHTING, m_btDirection, 0, 0, Integer(m_TargetCret), '');
@@ -1838,7 +1838,7 @@ begin
               if nDamage > 0 then begin
                 BaseObject.StruckDamage(nDamage, Self);
                 BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage, BaseObject.m_WAbil.HP,
-                  BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                  BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
               end;
             end;
           end;
@@ -1884,7 +1884,7 @@ begin
               if nDamage > 0 then begin
                 BaseObject.StruckDamage(nDamage, Self);
                 BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage, BaseObject.m_WAbil.HP,
-                  BaseObject.m_WAbil.MaxHP, Integer(Self), '', 500);
+                  BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 500);
               end;
             end;
           end;
@@ -1957,7 +1957,7 @@ begin
                 if nDamage > 0 then begin
                   BaseObject.StruckDamage(nDamage, Self);
                   BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                    BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 1200);
+                    BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 1200);
                 end;
               end;
             end;
@@ -1978,7 +1978,7 @@ begin
               if (BaseObject <> nil) and (not BaseObject.m_boGhost) and (not BaseObject.m_boDeath) and
                 IsProperTarget(BaseObject) and (not BaseObject.m_boHideMode or m_boCoolEye) then
               begin
-                BaseObject.SendDelayMsg(Self, RM_POISON, POISON_DECHEALTH, nPower, Integer(Self), ROUND(nPower / g_Config.nAmyOunsulPoint), '', 600);
+                BaseObject.SendDelayMsg(Self, RM_POISON, POISON_DECHEALTH, nPower, Integer(Self), ROUND(nPower / g_Config.nAmyOunsulPoint), 0,'', 600);
               end;
             end;
           end;
@@ -2002,7 +2002,7 @@ begin
                 if nDamage > 0 then begin
                   BaseObject.StruckDamage(nDamage, Self);
                   BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                    BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 200);
+                    BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 200);
                 end;
               end;
             end;
@@ -2100,7 +2100,7 @@ begin
               if nDamage > 0 then begin
                 BaseObject.StruckDamage(nDamage, Self);
                 BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nDamage,
-                  BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 450);
+                  BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 450);
               end;
             end;
           end;
@@ -2159,7 +2159,7 @@ begin
               nPower := BaseObject.GetMagStruckDamage(Self, nDamage);
               if nPower > 0 then begin
                 BaseObject.StruckDamage(nPower, Self);
-                BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 100);
+                BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower, BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 100);
               end;
             end;
           end;

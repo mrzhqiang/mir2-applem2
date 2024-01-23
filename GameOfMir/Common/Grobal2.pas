@@ -40,6 +40,8 @@ $80000000  }
 
   g_sProgram = '程序制作: mrzhqiang';
   g_sWebSite = '兰达尔引擎，永久免费';
+  // 注意：如果修改了人物字段信息，这里也需要同步改动，避免出现数据异常，也要搜索其他 SIZEOFTHUMAN 常量是否一致
+  SIZEOFTHUMAN = 83267;
 
   // 某种匹配符？
   GROBAL2VER = CLIENT_VERSION_NUMBER;
@@ -56,7 +58,11 @@ $80000000  }
   MapNameLen = 16;
   ActorNameLen = 14;
   GuildNameLen = 14;
-  DEFBLOCKSIZE = 16;
+  // TDefaultMessage 旧数据结构是 1 个 Integer 和 4 个 Word，通过 SizeOf(TDefaultMessage) 计算得到 12
+  // 12 根据 GetCodeMsgSize 计算 12 * 4 / 3 = 16
+  // 新数据结构是 5 个 Integer，通过 SizeOf(TDefaultMessage) 计算得到 20
+  // 20 根据 GetCodeMsgSize 计算 20 * 4 / 3 = 26.666... 即 27
+  DEFBLOCKSIZE = 27;
   BUFFERSIZE = 30000; //数据最长不超过20000
   DATABUFFERSIZE = 20000;
 
@@ -1231,12 +1237,21 @@ type
 
   TDefaultMessage = packed record
     Recog: Integer;//识别码
+    Ident: Integer;
+    Param: Integer;
+    tag: Integer;
+    Series: Integer;
+  end;
+  pTDefaultMessage = ^TDefaultMessage;
+
+  TDefaultMessageOld = packed record
+    Recog: Integer;//识别码
     Ident: Word;
     Param: Word;
     tag: Word;
     Series: Word;
   end;
-  pTDefaultMessage = ^TDefaultMessage;
+  pTDefaultMessageOld = ^TDefaultMessageOld;
 
   TSplitDateTime = packed record
     case Integer of
@@ -1259,11 +1274,12 @@ type
   pTOSObject = ^TOSObject;
 
   TSendMessage = packed record
-    wIdent: Word;
-    wParam: Word;
+    wIdent: Integer;
+    wParam: Integer;
     nParam1: Integer;
     nParam2: Integer;
     nParam3: Integer;
+    nParam4: Integer;
     BaseObject: TObject;
     dwAddTime: LongWord;
     dwDeliveryTime: LongWord;
@@ -1273,11 +1289,12 @@ type
   pTSendMessage = ^TSendMessage;
 
   TProcessMessage = record
-    wIdent: Word;
-    wParam: Word;
+    wIdent: Integer;
+    wParam: Integer;
     nParam1: Integer;
     nParam2: Integer;
     nParam3: Integer;
+    nParam4: Integer;
     BaseObject: TObject;
     boLateDelivery: Boolean;
     dwDeliveryTime: LongWord;
@@ -1290,7 +1307,6 @@ type
     sChrName: string[ActorNameLen];
     sUserAddr: string[15];
     nSessionID: Integer;
-
   end;
 
   TShortMessage = packed record
@@ -1377,15 +1393,13 @@ type
   end;
   pTQuestInfo = ^TQuestInfo;
 
-
-
   pTMakeItemInfo = ^TMakeItemInfo;
   TMakeItemInfo = packed record
     wIdent: Word;
     wCount: Word;
     boNotGet: Boolean;
   end;
-  
+
   pTMakeItem = ^TMakeItem;
   TMakeItem = packed record
     wIdx: Word;
@@ -1411,23 +1425,6 @@ type
     btLevel: Byte;
     wLevel: Word;
   end;
-
-
-  {TScript = packed record
-    boQuest: Boolean;
-    QuestInfo: array[0..9] of TQuestInfo;
-    nQuest: Integer;
-    RecordList: TList;
-  end;
-  pTScript = ^TScript;   }
-
-  {TMonItem = record
-    n00: Integer;
-    n04: Integer;
-    sMonName: string;
-    n18: Integer;
-  end;
-  pTMonItem = ^TMonItem;  }
 
   pTTopInfo = ^TTopInfo;
   TTopInfo = packed record
@@ -1630,90 +1627,94 @@ type
     Gold: Integer;
   end;
 
+  // 道具、物品、装备
   TStdItem = packed record
+    // 编号，全局唯一
     Idx: Word;
     // 物品名字，一般来说应该有一个前缀，位于人物的物品数据库中
     // 但这里为了方便开发，暂时增加了名字长度
+    // TODO 在服务端维护一个 序号+名称 的凝练列表，支持动态修改
+    // 当客户端连接时，从服务端读取此列表，如果客户端发现物品带有序号，则将序号对应的名称作为 Name 的前缀
     Name: string[24];
-    StdMode2: Byte;
-    StdMode: TStdMode;
+    StdMode2: Byte; // 分类代码
+    StdMode: TStdMode; // 分类枚举
     StdModeEx: TStdModeEx;
     Shape: Byte;//装配外观
-    Weight: Byte;//重量
-    AniCount: Byte;
-    Source: Word;//源动力
-    Reserved: Word; //保留
+    Weight: Byte;//重量 TODO 废弃
+    AniCount: Byte;// 特殊字段
+    Source: Word;// 特殊字段
+    Reserved: Word; // 特殊字段
     Looks: Word;//外观，即Items.WIL中的图片索引
-    Effect: Word;
-    DuraMax: Word;//最大持久
-    nAC: Word;
-    nAC2: Word;
-    nMAC: Word;
-    nMAC2: Word;
-    nDC: Word;
-    nDC2: Word;
-    nMC: Word;
-    nMC2: Word;
-    nSC: Word;
-    nSC2: Word;
-    HP: Word;
-    MP: Word;
-    AddAttack: Byte;
-    DelDamage: Byte;
-    HitPoint: Byte;
-    SpeedPoint: Byte;
-    Strong: Byte;
-    Luck: Integer;
-    HitSpeed: Byte;
-    AntiMagic: Byte;
-    PoisonMagic: Byte;
-    HealthRecover: Byte;
-    SpellRecover: Byte;
-    PoisonRecover: Byte;
-    AddWuXinAttack: Byte;
-    DelWuXinAttack: Byte;
-    Deadliness: Byte;
-    Bind: Byte;
-    Need: Integer;
-    NeedLevel: Integer;
-    Price: Integer;
-    NeedIdentify: Byte;
+    Effect: Word;// 动画特效
+    DuraMax: Word;//最大持久 TODO 废弃
+    nAC: Integer;// 最小防御
+    nAC2: Integer;// 最大防御 TODO 改为护甲，优先计算普通攻击百分比减伤，再计算防御减伤
+    nMAC: Integer;// 最小魔御
+    nMAC2: Integer;// 最大魔御 TODO 改为魔抗，优先计算技能百分比减伤，再计算魔御减伤
+    nDC: Integer;// 最小攻击
+    nDC2: Integer;// 最大攻击 TODO 废弃
+    nMC: Integer;// 最小法强
+    nMC2: Integer;// 最大法强 TODO 废弃
+    nSC: Integer;// 最小道术
+    nSC2: Integer;// 最大道术 TODO 废弃
+    HP: Integer;// 生命值
+    MP: Integer;// 魔法值
+    AddAttack: Byte;// 伤害加成
+    DelDamage: Byte;// 伤害吸收
+    HitPoint: Byte;// 准确 TODO 废弃
+    SpeedPoint: Byte;// 敏捷 TODO 废弃
+    Strong: Byte;// 神圣 TODO 废弃
+    Luck: Integer;// 幸运 TODO 废弃
+    HitSpeed: Byte;// 攻速 TODO 待定
+    AntiMagic: Byte;// 魔法躲避 TODO 废弃
+    PoisonMagic: Byte;// 毒物躲避 TODO 废弃
+    HealthRecover: Byte;// 生命恢复
+    SpellRecover: Byte;// 魔法恢复
+    PoisonRecover: Byte;// 中毒恢复
+    AddWuXinAttack: Byte;// 五行伤害加成
+    DelWuXinAttack: Byte;// 五行伤害吸收
+    Deadliness: Byte;//
+    Bind: Byte;// 特殊状态
+    Need: Integer;// 佩戴需求类型
+    NeedLevel: Integer;// 佩戴需求等级
+    Price: Integer;// 金币价格
+    NeedIdentify: Byte;//
     ExpRate: Byte;
     HPorMPRate: Byte;
     AC2Rate: Byte;
     MAC2Rate: Byte;
     Rule: pTItemRule;
-    Color: Byte;
+    Color: Byte;// 名称颜色
     SetItemList: TList;
   end;
   pTStdItem = ^TStdItem;
 
   TMonInfo = packed record
     sName: string[14];//怪物名
-    btRace: Byte;//种族
-    btRaceImg: Byte;//种族图像
+    btRace: Byte;//种族，行动模式及死亡时的效果代码
+    btRaceImg: Byte;//种族图像，攻击模式代码
     wAppr: Word;//形像代码
-    wLevel: Word;
-    btLifeAttrib: Byte;//不死系
-    boUndead: Boolean;
+    wLevel: Word;//等级
+    btLifeAttrib: Byte;
+    boUndead: Boolean;//不死系：0否1是（不死系无法诱惑，否则可以诱惑）
     boNotInSafe: Boolean;
     wCoolEye: Word;//视线范围
-    dwExp: LongWord;
-    wMP: Word;
-    wHP: Word;
-    wAC: Word;
-    wMAC: Word;
-    wDC: Word;
-    wMaxDC: Word;
-    wMC: Word;
-    wSC: Word;
-    wSpeed: Word;
+    dwExp: LongWord;// 经验值
+    wMP: Integer;
+    wHP: Integer;
+    wAC: Integer;// 防御
+    wMAC: Integer;// 魔御
+    wDC: Integer;// 最小攻击
+    wMaxDC: Integer;// 最大攻击
+    wMC: Integer;// 法强
+    wSC: Integer;// 道术
+    wSpeed: Word;// 敏捷
     wHitPoint: Word;//命中率
     nWalkSpeed: Integer;//行走速度
     wWalkStep: Word;//行走步伐
     wWalkWait: Word;//行走等待
     wAttackSpeed: Word;//攻击速度
-    btColor: Byte;
+    btColor: Byte;// 名称颜色
     ItemList: TList;
     MapQuestList: TList;
   end;
@@ -1742,15 +1743,15 @@ type
     nSpellFrame: Word;
     // 满级时的技能消耗
     wSpell: Word;
-    // 定义基础技能消耗
+    // 默认技能消耗
     btDefSpell: Word;
     // 最小伤害数值
     wPower: Word;
     // 最大伤害数值
     wMaxPower: Word;
-    // 定义最小伤害（或伤害类型）
+    // 默认最小伤害（或伤害类型）
     btDefPower: Word;
-    // 定义最大伤害（或伤害数值）
+    // 默认最大伤害（或伤害数值）
     btDefMaxPower: Word;
     // 技能最高等级
     btTrainLv: Byte;
@@ -1767,19 +1768,28 @@ type
     MagicMode: TMagicMode;
   end;
 
-
+  // 客户端组队信息
   pTClientGroup = ^TClientGroup;
   TClientGroup = packed record
+    // 玩家名称
     UserName: string[ActorNameLen];
+    // 玩家 ID
     UserID: Integer;
+    // 五行类型
     WuXin: Byte;
+    // 等级
     Level: Word;
-    HP, MP, MaxHP, MaxMP: Word;
+    // 生命值、魔法值
+    HP, MP, MaxHP, MaxMP: Integer;
+    // 职业、性别
     btJob, btSex: Byte;
+    // 地图名称
     mapName: string[16];
+    // 地图坐标
     cX,cY: Word;
   end;
 
+  // 客户端邮件头
   pTClientEMailHeader = ^TClientEMailHeader;
   TClientEMailHeader = packed record
     nIdx: Integer;
@@ -1790,10 +1800,11 @@ type
     btTime: Byte;
   end;
 
+  // 组队成员
   pTGroupMember = ^TGroupMember;
   TGroupMember = packed record
     ClientGroup: TClientGroup;
-    isScreen: TObject;
+    isScreen: TObject;// 是否屏幕范围内，如果有效则说明此队员在可视范围内
   end;
 
   {客户端技能}
@@ -1916,12 +1927,12 @@ type
 
   pTNakedAbil = ^TNakedAbil;
   TNakedAbil = packed record
-    nAc: Word;
-    nMac: Word;
-    nDC: Word;
-    nMC: Word;
-    nSC: Word;
-    nHP: Word;
+    nAc: Integer;
+    nMac: Integer;
+    nDC: Integer;
+    nMC: Integer;
+    nSC: Integer;
+    nHP: Integer;
   end;
 
   pTClientNakedInfo = ^TClientNakedInfo;
@@ -1932,17 +1943,17 @@ type
 
   pTNakedAddAbil = ^TNakedAddAbil;
   TNakedAddAbil = packed record
-    nAc: Word;
-    nAc2: Word;
-    nMac: Word;
-    nMac2: Word;
-    nDC: Word;
-    nDC2: Word;
-    nMC: Word;
-    nMC2: Word;
-    nSC: Word;
-    nSC2: Word;
-    nHP: Word;
+    nAc: Integer;
+    nAc2: Integer;
+    nMac: Integer;
+    nMac2: Integer;
+    nDC: Integer;
+    nDC2: Integer;
+    nMC: Integer;
+    nMC2: Integer;
+    nSC: Integer;
+    nSC2: Integer;
+    nHP: Integer;
   end;
 
   pTUserRealityInfo = ^TUserRealityInfo;
@@ -1966,10 +1977,10 @@ type
     DC: Integer; //攻击力
     MC: Integer; //魔法
     SC: Integer; //道术
-    HP: Word;
-    MP: Word;
-    MaxHP: Word;
-    MaxMP: Word;
+    HP: Integer;
+    MP: Integer;
+    MaxHP: Integer;
+    MaxMP: Integer;
     Exp: Int64;
     MaxExp: Int64;
     Weight: Word;
@@ -2014,18 +2025,18 @@ type
   end;
 
   TAddAbility = packed record
-    HP: Word;
-    MP: Word;
-    AC: Word;
-    AC2: Word;
-    MAC: Word;
-    MAC2: Word;
-    DC: Word;
-    DC2: Word;
-    MC: Word;
-    MC2: Word;
-    SC: Word;
-    SC2: Word;
+    HP: Integer;
+    MP: Integer;
+    AC: Integer;
+    AC2: Integer;
+    MAC: Integer;
+    MAC2: Integer;
+    DC: Integer;
+    DC2: Integer;
+    MC: Integer;
+    MC2: Integer;
+    SC: Integer;
+    SC2: Integer;
 
     wAddAttack: Byte;
     wDelDamage: Byte;
@@ -2051,10 +2062,10 @@ type
 
   TWAbility = packed record
     dwExp: LongWord; //怪物经验值
-    wHP: Word;
-    wMP: Word;
-    wMaxHP: Word;
-    wMaxMP: Word;
+    wHP: Integer;
+    wMP: Integer;
+    wMaxHP: Integer;
+    wMaxMP: Integer;
   end;
 
   TMerchantInfo = packed record
@@ -2140,7 +2151,7 @@ type
     btBindMode1: Byte;
     btBindMode2: Byte;
     TermTime: LongWord;
-    btAC, btMAC, btDC, btHP: Byte;
+    btAC, btMAC, btDC, btHP: Integer;
   end;
 
 
@@ -2188,7 +2199,7 @@ type
       2:(
         dwExp: LongWord;
         HorseItems: array[0..4] of THorseItem;
-        wHP: Word;
+        wHP: Integer;
         btLevel: Byte;
         dwMaxExp: LongWord;
         btAliveTime: Byte;
@@ -4023,7 +4034,7 @@ procedure GetHorseLevelAbility(UserItem: pTUserItem; StdItem: pTStdItem; var Add
 begin
   FillChar(AddAbility, SizeOf(AddAbility), #0);
   if StdItem.StdMode = tm_House then begin
-    AddAbility.HP := _MIN(High(Word), 14 + ROUND(((UserItem.btLevel / 4 + 4 + UserItem.btLevel / 20) * UserItem.btLevel)));
+    AddAbility.HP := _MIN(High(Integer), 14 + ROUND(((UserItem.btLevel / 4 + 4 + UserItem.btLevel / 20) * UserItem.btLevel)));
     AddAbility.AC :=  UserItem.btLevel div 7 div 2;
     AddAbility.AC2 := UserItem.btLevel div 7;
     AddAbility.MAC := ROUND(UserItem.btLevel / 6) div 2;
@@ -4038,15 +4049,15 @@ end;
 procedure GetHorseAddAbility(UserItem: pTUserItem; StdItem: pTStdItem; nIndex: Byte; var AddAbility: TAddAbility);
 begin
   if nIndex in [Low(UserItem.HorseItems)..High(UserItem.HorseItems)] then begin
-    AddAbility.HP := _MIN(High(Word), AddAbility.HP + StdItem.HP + UserItem.HorseItems[nIndex].btHP);
-    AddAbility.AC :=  _MIN(High(Word), AddAbility.AC + StdItem.nAC);
-    AddAbility.AC2 := _MIN(High(Word), AddAbility.AC2 + StdItem.nAC2 + UserItem.HorseItems[nIndex].btAC);
-    AddAbility.MAC :=  _MIN(High(Word), AddAbility.MAC + StdItem.nMAC);
-    AddAbility.MAC2 := _MIN(High(Word), AddAbility.MAC2 + StdItem.nMAC2 + UserItem.HorseItems[nIndex].btMAC);
-    AddAbility.DC :=  _MIN(High(Word), AddAbility.DC + StdItem.nDC);
-    AddAbility.DC2 := _MIN(High(Word), AddAbility.DC2 + StdItem.nDC2 + UserItem.HorseItems[nIndex].btDC);
-    AddAbility.wHitPoint := _MIN(High(Word), AddAbility.wHitPoint + StdItem.HitPoint);
-    AddAbility.wSpeedPoint := _MIN(High(Word), AddAbility.wHitPoint + StdItem.SpeedPoint);
+    AddAbility.HP := _MIN(High(Integer), AddAbility.HP + StdItem.HP + UserItem.HorseItems[nIndex].btHP);
+    AddAbility.AC :=  _MIN(High(Integer), AddAbility.AC + StdItem.nAC);
+    AddAbility.AC2 := _MIN(High(Integer), AddAbility.AC2 + StdItem.nAC2 + UserItem.HorseItems[nIndex].btAC);
+    AddAbility.MAC :=  _MIN(High(Integer), AddAbility.MAC + StdItem.nMAC);
+    AddAbility.MAC2 := _MIN(High(Integer), AddAbility.MAC2 + StdItem.nMAC2 + UserItem.HorseItems[nIndex].btMAC);
+    AddAbility.DC :=  _MIN(High(Integer), AddAbility.DC + StdItem.nDC);
+    AddAbility.DC2 := _MIN(High(Integer), AddAbility.DC2 + StdItem.nDC2 + UserItem.HorseItems[nIndex].btDC);
+    AddAbility.wHitPoint := _MIN(High(Integer), AddAbility.wHitPoint + StdItem.HitPoint);
+    AddAbility.wSpeedPoint := _MIN(High(Integer), AddAbility.wHitPoint + StdItem.SpeedPoint);
   end;
 end;
 

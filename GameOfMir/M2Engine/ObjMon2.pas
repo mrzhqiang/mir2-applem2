@@ -379,7 +379,7 @@ begin
     Exit;
   //SendRefMsg(RM_HIT, m_btDirection, m_nCurrX, m_nCurrY, 0, '');
   SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
-  SendDelayMsg(Self, RM_ZEN_BEE, 0, 0, 0, 0, '', 500);
+  SendDelayMsg(Self, RM_ZEN_BEE, 0, 0, 0, 0, 0,'', 500);
 end;
 
 function TBeeQueen.Operate(ProcessMsg: pTProcessMessage): Boolean;
@@ -492,7 +492,7 @@ begin
           - BaseObject.m_nCurrY) < m_nViewRange) then begin
           m_dwTargetFocusTick := GetTickCount();
           SendDelayMsg(Self, RM_DELAYMAGIC, nPower,
-            MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 2,
+            BaseObject.m_nCurrX, BaseObject.m_nCurrY, 2,
             Integer(BaseObject), '', 600);
           if Random(4) = 0 then begin
             if Random(3) <> 0 then begin
@@ -601,7 +601,7 @@ begin
       if IsProperTarget(BaseObject) then begin
         if (abs(m_nCurrX - BaseObject.m_nCurrX) <= m_nViewRange) and
           (abs(m_nCurrY - BaseObject.m_nCurrY) <= m_nViewRange) then begin
-          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, MakeLong(BaseObject.m_nCurrX, BaseObject.m_nCurrY), 1,
+          SendDelayMsg(Self, RM_DELAYMAGIC, nPower, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 1,
            Integer(BaseObject), '', 200);
           SendRefMsg(RM_10205, 0, BaseObject.m_nCurrX, BaseObject.m_nCurrY, 1{type}, '');
         end;
@@ -648,7 +648,7 @@ begin
   if BBList.Count < 15 then begin
     //SendRefMsg(RM_HIT, m_btDirection, m_nCurrX, m_nCurrY, 0, '');
     SendAttackMsg(RM_HIT, SM_HIT, m_btDirection, m_nCurrX, m_nCurrY);
-    SendDelayMsg(Self, RM_ZEN_BEE, 0, 0, 0, 0, '', 500);
+    SendDelayMsg(Self, RM_ZEN_BEE, 0, 0, 0, 0, 0,'', 500);
   end;
 end;
 
@@ -746,7 +746,7 @@ begin
         if n10 > 0 then begin
           BaseObject.StruckDamage(n10, Self);
           BaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, n10,
-            BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '', 700);
+            BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), 0,'', 700);
           //BaseObject.SendMsg(TBaseObject(RM_STRUCK), RM_10101, n10, BaseObject.m_WAbil.HP, BaseObject.m_WAbil.MaxHP, Integer(Self), '');
         end;
       end;
@@ -896,7 +896,7 @@ begin
       TargeTBaseObject.m_ExpHitter := nil;
       TargeTBaseObject.StruckDamage(nPower, Self);
       TargeTBaseObject.SendDelayMsg(TBaseObject(RM_STRUCK), RM_10101, nPower,
-        TargeTBaseObject.m_WAbil.HP, TargeTBaseObject.m_WAbil.MaxHP, Integer(Self), '',
+        TargeTBaseObject.m_WAbil.HP, TargeTBaseObject.m_WAbil.MaxHP, Integer(Self),0, '',
         _MAX(abs(m_nCurrX - TargeTBaseObject.m_nCurrX), abs(m_nCurrY - TargeTBaseObject.m_nCurrY)) * 50 + 600);
     end;
     SendRefMsg(RM_FLYAXE, m_btDirection, m_nCurrX, m_nCurrY, Integer(TargeTBaseObject), '');

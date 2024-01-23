@@ -4161,7 +4161,7 @@ begin
               g_SellDlgItemSellWait.Index2 := MakeLong(StorageIdx, idx);
               g_SellDlgItemSellWait.ItemType := mtBagItem;
               frmMain.SendTakeBackStorageItem(g_nCurMerchant, g_StorageArr[StorageIdx][idx].UserItem.MakeIndex,
-                MakeWord(StorageIdx, I));
+                                               MakeLong(StorageIdx, I));
               g_StorageArr[StorageIdx][idx].s.Name := '';
               g_StorageArrList[StorageIdx].Delete(I);
               break;
@@ -4178,7 +4178,7 @@ begin
           exit;
         end;
         g_SellDlgItemSellWait := g_MovingItem;
-        frmMain.SendStorageItem(g_nCurMerchant, g_MovingItem.Item.UserItem.MakeIndex, MakeWord(StorageIdx, Idx));
+        frmMain.SendStorageItem(g_nCurMerchant, g_MovingItem.Item.UserItem.MakeIndex, MakeLong(StorageIdx, Idx));
         ClearMovingItem();
       end;
     end;

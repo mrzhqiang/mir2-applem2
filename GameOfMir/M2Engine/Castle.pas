@@ -12,7 +12,7 @@ type
     nMainDoorY: Integer; //0x04
     sMainDoorName: string; //0x08
     boXXX: Boolean; //0x0C
-    wMainDoorHP: Word; //0x10
+    wMainDoorHP: Integer; //0x10
     MainDoor: TBaseObject;
     LeftWall: TBaseObject;
     CenterWall: TBaseObject;

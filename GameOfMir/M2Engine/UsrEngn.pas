@@ -1543,25 +1543,7 @@ end;
 
 procedure TUserEngine.ProcessMessageMove(PlayObject: TPlayObject; DefMsg: pTDefaultMessage; sMsg: string);
 begin
-  { if g_Config.boActionSendActionMsg then begin //使用UpdateMsg 可以防止消息队列里有多个操作
-
-     PlayObject.SendActionMsg(PlayObject,
-       DefMsg.Ident,
-       DefMsg.Tag,
-       LoWord(DefMsg.Recog),
-       HiWord(DefMsg.Recog),
-       0,
-       '');
-   end
-   else begin }
-  PlayObject.SendMsg(PlayObject,
-    DefMsg.Ident,
-    DefMsg.Tag,
-    LoWord(DefMsg.Recog), {x}
-    HiWord(DefMsg.Recog), {y}
-    0,
-    '');
-  //end;
+  PlayObject.SendMsg(PlayObject, DefMsg.Ident, DefMsg.Tag, LoWord(DefMsg.Recog), {x}HiWord(DefMsg.Recog), {y}0, '');
 end;
 
 procedure TUserEngine.ProcessMessageSay(PlayObject: TPlayObject; DefMsg: pTDefaultMessage; sMsg: string);
@@ -1970,25 +1952,7 @@ end;
 
 procedure TUserEngine.ProcessSpell(PlayObject: TPlayObject; DefMsg: pTDefaultMessage; sMsg: string);
 begin
-  {if g_Config.boSpellSendUpdateMsg then begin
-    PlayObject.SendUpdateMsg(PlayObject,
-      DefMsg.Ident,
-      DefMsg.Tag,
-      LoWord(DefMsg.Recog),
-      HiWord(DefMsg.Recog),
-      MakeLong(DefMsg.Param,
-      DefMsg.Series),
-      '');
-  end
-  else begin }
-  PlayObject.SendMsg(PlayObject,
-    DefMsg.Ident,
-    DefMsg.Tag,
-    LoWord(DefMsg.Recog),
-    HiWord(DefMsg.Recog),
-    MakeLong(DefMsg.Param, DefMsg.Series),
-    '');
-  //end;
+  PlayObject.SendMsg(PlayObject, DefMsg.Ident, DefMsg.Tag, DefMsg.Recog, DefMsg.Param, DefMsg.Series, '');
 end;
 
 function TUserEngine.RegenMonsterByName(Envir: TEnvirnoment; nX, nY: Integer; sMonName: string): TBaseObject;
@@ -3733,8 +3697,7 @@ begin
               if (BaseObject <> nil) and
                 (not BaseObject.m_boGhost) and
                 (BaseObject.m_btRaceServer = RC_PLAYOBJECT) then begin
-                BaseObject.SendMsg(BaseObject, wIdent, wX, nDoorX, nDoorY, nA,
-                  sStr);
+                BaseObject.SendMsg(BaseObject, wIdent, wX, nDoorX, nDoorY, nA, sStr);
               end;
             end;
           end;
