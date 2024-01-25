@@ -5988,15 +5988,8 @@ begin
     MainOutMessage(sExceptionMsg);
   end;
 end;
-{
-function TBaseObject.IsAddWeightAvailable(nWeight: Integer): Boolean;
-begin
-  Result := False;
-  if (m_WAbil.Weight + nWeight) <= m_WAbil.MaxWeight then
-    Result := True;
-end; }
-//是否队伍成员
 
+//是否队伍成员
 function TBaseObject.IsGroupMember(Target: TBaseObject): Boolean;
 var
   i: Integer;

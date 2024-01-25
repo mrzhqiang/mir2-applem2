@@ -1211,17 +1211,20 @@ $80000000  }
   M2SETUP_CANCELDROPITEMHINT = 5;
 type
 
-  TOnActionType = (AT_Walk, AT_Pushed, AT_Hit, AT_Spell, AT_ChangeMap, AT_Struck);
+  // 动作类型
+  TOnActionType = (AT_Walk{走}, AT_Pushed{推}, AT_Hit{击中}, AT_Spell{符咒}, AT_ChangeMap{切换地图}, AT_Struck{打击});
 
   TOnActionTypeArr = set of TOnActionType;
 
-  TStdMode = (tm_Drug, tm_Restrict, tm_Reel, tm_Book, tm_Weapon, tm_Rock,
-    tm_Cowry, tm_AddBag, tm_House, tm_Dress, tm_Helmet, tm_Necklace, tm_Ring, tm_ArmRing, tm_Amulet, tm_Belt,
-    tm_Boot, tm_Stone, tm_Light, tm_Open, tm_Flesh, tm_Ore, tm_Dice,
-    tm_Mission, tm_MissionSP, tm_MakeStone, tm_MakeProp, tm_MakePropSP, tm_unknown, tm_ResetStone,
-    tm_Prop, tm_PropSP, tm_Revive, tm_Rein, tm_Bell, tm_Saddle, tm_Decoration, tm_Nail);
+  // 物品类型
+  TStdMode = (tm_Drug{药品}, tm_Restrict{使用次数物品}, tm_Reel{特殊物品}, tm_Book{技能书籍}, tm_Weapon{武器}, tm_Rock{气血石},
+    tm_Cowry{宝物}, tm_AddBag{额外包裹}, tm_House{坐骑}, tm_Dress{男、女衣服}, tm_Helmet{头盔}, tm_Necklace{项链}, tm_Ring{戒指}, tm_ArmRing{手镯}, tm_Amulet{毒符}, tm_Belt{腰带},
+    tm_Boot{靴子}, tm_Stone{宝石}, tm_Light{勋章}, tm_Open{解包、双击触发}, tm_Flesh{肉类}, tm_Ore{矿类}, tm_Dice{骰子},
+    tm_Mission{任务物品}, tm_MissionSP{任务物品-可叠加}, tm_MakeStone{装备宝石}, tm_MakeProp{普通道具}, tm_MakePropSP{普通道具-可叠加}, tm_unknown{未知}, tm_ResetStone{洗装备属性石},
+    tm_Prop{普通道具}, tm_PropSP{普通道具-可叠加}, tm_Revive{还魂丹}, tm_Rein{坐骑缰绳}, tm_Bell{坐骑铃铛}, tm_Saddle{坐骑马鞍}, tm_Decoration{坐骑装饰}, tm_Nail{坐骑脚钉});
 
-  TStdModeEx = set of (sm_Arming, sm_ArmingStrong, sm_Superposition, sm_Eat, sm_Mission, sm_HorseArm);
+  // ？？？
+  TStdModeEx = set of (sm_Arming{武器装备}, sm_ArmingStrong{}, sm_Superposition, sm_Eat, sm_Mission, sm_HorseArm);
 
   TMagicMode = set of (mm_Attack, mm_Passiveness, mm_Warr, mm_MagLock, mm_Open);
 
@@ -1983,7 +1986,7 @@ type
     MaxMP: Integer;
     Exp: Int64;
     MaxExp: Int64;
-    Weight: Word;
+    Weight: Word; // TODO 废弃
     MaxWeight: Word; // 背包
     WearWeight: Word;
     MaxWearWeight: Word; //负重
@@ -2159,7 +2162,7 @@ type
     MakeIndex: Integer;
     wIndex: Word; //物品id
     Dura: Word; //当前持久值
-    DuraMax: Word; //最大持久值
+    DuraMax: Word; //最大持久值 TODO 废弃
     btBindMode1: Byte;
     btBindMode2: Byte;
     TermTime: TDateTime;
@@ -2174,7 +2177,7 @@ type
     btBindMode2: Byte;
     TermTime: LongWord;
     Dura: Word;
-    DuraMax: Word;
+    DuraMax: Word;// TODO 废弃
     EffectValue: TUserItemEffectValue;
     Value: TUserItemValue;
     ComLevel: Byte;
@@ -2190,7 +2193,7 @@ type
     case Integer of
       1:(
         Dura: Word;
-        DuraMax: Word;
+        DuraMax: Word;// TODO 废弃
         EffectValue: TUserItemEffectValue;
         Value: TUserItemValue;
         ComLevel: Byte; //合成等级

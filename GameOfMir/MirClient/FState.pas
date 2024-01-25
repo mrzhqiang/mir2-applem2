@@ -1329,23 +1329,13 @@ begin
             rc.Right := 0;
           rc.Right := _MIN(rc.Right, d.Width);
           dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 73, rc, d, FALSE);
-          //背包重量条
+          //成长点
           rc := d.ClientRect;
           if g_nDander > 0 then begin
             rc.Right := _MIN(Round(rc.Right / (10000 / g_nDander)), rc.Right);
             rc.Right := _MIN(rc.Right, d.Width);
             dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 40, rc, d, FALSE);
           end;
-          {if g_MySelf.m_Abil.Weight > 0 then
-            r := g_MySelf.m_Abil.MaxWeight / g_MySelf.m_Abil.Weight
-          else
-            r := 0;
-          if r > 0 then
-            rc.Right := Round(rc.Right / r)
-          else
-            rc.Right := 0;
-          rc.Right := _MIN(rc.Right, d.Width);
-          dsurface.Draw(g_FScreenWidth - ax - 134, g_FScreenHeight - 40, rc, d, FALSE);}
         end;
       end;
     end;

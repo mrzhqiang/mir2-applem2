@@ -4218,17 +4218,6 @@ begin
     g_boMoveSlow := FALSE;
     g_boAttackSlow := FALSE;
     g_nMoveSlowLevel := 0;
-    {if m_Abil.Weight > m_Abil.MaxWeight then begin
-      g_nMoveSlowLevel := m_Abil.Weight div m_Abil.MaxWeight;
-      g_boMoveSlow := TRUE;
-    end;
-    if m_Abil.WearWeight > m_Abil.MaxWearWeight then begin
-      g_nMoveSlowLevel := g_nMoveSlowLevel + m_Abil.WearWeight div m_Abil.MaxWearWeight;
-      g_boMoveSlow := TRUE;
-    end;
-    if m_Abil.HandWeight > m_Abil.MaxHandWeight then begin
-      g_boAttackSlow := TRUE;
-    end;   }
       //√‚∏∫÷ÿ
     if g_boMoveSlow and (m_nSkipTick < g_nMoveSlowLevel) then begin
       Inc(m_nSkipTick); //«—π¯ ΩÆ¥Ÿ.
