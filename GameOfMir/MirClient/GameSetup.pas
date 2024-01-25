@@ -14,13 +14,13 @@ const
   OS_SHOWITEMNAME = 3; //Ctrl显示物品名称
   OS_AUTOPICKUPITEM = 4; //自动捡物
   OS_EXEMPTSHIFT = 5; //免Shift键
-  OS_GETEXPFILTRATE = 6; //低经验值获取过滤
+  OS_GETEXPFILTRATE = 6; //经验值过滤
   OS_MOVEHPSHOW = 7; //移动飘血显示
   OS_HPPROTECT = 8; //血量保护
   OS_MPPROTECT = 9; //魔法值保护
-  OS_HPPROTECT2 = 10;
-  OS_MPPROTECT2 = 11;
-  OS_HPPROTECT3 = 12;
+  OS_HPPROTECT2 = 10;// 特殊药品保护
+  OS_MPPROTECT2 = 11;// 特殊药品魔法值保护
+  OS_HPPROTECT3 = 12;// 卷轴保护
   OS_HIDEAROUNDHUM = 13; //隐藏周围人物
   OS_HIDEALLYHUM = 14; //隐藏联盟人物
   OS_HIDEMAGICBEGIN = 15; //隐藏技能出招效果
@@ -30,14 +30,18 @@ const
   OS_AUTOFIREHIT = 19; //自动烈火
   OS_AUTOSHIELD = 20; //自动开盾
   OS_AUTOCLOAK = 21; //自动隐身
-  OS_SHOWNAMEALL = 22;
-  OS_SHOWNAMEMON = 23;
-  OS_SNOWWINDLOCK = 24;
-  OS_LONGWIND = 25;
-  OS_AUTOLONGICEHIT = 26;
-  OS_FIERYDRAGONLOCK = 27;
-  
-//  OS_HIDEHELMET = 22; //隐藏头盔显示
+  OS_SHOWNAMEALL = 22;// 全名显示
+  OS_SHOWNAMEMON = 23;// 怪物显名
+  OS_SNOWWINDLOCK = 24;// 冰咆哮锁定
+  OS_LONGWIND = 25;// 自动刺杀
+  OS_AUTOLONGICEHIT = 26;// 自动开天斩
+  OS_FIERYDRAGONLOCK = 27;// 火龙气焰锁定
+  OS_UNIT_HPMP = 28;// 单位血量
+//  OS_FIERYDRAGONLOCK = 29;// 火龙气焰锁定
+//  OS_FIERYDRAGONLOCK = 30;// 火龙气焰锁定
+//  OS_FIERYDRAGONLOCK = 32;// 火龙气焰锁定
+//  OS_FIERYDRAGONLOCK = 33;// 火龙气焰锁定
+//  OS_FIERYDRAGONLOCK = 34;// 火龙气焰锁定
 
   OS_ISSETUP = 31;
 
@@ -88,7 +92,6 @@ type
 
   TSetupInfo = packed record
     boCustomKey: Boolean; //启用自定义快捷键
-    //boShowHelmet: Boolean; //是否显示头盔
     boShowName: Boolean; //显示人物名称
     boShowNameAll: Boolean;  //全名显示
     boShowNameMon: Boolean;  //怪物显名
@@ -97,7 +100,7 @@ type
     boShowItemName: Boolean; //Ctrl显示物品名称
     boAutoPickUpItem: Boolean; //自动捡物
     boExemptShift: Boolean; //免Shift键
-    boGetExpFiltrate: Boolean; //低经验值获取过滤
+    boGetExpFiltrate: Boolean; //经验值过滤
     nExpFiltrateCount: Word; //过滤最低数量
     boMoveHpShow: Boolean; //移动飘血显示
     boHpProtect: Boolean; //血量保护
@@ -134,10 +137,8 @@ type
     nAutoMagicIndex: Integer;
     boAutoLongWide: Boolean;
 
-    {boNotDeal: Boolean;
-    boNotGroup: Boolean;
-    boNotFriend: Boolean;
-    boNotGuild: Boolean;  }
+    boUnitHpMp: Boolean;// 单位血量
+
   end;
 
 var
@@ -978,6 +979,7 @@ begin
   SetIntStatus(UserOptionSetup.nOptionSetup, OS_LONGWIND, g_SetupInfo.boAutoLongWide);
   SetIntStatus(UserOptionSetup.nOptionSetup, OS_AUTOLONGICEHIT, g_SetupInfo.boAutoLongIceHit);
   SetIntStatus(UserOptionSetup.nOptionSetup, OS_FIERYDRAGONLOCK, g_SetupInfo.boFieryDragonLock);
+  SetIntStatus(UserOptionSetup.nOptionSetup, OS_UNIT_HPMP, g_SetupInfo.boUnitHpMp);
 
 
   //SetIntStatus(UserOptionSetup.nOptionSetup, OS_HIDEHELMET, not g_SetupInfo.boShowHelmet);
@@ -1063,6 +1065,7 @@ begin
     g_SetupInfo.boAutoLongWide := CheckIntStatus(UserOptionSetup.nOptionSetup, OS_LONGWIND);
     g_SetupInfo.boAutoLongIceHit := CheckIntStatus(UserOptionSetup.nOptionSetup, OS_AUTOLONGICEHIT);
     g_SetupInfo.boFieryDragonLock := CheckIntStatus(UserOptionSetup.nOptionSetup, OS_FIERYDRAGONLOCK);
+    g_SetupInfo.boUnitHpMp := CheckIntStatus(UserOptionSetup.nOptionSetup, OS_UNIT_HPMP);
 
     //g_SetupInfo.boShowHelmet := not CheckIntStatus(UserOptionSetup.nOptionSetup, OS_HIDEHELMET);
     g_SetupInfo.nExpFiltrateCount := UserOptionSetup.nExpFiltrateCount;
@@ -1160,6 +1163,7 @@ begin
     boAutoLongIceHit := False;
     boSnowWindLock := False;
     boFieryDragonLock := False;
+    boUnitHpMp := False;
 
     boAutoMagic := False; //自动练功
     dwAutoMagicTick := 10000;

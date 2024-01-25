@@ -2883,8 +2883,14 @@ begin
       sMsg := '';
       sMsg := sMsg + '名称: <' + GroupMember.ClientGroup.UserName + ' /FCOLOR=' + IntToStr(GetRGB(255)) + '>\';
       sMsg := sMsg + '等级: ' + IntToStr(GroupMember.ClientGroup.Level) + ' 级\';
-      sMsg := sMsg + Format('H P: %d/%d\', [GroupMember.ClientGroup.HP, GroupMember.ClientGroup.MaxHP]);
-      sMsg := sMsg + Format('M P: %d/%d\', [GroupMember.ClientGroup.MP, GroupMember.ClientGroup.MaxMP]);
+      if (g_SetupInfo.boUnitHpMp) then
+        sMsg := sMsg + 'H P: ' + IntUnit(GroupMember.ClientGroup.HP) + '/' + IntUnit(GroupMember.ClientGroup.MaxHP) + '\'
+      else
+        sMsg := sMsg + Format('H P: %d/%d\', [GroupMember.ClientGroup.HP, GroupMember.ClientGroup.MaxHP]);
+      if (g_SetupInfo.boUnitHpMp) then
+        sMsg := sMsg + 'M P: ' + IntUnit(GroupMember.ClientGroup.MP) + '/' + IntUnit(GroupMember.ClientGroup.MaxMP) + '\'
+      else
+        sMsg := sMsg + Format('M P: %d/%d\', [GroupMember.ClientGroup.MP, GroupMember.ClientGroup.MaxMP]);
       if g_boUseWuXin then begin
         sMsg := sMsg + '五行: <' + GetWuXinName(GroupMember.ClientGroup.WuXin) + ' /FCOLOR=' + IntToStr(GetWuXinColor(GroupMember.ClientGroup.WuXin)) + '>\'
       end;

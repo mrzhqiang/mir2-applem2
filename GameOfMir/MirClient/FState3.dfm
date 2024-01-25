@@ -2000,7 +2000,7 @@ object FrmDlg3: TFrmDlg3
     OffsetTop = 1
   end
   object DDFAroundHum: TDCheckBox
-    Left = 903
+    Left = 967
     Top = 191
     Width = 58
     Height = 21
@@ -2022,7 +2022,7 @@ object FrmDlg3: TFrmDlg3
     OffsetTop = 1
   end
   object DDFAllyHum: TDCheckBox
-    Left = 903
+    Left = 967
     Top = 218
     Width = 58
     Height = 21
@@ -2044,8 +2044,8 @@ object FrmDlg3: TFrmDlg3
     OffsetTop = 1
   end
   object dchkDDFNewChangeMap: TDCheckBox
-    Left = 903
-    Top = 245
+    Left = 967
+    Top = 238
     Width = 58
     Height = 21
     DFColor = 12964541
@@ -2066,8 +2066,8 @@ object FrmDlg3: TFrmDlg3
     OffsetTop = 1
   end
   object DDFMagicEnd: TDCheckBox
-    Left = 903
-    Top = 269
+    Left = 967
+    Top = 265
     Width = 58
     Height = 21
     DFColor = 12964541
@@ -3006,7 +3006,7 @@ object FrmDlg3: TFrmDlg3
     OffsetTop = 1
   end
   object DDFHideHelmet: TDCheckBox
-    Left = 903
+    Left = 967
     Top = 292
     Width = 58
     Height = 21
@@ -4395,5 +4395,49 @@ object FrmDlg3: TFrmDlg3
     ShowCount = 5
     ShowHeight = 18
     ItemIndex = -1
+  end
+  object UnitHpMpBox: TDCheckBox
+    Left = 791
+    Top = 292
+    Width = 58
+    Height = 21
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnMouseMove = DDPickupAllItemMouseMove
+    Caption = #21333#20301#26174#31034
+    DParent = DDFunction
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    Checked = False
+    FontSpace = 3
+    OffsetLeft = 4
+    OffsetTop = 1
+  end
+  object UnitHpMpCheckBox: TDCheckBox
+    Left = 872
+    Top = 218
+    Width = 58
+    Height = 21
+    DFColor = 12964541
+    DFEnabledColor = 12964541
+    DFMoveColor = 12964541
+    DFDownColor = clWhite
+    DFBackColor = 8
+    OnMouseMove = DDPickupAllItemMouseMove
+    Caption = #21333#20301#26174#31034
+    DParent = DDFunction
+    Visible = True
+    Enabled = True
+    MouseFocus = True
+    KeyFocus = False
+    Checked = False
+    FontSpace = 3
+    OffsetLeft = 4
+    OffsetTop = 1
   end
 end

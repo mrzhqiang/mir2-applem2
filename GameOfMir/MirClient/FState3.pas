@@ -218,6 +218,8 @@ type
     DDMLongIceHit: TDCheckBox;
     DDMFieryDragonLock: TDCheckBox;
     DDAPMagicList: TDComboBox;
+    UnitHpMpCheckBox: TDCheckBox;
+
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure DWndArmStrengthenVisible(Sender: TObject; boVisible: Boolean);
@@ -345,6 +347,7 @@ type
     procedure DGDUpLevelDirectPaint(Sender: TObject; dsurface: TDXTexture);
     procedure DArmOKDirectPaint(Sender: TObject; dsurface: TDXTexture);
     procedure dbtnMissionTrackDirectPaint(Sender: TObject; dsurface: TDXTexture);
+
   private
     { Private declarations }
     FStrengthenHint: string;
@@ -2212,6 +2215,9 @@ begin
     if Sender = DDFHPShow then begin
       ShowMsg := '是否动画显示对目标或自己的伤害值多少';
     end else
+    if Sender = UnitHpMpCheckBox then begin
+      ShowMsg := '是否单位化显示血量，比如：10万、20亿';
+    end else
     if Sender = DDPickupAllItem then begin
       ShowMsg := '选中后，将自动捡取所有物品，不考虑过滤\';
       ShowMsg := ShowMsg + '使用快捷键(数字键1左边按键)<（~）/FCOLOR=$FFFF>可以快速捡取脚下物品';
@@ -2315,6 +2321,7 @@ begin
     DDFExp.Checked := g_SetupInfo.boGetExpFiltrate;
     DDFCtrl.Checked := g_SetupInfo.boShowItemName;
     DDFHPShow.Checked := g_SetupInfo.boMoveHpShow;
+    UnitHpMpCheckBox.Checked := g_SetupInfo.boUnitHpMp;
 
     DDFAroundHum.Checked := g_SetupInfo.boHideAroundHum;
     DDFAllyHum.Checked := g_SetupInfo.boHideAllyHum;
@@ -2850,6 +2857,7 @@ begin
   g_SetupInfo.boGetExpFiltrate := DDFExp.Checked;
   g_SetupInfo.boShowItemName := DDFCtrl.Checked;
   g_SetupInfo.boMoveHpShow := DDFHPShow.Checked;
+  g_SetupInfo.boUnitHpMp := UnitHpMpCheckBox.Checked;
 
   if g_boEasyNotShift then begin
     g_boShiftOpen := g_SetupInfo.boExemptShift;
@@ -3094,6 +3102,7 @@ begin
     DDFExp.Checked := False;
     DDFCtrl.Checked := True;
     DDFHPShow.Checked := True;
+    UnitHpMpCheckBox.Checked := True;
 
     DDFAroundHum.Checked := False;
     DDFAllyHum.Checked := False;
@@ -6407,6 +6416,9 @@ begin
   DDFMagicEnd.SetImgIndex(g_WMain99Images, 151);
   DDFMagicEnd.Left := 305;
   DDFMagicEnd.Top := 110;
+  UnitHpMpCheckBox.SetImgIndex(g_WMain99Images, 151);
+  UnitHpMpCheckBox.Left := 305;
+  UnitHpMpCheckBox.Top := 128;
 
   DEFExp.Left := 127;
   DEFExp.Top := 127;

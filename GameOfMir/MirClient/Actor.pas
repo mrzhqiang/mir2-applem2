@@ -2999,11 +2999,7 @@ begin
   //检查人物的HP值是否低于指定值，低于指定值将不允许跑
   if m_Abil.HP < RUN_MINHEALTH then begin
     Result := -1;
-  end; // else
-  //检查人物是否被攻击，如果被攻击将不允许跑，取消检测将可以跑步逃跑
-//   if (GetTickCount - LastStruckTime < 3*1000) or (GetTickCount - LatestSpellTime < MagicPKDelayTime) then
-//      Result := -2;
-
+  end;
 end;
 
 function TActor.Strucked: Boolean;

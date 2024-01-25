@@ -797,9 +797,10 @@ begin
 
   // 加载客户端配置
   ClientSetup.loadData();
+  // 以下代码似乎无用，已注释掉，后期可能考虑删除——如果没有意外的话
   // Windows 系统库
   // https://learn.microsoft.com/zh-cn/windows/win32/dlls/dynamic-link-library-creation#using-an-import-library
-  MODULE := LoadLibrary('user32.dll');
+  {MODULE := LoadLibrary('user32.dll');
   // 查询注册表
   Reg := TRegistry.Create;
   REGPathStr := '';
@@ -824,7 +825,7 @@ begin
       begin
         // WIN + R 输入 regedit 可以打开注册表编辑器
         Reg.RootKey := HKEY_LOCAL_MACHINE;
-        // 计算机\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000
+        // 计算机\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Class\(*4d36e968-e325-11ce-bfc1-08002be10318*)\0000
         if Reg.OpenKey(REGPathStr, True) then
         begin
           // 检查是否开启显卡硬件加速，0 为开启，非 0 为关闭
@@ -863,7 +864,7 @@ begin
   Finally
     Reg.Free;
     FreeLibrary(MODULE);
-  End;
+  End;}
 
   // 根据读取的客户端配置，设置分辨率
   case g_FScreenMode of
@@ -5202,7 +5203,7 @@ begin
       {g_DControlFreeList: TList;
   g_DControlFreeTick: LongWord = 0; }
 
-
+    // TODO 保护支持百分比设定
       //回城物品保护
     if g_SetupInfo.boHpProtect3 and
     (g_EatingItem.Item.S.name = '') and

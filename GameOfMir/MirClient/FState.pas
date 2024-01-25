@@ -1299,35 +1299,19 @@ begin
     if g_MySelf <> nil then begin
       // 左侧 HP MP 状态球
       if (g_MySelf.m_Abil.MaxHP > 0) and (g_MySelf.m_Abil.MaxMP > 0) then begin
-        if (g_MySelf.m_btJob = 0) and (g_MySelf.m_Abil.Level < 28) then begin //武士
-          d := g_WMain99Images.Images[1864];
-          if d <> nil then begin
-            rc := d.ClientRect;
-            rc.Right := d.ClientRect.Right - 2;
-            dsurface.Draw(ax + 38, ay + 90, rc, d, FALSE);
-          end;
-          d := g_WMain99Images.Images[1865];
-          if d <> nil then begin
-            rc := d.ClientRect;
-            rc.Right := d.ClientRect.Right - 2;
-            rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
-            dsurface.Draw(ax + 38, ay + 90 + rc.Top, rc, d, FALSE);
-          end;
-        end else begin
-          d := g_WMain99Images.Images[1863];
-          if d <> nil then begin
-            //HP 图形
-            rc := d.ClientRect;
-            rc.Right := d.ClientRect.Right div 2 - 1;
-            rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
-            dsurface.Draw(ax + 40, ay + 91 + rc.Top, rc, d, FALSE);
-            //MP 图形
-            rc := d.ClientRect;
-            rc.Left := d.ClientRect.Right div 2 + 1;
-            rc.Right := d.ClientRect.Right - 1;
-            rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxMP * (g_MySelf.m_Abil.MaxMP - g_MySelf.m_Abil.MP));
-            dsurface.Draw(ax + 40 + rc.Left, ay + 91 + rc.Top, rc, d, FALSE);
-          end;
+        d := g_WMain99Images.Images[1863];
+        if d <> nil then begin
+          //HP 图形
+          rc := d.ClientRect;
+          rc.Right := d.ClientRect.Right div 2 - 1;
+          rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxHP * (g_MySelf.m_Abil.MaxHP - g_MySelf.m_Abil.HP));
+          dsurface.Draw(ax + 40, ay + 91 + rc.Top, rc, d, FALSE);
+          //MP 图形
+          rc := d.ClientRect;
+          rc.Left := d.ClientRect.Right div 2 + 1;
+          rc.Right := d.ClientRect.Right - 1;
+          rc.Top := Round(rc.Bottom / g_MySelf.m_Abil.MaxMP * (g_MySelf.m_Abil.MaxMP - g_MySelf.m_Abil.MP));
+          dsurface.Draw(ax + 40 + rc.Left, ay + 91 + rc.Top, rc, d, FALSE);
         end;
       end;
       if (g_MySelf.m_Abil.MaxExp > 0) then begin
@@ -1377,17 +1361,38 @@ begin
       dsurface.Draw(0, 0, d.ClientRect, d, False);
     //
     with g_DXCanvas do begin
+      // 攻击模式
       if DBTAttackMode.Tag in [Low(AttackModeName)..High(AttackModeName)] then
         TextOut(g_FScreenWidth - ax - 152, ay + 113, clWhite, AttackModeName[DBTAttackMode.Tag]);
-
+      // 等级信息
+      sStr := IntToStr(g_MySelf.m_Abil.Level);
+      TextOut(g_FScreenWidth - ax - 121 - TextWidth(sStr) div 2, ay + 146, clWhite, sStr);
+      // 时间信息
       TextOut(g_FScreenWidth - ax - 128, ay + 230, clWhite, FormatDateTime('HH:MM:SS', g_ServerDateTime));
-      // todo 单位化 HP MP 显示
-      sStr := IntToStr(g_MySelf.m_Abil.HP) + '/' + IntToStr(g_MySelf.m_Abil.MaxHP); 
-      TextOut(ax + 56 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
-      sStr := IntToStr(g_MySelf.m_Abil.MP) + '/' + IntToStr(g_MySelf.m_Abil.MaxMP); 
-      TextOut(ax + 118 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
+      // 生命值和魔法值以百分比形式展示在底部栏的血条和蓝条中间
+      if (g_MySelf.m_Abil.MaxHP > 0) then
+      begin
+        sStr := IntToStr(Round(g_MySelf.m_Abil.HP / g_MySelf.m_Abil.MaxHP * 100)) + '%';
+        TextOut(ax + 60 - TextWidth(sStr) div 2, ay + 130, clWhite, sStr);
+      end;
+      if (g_MySelf.m_Abil.MaxMP > 0) then
+      begin
+        sStr := IntToStr(Round(g_MySelf.m_Abil.MP / g_MySelf.m_Abil.MaxMP * 100)) + '%';
+        TextOut(ax + 110 - TextWidth(sStr) div 2, ay + 130, clWhite, sStr);
+      end;
       sStr := IntToStr(g_MySelf.m_Abil.Level); 
       TextOut(g_FScreenWidth - ax - 121 - TextWidth(sStr) div 2, ay + 146, clWhite, sStr);
+      if (g_SetupInfo.boUnitHpMp) then
+        sStr := IntUnit(g_MySelf.m_Abil.HP) + '/' + IntUnit(g_MySelf.m_Abil.MaxHP)
+      else
+        sStr := IntToStr(g_MySelf.m_Abil.HP) + '/' + IntToStr(g_MySelf.m_Abil.MaxHP);
+      TextOut(ax + 56 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
+      if (g_SetupInfo.boUnitHpMp) then
+        sStr := IntUnit(g_MySelf.m_Abil.MP) + '/' + IntUnit(g_mySelf.m_Abil.MaxMP)
+      else
+        sStr := IntToStr(g_MySelf.m_Abil.MP) + '/' + IntToStr(g_mySelf.m_Abil.MaxMP);
+      TextOut(ax + 118 - TextWidth(sStr) div 2, ay + 214, clWhite, sStr);
+      // 地图信息
       TextOut(ax + 20, g_FScreenHeight - 16, clWhite, g_sMapTitle + ' ' + IntToStr(g_MySelf.m_nCurrX) + ':' + IntToStr(g_MySelf.m_nCurrY));
     end;
 {$IFEND}
@@ -1442,7 +1447,6 @@ procedure TFrmDlg.DBottomMouseMove(Sender: TObject; Shift: TShiftState; X, Y: In
 {$IF Var_Interface = Var_Mir2}
 var
   ShowMsg: string;
-  nLeft: Integer;
 {$IFEND}
 begin
 {$IF Var_Interface = Var_Mir2}
@@ -1454,17 +1458,15 @@ begin
   Dec(Y, DBottom.Top);
   Dec(X, DBottom.Left);
   ShowMsg := '';
-  nLeft := DBottom.Width - 160;
   if (x >= nLeft) and (x <= nLeft + 105) and (y >= 172) and (y <= 172 + 26) then begin
-    x := nLeft;
+    x := DBottom.Width - 160;
     Y := 192;
     ShowMsg := '经验值：' + IntToStr(g_MySelf.m_Abil.Exp) + '/' + IntToStr(g_MySelf.m_Abil.MaxExp);
   end else
   if (x >= nLeft) and (x <= nLeft + 105) and (y >= 205) and (y <= 205 + 26) then begin
-    x := nLeft;
+    x := DBottom.Width - 160;
     Y := 228;
     ShowMsg := '成长点：' + IntToStr(g_nDander) + '/10000';
-//    ShowMsg := '负重：' + IntToStr(g_MySelf.m_Abil.Weight) + '/' + IntToStr(g_MySelf.m_Abil.MaxWeight);
   end;
   if ShowMsg <> '' then
     DScreen.ShowHint(DBottom.SurfaceX(DBottom.Left + X), DBottom.SurfaceY(DBottom.Top + Y), ShowMsg, clWhite, False, Integer(Sender));
@@ -9673,8 +9675,8 @@ begin
   end;
 end;
 
-procedure TFrmDlg.DTopDirectPaint(Sender: TObject;
-  dsurface: TDXTexture);
+  // 剑侠界面的顶部信息栏绘制
+procedure TFrmDlg.DTopDirectPaint(Sender: TObject; dsurface: TDXTexture);
 var
   d: TDXTexture;
   ax, ay: integer;

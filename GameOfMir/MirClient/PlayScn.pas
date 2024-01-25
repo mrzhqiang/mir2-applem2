@@ -802,32 +802,32 @@ begin
 
 end;
 
-procedure TPlayScene.PlayDrawScreen;
-procedure NameTextOut(Actor: TActor; Surface: TDirectDrawSurface; X, Y, fcolor, bcolor: Integer; namestr: string);
-var
-  i, row: Integer;
-  nstr: string;
-begin
-  row := 0;
-  if g_boUseWuXin and (Actor.m_btWuXin in [1..5]) then
+procedure TPlayScene.PlayDrawScreen();
+  procedure NameTextOut(Actor: TActor; Surface: TDirectDrawSurface; X, Y, fcolor, bcolor: Integer; namestr: string);
+  var
+    i, row: Integer;
+    nstr: string;
   begin
-    g_DXCanvas.TextOut(X - 12, Y - 6, GetWuXinColor(Actor.m_btWuXin), '[' + GetWuXinName(Actor.m_btWuXin) + ']');
-    row := 1;
+    row := 0;
+    if g_boUseWuXin and (Actor.m_btWuXin in [1..5]) then
+    begin
+      g_DXCanvas.TextOut(X - 12, Y - 6, GetWuXinColor(Actor.m_btWuXin), '[' + GetWuXinName(Actor.m_btWuXin) + ']');
+      row := 1;
+    end;
+    for i := 0 to 10 do
+    begin
+      if namestr = '' then break;
+      namestr := GetValidStr3(namestr, nstr, ['\']);
+      if (row = 0) and (namestr <> '') then row := -1;
+      g_DXCanvas.TextOut(X - g_DXCanvas.TextWidth(nstr) div 2, Y + row * 6, fcolor, nstr);
+      Inc(row, 2);
+    end;
   end;
-  for i := 0 to 10 do
-  begin
-    if namestr = '' then break;
-    namestr := GetValidStr3(namestr, nstr, ['\']);
-    if (row = 0) and (namestr <> '') then row := -1;
-    g_DXCanvas.TextOut(X - g_DXCanvas.TextWidth(nstr) div 2, Y + row * 6, fcolor, nstr);
-    Inc(row, 2);
-  end;
-end;
 
 const
   MissionIconPlace: array[0..9] of Integer = (0, 1, 2, 3, 4, 5, 4, 3, 2, 1);
 var
-  i, k, ax, nx: Integer;
+  i, k, ax, ay, nx, ny: Integer;
   Actor: TActor;
   uname: string;
   d: TDirectDrawSurface;
@@ -843,11 +843,9 @@ begin
       Actor := g_MySelf
     else begin
       Actor := m_ActorList[k];
-      if (Actor = g_MySelf) or
-      (abs(g_MySelf.m_nCurrX - actor.m_nCurrX) > MAXLEFT2) or
-      (g_MySelf.m_nCurrY - actor.m_nCurrY > MAXTOP2) or
-      (Actor.m_nSayX = 0) or
-      (g_MySelf.m_nCurrY - actor.m_nCurrY < (MAXTOP3 + 1)) then
+      if (Actor = g_MySelf) or (abs(g_MySelf.m_nCurrX - actor.m_nCurrX) > MAXLEFT2)
+      or (g_MySelf.m_nCurrY - actor.m_nCurrY > MAXTOP2) or (Actor.m_nSayX = 0)
+      or (g_MySelf.m_nCurrY - actor.m_nCurrY < (MAXTOP3 + 1)) then
       begin
         Inc(k);
         Continue;
@@ -859,32 +857,34 @@ begin
     else
       actor.m_nShowY := 6;
 
-    ax := 800;
+    ax := 0;
+    ay := 0;
     // 摆摊
     if (actor.m_btRace = 0) and (actor.m_boShop) and (not Actor.m_boDeath) then
     begin
       if Actor.m_UserShopSurface <> nil then
       begin
         Inc(actor.m_nShowY, Actor.m_UserShopSurface.Height);
-        DrawWindow(m_ObjSurface, Actor.m_nSayX - Actor.m_UserShopSurface.Width div 2,
-                    Actor.m_nSayY - actor.m_nShowY - 1, Actor.m_UserShopSurface);
+        DrawWindow(m_ObjSurface, Actor.m_nSayX - Actor.m_UserShopSurface.Width div 2, Actor.m_nSayY - actor.m_nShowY - 1, Actor.m_UserShopSurface);
       end;
     end else
     begin
       //显示人物血量(数字显示)
       if (not Actor.m_boDeath) and (Actor.m_boShowHealthBar) then
       begin
+        // 玩家本身显示蓝条
         if actor = g_MySelf then
         begin
           Inc(actor.m_nShowY, 3);
-          // 生命条
+          // 蓝条空槽
           d := g_WMain99Images.Images[HEALTHBAR_BLACK];
           if d <> nil then
           begin
             ax := Actor.m_nSayX - d.Width div 2;
-            m_ObjSurface.Draw(ax, Actor.m_nSayY - actor.m_nShowY - 1, d.ClientRect, d, True);
+            ay := Actor.m_nSayY - actor.m_nShowY - 1;
+            m_ObjSurface.Draw(ax, ay, d.ClientRect, d, True);
           end;
-          // 蓝条
+          // 蓝条填充
           d := g_WMain99Images.Images[0];
           if d <> nil then
           begin
@@ -894,18 +894,22 @@ begin
             if Actor.m_Abil.MaxMP > 0 then
               rc.Right := Round((rc.Right - rc.Left) / Actor.m_Abil.MaxMP * Actor.m_Abil.MP);
             ax := Actor.m_nSayX - d.Width div 2;
-            m_ObjSurface.Draw(ax, Actor.m_nSayY - actor.m_nShowY - 1 + 1, rc, d, True);
+            ay := Actor.m_nSayY - actor.m_nShowY - 1 + 1;
+            m_ObjSurface.Draw(ax, ay, rc, d, True);
           end;
         end;
 
         //画人物的“血”（头上的一个横杠）
         Inc(actor.m_nShowY, 4);
+        // 血条空槽
         d := g_WMain99Images.Images[HEALTHBAR_BLACK];
         if d <> nil then
         begin
           ax := Actor.m_nSayX - d.Width div 2;
-          m_ObjSurface.Draw(ax, Actor.m_nSayY - actor.m_nShowY, d.ClientRect, d, True);
+          ay := Actor.m_nSayY - actor.m_nShowY;
+          m_ObjSurface.Draw(ax, ay, d.ClientRect, d, True);
         end;
+        // 血条填充
         d := m_HealthBarSurface;
         if d <> nil then
         begin
@@ -920,16 +924,22 @@ begin
           end;
           if Actor.m_Abil.MaxHP > 0 then
             rc.Right := Round((rc.Right - rc.Left) / Actor.m_Abil.MaxHP * Actor.m_Abil.HP);
-          m_ObjSurface.Draw(Actor.m_nSayX - d.Width div 2, Actor.m_nSayY - actor.m_nShowY + 1, rc, d, True);
+          ax := Actor.m_nSayX - d.Width div 2;
+          ay := Actor.m_nSayY - actor.m_nShowY + 1;
+          m_ObjSurface.Draw(ax, ay, rc, d, True);
         end;
       end;
 
       if (Actor.m_Abil.MaxHP > 1) and (not Actor.m_boDeath) and (Actor.m_boShowHealthBar) then
       begin
         Inc(actor.m_nShowY, 12);
-        infoMsg := IntToStr(actor.m_Abil.HP) + '/' + IntToStr(actor.m_Abil.MaxHP);
+        if (g_SetupInfo.boUnitHpMp) then
+          infoMsg := IntUnit(actor.m_Abil.HP) + '/' + IntUnit(actor.m_Abil.MaxHP)
+        else
+          infoMsg := IntToStr(actor.m_Abil.HP) + '/' + IntToStr(actor.m_Abil.MaxHP);
         nx := actor.m_nSayX - g_DXCanvas.TextWidth(infoMsg) div 2;
-        g_DXCanvas.TextOut(nx, actor.m_nSayY - actor.m_nShowY, clWhite, infoMsg);
+        ny := actor.m_nSayY - actor.m_nShowY;
+        g_DXCanvas.TextOut(nx, ny, clWhite, infoMsg);
         if Actor.m_Group <> nil then
         begin
           // 队员标识
@@ -939,7 +949,8 @@ begin
             nx := nx - d.Width - 5;
             if nx > ax then
               nx := ax;
-            m_ObjSurface.Draw(nx, actor.m_nSayY - actor.m_nShowY, d.ClientRect, d, True);
+            ny := actor.m_nSayY - actor.m_nShowY;
+            m_ObjSurface.Draw(nx, ny, d.ClientRect, d, True);
           end;
         end;
       end;
@@ -951,7 +962,9 @@ begin
         if d <> nil then
         begin
           Inc(actor.m_nShowY, 30);
-          m_ObjSurface.Draw(Actor.m_nSayX - d.Width div 2, Actor.m_nSayY - actor.m_nShowY, d.ClientRect, d, True);
+          nx := Actor.m_nSayX - d.Width div 2;
+          ny := Actor.m_nSayY - actor.m_nShowY;
+          m_ObjSurface.Draw(nx, ny, d.ClientRect, d, True);
           Inc(actor.m_nShowY, -15);
         end;
       end;
@@ -963,8 +976,8 @@ begin
         if GetTickCount() - actor.m_IconInfoShow[i].dwFrameTick >= (actor.m_IconInfo[i].wFrameTime * 10) then
         begin
           actor.m_IconInfoShow[i].dwFrameTick := GetTickCount();
-          if (actor.m_IconInfoShow[i].dwCurrentFrame < actor.m_IconInfo[i].wStart) or
-          (Integer(actor.m_IconInfoShow[i].dwCurrentFrame) >= actor.m_IconInfo[i].wStart + actor.m_IconInfo[i].btFrame - 1) then
+          if (actor.m_IconInfoShow[i].dwCurrentFrame < actor.m_IconInfo[i].wStart)
+            or (Integer(actor.m_IconInfoShow[i].dwCurrentFrame) >= actor.m_IconInfo[i].wStart + actor.m_IconInfo[i].btFrame - 1) then
             actor.m_IconInfoShow[i].dwCurrentFrame := actor.m_IconInfo[i].wStart
           else
             actor.m_IconInfoShow[i].dwCurrentFrame := actor.m_IconInfoShow[i].dwCurrentFrame + 1;
@@ -973,9 +986,9 @@ begin
         d := g_ClientImages[actor.m_IconInfo[i].wIndex].Images[actor.m_IconInfoShow[i].dwCurrentFrame];
         if d <> nil then
         begin
-          m_ObjSurface.Draw(Actor.m_nSayX - actor.m_IconInfo[i].nX,
-                             actor.m_nSayY - actor.m_nShowY - d.Height + 2 - actor.m_IconInfo[i].nY,
-                             d.ClientRect, d, True);
+          nx := Actor.m_nSayX - actor.m_IconInfo[i].nX;
+          ny := actor.m_nSayY - actor.m_nShowY - d.Height + 2 - actor.m_IconInfo[i].nY;
+          m_ObjSurface.Draw(nx, ny, d.ClientRect, d, True);
         end;
       end;
 
@@ -1001,14 +1014,15 @@ begin
             if d <> nil then
             begin
               Inc(actor.m_nShowY, d.Height + 5);
-              m_ObjSurface.Draw(Actor.m_nSayX - d.Width div 2,
-                                 actor.m_nSayY - actor.m_nShowY - MissionIconPlace[m_dwMissionIconIdx],
-                                 d.ClientRect, d, True);
+              nx := Actor.m_nSayX - d.Width div 2;
+              ny := actor.m_nSayY - actor.m_nShowY - MissionIconPlace[m_dwMissionIconIdx];
+              m_ObjSurface.Draw(nx, ny, d.ClientRect, d, True);
               d := g_WMain99Images.Images[1990 + m_dwMissionIconIdx];
               if d <> nil then
               begin
-                DrawBlend(m_ObjSurface, Actor.m_nSayX - d.Width div 2,
-                           actor.m_nSayY - actor.m_nShowY - 32, d, 1);
+                nx := Actor.m_nSayX - d.Width div 2;
+                ny := actor.m_nSayY - actor.m_nShowY - 32;
+                DrawBlend(m_ObjSurface, nx, ny, d, 1);
               end;
             end;
           end;
@@ -1032,31 +1046,27 @@ begin
     begin
       if (g_FocusCret.m_sDescUserName <> '') then
       begin
-        g_DXCanvas.TextOut(g_FocusCret.m_nSayX - g_FocusCret.m_DescNameWidth div 2, g_FocusCret.m_nSayY + 24,
-                            g_FocusCret.m_NameColor, g_FocusCret.m_sDescUserName);
-        g_DXCanvas.TextOut(g_FocusCret.m_nSayX - g_FocusCret.m_NameWidth div 2, g_FocusCret.m_nSayY + 36,
-                            clWhite, g_FocusCret.m_UserName);
+        nx := g_FocusCret.m_nSayX - g_FocusCret.m_DescNameWidth div 2;
+        ny := g_FocusCret.m_nSayY + 24;
+        g_DXCanvas.TextOut(nx, ny, g_FocusCret.m_NameColor, g_FocusCret.m_sDescUserName);
+        nx := g_FocusCret.m_nSayX - g_FocusCret.m_NameWidth div 2;
+        ny := g_FocusCret.m_nSayY + 36;
+        g_DXCanvas.TextOut(nx, ny, clWhite, g_FocusCret.m_UserName);
       end else
-        g_DXCanvas.TextOut(g_FocusCret.m_nSayX - g_FocusCret.m_NameWidth div 2, g_FocusCret.m_nSayY + 30,
-                            g_FocusCret.m_NameColor, g_FocusCret.m_UserName);
+      begin
+        nx := g_FocusCret.m_nSayX - g_FocusCret.m_NameWidth div 2;
+        ny := g_FocusCret.m_nSayY + 30;
+        g_DXCanvas.TextOut(nx, ny, g_FocusCret.m_NameColor, g_FocusCret.m_UserName);
+      end;
     end else begin
       uname := g_FocusCret.m_sDescUserName + '\' + g_FocusCret.m_UserName;
-
-      NameTextOut(g_FocusCret, m_ObjSurface,
-                   g_FocusCret.m_nSayX,
-                   g_FocusCret.m_nSayY + 30,
-                   g_FocusCret.m_NameColor, clBlack,
-                   uname);
+      NameTextOut(g_FocusCret, m_ObjSurface, g_FocusCret.m_nSayX, g_FocusCret.m_nSayY + 30, g_FocusCret.m_NameColor, clBlack, uname);
     end;
   end;
   if g_boSelectMyself and (g_MySelf <> nil) then
   begin
     uname := g_MySelf.m_sDescUserName + '\' + g_MySelf.m_UserName;
-    NameTextOut(g_MySelf, m_ObjSurface,
-                 g_MySelf.m_nSayX,
-                 g_MySelf.m_nSayY + 30,
-                 g_MySelf.m_NameColor, clBlack,
-                 uname);
+    NameTextOut(g_MySelf, m_ObjSurface, g_MySelf.m_nSayX, g_MySelf.m_nSayY + 30, g_MySelf.m_NameColor, clBlack, uname);
   end;
 end;
 

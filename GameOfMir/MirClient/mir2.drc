@@ -8,207 +8,206 @@
   resources were bound to the produced executable.
 */
 
-#define GIFConsts_sProgressSaving 65200
-#define GIFConsts_sProgressConverting 65201
-#define GIFConsts_sProgressRendering 65202
-#define GIFConsts_sProgressCopying 65203
-#define GIFConsts_sProgressOptimizing 65204
-#define MShare_sUserShellFolders 65205
-#define MShare_sShellFolders 65206
-#define ClMain_ItemClass1 65207
-#define ClMain_ItemClass2 65208
-#define GIFConsts_sBadSize 65216
-#define GIFConsts_sTPictureConflict 65217
-#define GIFConsts_sScreenSizeExceeded 65218
-#define GIFConsts_sNoColorTable 65219
-#define GIFConsts_sBadPixelCoordinates 65220
-#define GIFConsts_sInvalidPixelFormat 65221
-#define GIFConsts_sBadDimension 65222
-#define GIFConsts_sNoDIB 65223
-#define GIFConsts_sInvalidStream 65224
-#define GIFConsts_sInvalidColor 65225
-#define GIFConsts_sEmptyColorMap 65226
-#define GIFConsts_sEmptyImage 65227
-#define GIFConsts_sMultipleGCE 65228
-#define GIFConsts_sNoPalette 65229
-#define GIFConsts_sGIFImageFile 65230
-#define GIFConsts_sProgressLoading 65231
-#define GIFConsts_sBadColorIndexFixed 65232
-#define GIFConsts_sGIFErrorSaveEmpty 65233
-#define GIFConsts_sBadSignature 65234
-#define GIFConsts_sScreenBadColorSize 65235
-#define GIFConsts_sImageBadColorSize 65236
-#define GIFConsts_sUnknownExtension 65237
-#define GIFConsts_sBadExtensionLabel 65238
-#define GIFConsts_sOutOfMemDIB 65239
-#define GIFConsts_sDecodeTooFewBits 65240
-#define GIFConsts_sDecodeCircular 65241
-#define GIFConsts_sBadTrailer 65242
-#define GIFConsts_sBadExtensionInstance 65243
-#define GIFConsts_sBadBlockSize 65244
-#define GIFConsts_sBadBlock 65245
-#define GIFConsts_sUnsupportedClass 65246
-#define GIFConsts_sInvalidData 65247
-#define ComStrs_sInvalidIndex 65248
-#define ComStrs_sInsertError 65249
-#define ComStrs_sPageIndexError 65250
-#define ComConst_SOleError 65251
-#define ComConst_SNoMethod 65252
-#define ComConst_SVarNotObject 65253
-#define ComConst_STooManyParams 65254
-#define ComConst_SDCOMNotInstalled 65255
-#define OleConst_SCannotActivate 65256
-#define OleConst_SNoWindowHandle 65257
-#define OleConst_SInvalidLicense 65258
-#define OleConst_SNotLicensed 65259
-#define OleConst_sNoRunningObject 65260
-#define GIFConsts_sOutOfData 65261
-#define GIFConsts_sTooManyColors 65262
-#define GIFConsts_sBadColorIndex 65263
-#define DirectXWave_SNotMade 65264
-#define DirectXWave_SStreamNotOpend 65265
-#define DirectXWave_SStreamOpend 65266
-#define DirectXWave_SInvalidWave 65267
-#define DirectXWave_SInvalidWaveFormat 65268
-#define DirectXWave_SCannotInitialized 65269
-#define DirectXWave_SCannotLock 65270
-#define DirectXWave_SCannotMade 65271
-#define DirectXWave_SNoForm 65272
-#define ComStrs_sTabFailClear 65273
-#define ComStrs_sTabFailDelete 65274
-#define ComStrs_sTabFailRetrieve 65275
-#define ComStrs_sTabFailGetObject 65276
-#define ComStrs_sTabFailSet 65277
-#define ComStrs_sTabFailSetObject 65278
-#define ComStrs_sTabMustBeMultiLine 65279
-#define Consts_SErrorSettingCount 65280
-#define Consts_SListBoxMustBeVirtual 65281
-#define Consts_SANSIEncoding 65282
-#define Consts_SASCIIEncoding 65283
-#define Consts_SUnicodeEncoding 65284
-#define Consts_SBigEndianEncoding 65285
-#define Consts_SUTF8Encoding 65286
-#define Consts_SUTF7Encoding 65287
-#define Consts_SPageControlNotSet 65288
-#define Consts_SWindowsVistaRequired 65289
-#define JConsts_sChangeJPGSize 65290
-#define JConsts_sJPEGError 65291
-#define JConsts_sJPEGImageFile 65292
-#define DirectXWave_SDirectSound 65293
-#define DirectXWave_SDirectSoundBuffer 65294
-#define DirectXWave_SDirectSoundPrimaryBuffer 65295
-#define Consts_SmkcDel 65296
-#define Consts_SmkcShift 65297
-#define Consts_SmkcCtrl 65298
-#define Consts_SmkcAlt 65299
-#define Consts_SInsertLineError 65300
-#define Consts_SInvalidClipFmt 65301
-#define Consts_SIconToClipboard 65302
-#define Consts_SCannotOpenClipboard 65303
-#define Consts_SInvalidMemoSize 65304
-#define Consts_SDuplicateMenus 65305
-#define Consts_SDockedCtlNeedsName 65306
-#define Consts_SDockTreeRemoveError 65307
-#define Consts_SDockZoneNotFound 65308
-#define Consts_SDockZoneHasNoCtl 65309
-#define Consts_SDockZoneVersionConflict 65310
-#define Consts_SMultiSelectRequired 65311
-#define Consts_SMsgDlgNoToAll 65312
-#define Consts_SMsgDlgYesToAll 65313
-#define Consts_SmkcBkSp 65314
-#define Consts_SmkcTab 65315
-#define Consts_SmkcEsc 65316
-#define Consts_SmkcEnter 65317
-#define Consts_SmkcSpace 65318
-#define Consts_SmkcPgUp 65319
-#define Consts_SmkcPgDn 65320
-#define Consts_SmkcEnd 65321
-#define Consts_SmkcHome 65322
-#define Consts_SmkcLeft 65323
-#define Consts_SmkcUp 65324
-#define Consts_SmkcRight 65325
-#define Consts_SmkcDown 65326
-#define Consts_SmkcIns 65327
-#define Consts_SVEnhMetafiles 65328
-#define Consts_SVIcons 65329
-#define Consts_SVBitmaps 65330
-#define Consts_SMsgDlgWarning 65331
-#define Consts_SMsgDlgError 65332
-#define Consts_SMsgDlgInformation 65333
-#define Consts_SMsgDlgConfirm 65334
-#define Consts_SMsgDlgYes 65335
-#define Consts_SMsgDlgNo 65336
-#define Consts_SMsgDlgOK 65337
-#define Consts_SMsgDlgCancel 65338
-#define Consts_SMsgDlgHelp 65339
-#define Consts_SMsgDlgAbort 65340
-#define Consts_SMsgDlgRetry 65341
-#define Consts_SMsgDlgIgnore 65342
-#define Consts_SMsgDlgAll 65343
-#define Consts_SNoTimers 65344
-#define Consts_SGroupIndexTooLow 65345
-#define Consts_SNoMDIForm 65346
-#define Consts_SControlParentSetToSelf 65347
-#define Consts_SOKButton 65348
-#define Consts_SCancelButton 65349
-#define Consts_SYesButton 65350
-#define Consts_SNoButton 65351
-#define Consts_SHelpButton 65352
-#define Consts_SCloseButton 65353
-#define Consts_SIgnoreButton 65354
-#define Consts_SRetryButton 65355
-#define Consts_SAbortButton 65356
-#define Consts_SAllButton 65357
-#define Consts_SCannotDragForm 65358
-#define Consts_SVMetafiles 65359
-#define Consts_SReplaceImage 65360
-#define Consts_SImageIndexError 65361
-#define Consts_SImageReadFail 65362
-#define Consts_SImageWriteFail 65363
-#define Consts_SWindowDCError 65364
-#define Consts_SWindowClass 65365
-#define Consts_SCannotFocus 65366
-#define Consts_SParentRequired 65367
-#define Consts_SParentGivenNotAParent 65368
-#define Consts_SMDIChildNotVisible 65369
-#define Consts_SVisibleChanged 65370
-#define Consts_SCannotShowModal 65371
-#define Consts_SPropertyOutOfRange 65372
-#define Consts_SMenuIndexError 65373
-#define Consts_SMenuReinserted 65374
-#define Consts_SMenuNotFound 65375
-#define HelpIntfs_hNoContextFound 65376
-#define HelpIntfs_hNoTopics 65377
-#define Consts_SInvalidTabPosition 65378
-#define Consts_SInvalidTabStyle 65379
-#define Consts_SInvalidBitmap 65380
-#define Consts_SInvalidIcon 65381
-#define Consts_SInvalidMetafile 65382
-#define Consts_SInvalidPixelFormat 65383
-#define Consts_SScanLine 65384
-#define Consts_SChangeIconSize 65385
-#define Consts_SOleGraphic 65386
-#define Consts_SUnknownClipboardFormat 65387
-#define Consts_SOutOfResources 65388
-#define Consts_SNoCanvasHandle 65389
-#define Consts_SInvalidImageSize 65390
-#define Consts_SInvalidImageList 65391
-#define RTLConsts_SSeekNotImplemented 65392
-#define RTLConsts_SSortedListError 65393
-#define RTLConsts_SUnknownGroup 65394
-#define RTLConsts_SUnknownProperty 65395
-#define RTLConsts_SWriteError 65396
-#define RTLConsts_SMissingDateTimeField 65397
-#define RTLConsts_sWindowsSocketError 65398
-#define RTLConsts_sAsyncSocketError 65399
-#define RTLConsts_sNoAddress 65400
-#define RTLConsts_sCannotCreateSocket 65401
-#define RTLConsts_sSocketAlreadyOpen 65402
-#define RTLConsts_sCantChangeWhileActive 65403
-#define RTLConsts_SInvalidDateTime 65404
-#define HelpIntfs_hNoTableOfContents 65405
-#define HelpIntfs_hNothingFound 65406
-#define HelpIntfs_hNoContext 65407
+#define GIFConsts_sProgressLoading 65200
+#define GIFConsts_sProgressSaving 65201
+#define GIFConsts_sProgressConverting 65202
+#define GIFConsts_sProgressRendering 65203
+#define GIFConsts_sProgressCopying 65204
+#define GIFConsts_sProgressOptimizing 65205
+#define MShare_sUserShellFolders 65206
+#define MShare_sShellFolders 65207
+#define GIFConsts_sInvalidData 65216
+#define GIFConsts_sBadSize 65217
+#define GIFConsts_sTPictureConflict 65218
+#define GIFConsts_sScreenSizeExceeded 65219
+#define GIFConsts_sNoColorTable 65220
+#define GIFConsts_sBadPixelCoordinates 65221
+#define GIFConsts_sInvalidPixelFormat 65222
+#define GIFConsts_sBadDimension 65223
+#define GIFConsts_sNoDIB 65224
+#define GIFConsts_sInvalidStream 65225
+#define GIFConsts_sInvalidColor 65226
+#define GIFConsts_sEmptyColorMap 65227
+#define GIFConsts_sEmptyImage 65228
+#define GIFConsts_sMultipleGCE 65229
+#define GIFConsts_sNoPalette 65230
+#define GIFConsts_sGIFImageFile 65231
+#define GIFConsts_sBadColorIndex 65232
+#define GIFConsts_sBadColorIndexFixed 65233
+#define GIFConsts_sGIFErrorSaveEmpty 65234
+#define GIFConsts_sBadSignature 65235
+#define GIFConsts_sScreenBadColorSize 65236
+#define GIFConsts_sImageBadColorSize 65237
+#define GIFConsts_sUnknownExtension 65238
+#define GIFConsts_sBadExtensionLabel 65239
+#define GIFConsts_sOutOfMemDIB 65240
+#define GIFConsts_sDecodeTooFewBits 65241
+#define GIFConsts_sDecodeCircular 65242
+#define GIFConsts_sBadTrailer 65243
+#define GIFConsts_sBadExtensionInstance 65244
+#define GIFConsts_sBadBlockSize 65245
+#define GIFConsts_sBadBlock 65246
+#define GIFConsts_sUnsupportedClass 65247
+#define JConsts_sJPEGError 65248
+#define JConsts_sJPEGImageFile 65249
+#define ComConst_SOleError 65250
+#define ComConst_SNoMethod 65251
+#define ComConst_SVarNotObject 65252
+#define ComConst_STooManyParams 65253
+#define ComConst_SDCOMNotInstalled 65254
+#define OleConst_SCannotActivate 65255
+#define OleConst_SNoWindowHandle 65256
+#define OleConst_SInvalidLicense 65257
+#define OleConst_SNotLicensed 65258
+#define OleConst_sNoRunningObject 65259
+#define ClMain_ItemClass1 65260
+#define ClMain_ItemClass2 65261
+#define GIFConsts_sOutOfData 65262
+#define GIFConsts_sTooManyColors 65263
+#define ComStrs_sInvalidIndex 65264
+#define ComStrs_sInsertError 65265
+#define ComStrs_sPageIndexError 65266
+#define DirectXWave_SDirectSound 65267
+#define DirectXWave_SDirectSoundBuffer 65268
+#define DirectXWave_SDirectSoundPrimaryBuffer 65269
+#define DirectXWave_SNotMade 65270
+#define DirectXWave_SStreamNotOpend 65271
+#define DirectXWave_SStreamOpend 65272
+#define DirectXWave_SInvalidWave 65273
+#define DirectXWave_SInvalidWaveFormat 65274
+#define DirectXWave_SCannotInitialized 65275
+#define DirectXWave_SCannotLock 65276
+#define DirectXWave_SCannotMade 65277
+#define DirectXWave_SNoForm 65278
+#define JConsts_sChangeJPGSize 65279
+#define Consts_SListBoxMustBeVirtual 65280
+#define Consts_SANSIEncoding 65281
+#define Consts_SASCIIEncoding 65282
+#define Consts_SUnicodeEncoding 65283
+#define Consts_SBigEndianEncoding 65284
+#define Consts_SUTF8Encoding 65285
+#define Consts_SUTF7Encoding 65286
+#define Consts_SPageControlNotSet 65287
+#define Consts_SWindowsVistaRequired 65288
+#define ComStrs_sTabFailClear 65289
+#define ComStrs_sTabFailDelete 65290
+#define ComStrs_sTabFailRetrieve 65291
+#define ComStrs_sTabFailGetObject 65292
+#define ComStrs_sTabFailSet 65293
+#define ComStrs_sTabFailSetObject 65294
+#define ComStrs_sTabMustBeMultiLine 65295
+#define Consts_SmkcShift 65296
+#define Consts_SmkcCtrl 65297
+#define Consts_SmkcAlt 65298
+#define Consts_SInsertLineError 65299
+#define Consts_SInvalidClipFmt 65300
+#define Consts_SIconToClipboard 65301
+#define Consts_SCannotOpenClipboard 65302
+#define Consts_SInvalidMemoSize 65303
+#define Consts_SDuplicateMenus 65304
+#define Consts_SDockedCtlNeedsName 65305
+#define Consts_SDockTreeRemoveError 65306
+#define Consts_SDockZoneNotFound 65307
+#define Consts_SDockZoneHasNoCtl 65308
+#define Consts_SDockZoneVersionConflict 65309
+#define Consts_SMultiSelectRequired 65310
+#define Consts_SErrorSettingCount 65311
+#define Consts_SMsgDlgYesToAll 65312
+#define Consts_SmkcBkSp 65313
+#define Consts_SmkcTab 65314
+#define Consts_SmkcEsc 65315
+#define Consts_SmkcEnter 65316
+#define Consts_SmkcSpace 65317
+#define Consts_SmkcPgUp 65318
+#define Consts_SmkcPgDn 65319
+#define Consts_SmkcEnd 65320
+#define Consts_SmkcHome 65321
+#define Consts_SmkcLeft 65322
+#define Consts_SmkcUp 65323
+#define Consts_SmkcRight 65324
+#define Consts_SmkcDown 65325
+#define Consts_SmkcIns 65326
+#define Consts_SmkcDel 65327
+#define Consts_SVIcons 65328
+#define Consts_SVBitmaps 65329
+#define Consts_SMsgDlgWarning 65330
+#define Consts_SMsgDlgError 65331
+#define Consts_SMsgDlgInformation 65332
+#define Consts_SMsgDlgConfirm 65333
+#define Consts_SMsgDlgYes 65334
+#define Consts_SMsgDlgNo 65335
+#define Consts_SMsgDlgOK 65336
+#define Consts_SMsgDlgCancel 65337
+#define Consts_SMsgDlgHelp 65338
+#define Consts_SMsgDlgAbort 65339
+#define Consts_SMsgDlgRetry 65340
+#define Consts_SMsgDlgIgnore 65341
+#define Consts_SMsgDlgAll 65342
+#define Consts_SMsgDlgNoToAll 65343
+#define Consts_SGroupIndexTooLow 65344
+#define Consts_SNoMDIForm 65345
+#define Consts_SControlParentSetToSelf 65346
+#define Consts_SOKButton 65347
+#define Consts_SCancelButton 65348
+#define Consts_SYesButton 65349
+#define Consts_SNoButton 65350
+#define Consts_SHelpButton 65351
+#define Consts_SCloseButton 65352
+#define Consts_SIgnoreButton 65353
+#define Consts_SRetryButton 65354
+#define Consts_SAbortButton 65355
+#define Consts_SAllButton 65356
+#define Consts_SCannotDragForm 65357
+#define Consts_SVMetafiles 65358
+#define Consts_SVEnhMetafiles 65359
+#define Consts_SImageIndexError 65360
+#define Consts_SImageReadFail 65361
+#define Consts_SImageWriteFail 65362
+#define Consts_SWindowDCError 65363
+#define Consts_SWindowClass 65364
+#define Consts_SCannotFocus 65365
+#define Consts_SParentRequired 65366
+#define Consts_SParentGivenNotAParent 65367
+#define Consts_SMDIChildNotVisible 65368
+#define Consts_SVisibleChanged 65369
+#define Consts_SCannotShowModal 65370
+#define Consts_SPropertyOutOfRange 65371
+#define Consts_SMenuIndexError 65372
+#define Consts_SMenuReinserted 65373
+#define Consts_SMenuNotFound 65374
+#define Consts_SNoTimers 65375
+#define HelpIntfs_hNoTopics 65376
+#define Consts_SInvalidTabPosition 65377
+#define Consts_SInvalidTabStyle 65378
+#define Consts_SInvalidBitmap 65379
+#define Consts_SInvalidIcon 65380
+#define Consts_SInvalidMetafile 65381
+#define Consts_SInvalidPixelFormat 65382
+#define Consts_SScanLine 65383
+#define Consts_SChangeIconSize 65384
+#define Consts_SOleGraphic 65385
+#define Consts_SUnknownClipboardFormat 65386
+#define Consts_SOutOfResources 65387
+#define Consts_SNoCanvasHandle 65388
+#define Consts_SInvalidImageSize 65389
+#define Consts_SInvalidImageList 65390
+#define Consts_SReplaceImage 65391
+#define RTLConsts_SSortedListError 65392
+#define RTLConsts_SUnknownGroup 65393
+#define RTLConsts_SUnknownProperty 65394
+#define RTLConsts_SWriteError 65395
+#define RTLConsts_SMissingDateTimeField 65396
+#define RTLConsts_sWindowsSocketError 65397
+#define RTLConsts_sAsyncSocketError 65398
+#define RTLConsts_sNoAddress 65399
+#define RTLConsts_sCannotCreateSocket 65400
+#define RTLConsts_sSocketAlreadyOpen 65401
+#define RTLConsts_sCantChangeWhileActive 65402
+#define RTLConsts_SInvalidDateTime 65403
+#define HelpIntfs_hNoTableOfContents 65404
+#define HelpIntfs_hNothingFound 65405
+#define HelpIntfs_hNoContext 65406
+#define HelpIntfs_hNoContextFound 65407
 #define RTLConsts_SInvalidImage 65408
 #define RTLConsts_SInvalidName 65409
 #define RTLConsts_SInvalidProperty 65410
@@ -223,8 +222,8 @@
 #define RTLConsts_SReadError 65419
 #define RTLConsts_SReadOnlyProperty 65420
 #define RTLConsts_SRegGetDataFailed 65421
-#define RTLConsts_SRegSetDataFailed 65422
-#define RTLConsts_SResNotFound 65423
+#define RTLConsts_SResNotFound 65422
+#define RTLConsts_SSeekNotImplemented 65423
 #define SysConst_SLongDayNameThu 65424
 #define SysConst_SLongDayNameFri 65425
 #define SysConst_SLongDayNameSat 65426
@@ -339,6 +338,7 @@
 #define SysConst_SDiskFull 65535
 STRINGTABLE
 BEGIN
+	GIFConsts_sProgressLoading,	"Loading"
 	GIFConsts_sProgressSaving,	"Saving"
 	GIFConsts_sProgressConverting,	"Converting"
 	GIFConsts_sProgressRendering,	"Rendering"
@@ -346,8 +346,7 @@ BEGIN
 	GIFConsts_sProgressOptimizing,	"Optimizing"
 	MShare_sUserShellFolders,	"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders"
 	MShare_sShellFolders,	"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders"
-	ClMain_ItemClass1,	"队伍物品分配模式为[<CO$FFFF>共享随机分配<CE>]"
-	ClMain_ItemClass2,	"队伍物品分配模式为[<CO$FFFF>默认自由分配<CE>]"
+	GIFConsts_sInvalidData,	"Invalid GIF data"
 	GIFConsts_sBadSize,	"Invalid image size"
 	GIFConsts_sTPictureConflict,	"Another TGIFImage class has already been registered with TPicture"
 	GIFConsts_sScreenSizeExceeded,	"Image exceeds Logical Screen size"
@@ -363,7 +362,7 @@ BEGIN
 	GIFConsts_sMultipleGCE,	"Frame contains multiple Graphic Control Extension blocks"
 	GIFConsts_sNoPalette,	"Missing, invalid or empty palette"
 	GIFConsts_sGIFImageFile,	"GIF Image"
-	GIFConsts_sProgressLoading,	"Loading"
+	GIFConsts_sBadColorIndex,	"Invalid color index"
 	GIFConsts_sBadColorIndexFixed,	"Invalid color index - color map expanded"
 	GIFConsts_sGIFErrorSaveEmpty,	"Cannot save empty GIF"
 	GIFConsts_sBadSignature,	"Invalid GIF signature"
@@ -379,10 +378,8 @@ BEGIN
 	GIFConsts_sBadBlockSize,	"Unsupported Application Extension block size"
 	GIFConsts_sBadBlock,	"Unknown GIF block type"
 	GIFConsts_sUnsupportedClass,	"Object type not supported for operation"
-	GIFConsts_sInvalidData,	"Invalid GIF data"
-	ComStrs_sInvalidIndex,	"Invalid index"
-	ComStrs_sInsertError,	"Unable to insert an item"
-	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	JConsts_sJPEGError,	"JPEG error #%d"
+	JConsts_sJPEGImageFile,	"JPEG Image File"
 	ComConst_SOleError,	"OLE error %.8x"
 	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
 	ComConst_SVarNotObject,	"Variant does not reference an automation object"
@@ -393,9 +390,16 @@ BEGIN
 	OleConst_SInvalidLicense,	"License information for %s is invalid"
 	OleConst_SNotLicensed,	"License information for %s not found. You cannot use this control in design mode"
 	OleConst_sNoRunningObject,	"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
+	ClMain_ItemClass1,	"队伍物品分配模式为[<CO$FFFF>共享随机分配<CE>]"
+	ClMain_ItemClass2,	"队伍物品分配模式为[<CO$FFFF>默认自由分配<CE>]"
 	GIFConsts_sOutOfData,	"Premature end of data"
 	GIFConsts_sTooManyColors,	"Color table overflow"
-	GIFConsts_sBadColorIndex,	"Invalid color index"
+	ComStrs_sInvalidIndex,	"Invalid index"
+	ComStrs_sInsertError,	"Unable to insert an item"
+	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	DirectXWave_SDirectSound,	"音频设备"
+	DirectXWave_SDirectSoundBuffer,	"音频缓冲"
+	DirectXWave_SDirectSoundPrimaryBuffer,	"主音频缓冲"
 	DirectXWave_SNotMade,	"%s 丢失设备"
 	DirectXWave_SStreamNotOpend,	"尚未初始化"
 	DirectXWave_SStreamOpend,	"已经初始化"
@@ -405,14 +409,7 @@ BEGIN
 	DirectXWave_SCannotLock,	"%s 无法锁定"
 	DirectXWave_SCannotMade,	"%s 无法创建"
 	DirectXWave_SNoForm,	"没有父窗口"
-	ComStrs_sTabFailClear,	"Failed to clear tab control"
-	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
-	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
-	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
-	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
-	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
-	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
-	Consts_SErrorSettingCount,	"Error setting %s.Count"
+	JConsts_sChangeJPGSize,	"Cannot change the size of a JPEG image"
 	Consts_SListBoxMustBeVirtual,	"Listbox (%s) style must be virtual in order to set Count"
 	Consts_SANSIEncoding,	"ANSI"
 	Consts_SASCIIEncoding,	"ASCII"
@@ -422,13 +419,13 @@ BEGIN
 	Consts_SUTF7Encoding,	"UTF-7"
 	Consts_SPageControlNotSet,	"PageControl must first be assigned"
 	Consts_SWindowsVistaRequired,	"%s requires Windows Vista or later"
-	JConsts_sChangeJPGSize,	"Cannot change the size of a JPEG image"
-	JConsts_sJPEGError,	"JPEG error #%d"
-	JConsts_sJPEGImageFile,	"JPEG Image File"
-	DirectXWave_SDirectSound,	"音频设备"
-	DirectXWave_SDirectSoundBuffer,	"音频缓冲"
-	DirectXWave_SDirectSoundPrimaryBuffer,	"主音频缓冲"
-	Consts_SmkcDel,	"Del"
+	ComStrs_sTabFailClear,	"Failed to clear tab control"
+	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
+	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
+	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
+	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
+	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
+	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
 	Consts_SmkcShift,	"Shift+"
 	Consts_SmkcCtrl,	"Ctrl+"
 	Consts_SmkcAlt,	"Alt+"
@@ -444,7 +441,7 @@ BEGIN
 	Consts_SDockZoneHasNoCtl,	" - Dock zone has no control"
 	Consts_SDockZoneVersionConflict,	"Error loading dock zone from the stream. Expecting version %d, but found %d."
 	Consts_SMultiSelectRequired,	"Multiselect mode must be on for this feature"
-	Consts_SMsgDlgNoToAll,	"N&o to All"
+	Consts_SErrorSettingCount,	"Error setting %s.Count"
 	Consts_SMsgDlgYesToAll,	"Yes to &All"
 	Consts_SmkcBkSp,	"BkSp"
 	Consts_SmkcTab,	"Tab"
@@ -460,7 +457,7 @@ BEGIN
 	Consts_SmkcRight,	"Right"
 	Consts_SmkcDown,	"Down"
 	Consts_SmkcIns,	"Ins"
-	Consts_SVEnhMetafiles,	"Enhanced Metafiles"
+	Consts_SmkcDel,	"Del"
 	Consts_SVIcons,	"Icons"
 	Consts_SVBitmaps,	"Bitmaps"
 	Consts_SMsgDlgWarning,	"Warning"
@@ -476,7 +473,7 @@ BEGIN
 	Consts_SMsgDlgRetry,	"&Retry"
 	Consts_SMsgDlgIgnore,	"&Ignore"
 	Consts_SMsgDlgAll,	"&All"
-	Consts_SNoTimers,	"Not enough timers available"
+	Consts_SMsgDlgNoToAll,	"N&o to All"
 	Consts_SGroupIndexTooLow,	"GroupIndex cannot be less than a previous menu item's GroupIndex"
 	Consts_SNoMDIForm,	"Cannot create form. No MDI forms are currently active"
 	Consts_SControlParentSetToSelf,	"A control cannot have itself as its parent"
@@ -492,7 +489,7 @@ BEGIN
 	Consts_SAllButton,	"&All"
 	Consts_SCannotDragForm,	"Cannot drag a form"
 	Consts_SVMetafiles,	"Metafiles"
-	Consts_SReplaceImage,	"Unable to Replace Image"
+	Consts_SVEnhMetafiles,	"Enhanced Metafiles"
 	Consts_SImageIndexError,	"Invalid ImageList Index"
 	Consts_SImageReadFail,	"Failed to read ImageList data from stream"
 	Consts_SImageWriteFail,	"Failed to write ImageList data to stream"
@@ -508,7 +505,7 @@ BEGIN
 	Consts_SMenuIndexError,	"Menu index out of range"
 	Consts_SMenuReinserted,	"Menu inserted twice"
 	Consts_SMenuNotFound,	"Sub-menu is not in menu"
-	HelpIntfs_hNoContextFound,	"No help found for context"
+	Consts_SNoTimers,	"Not enough timers available"
 	HelpIntfs_hNoTopics,	"No topic-based help system installed"
 	Consts_SInvalidTabPosition,	"Tab position incompatible with current tab style"
 	Consts_SInvalidTabStyle,	"Tab style incompatible with current tab position"
@@ -524,7 +521,7 @@ BEGIN
 	Consts_SNoCanvasHandle,	"Canvas does not allow drawing"
 	Consts_SInvalidImageSize,	"Invalid image size"
 	Consts_SInvalidImageList,	"Invalid ImageList"
-	RTLConsts_SSeekNotImplemented,	"%s.Seek not implemented"
+	Consts_SReplaceImage,	"Unable to Replace Image"
 	RTLConsts_SSortedListError,	"Operation not allowed on sorted list"
 	RTLConsts_SUnknownGroup,	"%s not in a class registration group"
 	RTLConsts_SUnknownProperty,	"Property %s does not exist"
@@ -540,6 +537,7 @@ BEGIN
 	HelpIntfs_hNoTableOfContents,	"Unable to find a Table of Contents"
 	HelpIntfs_hNothingFound,	"No help found for %s"
 	HelpIntfs_hNoContext,	"No context-sensitive help installed"
+	HelpIntfs_hNoContextFound,	"No help found for context"
 	RTLConsts_SInvalidImage,	"Invalid stream format"
 	RTLConsts_SInvalidName,	"''%s'' is not a valid component name"
 	RTLConsts_SInvalidProperty,	"Invalid property value"
@@ -554,8 +552,8 @@ BEGIN
 	RTLConsts_SReadError,	"Stream read error"
 	RTLConsts_SReadOnlyProperty,	"Property is read-only"
 	RTLConsts_SRegGetDataFailed,	"Failed to get data for '%s'"
-	RTLConsts_SRegSetDataFailed,	"Failed to set data for '%s'"
 	RTLConsts_SResNotFound,	"Resource %s not found"
+	RTLConsts_SSeekNotImplemented,	"%s.Seek not implemented"
 	SysConst_SLongDayNameThu,	"Thursday"
 	SysConst_SLongDayNameFri,	"Friday"
 	SysConst_SLongDayNameSat,	"Saturday"
@@ -672,18 +670,18 @@ END
 
 /* c:\program files (x86)\codegear\rad studio\5.0\lib\Controls.res */
 /* c:\program files (x86)\codegear\rad studio\5.0\lib\Buttons.res */
-/* c:\program files (x86)\codegear\rad studio\5.0\lib\SPIN.RES */
 /* c:\program files (x86)\codegear\rad studio\5.0\lib\ExtDlgs.res */
-/* DlgConfig.dfm */
-/* FrmAD.dfm */
-/* FWeb.dfm */
-/* FState4.dfm */
-/* GMManage.dfm */
-/* FState3.dfm */
-/* FState2.dfm */
-/* FState.dfm */
-/* ClMain.DFM */
-/* NewCursor.RES */
-/* ColorTable.RES */
+/* c:\program files (x86)\codegear\rad studio\5.0\lib\SPIN.RES */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FWeb.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState2.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState3.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState4.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FrmAD.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\DlgConfig.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\ClMain.DFM */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\NewCursor.RES */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\ColorTable.RES */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\GMManage.dfm */
 /* D:\develop\github\mir2-applem2\GameOfMir\MirClient\mir2.RES */
 /* D:\develop\github\mir2-applem2\GameOfMir\MirClient\mir2.drf */

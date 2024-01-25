@@ -10,7 +10,7 @@ type
   Str256 = array[0..256] of Char;
   TyNameTable = record
     Name: string;
-    varl: LongInt;
+    varl: LongInt;// Integer
   end;
 
   TLRect = record
@@ -190,6 +190,8 @@ function GetEMailGold(nGold: Integer; boItem: Boolean): Integer;
 procedure SafeFillChar(out X; Count: Integer; Value: Char); overload;
 procedure SafeFillChar(out X; Count: Integer; Value: Byte); overload;
 procedure SafeFillChar(out X; Count: Integer; Value: Boolean); overload;
+
+function IntUnit(n1: Integer): string;
 
 implementation
 
@@ -2696,13 +2698,22 @@ begin
   end;      }
 end;
 
+// 单位化为字符串
+function IntUnit(n1: Integer): string;
+var
+  ut: Integer;
+begin
+  if (n1 > 9999) and (n1 < 100000000) then
+  begin
+    Result := IntToStr(n1 div 10000) + '万';
+    exit;
+  end;
+  if (n1 > 99999999) then
+  begin
+    Result := IntToStr(n1 div 100000000) + '亿';
+    exit;
+  end;
+  Result := IntToStr(n1);
+end;
+
 end.
-
-
-
-
-
-
-
-
-
