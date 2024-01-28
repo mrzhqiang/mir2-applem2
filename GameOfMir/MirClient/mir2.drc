@@ -8,48 +8,48 @@
   resources were bound to the produced executable.
 */
 
-#define GIFConsts_sProgressConverting 65200
-#define GIFConsts_sProgressRendering 65201
-#define GIFConsts_sProgressCopying 65202
-#define GIFConsts_sProgressOptimizing 65203
-#define MShare_sUserShellFolders 65204
-#define MShare_sShellFolders 65205
-#define ClMain_ItemClass1 65206
-#define ClMain_ItemClass2 65207
-#define GIFConsts_sTPictureConflict 65216
-#define GIFConsts_sScreenSizeExceeded 65217
-#define GIFConsts_sNoColorTable 65218
-#define GIFConsts_sBadPixelCoordinates 65219
-#define GIFConsts_sInvalidPixelFormat 65220
-#define GIFConsts_sBadDimension 65221
-#define GIFConsts_sNoDIB 65222
-#define GIFConsts_sInvalidStream 65223
-#define GIFConsts_sInvalidColor 65224
-#define GIFConsts_sEmptyColorMap 65225
-#define GIFConsts_sEmptyImage 65226
-#define GIFConsts_sMultipleGCE 65227
-#define GIFConsts_sNoPalette 65228
-#define GIFConsts_sGIFImageFile 65229
-#define GIFConsts_sProgressLoading 65230
-#define GIFConsts_sProgressSaving 65231
-#define GIFConsts_sGIFErrorSaveEmpty 65232
-#define GIFConsts_sBadSignature 65233
-#define GIFConsts_sScreenBadColorSize 65234
-#define GIFConsts_sImageBadColorSize 65235
-#define GIFConsts_sUnknownExtension 65236
-#define GIFConsts_sBadExtensionLabel 65237
-#define GIFConsts_sOutOfMemDIB 65238
-#define GIFConsts_sDecodeTooFewBits 65239
-#define GIFConsts_sDecodeCircular 65240
-#define GIFConsts_sBadTrailer 65241
-#define GIFConsts_sBadExtensionInstance 65242
-#define GIFConsts_sBadBlockSize 65243
-#define GIFConsts_sBadBlock 65244
-#define GIFConsts_sUnsupportedClass 65245
-#define GIFConsts_sInvalidData 65246
-#define GIFConsts_sBadSize 65247
-#define ComStrs_sInsertError 65248
-#define ComStrs_sPageIndexError 65249
+#define GIFConsts_sProgressLoading 65200
+#define GIFConsts_sProgressSaving 65201
+#define GIFConsts_sProgressConverting 65202
+#define GIFConsts_sProgressRendering 65203
+#define GIFConsts_sProgressCopying 65204
+#define GIFConsts_sProgressOptimizing 65205
+#define MShare_sUserShellFolders 65206
+#define MShare_sShellFolders 65207
+#define GIFConsts_sInvalidData 65216
+#define GIFConsts_sBadSize 65217
+#define GIFConsts_sTPictureConflict 65218
+#define GIFConsts_sScreenSizeExceeded 65219
+#define GIFConsts_sNoColorTable 65220
+#define GIFConsts_sBadPixelCoordinates 65221
+#define GIFConsts_sInvalidPixelFormat 65222
+#define GIFConsts_sBadDimension 65223
+#define GIFConsts_sNoDIB 65224
+#define GIFConsts_sInvalidStream 65225
+#define GIFConsts_sInvalidColor 65226
+#define GIFConsts_sEmptyColorMap 65227
+#define GIFConsts_sEmptyImage 65228
+#define GIFConsts_sMultipleGCE 65229
+#define GIFConsts_sNoPalette 65230
+#define GIFConsts_sGIFImageFile 65231
+#define GIFConsts_sBadColorIndex 65232
+#define GIFConsts_sBadColorIndexFixed 65233
+#define GIFConsts_sGIFErrorSaveEmpty 65234
+#define GIFConsts_sBadSignature 65235
+#define GIFConsts_sScreenBadColorSize 65236
+#define GIFConsts_sImageBadColorSize 65237
+#define GIFConsts_sUnknownExtension 65238
+#define GIFConsts_sBadExtensionLabel 65239
+#define GIFConsts_sOutOfMemDIB 65240
+#define GIFConsts_sDecodeTooFewBits 65241
+#define GIFConsts_sDecodeCircular 65242
+#define GIFConsts_sBadTrailer 65243
+#define GIFConsts_sBadExtensionInstance 65244
+#define GIFConsts_sBadBlockSize 65245
+#define GIFConsts_sBadBlock 65246
+#define GIFConsts_sUnsupportedClass 65247
+#define JConsts_sJPEGError 65248
+#define JConsts_sJPEGImageFile 65249
 #define ComConst_SOleError 65250
 #define ComConst_SNoMethod 65251
 #define ComConst_SVarNotObject 65252
@@ -60,26 +60,26 @@
 #define OleConst_SInvalidLicense 65257
 #define OleConst_SNotLicensed 65258
 #define OleConst_sNoRunningObject 65259
-#define GIFConsts_sOutOfData 65260
-#define GIFConsts_sTooManyColors 65261
-#define GIFConsts_sBadColorIndex 65262
-#define GIFConsts_sBadColorIndexFixed 65263
-#define DirectXWave_SStreamNotOpend 65264
-#define DirectXWave_SStreamOpend 65265
-#define DirectXWave_SInvalidWave 65266
-#define DirectXWave_SInvalidWaveFormat 65267
-#define DirectXWave_SCannotInitialized 65268
-#define DirectXWave_SCannotLock 65269
-#define DirectXWave_SCannotMade 65270
-#define DirectXWave_SNoForm 65271
-#define ComStrs_sTabFailClear 65272
-#define ComStrs_sTabFailDelete 65273
-#define ComStrs_sTabFailRetrieve 65274
-#define ComStrs_sTabFailGetObject 65275
-#define ComStrs_sTabFailSet 65276
-#define ComStrs_sTabFailSetObject 65277
-#define ComStrs_sTabMustBeMultiLine 65278
-#define ComStrs_sInvalidIndex 65279
+#define ClMain_ItemClass1 65260
+#define ClMain_ItemClass2 65261
+#define GIFConsts_sOutOfData 65262
+#define GIFConsts_sTooManyColors 65263
+#define ComStrs_sInvalidIndex 65264
+#define ComStrs_sInsertError 65265
+#define ComStrs_sPageIndexError 65266
+#define DirectXWave_SDirectSound 65267
+#define DirectXWave_SDirectSoundBuffer 65268
+#define DirectXWave_SDirectSoundPrimaryBuffer 65269
+#define DirectXWave_SNotMade 65270
+#define DirectXWave_SStreamNotOpend 65271
+#define DirectXWave_SStreamOpend 65272
+#define DirectXWave_SInvalidWave 65273
+#define DirectXWave_SInvalidWaveFormat 65274
+#define DirectXWave_SCannotInitialized 65275
+#define DirectXWave_SCannotLock 65276
+#define DirectXWave_SCannotMade 65277
+#define DirectXWave_SNoForm 65278
+#define JConsts_sChangeJPGSize 65279
 #define Consts_SListBoxMustBeVirtual 65280
 #define Consts_SANSIEncoding 65281
 #define Consts_SASCIIEncoding 65282
@@ -89,13 +89,13 @@
 #define Consts_SUTF7Encoding 65286
 #define Consts_SPageControlNotSet 65287
 #define Consts_SWindowsVistaRequired 65288
-#define JConsts_sChangeJPGSize 65289
-#define JConsts_sJPEGError 65290
-#define JConsts_sJPEGImageFile 65291
-#define DirectXWave_SDirectSound 65292
-#define DirectXWave_SDirectSoundBuffer 65293
-#define DirectXWave_SDirectSoundPrimaryBuffer 65294
-#define DirectXWave_SNotMade 65295
+#define ComStrs_sTabFailClear 65289
+#define ComStrs_sTabFailDelete 65290
+#define ComStrs_sTabFailRetrieve 65291
+#define ComStrs_sTabFailGetObject 65292
+#define ComStrs_sTabFailSet 65293
+#define ComStrs_sTabFailSetObject 65294
+#define ComStrs_sTabMustBeMultiLine 65295
 #define Consts_SmkcShift 65296
 #define Consts_SmkcCtrl 65297
 #define Consts_SmkcAlt 65298
@@ -338,14 +338,16 @@
 #define SysConst_SDiskFull 65535
 STRINGTABLE
 BEGIN
+	GIFConsts_sProgressLoading,	"Loading"
+	GIFConsts_sProgressSaving,	"Saving"
 	GIFConsts_sProgressConverting,	"Converting"
 	GIFConsts_sProgressRendering,	"Rendering"
 	GIFConsts_sProgressCopying,	"Copying"
 	GIFConsts_sProgressOptimizing,	"Optimizing"
 	MShare_sUserShellFolders,	"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders"
 	MShare_sShellFolders,	"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders"
-	ClMain_ItemClass1,	"队伍物品分配模式为[<CO$FFFF>共享随机分配<CE>]"
-	ClMain_ItemClass2,	"队伍物品分配模式为[<CO$FFFF>默认自由分配<CE>]"
+	GIFConsts_sInvalidData,	"Invalid GIF data"
+	GIFConsts_sBadSize,	"Invalid image size"
 	GIFConsts_sTPictureConflict,	"Another TGIFImage class has already been registered with TPicture"
 	GIFConsts_sScreenSizeExceeded,	"Image exceeds Logical Screen size"
 	GIFConsts_sNoColorTable,	"No global or local color table defined"
@@ -360,8 +362,8 @@ BEGIN
 	GIFConsts_sMultipleGCE,	"Frame contains multiple Graphic Control Extension blocks"
 	GIFConsts_sNoPalette,	"Missing, invalid or empty palette"
 	GIFConsts_sGIFImageFile,	"GIF Image"
-	GIFConsts_sProgressLoading,	"Loading"
-	GIFConsts_sProgressSaving,	"Saving"
+	GIFConsts_sBadColorIndex,	"Invalid color index"
+	GIFConsts_sBadColorIndexFixed,	"Invalid color index - color map expanded"
 	GIFConsts_sGIFErrorSaveEmpty,	"Cannot save empty GIF"
 	GIFConsts_sBadSignature,	"Invalid GIF signature"
 	GIFConsts_sScreenBadColorSize,	"Invalid number of colors specified in Screen Descriptor"
@@ -376,10 +378,8 @@ BEGIN
 	GIFConsts_sBadBlockSize,	"Unsupported Application Extension block size"
 	GIFConsts_sBadBlock,	"Unknown GIF block type"
 	GIFConsts_sUnsupportedClass,	"Object type not supported for operation"
-	GIFConsts_sInvalidData,	"Invalid GIF data"
-	GIFConsts_sBadSize,	"Invalid image size"
-	ComStrs_sInsertError,	"Unable to insert an item"
-	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	JConsts_sJPEGError,	"JPEG error #%d"
+	JConsts_sJPEGImageFile,	"JPEG Image File"
 	ComConst_SOleError,	"OLE error %.8x"
 	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
 	ComConst_SVarNotObject,	"Variant does not reference an automation object"
@@ -390,10 +390,17 @@ BEGIN
 	OleConst_SInvalidLicense,	"License information for %s is invalid"
 	OleConst_SNotLicensed,	"License information for %s not found. You cannot use this control in design mode"
 	OleConst_sNoRunningObject,	"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
+	ClMain_ItemClass1,	"队伍物品分配模式为[<CO$FFFF>共享随机分配<CE>]"
+	ClMain_ItemClass2,	"队伍物品分配模式为[<CO$FFFF>默认自由分配<CE>]"
 	GIFConsts_sOutOfData,	"Premature end of data"
 	GIFConsts_sTooManyColors,	"Color table overflow"
-	GIFConsts_sBadColorIndex,	"Invalid color index"
-	GIFConsts_sBadColorIndexFixed,	"Invalid color index - color map expanded"
+	ComStrs_sInvalidIndex,	"Invalid index"
+	ComStrs_sInsertError,	"Unable to insert an item"
+	ComStrs_sPageIndexError,	"%d is an invalid PageIndex value.  PageIndex must be between 0 and %d"
+	DirectXWave_SDirectSound,	"音频设备"
+	DirectXWave_SDirectSoundBuffer,	"音频缓冲"
+	DirectXWave_SDirectSoundPrimaryBuffer,	"主音频缓冲"
+	DirectXWave_SNotMade,	"%s 丢失设备"
 	DirectXWave_SStreamNotOpend,	"尚未初始化"
 	DirectXWave_SStreamOpend,	"已经初始化"
 	DirectXWave_SInvalidWave,	"数据错误"
@@ -402,14 +409,7 @@ BEGIN
 	DirectXWave_SCannotLock,	"%s 无法锁定"
 	DirectXWave_SCannotMade,	"%s 无法创建"
 	DirectXWave_SNoForm,	"没有父窗口"
-	ComStrs_sTabFailClear,	"Failed to clear tab control"
-	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
-	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
-	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
-	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
-	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
-	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
-	ComStrs_sInvalidIndex,	"Invalid index"
+	JConsts_sChangeJPGSize,	"Cannot change the size of a JPEG image"
 	Consts_SListBoxMustBeVirtual,	"Listbox (%s) style must be virtual in order to set Count"
 	Consts_SANSIEncoding,	"ANSI"
 	Consts_SASCIIEncoding,	"ASCII"
@@ -419,13 +419,13 @@ BEGIN
 	Consts_SUTF7Encoding,	"UTF-7"
 	Consts_SPageControlNotSet,	"PageControl must first be assigned"
 	Consts_SWindowsVistaRequired,	"%s requires Windows Vista or later"
-	JConsts_sChangeJPGSize,	"Cannot change the size of a JPEG image"
-	JConsts_sJPEGError,	"JPEG error #%d"
-	JConsts_sJPEGImageFile,	"JPEG Image File"
-	DirectXWave_SDirectSound,	"音频设备"
-	DirectXWave_SDirectSoundBuffer,	"音频缓冲"
-	DirectXWave_SDirectSoundPrimaryBuffer,	"主音频缓冲"
-	DirectXWave_SNotMade,	"%s 丢失设备"
+	ComStrs_sTabFailClear,	"Failed to clear tab control"
+	ComStrs_sTabFailDelete,	"Failed to delete tab at index %d"
+	ComStrs_sTabFailRetrieve,	"Failed to retrieve tab at index %d"
+	ComStrs_sTabFailGetObject,	"Failed to get object at index %d"
+	ComStrs_sTabFailSet,	"Failed to set tab \"%s\" at index %d"
+	ComStrs_sTabFailSetObject,	"Failed to set object at index %d"
+	ComStrs_sTabMustBeMultiLine,	"MultiLine must be True when TabPosition is tpLeft or tpRight"
 	Consts_SmkcShift,	"Shift+"
 	Consts_SmkcCtrl,	"Ctrl+"
 	Consts_SmkcAlt,	"Alt+"
@@ -670,18 +670,18 @@ END
 
 /* c:\program files (x86)\codegear\rad studio\5.0\lib\Controls.res */
 /* c:\program files (x86)\codegear\rad studio\5.0\lib\Buttons.res */
-/* c:\program files (x86)\codegear\rad studio\5.0\lib\SPIN.RES */
 /* c:\program files (x86)\codegear\rad studio\5.0\lib\ExtDlgs.res */
-/* DlgConfig.dfm */
-/* FrmAD.dfm */
-/* FWeb.dfm */
-/* FState4.dfm */
-/* GMManage.dfm */
-/* FState3.dfm */
-/* FState2.dfm */
-/* FState.dfm */
-/* ClMain.DFM */
-/* NewCursor.RES */
-/* ColorTable.RES */
+/* c:\program files (x86)\codegear\rad studio\5.0\lib\SPIN.RES */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FWeb.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState2.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState3.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState4.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FrmAD.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\DlgConfig.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\ClMain.DFM */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\NewCursor.RES */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\ColorTable.RES */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\FState.dfm */
+/* D:\develop\github\mir2-applem2\GameOfMir\MirClient\GMManage.dfm */
 /* D:\develop\github\mir2-applem2\GameOfMir\MirClient\mir2.RES */
 /* D:\develop\github\mir2-applem2\GameOfMir\MirClient\mir2.drf */

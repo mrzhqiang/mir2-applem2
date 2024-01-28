@@ -4387,7 +4387,7 @@ begin
                   pcp.boItem := False;
                   pcp.Color := ClickColor;
                   Points.Add(pcp);
-                  Line(lx + sx - 1, ly + g_DXCanvas.TextHeight(sTemp) {+ 1}, g_DXCanvas.TextWidth(sTemp) - 2, clYellow);
+                  Line(lx + sx - 1, ly + g_DXCanvas.TextHeight(sTemp) + 1, g_DXCanvas.TextWidth(sTemp) - 2, clYellow);
                 end;
               end;
               if cmdparam = '' then begin
