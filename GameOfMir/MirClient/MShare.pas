@@ -900,7 +900,7 @@ procedure CopyStrToClipboard(sStr: string);
 function InGroupList(sName: string): Boolean;
 procedure DeleteEMailByIndex(nIndex: Integer);
 //function GetItemShowName(Item: TNewClientItem): string;
-function ShowItemInfo(Item: TNewClientItem; MoveItemState: TMoveItemState; btNum: array of Integer): string;
+function ShowItemInfo(Item: TNewClientItem; MoveItemState: TMoveItemState; btNum: array of Integer; showSource: Boolean = True): string;
 function ShowMagicInfo(PMagic: pTNewClientMagic): string;
 //function GetNeedStr(var sMsg: string; Item: pTNewClientItem {; boHero: Boolean}): Boolean;
 function GetNeedStr(Item: pTNewClientItem; AddStr: string = ''): String;
@@ -2335,7 +2335,7 @@ begin
 end;
 
 //20091104修改
-function ShowItemInfo(Item: TNewClientItem; MoveItemState: TMoveItemState; btNum: array of Integer): string;
+function ShowItemInfo(Item: TNewClientItem; MoveItemState: TMoveItemState; btNum: array of Integer; showSource: Boolean = True): string;
 {var
   Item: TNewClientItem; }
 
@@ -3347,7 +3347,28 @@ begin
 
     sNeedStr := AddBindStr(sNeedStr, '', ArrCount);
     ShowString := ShowString + sNeedStr;
-    
+
+    // 不是NPC购买、商铺购买，才显示物品来源
+    if showSource and (not boBuy) then begin
+      ShowString := ShowString + '<[物品来源]/FCOLOR='+ADDVALUECOLOR+'>\';
+      if Item.UserItem.GetTime <> '' then
+        ShowString := ShowString + '<时间：' + Item.UserItem.GetTime + '/FCOLOR=$00FFFF>\'
+      else
+        ShowString := ShowString + '<时间：未知/FCOLOR=$00FFFF>\';
+      if Item.UserItem.GetMap <> '' then
+        ShowString := ShowString + '<地点：' + Item.UserItem.GetMap + '/FCOLOR=$00FFFF>\'
+      else
+        ShowString := ShowString + '<地点：未知/FCOLOR=$00FFFF>\';
+      if Item.UserItem.GetName <> '' then
+        ShowString := ShowString + '<人物：' + Item.UserItem.GetName + '/FCOLOR=$00FFFF>\'
+      else
+        ShowString := ShowString + '<人物：未知/FCOLOR=$00FFFF>\';
+      if Item.UserItem.GetMode <> '' then
+        ShowString := ShowString + '<事件：' + Item.UserItem.GetMode + '/FCOLOR=$00FFFF>\'
+      else
+        ShowString := ShowString + '<事件：未知/FCOLOR=$00FFFF>\';
+    end;
+
     sNeedStr := '';
     if not boBuy then begin
       sGoldStr := '';

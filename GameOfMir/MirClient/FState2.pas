@@ -3373,7 +3373,7 @@ begin
         p.Y := p.Y - FrmMain.m_Point.Y;
         if ShopItem.ClientShopItem.wTime > 0 then
           ShopItem.CLientItem.UserItem.TermTime := DateTimeToLongWord(IncDay(g_ShopDateTime, ShopItem.ClientShopItem.wTime));
-        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], []), clwhite, False, idx, True);
+        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], [], False), clwhite, False, idx, True);
       end;
     end else begin
       if idx < g_ShopList[0].Count then begin
@@ -3383,7 +3383,7 @@ begin
         p.Y := p.Y - FrmMain.m_Point.Y;
         if ShopItem.ClientShopItem.wTime > 0 then
           ShopItem.CLientItem.UserItem.TermTime := DateTimeToLongWord(IncDay(g_ShopDateTime, ShopItem.ClientShopItem.wTime));
-        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], []), clwhite, False, idx, True);
+        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], [], False), clwhite, False, idx, True);
       end;
     end;
   end;
@@ -3473,7 +3473,7 @@ begin
         p.Y := p.Y - FrmMain.m_Point.Y;
         if ShopItem.ClientShopItem.wTime > 0 then
           ShopItem.CLientItem.UserItem.TermTime := DateTimeToLongWord(IncDay(g_ShopDateTime, ShopItem.ClientShopItem.wTime));
-        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], []), clwhite, False, idx, True);
+        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], [], False), clwhite, False, idx, True);
       end;
     end else begin
       if idx < g_ShopList[ShopIndex].Count then begin
@@ -3483,7 +3483,7 @@ begin
         p.Y := p.Y - FrmMain.m_Point.Y;
         if ShopItem.ClientShopItem.wTime > 0 then
           ShopItem.CLientItem.UserItem.TermTime := DateTimeToLongWord(IncDay(g_ShopDateTime, ShopItem.ClientShopItem.wTime));
-        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], []), clwhite, False, idx, True);
+        DScreen.ShowHint(p.X, p.Y + 30, ShowItemInfo(ShopItem.CLientItem, [], [], False), clwhite, False, idx, True);
       end;
     end;
   end;
@@ -3916,7 +3916,7 @@ begin
         end;
       end;
       if ShopItem <> nil then
-        DScreen.ShowHint(SurfaceX(Left + X) + 30, SurfaceY(Top + Y) + 30, ShowItemInfo(ShopItem.CLientItem, [], []),
+        DScreen.ShowHint(SurfaceX(Left + X) + 30, SurfaceY(Top + Y) + 30, ShowItemInfo(ShopItem.CLientItem, [], [], False),
           clwhite, False, Integer(Sender), True);
 {$ELSE}
       if ShopMoneyType = 2 then ShopList := g_ShopGoldList[ShopIndex]

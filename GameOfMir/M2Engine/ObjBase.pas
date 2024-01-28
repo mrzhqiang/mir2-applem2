@@ -3600,6 +3600,7 @@ begin
   m_boHorseHit := False;
   m_dwDeathTick := GetTickCount();
   //sub_4BC87C();
+  // 如果是宝宝，则清空经验打击者和上次打击者，避免击杀者获得经验
   if m_Master <> nil then
   begin
     m_ExpHitter := nil;
@@ -3609,10 +3610,11 @@ begin
   m_nIncHealth := 0;
   m_nIncHealing := 0;
   m_AddHP := 0;
+  // 触发刷怪文件中的怪物死亡脚本命令
   HintGotoScript(m_nDieScript);
   //2010-02-06 增加，将怪物可爆物品刷新加于死亡函数当中，以节约内存
   if m_boCanGetRandomItems and (m_btRaceServer <> RC_PLAYOBJECT) and (m_CanDropItemList <> nil) then
-    UserEngine.MonGetRandomItems(Self, m_CanDropItemList);
+    UserEngine.MonGetRandomItems(Self, m_CanDropItemList);// 将可掉落物品添加到死亡的怪物背包
 
   try
     //获取经验
@@ -3626,10 +3628,12 @@ begin
       if (AttackBaseObject.m_btRaceServer <> RC_PLAYOBJECT) then begin
         if (AttackBaseObject.m_Master <> nil) and (AttackBaseObject.m_Master.m_btRaceServer = RC_PLAYOBJECT) then
         begin
+          // 宝宝增加经验，并转移击杀者为宝宝的主人
           AttackBaseObject.GainSlaveExp(m_Abil.Level);
           AttackBaseObject := AttackBaseObject.m_Master;
         end;
       end;
+      // 如果击杀者是玩家
       if (AttackBaseObject <> nil) and (AttackBaseObject.m_btRaceServer = RC_PLAYOBJECT) then
       begin
         TPlayObject(AttackBaseObject).m_sLastKillMonName := m_sCharName;
@@ -6083,7 +6087,9 @@ procedure TBaseObject.GainSlaveExp(nLevel: Integer);
     Result := ((m_Abil.Level * g_Config.nMonUpLvRate) - m_Abil.Level) + g_Config.nMonUpLvNeedKillBase + tCount
   end;
 begin
+  // 累计击杀怪物等级到击杀统计数量
   Inc(m_nKillMonCount, nLevel);
+  // 宝宝升级，刷新宝宝属性和名字颜色
   if GetUpKillCount() < m_nKillMonCount then begin
     Dec(m_nKillMonCount, GetUpKillCount);
     if m_btSlaveExpLevel < (m_btSlaveMakeLevel * 2 + 1) then begin

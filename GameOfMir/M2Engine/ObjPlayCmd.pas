@@ -3570,6 +3570,10 @@ begin
       New(UserItem);
       if UserEngine.CopyToUserItemFromNameEx(sItemName, UserItem, True) then begin
         StdItem := UserEngine.GetStdItem(UserItem.wIndex);
+        UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+        UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+        UserItem.GetName := PlayObject.m_sCharName;
+        UserItem.GetMode := '系统制造';
         UserItem.Dura := UserItem.DuraMax;
         nBack := AddItemToBag(UserItem, StdItem, False, '', '', AddUserItem);
         if nBack <> -1 then begin

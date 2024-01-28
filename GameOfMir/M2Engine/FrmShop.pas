@@ -908,6 +908,10 @@ begin
         else Dec(ShopItem.nCount, nCount);
         m_boSave := True;
       end;
+      UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+      UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+      UserItem.GetName := PlayObject.m_sCharName;
+      UserItem.GetMode := 'ÉÌÆÌ¹ºÂò';
       if (sm_Superposition in StdItem.StdModeEx) and (StdItem.DuraMax > 1) then begin
         UserItem.Dura := _MIN(nCount, UserItem.DuraMax);
         UserItem.MakeIndex := GetItemNumber();

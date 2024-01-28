@@ -3136,6 +3136,10 @@ begin
               if (Stditem <> nil) and (tm_MakeStone = Stditem.StdMode) and (Stditem.Shape = 3) then begin
                 New(UserItem);
                 if UserEngine.CopyToUserItemFromIdx(ArmItem.Value.wFlute[nIdx], UserItem) then begin
+                  UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+                  UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+                  UserItem.GetName := m_sCharName;
+                  UserItem.GetMode := '系统制造';
                   m_ItemList.Add(UserItem);
                   ArmItem.Value.wFlute[nIdx] := 0;
                   if RemoveStdItem.NeedIdentify = 1 then
@@ -5184,6 +5188,7 @@ begin
   end;
 end;
 
+  // 获取经验逻辑：需要检查是否支持 2、3、5、10 倍率的经验
 procedure TPlayObject.GainExp(dwExp: LongWord);
 var
   i, n, sumlv, nExp, nHighLevel, nLowLevel: Integer;
@@ -7061,6 +7066,10 @@ begin
       if m_boNewHuman then begin
         New(UserItem);
         if UserEngine.CopyToUserItemFromName(g_Config.sCandle, UserItem) then begin
+          UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+          UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+          UserItem.GetName := m_sCharName;
+          UserItem.GetMode := '系统制造';
           m_ItemList.Add(UserItem);
         end
         else
@@ -7068,6 +7077,10 @@ begin
 
         New(UserItem);
         if UserEngine.CopyToUserItemFromName(g_Config.sBasicDrug, UserItem) then begin
+          UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+          UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+          UserItem.GetName := m_sCharName;
+          UserItem.GetMode := '系统制造';
           m_ItemList.Add(UserItem);
         end
         else
@@ -7075,6 +7088,10 @@ begin
 
         New(UserItem);
         if UserEngine.CopyToUserItemFromName(g_Config.sWoodenSword, UserItem) then begin
+          UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+          UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+          UserItem.GetName := m_sCharName;
+          UserItem.GetMode := '系统制造';
           m_ItemList.Add(UserItem);
         end
         else
@@ -7087,6 +7104,10 @@ begin
           sItem := g_Config.sClothsWoman;
 
         if UserEngine.CopyToUserItemFromName(sItem, UserItem) then begin
+          UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+          UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+          UserItem.GetName := m_sCharName;
+          UserItem.GetMode := '系统制造';
           m_ItemList.Add(UserItem);
         end
         else
@@ -8663,6 +8684,10 @@ procedure TPlayObject.ClientUseItems(ProcessMsg: pTProcessMessage; var boResult:
     for i := 0 to nCount - 1 do begin
       New(UserItem);
       if UserEngine.CopyToUserItemFromName(sItemName, UserItem) then begin
+        UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+        UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+        UserItem.GetName := m_sCharName;
+        UserItem.GetMode := '系统制造';
         m_ItemList.Add(UserItem);
         UserItem.btBindMode1 := MasterUserItem.btBindMode1;
         UserItem.btBindMode2 := MasterUserItem.btBindMode2;
@@ -10093,8 +10118,14 @@ begin
                     ItemUnit.RandomUpgradeItem(UserItem, DefUnsealItem);
                 end;
               end
-              else
+              else begin
                 UserItem.btBindMode1 := btBindMode1;
+                // TODO 打造物品显示获取信息
+//                UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+//                UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+//                UserItem.GetName := m_sCharName;
+//                UserItem.GetMode := '系统打造';
+              end;
 
               if StdItem.NeedIdentify = 1 then
                 AddGameLog(Self, LOG_ADDITEM, StdItem.Name, UserItem.MakeIndex, UserItem.Dura, sNPCName,
@@ -13097,6 +13128,7 @@ begin
               UserItem32^ := UserItem^;
               UserItem32.MakeIndex := GetItemNumber();
               UserItem32.Dura := nUniteIndex;
+              // TODO 拆分时，复制有效的物品信息
               if AddItemToBag(UserItem32, Stditem, False, '', '', AddUserItem) = 2 then begin
                 Dec(UserItem.Dura, nUniteIndex);
                 if (Stditem.NeedIdentify = 1) then begin
@@ -15005,6 +15037,10 @@ begin
     New(UserItem);
     if UserEngine.CopyToUserItemFromName(g_Config.sGoldStone, UserItem) then begin
       UserItem.Dura := RandomDrua();
+      UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+      UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+      UserItem.GetName := m_sCharName;
+      UserItem.GetMode := '挖矿获取';
       m_ItemList.Add(UserItem);
       //WeightChanged();
       SendAddItem(UserItem);
@@ -15019,6 +15055,10 @@ begin
     New(UserItem);
     if UserEngine.CopyToUserItemFromName(g_Config.sSilverStone, UserItem) then begin
       UserItem.Dura := RandomDrua();
+      UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+      UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+      UserItem.GetName := m_sCharName;
+      UserItem.GetMode := '挖矿获取';
       m_ItemList.Add(UserItem);
       //WeightChanged();
       SendAddItem(UserItem);
@@ -15033,6 +15073,10 @@ begin
     New(UserItem);
     if UserEngine.CopyToUserItemFromName(g_Config.sCopperStone, UserItem) then begin
       UserItem.Dura := RandomDrua();
+      UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+      UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+      UserItem.GetName := m_sCharName;
+      UserItem.GetMode := '挖矿获取';
       m_ItemList.Add(UserItem);
       //WeightChanged();
       SendAddItem(UserItem);
@@ -15047,6 +15091,10 @@ begin
     New(UserItem);
     if UserEngine.CopyToUserItemFromName(g_Config.sBlackStone, UserItem) then begin
       UserItem.Dura := RandomDrua();
+      UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+      UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+      UserItem.GetName := m_sCharName;
+      UserItem.GetMode := '挖矿获取';
       m_ItemList.Add(UserItem);
       //WeightChanged();
       SendAddItem(UserItem);
@@ -15060,6 +15108,10 @@ begin
   New(UserItem);
   if UserEngine.CopyToUserItemFromName(g_Config.sSteelStone, UserItem) then begin
     UserItem.Dura := RandomDrua();
+    UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+    UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+    UserItem.GetName := m_sCharName;
+    UserItem.GetMode := '挖矿获取';
     m_ItemList.Add(UserItem);
     //WeightChanged();
     SendAddItem(UserItem);
@@ -16001,6 +16053,10 @@ begin
           New(UserItem);
           UserItem^ := m_BoxGetItem.Item;
           UserItem.MakeIndex := GetItemNumber;
+          UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+          UserItem.GetMap := m_PEnvir.sMapDesc + '(' + IntToStr(m_nCurrX) + ':' + IntToStr(m_nCurrY) + ')';
+          UserItem.GetName := m_sCharName;
+          UserItem.GetMode := '宝箱获取';
           m_ItemList.Add(UserItem);
           SendAddItem(UserItem);
           if Stditem.NeedIdentify = 1 then

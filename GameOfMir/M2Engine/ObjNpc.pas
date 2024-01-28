@@ -2022,6 +2022,10 @@ begin
             nCheckCode := 7;
             if boPileUp then begin //叠加购买
               nCheckCode := 8;
+              UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+              UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+              UserItem.GetName := PlayObject.m_sCharName;
+              UserItem.GetMode := '商铺购买';
               nBack := PlayObject.AddItemToBag(UserItem, StdItem, True, m_sCharName, '购买', AddUserItem);
               if nBack <> -1 then begin
                 nCheckCode := 9;
@@ -2071,6 +2075,10 @@ begin
               nCheckCode := 12;
               for I := 1 to nCount do begin
                 nCheckCode := 13;
+                UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+                UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+                UserItem.GetName := PlayObject.m_sCharName;
+                UserItem.GetMode := '商铺购买';
                 nBack := PlayObject.AddItemToBag(UserItem, StdItem, False, '', '', AddUserItem);
                 if nBack <> -1 then begin
                   UserItem.MakeIndex := GetItemNumber();
@@ -11988,6 +11996,10 @@ begin
             //            Inc(nCount, nItemCount);
             nItemCount := 0;
           end;
+          UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+          UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+          UserItem.GetName := PlayObject.m_sCharName;
+          UserItem.GetMode := '系统制造';
           nBack := PlayObject.AddItemToBag(UserItem, StdItem, False, m_sCharName, '购买', AddUserItem);
           if nBack = 2 then begin
             UserItem.MakeIndex := GetItemNumber;
@@ -12023,6 +12035,10 @@ begin
           New(UserItem);
           if UserEngine.CopyToUserItemFromName(sItemName, UserItem) then begin
             //FGiveItem := UserItem;
+            UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+            UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+            UserItem.GetName := PlayObject.m_sCharName;
+            UserItem.GetMode := '系统制造';
             FGiveItemList.Add(UserItem);
             PlayObject.m_ItemList.Add((UserItem));
             //PlayObject.SendAddItem(UserItem);
@@ -12081,6 +12097,11 @@ begin
               PlayObject.SendAddItem(UserItem);
               PlayObject.m_UseItems[where].wIndex := 0;
             end;
+
+            UserItem34.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+            UserItem34.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+            UserItem34.GetName := PlayObject.m_sCharName;
+            UserItem34.GetMode := '系统制造';
             PlayObject.m_UseItems[where] := UserItem34;
             PlayObject.RecalcAbilitys();
             PlayObject.SendAbility;
@@ -12147,6 +12168,10 @@ begin
               //            Inc(nCount, nItemCount);
               nItemCount := 0;
             end;
+            UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+            UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+            UserItem.GetName := PlayObject.m_sCharName;
+            UserItem.GetMode := '系统制造';
             nBack := PlayObject.AddItemToBag(UserItem, StdItem, True, m_sCharName, '购买', AddUserItem);
             if nBack = 2 then begin
               UserItem.MakeIndex := GetItemNumber;
@@ -12181,6 +12206,10 @@ begin
             New(UserItem);
             if UserEngine.CopyToUserItemFromName(sItemName, UserItem) then begin
               //FGiveItem := UserItem;
+              UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+              UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+              UserItem.GetName := PlayObject.m_sCharName;
+              UserItem.GetMode := '系统制造';
               PlayObject.m_ItemList.Add((UserItem));
               PlayObject.SendAddItem(UserItem);
               //0049D46B
@@ -12197,6 +12226,10 @@ begin
               //StdItem := UserEngine.GetStdItem(UserItem.wIndex);
               //0049D5A5
               //FGiveItem := UserItem;
+              UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+              UserItem.GetMap := PlayObject.m_PEnvir.sMapDesc + '(' + IntToStr(PlayObject.m_nCurrX) + ':' + IntToStr(PlayObject.m_nCurrY) + ')';
+              UserItem.GetName := PlayObject.m_sCharName;
+              UserItem.GetMode := '系统制造';
               if StdItem.NeedIdentify = 1 then
                 AddGameLog(PlayObject, LOG_ADDITEM, Stditem.Name, Useritem.MakeIndex, UserItem.Dura, m_sCharName,
                   'Give', '0', '购买', UserItem);

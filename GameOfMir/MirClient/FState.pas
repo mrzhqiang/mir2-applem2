@@ -1198,6 +1198,7 @@ begin
     x := x - left;
     y := y - top;
   end;
+  // FIXME 快捷键栏应该视为背包的一部分，且固定 6 个格子，因此无需对 Item 进行重置——重置将导致各种各样的问题
   if Sender = DBottom2 then begin
     with DUserKeyGrid2 do begin
       if (Button = mbRight) and (x >= Left) and (y >= Top) and (X <= Left + Width) and (y <= Top + Height) then begin
@@ -10152,6 +10153,7 @@ var
   idx, nMagID: Integer;
   Item: TNewClientItem;
 begin
+  // FIXME 快捷键栏应该视为背包的一部分，且固定 6 个格子，因此无需对 Item 进行重置——重置将导致各种各样的问题
   with Sender as TDGrid do begin
     idx := ACol + ARow * ColCount + Tag * 12;
     if idx in [Low(g_UserKeySetup)..High(g_UserKeySetup)] then begin
@@ -10193,6 +10195,7 @@ var
   PaintMode: TItemPaintMode;
   boUse: Boolean;
 begin
+  // FIXME 快捷键栏应该视为背包的一部分，且固定 6 个格子，因此无需对 Item 进行重置——重置将导致各种各样的问题
   with Sender as TDGrid do begin
     idx := ACol + ARow * ColCount + Tag * 12;
     if idx in [Low(g_UserKeySetup)..High(g_UserKeySetup)] then begin
@@ -10307,6 +10310,7 @@ var
 begin
   if (GetTickCount - m_dwDblClick) < 500 then
     Exit;
+  // FIXME 快捷键栏应该视为背包的一部分，且固定 6 个格子，因此无需对 Item 进行重置——重置将导致各种各样的问题
   boSend := False;
   with Sender as TDGrid do begin
     idx := ACol + ARow * ColCount + Tag * 12;

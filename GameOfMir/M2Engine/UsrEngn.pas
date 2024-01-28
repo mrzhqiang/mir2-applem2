@@ -2204,6 +2204,7 @@ function TUserEngine.MonGetRandomItems(mon: TBaseObject; ItemList: TList): Integ
     StdItem: pTStdItem;
     StdModeEx: TStdModeEx;
     vCompoundInfos: pTCompoundInfos;
+    AttackBaseObject: TBaseObject;
   begin
     if MonItem.boGold then begin
       mon.m_nGold := mon.m_nGold + (MonItem.Count div 2) + Random(MonItem.Count);
@@ -2212,9 +2213,13 @@ function TUserEngine.MonGetRandomItems(mon: TBaseObject; ItemList: TList): Integ
       New(UserItem);
       if CopyToUserItemFromIdxEx(MonItem.ItemIdent, UserItem) then begin
         StdItem := GetStdItem(UserItem.wIndex);
+        // FIXME 这里有点多余，直接用 StdItem.StdModeEx 即可，不用再遍历一次，浪费时间
         StdModeEx := GetStdItemModeEx(UserItem.wIndex);
+        // 如果是坐骑装备、正常装备
         if (sm_HorseArm in StdModeEx) or (sm_ArmingStrong in StdModeEx) then begin
+          // 物品持久：20% —— 100% 最大持久
           UserItem.Dura := Round((UserItem.DuraMax / 100) * (20 + Random(80)));
+          // 装备合成数据
           vCompoundInfos := GetCompoundInfos(StdItem.Name);
           if (vCompoundInfos <> nil) then
           begin
@@ -2232,6 +2237,21 @@ function TUserEngine.MonGetRandomItems(mon: TBaseObject; ItemList: TList): Integ
               ItemUnit.RandomUpgradeItem(UserItem, DefUnsealItem);
           end;
         end;
+
+        if (mon.m_ExpHitter <> nil) then
+          AttackBaseObject := mon.m_ExpHitter
+        else
+          AttackBaseObject := mon.m_LastHiter;
+        if (AttackBaseObject.m_btRaceServer <> RC_PLAYOBJECT) then begin
+          if (AttackBaseObject.m_Master <> nil) and (AttackBaseObject.m_Master.m_btRaceServer = RC_PLAYOBJECT) then
+          begin
+            AttackBaseObject := AttackBaseObject.m_Master;
+          end;
+        end;
+        UserItem.GetTime := FormatDateTime('YYYY-MM-DD HH:MM:SS', Now());
+        UserItem.GetMap := AttackBaseObject.m_PEnvir.sMapDesc + '(' + IntToStr(AttackBaseObject.m_nCurrX) + ':' + IntToStr(AttackBaseObject.m_nCurrY) + ')';
+        UserItem.GetName := AttackBaseObject.m_sCharName;
+        UserItem.GetMode := '怪物[' + FilterShowName(mon.m_sCharName) + ']掉落';
         mon.m_ItemList.Add(UserItem);
       end
       else
@@ -2344,7 +2364,9 @@ begin
     SafeFillChar(Item^, SizeOf(TUserItem), #0);
     Item.wIndex := nIdx + 1;
     Item.MakeIndex := 0;
+    // 此物品不是坐骑
     if StdItem.StdMode <> tm_House then begin
+      // 此物品可叠加，且最大叠加数量超过 1
       if (sm_Superposition in StdItem.StdModeEx) and (StdItem.DuraMax > 1) then
         Item.Dura := 1
       else

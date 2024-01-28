@@ -41,7 +41,7 @@ $80000000  }
   g_sProgram = '程序制作: mrzhqiang';
   g_sWebSite = '兰达尔引擎，永久免费';
   // 注意：如果修改了人物字段信息，这里也需要同步改动，避免出现数据异常，也要搜索其他 SIZEOFTHUMAN 常量是否一致
-  SIZEOFTHUMAN = 83267;
+  SIZEOFTHUMAN = 111867;
 
   // 某种匹配符？
   GROBAL2VER = CLIENT_VERSION_NUMBER;
@@ -261,7 +261,7 @@ $80000000  }
   OT_HAZARD = 3;
   OT_FREEPKAREA = 4;
 
-  RC_PLAYOBJECT = 0;
+  RC_PLAYOBJECT = 0;// 玩家
   RC_PLAYMOSTER = 150; //人形怪物
   RC_HEROOBJECT = 66;
   RC_GUARD = 11;//大刀守卫
@@ -1223,8 +1223,8 @@ type
     tm_Mission{任务物品}, tm_MissionSP{任务物品-可叠加}, tm_MakeStone{装备宝石}, tm_MakeProp{普通道具}, tm_MakePropSP{普通道具-可叠加}, tm_unknown{未知}, tm_ResetStone{洗装备属性石},
     tm_Prop{普通道具}, tm_PropSP{普通道具-可叠加}, tm_Revive{还魂丹}, tm_Rein{坐骑缰绳}, tm_Bell{坐骑铃铛}, tm_Saddle{坐骑马鞍}, tm_Decoration{坐骑装饰}, tm_Nail{坐骑脚钉});
 
-  // ？？？
-  TStdModeEx = set of (sm_Arming{武器装备}, sm_ArmingStrong{}, sm_Superposition, sm_Eat, sm_Mission, sm_HorseArm);
+  // 物品大类
+  TStdModeEx = set of (sm_Arming{装备}, sm_ArmingStrong{强化装备}, sm_Superposition{可重叠}, sm_Eat{食物}, sm_Mission{任务}, sm_HorseArm{坐骑装备});
 
   TMagicMode = set of (mm_Attack, mm_Passiveness, mm_Warr, mm_MagLock, mm_Open);
 
@@ -2176,6 +2176,10 @@ type
     btBindMode1: Byte;
     btBindMode2: Byte;
     TermTime: LongWord;
+    GetTime: string[20];// 时间：YYYY-MM-DD HH:MM:SS
+    GetMap: string[32];//  地点：MAP(xxx:yyy)
+    GetName: string[24];// 人物：（玩家名称）
+    GetMode: string[24];// 事件：系统制造、商铺购买、宝箱获取、挖矿获取、怪物[XXX]掉落
     Dura: Word;
     DuraMax: Word;// TODO 废弃
     EffectValue: TUserItemEffectValue;
@@ -2190,6 +2194,10 @@ type
     btBindMode1: Byte;
     btBindMode2: Byte;
     TermTime: LongWord;
+    GetTime: string[20];// 时间：YYYY-MM-DD HH:MM:SS
+    GetMap: string[32];//  地点：TTTT(xxx:yyy)
+    GetName: string[24];// 人物：（玩家名称）
+    GetMode: string[24];// 事件：系统制造、商铺购买、宝箱获取、挖矿获取、怪物[XXX]掉落
     case Integer of
       1:(
         Dura: Word;
