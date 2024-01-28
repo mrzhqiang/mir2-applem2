@@ -501,26 +501,6 @@ object FrmDlg2: TFrmDlg2
     ClickCount = csNorm
     OnClickSound = DLoginOkSound
   end
-  object DButtonPayment: TDButton
-    Left = 135
-    Top = 259
-    Width = 61
-    Height = 17
-    DFColor = 11922415
-    DFEnabledColor = clWhite
-    DFMoveColor = 7075839
-    DFDownColor = clWhite
-    DFBackColor = 8
-    OnClick = DButtonPaymentClick
-    Caption = #20805#20540
-    DParent = DShopWin
-    Visible = True
-    Enabled = True
-    MouseFocus = True
-    KeyFocus = False
-    ClickCount = csNorm
-    OnClickSound = DLoginOkSound
-  end
   object DButFront: TDButton
     Left = 72
     Top = 129

@@ -41,7 +41,6 @@ type
     DBotList6: TDButton;
     DBotShopClose: TDButton;
     DBotBuy: TDButton;
-    DButtonPayment: TDButton;
     DButFront: TDButton;
     DButNext: TDButton;
     DButFront2: TDButton;
@@ -284,7 +283,6 @@ type
     procedure DWndHintMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure DWndHintClick(Sender: TObject; X, Y: Integer);
     procedure DWndHintLeave(Sender: TObject);
-    procedure DButtonPaymentClick(Sender: TObject; X, Y: Integer);
     procedure DWndWebInRealArea(Sender: TObject; X, Y: Integer; var IsRealArea: Boolean);
     procedure dbtnSelectChrDirectPaint(Sender: TObject; dsurface: TDXTexture);
     procedure DEMailReadDirectPaint(Sender: TObject; dsurface: TDXTexture);
@@ -586,17 +584,13 @@ begin
 
   DBotBuy.SetImgIndex(g_WMain99Images, 1751);
   DBotBuy.Left := 52;
-  DBotBuy.Top := 268;
+  DBotBuy.Top := 353;
 
   DShopGetGamePoint.SetImgIndex(g_WMain99Images, 198);
   DShopGetGamePoint.Left := 31;
   DShopGetGamePoint.Top := 545;
   DShopGetGamePoint.Caption := '¶Ô»»' + g_sGameGoldName;
   DShopGetGamePoint.Visible := False;
-  DButtonPayment.SetImgIndex(g_WMain99Images, 1750);
-  DButtonPayment.Left := 52;
-  DButtonPayment.Top := 354;
-  DButtonPayment.OnDirectPaint := DBotShopCloseDirectPaint;
 
   DButFront.SetImgIndex(g_WMain99Images, 204);
   DButFront.Left := 538;
@@ -701,9 +695,6 @@ begin
   DShopGetGamePoint.Left := 31;
   DShopGetGamePoint.Top := 545;
   DShopGetGamePoint.Caption := '¶Ô»»' + g_sGameGoldName;
-  DButtonPayment.SetImgIndex(g_WMain99Images, 204);
-  DButtonPayment.Left := 108;
-  DButtonPayment.Top := 545;
 
 
 
@@ -2005,15 +1996,6 @@ begin
     if ShopPage < ShopMaxPage then
       Inc(ShopPage);
   end;
-end;
-
-procedure TFrmDlg2.DButtonPaymentClick(Sender: TObject; X, Y: Integer);
-begin
-  {if g_WebInfo.g_PayUrl <> '' then begin
-    OpenWeb(g_WebInfo.g_PayUrl, g_FScreenWidth, g_FScreenHeight);
-  end;      }
-  FrmWEB.wb.UISettings.EnableScrollBars := False;
-  OpenWeb(g_WebInfo.g_PayUrl, g_FScreenWidth, g_FScreenHeight);
 end;
 
 procedure TFrmDlg2.DBuyAddClick(Sender: TObject; X, Y: Integer);
