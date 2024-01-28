@@ -2458,7 +2458,7 @@ Result := IntToStr(Round(Dura / 100)); }
   begin
     Result := '';
     if nCount > 0 then begin
-      Result := '<[+' + IntToStr(nCount) + ']/FCOLOR=$63CEFF>';
+      Result := '<[+' + IntToStr(nCount) + ']/FCOLOR=$63CEFF>';// ADDVALUECOLOR2
     end;
   end;
 
@@ -2466,7 +2466,7 @@ Result := IntToStr(Round(Dura / 100)); }
   begin
     Result := '';
     if nCount > 0 then begin
-      Result := '<[+' + IntToStr(nCount * 10) + '%]/FCOLOR=$63CEFF>';
+      Result := '<[+' + IntToStr(nCount * 10) + '%]/FCOLOR=$63CEFF>';// ADDVALUECOLOR2
     end;
   end;
 
@@ -2474,7 +2474,7 @@ Result := IntToStr(Round(Dura / 100)); }
   begin
     Result := '';
     if nCount > 0 then begin
-      Result := '<[+' + IntToStr(nCount) + '%]/FCOLOR=$63CEFF>';
+      Result := '<[+' + IntToStr(nCount) + '%]/FCOLOR=$63CEFF>';// ADDVALUECOLOR2
     end;
   end;
 var
@@ -2548,7 +2548,7 @@ begin
   end;
   if Item.UserItem.EffectValue.btColor > 0 then sNameColor := IntToStr(GetRGB(Item.UserItem.EffectValue.btColor))
   else if Item.S.Color > 0 then sNameColor := IntToStr(GetRGB(Item.S.Color))
-  else sNameColor := '$63CEFF';
+  else sNameColor := ADDVALUECOLOR2;
   
   boBuy := False;
   boBindGold := False;
@@ -2604,720 +2604,433 @@ begin
 
   //MyWuXin := g_MySelf.m_btWuXin;
   if Item.S.name <> '' then begin
-    ShowString := '<' + Item.S.name + '/FCOLOR=' + sNameColor + '>\';
+    // 默认是物品名称、基础属性、重量，如果以 ShowString := XXX 开头，表示这里的内容被覆盖——通常装备名称需要显示前后缀
+    ShowString := '<' + Item.S.name + '/FCOLOR=' + sNameColor + '>\ \';
+    // 装备图标
+    ShowString := ShowString + '<img=f.' + IntToStr(Images_ItemsBegin + Item.S.Looks div 10000) + ',i.' + IntToStr(Item.S.Looks mod 10000) + '><x=22>';
+    ShowString := ShowString + '    重量: ' + IntToStr(Item.S.Weight) + '\ \ \ \';
+
     case Item.S.StdMode of
-      tm_Reel: begin
-          if Item.s.Shape = 13 then begin
-            ShowString := ShowString + ' \';
-            if Item.UserItem.Value.boBind then begin
-              ShowString := ShowString + '<记忆地图：' + Item.UserItem.Value.sMapDesc + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              ShowString := ShowString + '<记忆坐标：' + IntToStr(Item.UserItem.Value.wCurrX) + ',' +
-                IntToStr(Item.UserItem.Value.wCurrY) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-            end else begin
-              ShowString := ShowString + '<尚未使用/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-            end;
-            ShowString := ShowString + GetItemNeedStr(@Item);
-          end else
-          if Item.s.Shape = 14 then begin
-            ShowString := ShowString + ' \对换自然成长点：' + IntToStr(Item.s.DuraMax) + ' 点\';
-            ShowString := ShowString + '获得经验值：' + IntToStr(Item.s.Source * Item.s.Reserved) + '\';
-            ShowString := ShowString + GetItemNeedStr(@Item);
-          end else
-          if Item.s.Shape = 15 then begin
-            ShowString := ShowString + ' \增加行会建设值：' + IntToStr(Item.s.Source) + ' 点\';
-
-            ShowString := ShowString + GetItemNeedStr(@Item);
-          end else
-          if Item.s.Shape = 17 then begin
-            ShowString := ShowString + ' \获得经验值：' + IntToStr(Item.s.Source * 1000) + '\';
-            ShowString := ShowString + GetItemNeedStr(@Item);
-          end else
-          if Item.s.Shape = 18 then begin
-            ShowString := ShowString + ' \还原属性点：' + IntToStr(Item.s.DuraMax) + '\';
-            ShowString := ShowString + GetItemNeedStr(@Item);
+      tm_Reel{特殊物品}: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        if Item.s.Shape = 13 then begin
+          if Item.UserItem.Value.boBind then begin
+            ShowString := ShowString + '<记忆地图: ' + Item.UserItem.Value.sMapDesc + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+            ShowString := ShowString + '<记忆坐标: ' + IntToStr(Item.UserItem.Value.wCurrX) + ',' + IntToStr(Item.UserItem.Value.wCurrY) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
           end else begin
-            sNeedStr := GetItemNeedStr(@Item);
-            if sNeedStr <> '' then
-              ShowString := ShowString + ' \' + sNeedStr;
+            ShowString := ShowString + '<尚未使用/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+          end;
+        end else if Item.s.Shape = 14 then begin
+          ShowString := ShowString + '需要成长点: ' + IntToStr(Item.s.DuraMax) + '点\';
+          ShowString := ShowString + '获得经验值: ' + IntToStr(Item.s.Source * Item.s.Reserved) + '\';
+        end else if Item.s.Shape = 15 then begin
+          ShowString := ShowString + '增加行会建设值: ' + IntToStr(Item.s.Source) + '点\';
+        end else if Item.s.Shape = 17 then begin
+          ShowString := ShowString + '获得经验值: ' + IntToStr(Item.s.Source * 1000) + '\';
+        end else if Item.s.Shape = 18 then begin
+          ShowString := ShowString + '还原属性点: ' + IntToStr(Item.s.DuraMax) + '\';
+        end;
+        ShowString := ShowString + GetItemNeedStr(@Item);
+      end;
+      tm_Drug{药品}: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        // TODO 区分持续恢复和瞬间恢复
+        if Item.S.nAC > 0 then
+          ShowString := ShowString + '生命值: +' + IntToStr(Item.S.nAC) + '\';
+        if Item.S.nMAC > 0 then
+          ShowString := ShowString + '魔法值: +' + IntToStr(Item.S.nMAC) + '\';
+        ShowString := ShowString + GetItemNeedStr(@Item);
+      end;
+      tm_Restrict{解包物品}: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        if Item.S.StdMode = tm_Restrict then begin
+          if Item.S.Shape = 9 then begin
+            ShowString := ShowString + '修复装备持久: ' + IntToStr(Round(Item.UserItem.dura / 100)) + '点\'
+          end
+          else begin
+            if mis_bottom in MoveItemState then begin
+              ShowString := ShowString + '剩余: ' + IntToStr(Item.UserItem.Dura) + '次\';
+            end else
+              ShowString := ShowString + '剩余: ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + '次\';
           end;
         end;
-      tm_Drug: begin //药品
-          ShowString := ShowString + ' \';
-          if Item.S.nAC > 0 then
-            ShowString := ShowString + '恢复HP ' + IntToStr(Item.S.nAC) + ' 点\';
-          if Item.S.nMAC > 0 then
-            ShowString := ShowString + '恢复MP ' + IntToStr(Item.S.nMAC) + ' 点\';
-          ShowString := ShowString + GetItemNeedStr(@Item);
+        ShowString := ShowString + GetItemNeedStr(@Item);
+      end;
+      tm_Rock{气血石等}: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        case Item.S.Shape of
+          0: ShowString := ShowString + '剩余: ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + '次\';
+          1: ShowString := ShowString + '恢复生命值: ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + '万\';
+          2: ShowString := ShowString + '恢复魔法值: ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + '万\';
+          3: ShowString := ShowString + '恢复生命值和魔法值: ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + '万\';
         end;
-      tm_Restrict: begin //解包物品
-          if Item.S.StdMode = tm_Restrict then begin
-            if Item.S.Shape = 9 then begin
-              ShowString := ShowString + ' \修复装备持久 ' +
-                IntToStr(Round(Item.UserItem.dura / 100)) + ' 点\'
-            end
-            else begin
-              if mis_bottom in MoveItemState then begin
-                ShowString := ShowString + ' \剩余 ' + IntToStr(Item.UserItem.Dura) + ' 次\';
-              end else
-                ShowString := ShowString + ' \剩余 ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 次\';
-            end;
-          end;
-          ShowString := ShowString + GetItemNeedStr(@Item);
-        end;
-      tm_Rock: begin //气血石等
-          ShowString := ShowString + ' \重量 ' + IntToStr(Item.S.Weight) + '\';
-          case Item.S.Shape of
-            0: ShowString := ShowString + '剩余 ' +
-              GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 次\';
-            1: ShowString := ShowString + '恢复HP ' +
-              GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 万\';
-            2: ShowString := ShowString + '恢复MP ' +
-              GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 万\';
-            3: ShowString := ShowString + '恢复HP和MP ' +
-              GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 万\';
-          end;
-        end;
-      tm_Book: {// 技能书} begin
-          case Item.S.Shape of
-            0: begin
-                ShowString := ShowString + ' \武士秘籍\';
-              end;
-            1: begin
-                ShowString := ShowString + ' \法师秘籍\';
-              end;
-            2: begin
-                ShowString := ShowString + ' \道士秘籍\';
-              end;
-            3: begin
-                ShowString := ShowString + ' \合击秘籍\';
-              end;
-          end;
-          ShowString := ShowString + GetNeedStr(@Item);
-        end;
-      tm_Amulet: {符类} begin
-          ShowString := ShowString + ' \重量 ' + IntToStr(Item.S.Weight) + '\';
-          case Item.S.Shape of
-            5: ShowString := ShowString + '剩余 ' +
-              GetDura1Str(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 张\';
-            1, 2: ShowString := ShowString + '剩余 ' +
-              GetDura1Str(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 次\';
-          end;
-        end;
-      tm_Cowry: begin
-          ShowString := ShowString + ' \重量 ' + IntToStr(Item.S.Weight) + '\';
-          if Item.s.Shape = 0 then begin
-            ShowString := ShowString + '剩余 ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + ' 次\';
-          end;
-        end;
-      tm_Ore: begin
-          ShowString := ShowString + ' \纯度 ' + IntToStr(Round(Item.UserItem.Dura / 1000)) + '\';
-        end;
-      tm_Open: begin
-          sNeedStr := GetItemNeedStr(@Item);
-          if sNeedStr <> '' then
-            ShowString := ShowString + ' \' + sNeedStr;
-        end;
-      tm_MakeStone: begin
-
-          //ShowString := ShowString + '重量: ' + IntToStr(Item.S.Weight) + '\ \';
-          case Item.s.Shape of
-            0: begin
-              ShowString := ShowString + ' \';
-              ShowString := ShowString + '<强化属性/FCOLOR=' + NOTDOWNCOLOR + '>\';
-              ShowString := ShowString + '<强化成功机率: +' + IntToStr(Item.s.Reserved) +
-                  '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              ShowString := ShowString + '<强化成功提高装备等级: +1/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              if item.s.AniCount > 0 then
-                ShowString := ShowString + '<强化失败降低装备强化等级机率: +' + IntToStr(item.s.AniCount) +
-                  '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              if item.s.Source > 0 then
-                ShowString := ShowString + '<强化失败装备破碎机率: +' + IntToStr(item.s.Source) +
-                  '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              ShowString := ShowString + ' \';
-              ShowString := ShowString + '<强化使用要求/FCOLOR=' + NOTDOWNCOLOR + '>\';
-              if Item.s.Need > 0 then
-                ShowString := ShowString + '<装备强化等级大于或等于: +' + IntToStr(Item.s.Need) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              ShowString := ShowString + '<装备强化等级小于或等于: +' + IntToStr(Item.s.NeedLevel) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-            end;
-            2, 4: begin
-              ShowString := ShowString + ' \';
-              ShowString := ShowString + '<宝石属性/FCOLOR=' + NOTDOWNCOLOR + '>\';
-              ShowString := ShowString + '<提高成功机率: +' + IntToStr(Item.s.Reserved) + '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              //ShowString := ShowString + '<可以在强化装备、打造物品和装备开光时使用/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-            end;
-            1: begin
-              //ShowString := ShowString + '<强化装备时使用，保护装备不会破碎/FCOLOR=' + WUXINISMYCOLOR + '>\';
-            end;
-            3: begin
-              ShowString := ShowString + ' \';
-              ShowString := ShowString + '<宝石属性/FCOLOR=' + NOTDOWNCOLOR + '>\';
-              case Item.s.AniCount of
-                1: ShowString := ShowString + '<防御  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-                2: ShowString := ShowString + '<魔御  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-                3: ShowString := ShowString + '<攻击  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-                4: ShowString := ShowString + '<魔法  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-                5: ShowString := ShowString + '<道术  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-                6: ShowString := ShowString + '<生命值  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-                7: ShowString := ShowString + '<魔法值  +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-              end;
-              ShowString := ShowString + ' \<镶嵌要求/FCOLOR=' + NOTDOWNCOLOR + '>\';
-              if Item.s.Need > 0 then
-                ShowString := ShowString + '<装备强化等级大于或等于: +' + IntToStr(Item.s.Need) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\'
-              else
-                ShowString := ShowString + '<可用于任何有凹槽的装备/FCOLOR=' + ADDVALUECOLOR2 + '>\';
-            end;
-            9: begin
-            
-            end;
-          end;
-        end;
-      {tm_ResetStone: begin
-        ShowString := ShowString + ' \<COLOR=$00FFFF>';
-        ShowString := ShowString + '拥有女娲神奇的力量，可以随机刷新装备极品属性点\';
-        ShowString := ShowString + '使用方法\';
-        ShowString := ShowString + '右键单击该宝石，然后再左键单击的装备';
-        ShowString := ShowString + '<ENDCOLOR>\'
-      end;   }
-      tm_House: begin
-          ShowString := '<' + Item.S.name + '/FCOLOR=' + sNameColor + '>\';
-
-          ShowString := ShowString + '<Height>';
-          ShowString := ShowString + '重量        ' + IntToStr(Item.S.Weight) + '\';
-
-          GetHorseLevelAbility(@Item.UserItem, @Item.S, AddAbility);
-          for I := Low(Item.UserItem.HorseItems) to High(Item.UserItem.HorseItems) do begin
-            if Item.UserItem.HorseItems[I].wIndex > 0 then begin
-              StdItem := GetStditem(Item.UserItem.HorseItems[I].wIndex);
-              if StdItem.Name <> '' then
-                GetHorseAddAbility(@Item.UserItem, @StdItem, I, AddAbility);
-            end;
-          end;
-
-          ShowString := ShowString + '坐骑等级    ' + IntToStr(Item.UserItem.btLevel) + '\';
-          if Item.UserItem.btAliveTime > 0 then ShowString := ShowString + '坐骑状态    <已死亡 ' + IntToStr(Item.UserItem.btAliveTime) + '分钟后自动复活/FCOLOR=$C0C0C0>\'
-          else ShowString := ShowString + '坐骑状态    <正常/FCOLOR=$00FF00>\';
-          ShowString := ShowString + '坐骑经验    ' + IntToStr(Item.UserItem.dwExp) + '/' + IntToStr(Item.UserItem.dwMaxExp) + '\';
-
-          ShowString := ShowString + ' \';
-          if (AddAbility.AC > 0) or (AddAbility.AC2 > 0) then
-            ShowString := ShowString + '坐骑防御    ' + GetStrSpace(IntToStr(AddAbility.AC) + '-' + IntToStr(AddAbility.AC2)) + '\';
-
-          if (AddAbility.MAC > 0) or (AddAbility.MAC2 > 0) then
-            ShowString := ShowString + '坐骑魔御    ' + GetStrSpace(IntToStr(AddAbility.MAC) + '-' + IntToStr(AddAbility.MAC2)) + '\';
-
-          if (AddAbility.DC > 0) or (AddAbility.DC2 > 0) then
-            ShowString := ShowString + '坐骑攻击    ' + GetStrSpace(IntToStr(AddAbility.DC) + '-' + IntToStr(AddAbility.DC2)) + '\';
-
-
-          if (AddAbility.wHitPoint > 0) then
-            ShowString := ShowString + '<坐骑准确    /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(IntToStr(AddAbility.wHitPoint)) + '\';
-
-          if (Item.s.SpeedPoint > 0) or (Item.UserItem.Value.btValue[tb_Speed] > 0) then
-            ShowString := ShowString + '<坐骑敏捷    /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(IntToStr(AddAbility.wSpeedPoint)) + '\';
-
-
-          if (AddAbility.HP > 0) then
-            ShowString := ShowString + '<坐骑生命值  /FCOLOR=' + ADDVALUECOLOR3 + '>'  + GetStrSpace(IntToStr(AddAbility.HP)) + '\';
-
-          ShowString := ShowString + GetNeedStr(@Item, '  ');
-
-
-          ShowString := ShowString + ' \坐骑装备\';
-
-          for I := Low(Item.UserItem.HorseItems) to High(Item.UserItem.HorseItems) do begin
-            ShowString := ShowString + '<  [' + HorseItemNames[I] + ']  ';
-            if Item.UserItem.HorseItems[I].wIndex > 0 then begin
-              ShowString := ShowString + '  ' + GetStditem(Item.UserItem.HorseItems[I].wIndex).Name + '/FCOLOR=$63CEFF>\';
-            end else begin
-              ShowString := ShowString + '  未装备' + '/FCOLOR=' + HINTCOLOR2 + '>\';
-            end;
-          end;
-
-        end;
-      tm_Rein,
-        tm_Bell,
-        tm_Saddle,
-        tm_Decoration,
-        tm_Nail: begin
-          sNeedStr := Item.S.name;
-          TempStr := '';
-          AddStr := '';
-
-          itValue := Item.UserItem.Value.btValue;
-          ShowString := '<' + sNeedStr + ' (坐骑专用装备)/FCOLOR=' + sNameColor + '>\ \';
-
-
-          ShowString := ShowString + '<Height>';
-          ShowString := ShowString + '重量      ' + IntToStr(Item.S.Weight) + '\';
-          ShowString := ShowString + '持久      ' + GetStrSpace(GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax));
-          
-          TempInt := Item.UserItem.DuraMax - Item.s.DuraMax;
-          if TempInt > 500 then begin
-            TempInt := Round(TempInt / 1000);
-            ShowString := ShowString + '<[+' + IntToStr(TempInt) + ']/FCOLOR=$63CEFF>\';
-          end else ShowString := ShowString + '\';
-
-          if (Item.S.nAC > 0) or (Item.S.nAC2 > 0) or
-            (item.UserItem.Value.btValue[tb_AC] > 0) or
-            (item.UserItem.Value.btValue[tb_AC2] > 0) then
-            ShowString := ShowString + '防御      ' + GetStrSpace(GetJPStr(Item.S.nAC, tb_AC) + '-' +
-              GetJPStr(Item.S.nAC2, tb_AC2)) + GetJPStrEx(itValue[tb_AC2]) + '\';
-
-          if (Item.S.nMAC > 0) or (Item.S.nMAC2 > 0) or
-            (item.UserItem.Value.btValue[tb_MAC] > 0) or (item.UserItem.Value.btValue[tb_MAC2] > 0) then
-            ShowString := ShowString + '魔御      ' + GetStrSpace(GetJPStr(Item.S.nMaC, tb_MAC) + '-' +
-              GetJPStr(Item.S.nMAC2, tb_MAC2)) + GetJPStrEx(itValue[tb_MAC2]) + '\';
-
-          if (Item.S.nDC > 0) or (Item.S.nDC2 > 0) or
-            (item.UserItem.Value.btValue[tb_DC] > 0) or (item.UserItem.Value.btValue[tb_DC2] > 0) then
-            ShowString := ShowString + '攻击      ' + GetStrSpace(GetJPStr(Item.S.nDC, tb_DC)
-              + '-' + GetJPStr(Item.S.nDC2, tb_DC2)) + GetJPStrEx(itValue[tb_DC2]) + '\';
-
-
-          if (Item.s.HitPoint > 0) or (Item.UserItem.Value.btValue[tb_Hit] > 0) then
-            ShowString := ShowString + '<准确      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.HitPoint, tb_Hit)) + GetJPStrEx(itValue[tb_Hit]) + '\';
-
-          if (Item.s.SpeedPoint > 0) or (Item.UserItem.Value.btValue[tb_Speed] > 0) then
-            ShowString := ShowString + '<敏捷      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.SpeedPoint, tb_Speed)) + GetJPStrEx(itValue[tb_Speed]) + '\';
-
-
-          if (Item.S.HP > 0) or (item.UserItem.Value.btValue[tb_HP] > 0) then
-            ShowString := ShowString + '<生命值    /FCOLOR=' + ADDVALUECOLOR3 +
-              '>'  + GetStrSpace(GetJPStr2(Item.S.HP, tb_HP)) + GetJPStrEx(itValue[tb_HP]) + '\';
-
-
-          ShowString := ShowString + GetNeedStr(@Item);
-          if CheckByteStatus(Item.UserItem.btBindMode2, Ib2_Unknown) then
-            ShowString := ShowString + '<未开光/FCOLOR=' + ITEMNAMECOLOR + '>\';
-
-          if (g_UseItems[U_HOUSE].S.Name <> '') and (g_UseItems[U_HOUSE].UserItem.btLevel >= Item.S.NeedLevel) then
-            ShowString := ShowString + '<' + '需要坐骑等级 ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\'
-          else ShowString := ShowString + '<' + '需要坐骑等级 ' + AddStr + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
-          
-
-         { sMsg := '<' + '需要等级 ' + AddStr + IntToStr(Item.S.DuraMax) + '/FCOLOR=$0000FF>\';
+      end;
+      tm_Book{技能书}: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
         case Item.S.Shape of
           0: begin
-              if (MyJob = 0) and (m_Abil.Level >= Item.S.DuraMax) then
-                sMsg := '<' + '需要等级 ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
-            end;   }
-        end;
-      tm_Weapon,
-        tm_Dress,
-        tm_Helmet,
-        tm_Ring,
-        tm_ArmRing,
-        tm_Necklace,
-        tm_Belt,
-        tm_Boot,
-        tm_Stone,
-        tm_Light: begin
-
-          if Item.UserItem.EffectValue.btUpgrade > 0 then sNeedStr := '(*)' + Item.S.name
-          else sNeedStr := Item.S.name;
-          TempStr := '';
-          AddStr := '';
-
-          {Item.UserItem.Value.StrengthenInfo.btStrengthenCount := 9;
-          item.UserItem.Value.btValue[tb_DC2] := 3;
-          item.UserItem.Value.btValue[tb_AntiMagic] := 1;
-          Item.UserItem.Value.btFluteCount := 3;  }
-          itValue := Item.UserItem.Value.btValue;
-          if (Item.s.StdMode <> tm_House) and (Item.UserItem.Value.btWuXin in [1..5]) then begin
-            {if g_nParam1 > 0 then
-              Item.UserItem.Value.btValue[tb_StrengthenCount] := g_nParam1;  }
-            //boArmST := GetStrengthenAbility(@Item.UserItem, @Item.UserItem.Value.btValue);
-            boArmST := Item.UserItem.Value.StrengthenInfo.btStrengthenCount > 0;
-            //boArmST := GetStrengthenValue(@Item.UserItem.Value.btValue, Item.s);
-            //取镶嵌宝石属性
-            {if Item.UserItem.Value.btFluteCount > 0 then begin
-              for I := 0 to Item.UserItem.Value.btFluteCount - 1 do begin
-                if (I in [0..MAXFLUTECOUNT - 1]) then begin
-                  if Item.UserItem.Value.wFlute[i] > 0 then begin
-                    Stditem := GetStdItem(Item.UserItem.Value.wFlute[i]);
-                    if (Stditem.name <> '') and (Stditem.StdMode = tm_MakeStone) and (Stditem.Shape = 3) then begin
-                      case Stditem.AniCount of
-                        Itas_Ac: Inc(Item.UserItem.Value.btValue[tb_AC2], Stditem.Source);
-                        Itas_Mac: Inc(Item.UserItem.Value.btValue[tb_MAC2], Stditem.Source);
-                        Itas_Dc: Inc(Item.UserItem.Value.btValue[tb_DC2], Stditem.Source);
-                        Itas_Mc: Inc(Item.UserItem.Value.btValue[tb_MC2], Stditem.Source);
-                        Itas_Sc: Inc(Item.UserItem.Value.btValue[tb_SC2], Stditem.Source);
-                        Itas_Hp: Inc(Item.UserItem.Value.btValue[tb_HP], Stditem.Source);
-                        Itas_Mp: Inc(Item.UserItem.Value.btValue[tb_MP], Stditem.Source);
-                      end;
-                    end;
-
-                  end;
-                end else break;
-              end;
-            end;   }
-            //GetStoneAbility(@Item.UserItem, Item.s);
-            //取强化装备属性
-            if boArmST then begin
-              {if Item.s.StdMode = tm_Weapon then begin
-                if Item.UserItem.Value.btValue[tb_StrengthenCount] > 3 then begin
-                  Item.s.DuraMax := Item.s.DuraMax + 3000;
-                end else
-                  Item.s.DuraMax := Item.s.DuraMax + Item.UserItem.Value.btValue[tb_StrengthenCount] * 1000;
-              end else begin
-                if Item.UserItem.Value.btValue[tb_StrengthenCount] > 5 then begin
-                  Item.s.DuraMax := Item.s.DuraMax + 5000;
-                end else
-                  Item.s.DuraMax := Item.s.DuraMax + Item.UserItem.Value.btValue[tb_StrengthenCount] * 1000;
-              end;       }
-              sNeedStr := GetStrengthenItemName(Item.S.name, Item.UserItem.Value.StrengthenInfo.btStrengthenCount);
-              TempStr := ' [+' + IntToStr(Item.UserItem.Value.StrengthenInfo.btStrengthenCount) + ']';
-              {nInt := Item.UserItem.Value.StrengthenInfo.btStrengthenCount div 2;
-              for TempInt := 0 to nInt - 1 do begin
-                if (TempInt > 0) and (TempInt mod 3 = 0) then
-                  AddStr := AddStr + '<x=10>';
-                AddStr := AddStr + '<img=f.3,t.150,i.462-467><x=17>';
-
-              end;
-              if Item.UserItem.Value.StrengthenInfo.btStrengthenCount mod 2 <> 0 then
-                AddStr := AddStr + '<img=f.3,t.150,i.468-473><x=17>'; }
-              //AddStr := AddStr + '\';
+              ShowString := ShowString + '武士秘籍\';
             end;
-            ShowString := '<' + sNeedStr + TempStr + '/FCOLOR=' + sNameColor + '>';
-
-            if g_boUseWuXin and (Item.UserItem.Value.btWuXin in [1..5]) then
-              ShowString := ShowString + ' <y=-2><img=f.3,i.' + IntToStr(767 + Item.UserItem.Value.btWuXin) + '><y=2>\'
-            else
-              ShowString := ShowString + '\';
-              //IntToHex(GetWuXinColor(Item.UserItem.Value.btWuXin), 0) + '> ' + TempStr + '\';
-
-            {ShowString := '<' + sNeedStr + '/FCOLOR=' + ITEMNAMECOLOR + '> <【' +
-              GetWuXinName(Item.UserItem.Value.btWuXin) + '】/FCOLOR=$' +
-              IntToHex(GetWuXinColor(Item.UserItem.Value.btWuXin), 0) + '> ' + TempStr + '\';   }
-              //WuXinStr[Item.UserItem.Value.btValue[tb_WuXin]]
-
+          1: begin
+              ShowString := ShowString + '法师秘籍\';
+            end;
+          2: begin
+              ShowString := ShowString + '道士秘籍\';
+            end;
+          3: begin
+//                ShowString := ShowString + '合击秘籍\';
+              ShowString := ShowString + '通用秘籍\';
+            end;
+        end;
+        ShowString := ShowString + GetNeedStr(@Item);
+      end;
+      tm_Amulet{符类}: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        // TODO 支持道士免毒符选项
+        case Item.S.Shape of
+          5: ShowString := ShowString + '剩余: ' + GetDura1Str(Item.UserItem.Dura, Item.UserItem.DuraMax) + '张\';
+          1, 2: ShowString := ShowString + '剩余: ' + GetDura1Str(Item.UserItem.Dura, Item.UserItem.DuraMax) + '次\';
+        end;
+      end;
+      tm_Cowry: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        if Item.s.Shape = 0 then begin
+          ShowString := ShowString + '剩余: ' + GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax) + '次\';
+        end;
+      end;
+      tm_Ore: begin
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        ShowString := ShowString + '纯度: ' + IntToStr(Round(Item.UserItem.Dura / 1000)) + '\';
+      end;
+      tm_Open: begin
+        sNeedStr := GetItemNeedStr(@Item);
+        if sNeedStr <> '' then
+          ShowString := ShowString + sNeedStr;
+      end;
+      tm_MakeStone: begin
+        case Item.s.Shape of
+          0: begin
+            ShowString := ShowString + '<[强化属性]/FCOLOR=' + NOTDOWNCOLOR + '>\';
+            ShowString := ShowString + '<强化成功几率: +' + IntToStr(Item.s.Reserved) + '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+            ShowString := ShowString + '<强化成功提高强化等级: +1/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+            if item.s.AniCount > 0 then
+              ShowString := ShowString + '<强化失败降低强化等级几率: +' + IntToStr(item.s.AniCount) + '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+            if item.s.Source > 0 then
+              ShowString := ShowString + '<强化失败装备破碎几率: +' + IntToStr(item.s.Source) + '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
             ShowString := ShowString + ' \';
-            //'<img=f.3,t.150,i.462-467><img=f.3,t.150,i.462-467><img=f.3,t.150,i.462-467>\ \';
-          end else begin
-            ShowString := '<' + sNeedStr + '/FCOLOR=' + sNameColor + '>\ \'
+            ShowString := ShowString + '<[强化使用要求]/FCOLOR=' + NOTDOWNCOLOR + '>\';
+            if Item.s.Need > 0 then
+              ShowString := ShowString + '<装备强化等级 >= +' + IntToStr(Item.s.Need) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+            ShowString := ShowString + '<装备强化等级 <= +' + IntToStr(Item.s.NeedLevel) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
           end;
-
-          ShowString := ShowString + '<Height>';
-          ShowString := ShowString + '重量      ' + IntToStr(Item.S.Weight) + '\';
-          if (mis_CompoundItemAdd in MoveItemState) then
-            ShowString := ShowString + '合成等级  ' + IntToStr(Item.UserItem.ComLevel) + '\';
-          ShowString := ShowString + '持久      ' + GetStrSpace(GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax));
-
-          TempInt := Item.UserItem.DuraMax - Item.s.DuraMax;
-          if TempInt > 500 then begin
-            TempInt := Round(TempInt / 1000);
-            ShowString := ShowString + '<[+' + IntToStr(TempInt) + ']/FCOLOR=$63CEFF>\';
-          end else ShowString := ShowString + '\';
-
-         { ShowString := ShowString + '攻击      45-535  [+15]\';
-          ShowString := ShowString + '生命值    +200    [+200]\';
-          ShowString := ShowString + '致命一击  +100%   [+10%]\';        }
-          if (Item.S.nAC > 0) or (Item.S.nAC2 > 0) or
-            (item.UserItem.Value.btValue[tb_AC] > 0) or
-            (item.UserItem.Value.btValue[tb_AC2] > 0) then
-            ShowString := ShowString + '防御      ' + GetStrSpace(GetJPStr(Item.S.nAC, tb_AC) + '-' +
-              GetJPStr(Item.S.nAC2, tb_AC2)) + GetJPStrEx(itValue[tb_AC2]) + '\';
-
-          if (Item.S.nMAC > 0) or (Item.S.nMAC2 > 0) or
-            (item.UserItem.Value.btValue[tb_MAC] > 0) or (item.UserItem.Value.btValue[tb_MAC2] > 0) then
-            ShowString := ShowString + '魔御      ' + GetStrSpace(GetJPStr(Item.S.nMaC, tb_MAC) + '-' +
-              GetJPStr(Item.S.nMAC2, tb_MAC2)) + GetJPStrEx(itValue[tb_MAC2]) + '\';
-
-          if (Item.S.nDC > 0) or (Item.S.nDC2 > 0) or
-            (item.UserItem.Value.btValue[tb_DC] > 0) or (item.UserItem.Value.btValue[tb_DC2] > 0) then
-            ShowString := ShowString + '攻击      ' + GetStrSpace(GetJPStr(Item.S.nDC, tb_DC)
-              + '-' + GetJPStr(Item.S.nDC2, tb_DC2)) + GetJPStrEx(itValue[tb_DC2]) + '\';
-
-          if (Item.S.nMC > 0) or (Item.S.nMC2 > 0) or
-            (item.UserItem.Value.btValue[tb_MC] > 0) or (item.UserItem.Value.btValue[tb_MC2] > 0) then
-            ShowString := ShowString + '魔法      ' + GetStrSpace(GetJPStr(Item.S.nMC, tb_MC)
-              + '-' + GetJPStr(Item.S.nMC2, tb_MC2)) + GetJPStrEx(itValue[tb_MC2]) + '\';
-
-          if (Item.S.nSC > 0) or (Item.S.nSC2 > 0) or
-            (item.UserItem.Value.btValue[tb_SC] > 0) or (item.UserItem.Value.btValue[tb_SC2] > 0) then
-            ShowString := ShowString + '道术      ' + GetStrSpace(GetJPStr(Item.S.nSC, tb_SC)
-              + '-' + GetJPStr(Item.S.nSC2, tb_SC2)) + GetJPStrEx(itValue[tb_SC2]) + '\';
-
-          {if (Item.s.Dunt > 0) or (Item.UserItem.Value.btValue[tb_Dunt] > 0) then
-            ShowString := ShowString + '<致命一击: /FCOLOR=' + ADDVALUECOLOR2
-              + '>' + GetJPBTStr5(Item.S.Dunt, tb_Dunt) + '\'; }
-
-          if (Item.s.HitPoint > 0) or (Item.UserItem.Value.btValue[tb_Hit] > 0) then
-            ShowString := ShowString + '<准确      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.HitPoint, tb_Hit)) + GetJPStrEx(itValue[tb_Hit]) + '\';
-
-          if (Item.s.SpeedPoint > 0) or (Item.UserItem.Value.btValue[tb_Speed] > 0) then
-            ShowString := ShowString + '<敏捷      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.SpeedPoint, tb_Speed)) + GetJPStrEx(itValue[tb_Speed]) + '\';
-
-          if (Item.s.Strong > 0) or (Item.UserItem.Value.btValue[tb_Strong] > 0) then
-            ShowString := ShowString + '<强度      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.Strong, tb_Strong)) + GetJPStrEx(itValue[tb_Strong]) + '\';
-
-          TempInt := LoByte(Item.s.Luck) + Item.UserItem.Value.btValue[tb_Luck] - Item.UserItem.Value.btValue[tb_UnLuck];
-          if TempInt > 0 then
-            ShowString := ShowString + '<幸运      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBtStr6(TempInt, tb_Luck, tb_UnLuck)) + GetJPStrEx(itValue[tb_Luck] - itValue[tb_UnLuck]) + '\'
-          else if TempInt < 0 then
-            ShowString := ShowString + '<诅咒      /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBtStr6(-TempInt, tb_Luck, tb_UnLuck)) + GetJPStrEx(-(itValue[tb_Luck] - itValue[tb_UnLuck])) + '\';
-
-          if (Item.S.HP > 0) or (item.UserItem.Value.btValue[tb_HP] > 0) then
-            ShowString := ShowString + '<生命值    /FCOLOR=' + ADDVALUECOLOR3 +
-              '>'  + GetStrSpace(GetJPStr2(Item.S.HP, tb_HP)) + GetJPStrEx(itValue[tb_HP]) + '\';
-          if (Item.S.MP > 0) or (item.UserItem.Value.btValue[tb_MP] > 0) then
-            ShowString := ShowString + '<魔法值    /FCOLOR=' + ADDVALUECOLOR3 +
-              '>' + GetStrSpace(GetJPStr2(Item.S.MP, tb_MP)) + GetJPStrEx(itValue[tb_MP]) + '\';
-
-         { TempByte := Item.S.HitSpeed + Item.UserItem.Value.btValue[tb_HitSpeed];
-          if (TempByte > 0) then begin
-            ShowString := ShowString + '<攻击速度: /FCOLOR=' + ADDVALUECOLOR2
-              + '>' + GetJPBTStr4(TempByte, tb_HitSpeed) + '\'
-          end;    }
-
-          if (Item.s.AntiMagic > 0) or (Item.UserItem.Value.btValue[tb_AntiMagic] > 0) then
-            ShowString := ShowString + '<魔法躲避  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr3(Item.S.AntiMagic, tb_AntiMagic)) + GetJPStrEx2(itValue[tb_AntiMagic]) + '\';
-
-          if (Item.s.PoisonMagic > 0) or (Item.UserItem.Value.btValue[tb_PoisonMagic] > 0) then
-            ShowString := ShowString + '<毒物躲避  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr3(Item.S.PoisonMagic, tb_PoisonMagic)) + GetJPStrEx2(itValue[tb_PoisonMagic]) + '\';
-
-          if (Item.s.HealthRecover > 0) or (Item.UserItem.Value.btValue[tb_HealthRecover] > 0) then
-            ShowString := ShowString + '<体力恢复  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr3(Item.S.HealthRecover, tb_HealthRecover)) + GetJPStrEx2(itValue[tb_HealthRecover]) + '\';
-
-          if (Item.s.SpellRecover > 0) or (Item.UserItem.Value.btValue[tb_SpellRecover] > 0) then
-            ShowString := ShowString + '<魔法恢复  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr3(Item.S.SpellRecover, tb_SpellRecover)) + GetJPStrEx2(itValue[tb_SpellRecover]) + '\';
-
-          if (Item.s.PoisonRecover > 0) or (Item.UserItem.Value.btValue[tb_PoisonRecover] > 0) then
-            ShowString := ShowString + '<毒物恢复  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr3(Item.S.PoisonRecover, tb_PoisonRecover)) + GetJPStrEx2(itValue[tb_PoisonRecover]) + '\';
-
-         { if (Item.s.StdMode <> tm_House) and (Item.UserItem.Value.btWuXin <> 0) and
-            ((Item.s.AddWuXinAttack > 0) or (Item.s.DelWuXinAttack > 0) or
-             (Item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) or
-             (Item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0)) then begin
-            if (Item.s.DelWuXinAttack > 0) or (Item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0) then begin
-              if CheckWuXinConsistent(Item.UserItem.Value.btWuXin, MyWuXin) then
-                ShowString := ShowString + '<五行防御  /FCOLOR=' + ADDVALUECOLOR3
-                  + '>' + GetJPBTStr5(Item.s.DelWuXinAttack, tb_DelWuXinAttack) + '\';
+          2, 4: begin
+            ShowString := ShowString + '<[宝石属性]/FCOLOR=' + NOTDOWNCOLOR + '>\';
+            ShowString := ShowString + '<提高成功机率: +' + IntToStr(Item.s.Reserved) + '%/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+            //ShowString := ShowString + '<可以在强化装备、打造物品和装备开光时使用/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+          end;
+          1: begin
+            //ShowString := ShowString + '<强化装备时使用，保护装备不会破碎/FCOLOR=' + WUXINISMYCOLOR + '>\';
+          end;
+          3: begin
+            ShowString := ShowString + '<[宝石属性]/FCOLOR=' + NOTDOWNCOLOR + '>\';
+            case Item.s.AniCount of
+              1: ShowString := ShowString + '<防御: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+              2: ShowString := ShowString + '<魔御: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+              3: ShowString := ShowString + '<攻击: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+              4: ShowString := ShowString + '<魔法: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+              5: ShowString := ShowString + '<道术: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+              6: ShowString := ShowString + '<生命值: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
+              7: ShowString := ShowString + '<魔法值: +' + IntToStr(Item.s.Source) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\';
             end;
-            if (Item.s.AddWuXinAttack > 0) or (Item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) then begin
-              if CheckWuXinConsistent(MyWuXin, Item.UserItem.Value.btWuXin) then
-                ShowString := ShowString + '<五行伤害  /FCOLOR=' + ADDVALUECOLOR3
-                  + '>' + GetJPBTStr5(Item.s.AddWuXinAttack, tb_AddWuXinAttack) + '\';
-            end;
-          end;   }
-
-          if (Item.s.AddAttack > 0) or (Item.UserItem.Value.btValue[tb_AddAttack] > 0) then
-            ShowString := ShowString + '<伤害加成  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr5(Item.S.AddAttack, tb_AddAttack)) + GetJPStrEx3(itValue[tb_AddAttack]) + '\';
-
-          if (Item.s.DelDamage > 0) or (Item.UserItem.Value.btValue[tb_DelDamage] > 0) then
-            ShowString := ShowString + '<伤害吸收  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr5(Item.S.DelDamage, tb_DelDamage)) + GetJPStrEx3(itValue[tb_DelDamage]) + '\';
-
-          if (Item.s.Deadliness > 0) or (Item.UserItem.Value.btValue[tb_Deadliness] > 0) then
-            ShowString := ShowString + '<致命一击  /FCOLOR=' + ADDVALUECOLOR3
-              + '>' + GetStrSpace(GetJPBTStr5(Item.S.Deadliness, tb_Deadliness)) + GetJPStrEx3(itValue[tb_Deadliness]) + '\';
-
-          ShowString := ShowString + GetNeedStr(@Item);
-          if sm_ArmingStrong in Item.s.StdModeEx then begin
-            if CheckByteStatus(Item.UserItem.btBindMode2, Ib2_Unknown) then
-              ShowString := ShowString + '<未开光/FCOLOR=' + ITEMNAMECOLOR + '>\';
-          end;
-
-          (*
-          sNeedStr := '';
-          if (itValue[tb_Hit] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_Hit]) + ' 准确' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_Speed] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_Speed]) + ' 敏捷' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_Strong] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_Strong]) + ' 强度' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          TempInt := itValue[tb_Luck] - itValue[tb_UnLuck];
-          if TempInt > 0 then
-            sNeedStr := sNeedStr + '<+' + IntToStr(TempInt) + ' 幸运' + '/FCOLOR=' + ADDVALUECOLOR + '>\'
-          else if TempInt < 0 then
-            sNeedStr := sNeedStr + '<+' + IntToStr(-TempInt) + ' 诅咒' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_HP] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_HP]) + ' 生命值' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_MP] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_MP]) + ' 魔法值' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          TempInt := Item.UserItem.DuraMax - Item.s.DuraMax;
-          if TempInt > 500 then begin
-            TempInt := Round(TempInt / 1000);
-            sNeedStr := sNeedStr + '<+' + IntToStr(TempInt) + ' 最大持久' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          end;
-
-          if (itValue[tb_AC] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_AC]) + ' 最小防御' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_AC2] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_AC2]) + ' 最大防御' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_mAC] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_mAC]) + ' 最小魔御' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_mAC2] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_mAC2]) + ' 最大魔御' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_DC] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_DC]) + ' 最小攻击' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_DC2] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_DC2]) + ' 最大攻击' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_MC] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_MC]) + ' 最小魔法' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_MC2] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_MC2]) + ' 最大魔法' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_SC] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_SC]) + ' 最小道术' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-          if (itValue[tb_SC2] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_SC2]) + ' 最大道术' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          {if (item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(item.UserItem.Value.btValue[tb_DelWuXinAttack])
-              + '% 五行防御' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(item.UserItem.Value.btValue[tb_AddWuXinAttack])
-              + '% 五行伤害' + '/FCOLOR=' + ADDVALUECOLOR + '>\'; }
-
-
-
-          {if (item.UserItem.Value.btValue[tb_HitSpeed] > 0) then
-            if TempByte > 10 then
-              sNeedStr := sNeedStr + '<+' + IntToStr(item.UserItem.Value.btValue[tb_HitSpeed] * 10)
-                + '% 攻击速度' + '/FCOLOR=' + ADDVALUECOLOR + '>\'
+            ShowString := ShowString + ' \<[镶嵌要求]/FCOLOR=' + NOTDOWNCOLOR + '>\';
+            if Item.s.Need > 0 then
+              ShowString := ShowString + '<装备强化等级 >= +' + IntToStr(Item.s.Need) + '/FCOLOR=' + ADDVALUECOLOR2 + '>\'
             else
-              sNeedStr := sNeedStr + '<-' + IntToStr(item.UserItem.Value.btValue[tb_HitSpeed] * 10)
-                + '% 攻击速度' + '/FCOLOR=' + ADDVALUECOLOR + '>\';  }
-
-          if (itValue[tb_AntiMagic] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_AntiMagic] * 10)
-              + '% 魔法躲避' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_PoisonMagic] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_PoisonMagic] * 10)
-              + '% 毒物躲避' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_HealthRecover] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_HealthRecover] * 10)
-              + '% 体力恢复' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_SpellRecover] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_SpellRecover] * 10)
-              + '% 魔法恢复' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_PoisonRecover] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_PoisonRecover] * 10)
-              + '% 毒物恢复' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_AddAttack] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_AddAttack])
-              + '% 伤害加成' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_DelDamage] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_DelDamage])
-              + '% 伤害吸收' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if (itValue[tb_Deadliness] > 0) then
-            sNeedStr := sNeedStr + '<+' + IntToStr(itValue[tb_Deadliness])
-              + '% 致命一击' + '/FCOLOR=' + ADDVALUECOLOR + '>\';
-
-          if sNeedStr <> '' then begin
-            ShowString := ShowString + ' \<极品属性/FCOLOR=' + NOTDOWNCOLOR{NOTDOWNCOLOR} + '>\';
-            ShowString := ShowString + sNeedStr;
-          end;         *)
-
-          if g_boUseWuXin and (Item.s.StdMode <> tm_House) and (Item.UserItem.Value.btWuXin <> 0) and
-            ((Item.s.AddWuXinAttack > 0) or (Item.s.DelWuXinAttack > 0) or
-             (Item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) or
-             (Item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0)) then begin
-            ShowString := ShowString + ' \五行属性\';
-            if (Item.s.DelWuXinAttack > 0) or (Item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0) then begin
-              if CheckWuXinConsistent(Item.UserItem.Value.btWuXin, MyWuXin) then
-                ShowString := ShowString + '<角色属[' +
-                  GetWuXinName(GetWuXinConsistent(Item.UserItem.Value.btWuXin)) + '] 五行防御 +' +
-                  IntToStr(Item.s.DelWuXinAttack + Item.UserItem.Value.btValue[tb_DelWuXinAttack])  +
-                  '%/FCOLOR=$FFFF63>\'
-              else
-                ShowString := ShowString + '<角色属[' +
-                  GetWuXinName(GetWuXinConsistent(Item.UserItem.Value.btWuXin)) + '] 五行防御 +' +
-                  IntToStr(Item.s.DelWuXinAttack + Item.UserItem.Value.btValue[tb_DelWuXinAttack])  +
-                  '%/FCOLOR=' + HINTCOLOR2 + '>\';
-            end;
-            if (Item.s.AddWuXinAttack > 0) or (Item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) then begin
-              if CheckWuXinConsistent(MyWuXin, Item.UserItem.Value.btWuXin) then
-                ShowString := ShowString + '<角色属[' +
-                  GetWuXinName(GetWuXinConsistentBack(Item.UserItem.Value.btWuXin)) + '] 五行伤害 +' +
-                  IntToStr(Item.s.AddWuXinAttack + Item.UserItem.Value.btValue[tb_AddWuXinAttack])  +
-                  '%/FCOLOR=$FFFF63>\'
-              else
-                ShowString := ShowString + '<角色属[' +
-                  GetWuXinName(GetWuXinConsistentBack(Item.UserItem.Value.btWuXin)) + '] 五行伤害 +' +
-                  IntToStr(Item.s.AddWuXinAttack + Item.UserItem.Value.btValue[tb_AddWuXinAttack])  +
-                  '%/FCOLOR=' + HINTCOLOR2 + '>\';
-            end;
+              ShowString := ShowString + '<可用于任何有凹槽的装备/FCOLOR=' + ADDVALUECOLOR2 + '>\';
           end;
-
-          if Item.UserItem.Value.StrengthenInfo.btCanStrengthenCount > 2 then begin
-            ShowString := ShowString + ' \强化属性 [' + Format('%d/%d',
-              [Item.UserItem.Value.StrengthenInfo.btStrengthenCount,
-              Item.UserItem.Value.StrengthenInfo.btCanStrengthenCount]) + ']\';
-
-            for I := 1 to 6 do begin
-              TempInt := I * 3;
-              if Item.UserItem.Value.StrengthenInfo.btCanStrengthenCount >= TempInt then begin
-                if TempInt < 10 then ShowString := ShowString + '<[+ ' + IntToStr(TempInt) + ']  '
-                else ShowString := ShowString + '<[+' + IntToStr(TempInt) + ']  ';
-                if Item.UserItem.Value.StrengthenInfo.btStrengthenCount >= TempInt then begin
-                  ShowString := ShowString + GetStrengthenText(TempInt, Item.UserItem.Value.StrengthenInfo.btStrengthenInfo[(TempInt - 1) div 3]) + '/FCOLOR=$63CEFF>\';
-                end
-                else begin
-                  if g_ShowStrengthenInfo then begin
-                    ShowString := ShowString + GetStrengthenText(TempInt, Item.UserItem.Value.StrengthenInfo.btStrengthenInfo[(TempInt - 1) div 3]) + '/FCOLOR=' + HINTCOLOR2 + '>\';
-                  end else begin
-                    ShowString := ShowString + '未激活' + '/FCOLOR=' + HINTCOLOR2 + '>\';
-                    break;
-                  end;
-                end;
-              end else break;
-            end;
-          end;
-          sNeedStr := '';
-          TempInt := 0;
-          if Item.UserItem.Value.btFluteCount > 0 then begin
-            for I := Low(Item.UserItem.Value.wFlute) to High(Item.UserItem.Value.wFlute) do begin
-              if I >= Item.UserItem.Value.btFluteCount then break;
-
-              if Item.UserItem.Value.wFlute[I] > 0 then begin
-                sNeedStr := sNeedStr + '<img=f.3,i.774><x=22><';
-                Inc(TempInt);
-                StdItem := GetStditem(Item.UserItem.Value.wFlute[I]);
-                if (StdItem.Name <> '') and (tm_MakeStone = StdItem.StdMode) and (StdItem.Shape = 3) then begin
-                  sNeedStr := sNeedStr + StdItem.Name + ' ';
-                  case Stditem.Anicount of
-                    1: sNeedStr := sNeedStr + ' 防御 +' + IntToStr(Stditem.Source);
-                    2: sNeedStr := sNeedStr + ' 魔御 +' + IntToStr(Stditem.Source);
-                    3: sNeedStr := sNeedStr + ' 攻击 +' + IntToStr(Stditem.Source);
-                    4: sNeedStr := sNeedStr + ' 魔法 +' + IntToStr(Stditem.Source);
-                    5: sNeedStr := sNeedStr + ' 道术 +' + IntToStr(Stditem.Source);
-                    6: sNeedStr := sNeedStr + ' HP +' + IntToStr(Stditem.Source);
-                    7: sNeedStr := sNeedStr + ' MP +' + IntToStr(Stditem.Source);
-                  end;
-                  sNeedStr := sNeedStr + '/FCOLOR=$FFFF63>\';
-                end;
-              end else begin
-                sNeedStr := sNeedStr + '<img=f.3,i.773><x=22><';
-                sNeedStr := sNeedStr + '未镶嵌宝石/FCOLOR=' + HINTCOLOR2 + '>\';
-              end;
-            end;
-            ShowString := ShowString + ' \凹槽数量 [' + Format('%d/%d', [TempInt, Item.UserItem.Value.btFluteCount]) + ']\';
-            ShowString := ShowString + sNeedStr;
+          9: begin
           end;
         end;
+      end;
+      tm_House: begin
+        // TODO 坐骑属性加成优化
+        GetHorseLevelAbility(@Item.UserItem, @Item.S, AddAbility);
+        for I := Low(Item.UserItem.HorseItems) to High(Item.UserItem.HorseItems) do begin
+          if Item.UserItem.HorseItems[I].wIndex > 0 then begin
+            StdItem := GetStditem(Item.UserItem.HorseItems[I].wIndex);
+            if StdItem.Name <> '' then
+              GetHorseAddAbility(@Item.UserItem, @StdItem, I, AddAbility);
+          end;
+        end;
+        ShowString := ShowString + '<Height>';
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        ShowString := ShowString + '坐骑等级: ' + IntToStr(Item.UserItem.btLevel) + '\';
+        if Item.UserItem.btAliveTime > 0 then ShowString := ShowString + '坐骑状态: <已死亡 ' + IntToStr(Item.UserItem.btAliveTime) + '分钟后自动复活/FCOLOR=$C0C0C0>\'
+        else ShowString := ShowString + '坐骑状态: <正常/FCOLOR=$00FF00>\';
+        ShowString := ShowString + '坐骑经验: ' + IntToStr(Item.UserItem.dwExp) + '/' + IntToStr(Item.UserItem.dwMaxExp) + '\';
+        ShowString := ShowString + ' \';
+        if (AddAbility.AC > 0) or (AddAbility.AC2 > 0) then
+          ShowString := ShowString + '坐骑防御: ' + GetStrSpace(IntToStr(AddAbility.AC) + '-' + IntToStr(AddAbility.AC2)) + '\';
+        if (AddAbility.MAC > 0) or (AddAbility.MAC2 > 0) then
+          ShowString := ShowString + '坐骑魔御: ' + GetStrSpace(IntToStr(AddAbility.MAC) + '-' + IntToStr(AddAbility.MAC2)) + '\';
+        if (AddAbility.DC > 0) or (AddAbility.DC2 > 0) then
+          ShowString := ShowString + '坐骑攻击: ' + GetStrSpace(IntToStr(AddAbility.DC) + '-' + IntToStr(AddAbility.DC2)) + '\';
+        if (AddAbility.wHitPoint > 0) then
+          ShowString := ShowString + '<坐骑准确: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(IntToStr(AddAbility.wHitPoint)) + '\';
+        if (Item.s.SpeedPoint > 0) or (Item.UserItem.Value.btValue[tb_Speed] > 0) then
+          ShowString := ShowString + '<坐骑敏捷: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(IntToStr(AddAbility.wSpeedPoint)) + '\';
+        if (AddAbility.HP > 0) then
+          ShowString := ShowString + '<坐骑生命值: /FCOLOR=' + ADDVALUECOLOR3 + '>'  + GetStrSpace(IntToStr(AddAbility.HP)) + '\';
+        ShowString := ShowString + GetNeedStr(@Item, '  ');
+        ShowString := ShowString + ' \[坐骑装备]\';
+
+        for I := Low(Item.UserItem.HorseItems) to High(Item.UserItem.HorseItems) do begin
+          ShowString := ShowString + '<  [' + HorseItemNames[I] + ']  ';
+          if Item.UserItem.HorseItems[I].wIndex > 0 then begin
+            ShowString := ShowString + '  ' + GetStditem(Item.UserItem.HorseItems[I].wIndex).Name + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
+          end else begin
+            ShowString := ShowString + '  未装备' + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          end;
+        end;
+      end;
+      tm_Rein, tm_Bell, tm_Saddle, tm_Decoration, tm_Nail: begin
+        sNeedStr := Item.S.name;
+        TempStr := '';
+        AddStr := '';
+
+        itValue := Item.UserItem.Value.btValue;
+        ShowString := '<' + sNeedStr + ' (坐骑专用装备)/FCOLOR=' + sNameColor + '>\ \';
+        ShowString := ShowString + '<Height>';
+        // 装备图标
+        ShowString := ShowString + '<img=f.' + IntToStr(Images_ItemsBegin + Item.S.Looks div 10000) + ',i.' + IntToStr(Item.S.Looks mod 10000) + '><x=22>';
+        ShowString := ShowString + '    重量: ' + IntToStr(Item.S.Weight) + '\';
+        ShowString := ShowString + '       持久: ' + GetStrSpace(GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax)) + '\ \ \';
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+
+        TempInt := Item.UserItem.DuraMax - Item.s.DuraMax;
+        if TempInt > 500 then begin
+          TempInt := Round(TempInt / 1000);
+          ShowString := ShowString + '<[+' + IntToStr(TempInt) + ']/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
+        end else ShowString := ShowString + '\';
+
+        if (Item.S.nAC > 0) or (Item.S.nAC2 > 0) or
+          (item.UserItem.Value.btValue[tb_AC] > 0) or
+          (item.UserItem.Value.btValue[tb_AC2] > 0) then
+          ShowString := ShowString + '防御: ' + GetStrSpace(GetJPStr(Item.S.nAC, tb_AC) + '-' +
+            GetJPStr(Item.S.nAC2, tb_AC2)) + GetJPStrEx(itValue[tb_AC2]) + '\';
+        if (Item.S.nMAC > 0) or (Item.S.nMAC2 > 0) or
+          (item.UserItem.Value.btValue[tb_MAC] > 0) or (item.UserItem.Value.btValue[tb_MAC2] > 0) then
+          ShowString := ShowString + '魔御: ' + GetStrSpace(GetJPStr(Item.S.nMaC, tb_MAC) + '-' +
+            GetJPStr(Item.S.nMAC2, tb_MAC2)) + GetJPStrEx(itValue[tb_MAC2]) + '\';
+        if (Item.S.nDC > 0) or (Item.S.nDC2 > 0) or
+          (item.UserItem.Value.btValue[tb_DC] > 0) or (item.UserItem.Value.btValue[tb_DC2] > 0) then
+          ShowString := ShowString + '攻击: ' + GetStrSpace(GetJPStr(Item.S.nDC, tb_DC)
+            + '-' + GetJPStr(Item.S.nDC2, tb_DC2)) + GetJPStrEx(itValue[tb_DC2]) + '\';
+        if (Item.s.HitPoint > 0) or (Item.UserItem.Value.btValue[tb_Hit] > 0) then
+          ShowString := ShowString + '<准确: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.HitPoint, tb_Hit)) + GetJPStrEx(itValue[tb_Hit]) + '\';
+        if (Item.s.SpeedPoint > 0) or (Item.UserItem.Value.btValue[tb_Speed] > 0) then
+          ShowString := ShowString + '<敏捷: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.SpeedPoint, tb_Speed)) + GetJPStrEx(itValue[tb_Speed]) + '\';
+        if (Item.S.HP > 0) or (item.UserItem.Value.btValue[tb_HP] > 0) then
+          ShowString := ShowString + '<生命值: /FCOLOR=' + ADDVALUECOLOR3 +
+            '>'  + GetStrSpace(GetJPStr2(Item.S.HP, tb_HP)) + GetJPStrEx(itValue[tb_HP]) + '\';
+
+        ShowString := ShowString + GetNeedStr(@Item);
+        if CheckByteStatus(Item.UserItem.btBindMode2, Ib2_Unknown) then
+          ShowString := ShowString + '<未开光/FCOLOR=' + ITEMNAMECOLOR + '>\';
+
+        if (g_UseItems[U_HOUSE].S.Name <> '') and (g_UseItems[U_HOUSE].UserItem.btLevel >= Item.S.NeedLevel) then
+          ShowString := ShowString + '<' + '需要坐骑等级: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\'
+        else ShowString := ShowString + '<' + '需要坐骑等级: ' + AddStr + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+      end;
+      tm_Weapon, tm_Dress, tm_Helmet, tm_Ring, tm_ArmRing, tm_Necklace, tm_Belt, tm_Boot, tm_Stone, tm_Light: begin
+        if Item.UserItem.EffectValue.btUpgrade > 0 then
+          sNeedStr := '(*)' + Item.S.name
+        else
+          sNeedStr := Item.S.name;
+        TempStr := '';
+        AddStr := '';
+        itValue := Item.UserItem.Value.btValue;
+        if (Item.s.StdMode <> tm_House) and (Item.UserItem.Value.btWuXin in [1..5]) then begin
+          boArmST := Item.UserItem.Value.StrengthenInfo.btStrengthenCount > 0;
+          //取强化装备属性
+          if boArmST then begin
+            sNeedStr := GetStrengthenItemName(Item.S.name, Item.UserItem.Value.StrengthenInfo.btStrengthenCount);
+            TempStr := ' [+' + IntToStr(Item.UserItem.Value.StrengthenInfo.btStrengthenCount) + ']';
+          end;
+          ShowString := '<' + sNeedStr + TempStr + '/FCOLOR=' + sNameColor + '>';
+          if g_boUseWuXin and (Item.UserItem.Value.btWuXin in [1..5]) then
+            ShowString := ShowString + ' <y=-2><img=f.3,i.' + IntToStr(767 + Item.UserItem.Value.btWuXin) + '><y=2>\'
+          else
+            ShowString := ShowString + '\';
+        end else begin
+          ShowString := '<' + sNeedStr + '/FCOLOR=' + sNameColor + '>\'
+        end;
+
+        ShowString := ShowString + ' \';
+        ShowString := ShowString + '<Height>';
+        // 装备图标
+        ShowString := ShowString + '<img=f.' + IntToStr(Images_ItemsBegin + Item.S.Looks div 10000) + ',i.' + IntToStr(Item.S.Looks mod 10000) + '><x=22>';
+        ShowString := ShowString + '    重量: ' + IntToStr(Item.S.Weight) + '\';
+        if (mis_CompoundItemAdd in MoveItemState) then
+          ShowString := ShowString + '    合成等级: ' + IntToStr(Item.UserItem.ComLevel) + '\';
+        ShowString := ShowString + '       持久: ' + GetStrSpace(GetDuraStr(Item.UserItem.Dura, Item.UserItem.DuraMax)) + '\ \ \';
+        ShowString := ShowString + '<[基础属性]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
+        TempInt := Item.UserItem.DuraMax - Item.s.DuraMax;
+        if TempInt > 500 then begin
+          TempInt := Round(TempInt / 1000);
+          ShowString := ShowString + '<[+' + IntToStr(TempInt) + ']/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
+        end else ShowString := ShowString + '\';
+
+        if (Item.S.nAC > 0) or (Item.S.nAC2 > 0) or
+          (item.UserItem.Value.btValue[tb_AC] > 0) or
+          (item.UserItem.Value.btValue[tb_AC2] > 0) then
+          ShowString := ShowString + '防御: ' + GetStrSpace(GetJPStr(Item.S.nAC, tb_AC) + '-' +
+            GetJPStr(Item.S.nAC2, tb_AC2)) + GetJPStrEx(itValue[tb_AC2]) + '\';
+        if (Item.S.nMAC > 0) or (Item.S.nMAC2 > 0) or
+          (item.UserItem.Value.btValue[tb_MAC] > 0) or (item.UserItem.Value.btValue[tb_MAC2] > 0) then
+          ShowString := ShowString + '魔御: ' + GetStrSpace(GetJPStr(Item.S.nMaC, tb_MAC) + '-' +
+            GetJPStr(Item.S.nMAC2, tb_MAC2)) + GetJPStrEx(itValue[tb_MAC2]) + '\';
+        if (Item.S.nDC > 0) or (Item.S.nDC2 > 0) or
+          (item.UserItem.Value.btValue[tb_DC] > 0) or (item.UserItem.Value.btValue[tb_DC2] > 0) then
+          ShowString := ShowString + '攻击: ' + GetStrSpace(GetJPStr(Item.S.nDC, tb_DC)
+            + '-' + GetJPStr(Item.S.nDC2, tb_DC2)) + GetJPStrEx(itValue[tb_DC2]) + '\';
+        if (Item.S.nMC > 0) or (Item.S.nMC2 > 0) or
+          (item.UserItem.Value.btValue[tb_MC] > 0) or (item.UserItem.Value.btValue[tb_MC2] > 0) then
+          ShowString := ShowString + '魔法: ' + GetStrSpace(GetJPStr(Item.S.nMC, tb_MC)
+            + '-' + GetJPStr(Item.S.nMC2, tb_MC2)) + GetJPStrEx(itValue[tb_MC2]) + '\';
+        if (Item.S.nSC > 0) or (Item.S.nSC2 > 0) or
+          (item.UserItem.Value.btValue[tb_SC] > 0) or (item.UserItem.Value.btValue[tb_SC2] > 0) then
+          ShowString := ShowString + '道术: ' + GetStrSpace(GetJPStr(Item.S.nSC, tb_SC)
+            + '-' + GetJPStr(Item.S.nSC2, tb_SC2)) + GetJPStrEx(itValue[tb_SC2]) + '\';
+
+        if (Item.s.HitPoint > 0) or (Item.UserItem.Value.btValue[tb_Hit] > 0) then
+          ShowString := ShowString + '<准确: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.HitPoint, tb_Hit)) + GetJPStrEx(itValue[tb_Hit]) + '\';
+        if (Item.s.SpeedPoint > 0) or (Item.UserItem.Value.btValue[tb_Speed] > 0) then
+          ShowString := ShowString + '<敏捷: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.SpeedPoint, tb_Speed)) + GetJPStrEx(itValue[tb_Speed]) + '\';
+        if (Item.s.Strong > 0) or (Item.UserItem.Value.btValue[tb_Strong] > 0) then
+          ShowString := ShowString + '<强度: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBTStr2(Item.S.Strong, tb_Strong)) + GetJPStrEx(itValue[tb_Strong]) + '\';
+        TempInt := LoByte(Item.s.Luck) + Item.UserItem.Value.btValue[tb_Luck] - Item.UserItem.Value.btValue[tb_UnLuck];
+        if TempInt > 0 then
+          ShowString := ShowString + '<幸运: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBtStr6(TempInt, tb_Luck, tb_UnLuck)) + GetJPStrEx(itValue[tb_Luck] - itValue[tb_UnLuck]) + '\'
+        else if TempInt < 0 then
+          ShowString := ShowString + '<诅咒: /FCOLOR=' + ADDVALUECOLOR3 + '>' + GetStrSpace(GetJPBtStr6(-TempInt, tb_Luck, tb_UnLuck)) + GetJPStrEx(-(itValue[tb_Luck] - itValue[tb_UnLuck])) + '\';
+
+        if (Item.S.HP > 0) or (item.UserItem.Value.btValue[tb_HP] > 0) then
+          ShowString := ShowString + '<生命值: /FCOLOR=' + ADDVALUECOLOR3 +
+            '>'  + GetStrSpace(GetJPStr2(Item.S.HP, tb_HP)) + GetJPStrEx(itValue[tb_HP]) + '\';
+        if (Item.S.MP > 0) or (item.UserItem.Value.btValue[tb_MP] > 0) then
+          ShowString := ShowString + '<魔法值: /FCOLOR=' + ADDVALUECOLOR3 +
+            '>' + GetStrSpace(GetJPStr2(Item.S.MP, tb_MP)) + GetJPStrEx(itValue[tb_MP]) + '\';
+        if (Item.s.AntiMagic > 0) or (Item.UserItem.Value.btValue[tb_AntiMagic] > 0) then
+          ShowString := ShowString + '<魔法躲避: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr3(Item.S.AntiMagic, tb_AntiMagic)) + GetJPStrEx2(itValue[tb_AntiMagic]) + '\';
+        if (Item.s.PoisonMagic > 0) or (Item.UserItem.Value.btValue[tb_PoisonMagic] > 0) then
+          ShowString := ShowString + '<毒物躲避: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr3(Item.S.PoisonMagic, tb_PoisonMagic)) + GetJPStrEx2(itValue[tb_PoisonMagic]) + '\';
+        if (Item.s.HealthRecover > 0) or (Item.UserItem.Value.btValue[tb_HealthRecover] > 0) then
+          ShowString := ShowString + '<体力恢复: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr3(Item.S.HealthRecover, tb_HealthRecover)) + GetJPStrEx2(itValue[tb_HealthRecover]) + '\';
+        if (Item.s.SpellRecover > 0) or (Item.UserItem.Value.btValue[tb_SpellRecover] > 0) then
+          ShowString := ShowString + '<魔法恢复: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr3(Item.S.SpellRecover, tb_SpellRecover)) + GetJPStrEx2(itValue[tb_SpellRecover]) + '\';
+        if (Item.s.PoisonRecover > 0) or (Item.UserItem.Value.btValue[tb_PoisonRecover] > 0) then
+          ShowString := ShowString + '<毒物恢复: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr3(Item.S.PoisonRecover, tb_PoisonRecover)) + GetJPStrEx2(itValue[tb_PoisonRecover]) + '\';
+        if (Item.s.AddAttack > 0) or (Item.UserItem.Value.btValue[tb_AddAttack] > 0) then
+          ShowString := ShowString + '<伤害加深: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr5(Item.S.AddAttack, tb_AddAttack)) + GetJPStrEx3(itValue[tb_AddAttack]) + '\';
+        if (Item.s.DelDamage > 0) or (Item.UserItem.Value.btValue[tb_DelDamage] > 0) then
+          ShowString := ShowString + '<伤害吸收: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr5(Item.S.DelDamage, tb_DelDamage)) + GetJPStrEx3(itValue[tb_DelDamage]) + '\';
+        if (Item.s.Deadliness > 0) or (Item.UserItem.Value.btValue[tb_Deadliness] > 0) then
+          ShowString := ShowString + '<致命一击: /FCOLOR=' + ADDVALUECOLOR3
+            + '>' + GetStrSpace(GetJPBTStr5(Item.S.Deadliness, tb_Deadliness)) + GetJPStrEx3(itValue[tb_Deadliness]) + '\';
+
+        ShowString := ShowString + GetNeedStr(@Item);
+        if sm_ArmingStrong in Item.s.StdModeEx then begin
+          if CheckByteStatus(Item.UserItem.btBindMode2, Ib2_Unknown) then
+            ShowString := ShowString + '<未开光/FCOLOR=' + ITEMNAMECOLOR + '>\';
+        end;
+
+        if g_boUseWuXin and (Item.s.StdMode <> tm_House) and (Item.UserItem.Value.btWuXin <> 0) and
+          ((Item.s.AddWuXinAttack > 0) or (Item.s.DelWuXinAttack > 0) or
+           (Item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) or
+           (Item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0)) then begin
+          ShowString := ShowString + ' \五行属性\';
+          if (Item.s.DelWuXinAttack > 0) or (Item.UserItem.Value.btValue[tb_DelWuXinAttack] > 0) then begin
+            if CheckWuXinConsistent(Item.UserItem.Value.btWuXin, MyWuXin) then
+              ShowString := ShowString + '<角色属[' + GetWuXinName(GetWuXinConsistent(Item.UserItem.Value.btWuXin)) + '] 五行防御 +' +
+                IntToStr(Item.s.DelWuXinAttack + Item.UserItem.Value.btValue[tb_DelWuXinAttack])  + '%/FCOLOR=$FFFF63>\'
+            else
+              ShowString := ShowString + '<角色属[' + GetWuXinName(GetWuXinConsistent(Item.UserItem.Value.btWuXin)) + '] 五行防御 +' +
+                IntToStr(Item.s.DelWuXinAttack + Item.UserItem.Value.btValue[tb_DelWuXinAttack])  + '%/FCOLOR=' + HINTCOLOR2 + '>\';
+          end;
+          if (Item.s.AddWuXinAttack > 0) or (Item.UserItem.Value.btValue[tb_AddWuXinAttack] > 0) then begin
+            if CheckWuXinConsistent(MyWuXin, Item.UserItem.Value.btWuXin) then
+              ShowString := ShowString + '<角色属[' + GetWuXinName(GetWuXinConsistentBack(Item.UserItem.Value.btWuXin)) + '] 五行伤害 +' +
+                IntToStr(Item.s.AddWuXinAttack + Item.UserItem.Value.btValue[tb_AddWuXinAttack])  + '%/FCOLOR=$FFFF63>\'
+            else
+              ShowString := ShowString + '<角色属[' + GetWuXinName(GetWuXinConsistentBack(Item.UserItem.Value.btWuXin)) + '] 五行伤害 +' +
+                IntToStr(Item.s.AddWuXinAttack + Item.UserItem.Value.btValue[tb_AddWuXinAttack])  + '%/FCOLOR=' + HINTCOLOR2 + '>\';
+          end;
+        end;
+
+        if Item.UserItem.Value.StrengthenInfo.btCanStrengthenCount > 2 then begin
+          ShowString := ShowString + ' \强化属性 [' + Format('%d/%d', [Item.UserItem.Value.StrengthenInfo.btStrengthenCount, Item.UserItem.Value.StrengthenInfo.btCanStrengthenCount]) + ']\';
+
+          for I := 1 to 6 do begin
+            TempInt := I * 3;
+            if Item.UserItem.Value.StrengthenInfo.btCanStrengthenCount >= TempInt then begin
+              if TempInt < 10 then ShowString := ShowString + '<[+ ' + IntToStr(TempInt) + ']  '
+              else ShowString := ShowString + '<[+' + IntToStr(TempInt) + ']  ';
+              if Item.UserItem.Value.StrengthenInfo.btStrengthenCount >= TempInt then begin
+                ShowString := ShowString + GetStrengthenText(TempInt, Item.UserItem.Value.StrengthenInfo.btStrengthenInfo[(TempInt - 1) div 3]) + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
+              end
+              else begin
+                if g_ShowStrengthenInfo then begin
+                  ShowString := ShowString + GetStrengthenText(TempInt, Item.UserItem.Value.StrengthenInfo.btStrengthenInfo[(TempInt - 1) div 3]) + '/FCOLOR=' + HINTCOLOR2 + '>\';
+                end else begin
+                  ShowString := ShowString + '未激活' + '/FCOLOR=' + HINTCOLOR2 + '>\';
+                  break;
+                end;
+              end;
+            end else break;
+          end;
+        end;
+        sNeedStr := '';
+        TempInt := 0;
+        if Item.UserItem.Value.btFluteCount > 0 then begin
+          for I := Low(Item.UserItem.Value.wFlute) to High(Item.UserItem.Value.wFlute) do begin
+            if I >= Item.UserItem.Value.btFluteCount then break;
+
+            if Item.UserItem.Value.wFlute[I] > 0 then begin
+              sNeedStr := sNeedStr + '<img=f.3,i.774><x=22><';
+              Inc(TempInt);
+              StdItem := GetStditem(Item.UserItem.Value.wFlute[I]);
+              if (StdItem.Name <> '') and (tm_MakeStone = StdItem.StdMode) and (StdItem.Shape = 3) then begin
+                sNeedStr := sNeedStr + StdItem.Name + ' ';
+                case Stditem.Anicount of
+                  1: sNeedStr := sNeedStr + ' 防御: +' + IntToStr(Stditem.Source);
+                  2: sNeedStr := sNeedStr + ' 魔御: +' + IntToStr(Stditem.Source);
+                  3: sNeedStr := sNeedStr + ' 攻击: +' + IntToStr(Stditem.Source);
+                  4: sNeedStr := sNeedStr + ' 魔法: +' + IntToStr(Stditem.Source);
+                  5: sNeedStr := sNeedStr + ' 道术: +' + IntToStr(Stditem.Source);
+                  6: sNeedStr := sNeedStr + ' 生命值: +' + IntToStr(Stditem.Source);
+                  7: sNeedStr := sNeedStr + ' 魔法值: +' + IntToStr(Stditem.Source);
+                end;
+                sNeedStr := sNeedStr + '/FCOLOR=$FFFF63>\';
+              end;
+            end else begin
+              sNeedStr := sNeedStr + '<img=f.3,i.773><x=22><';
+              sNeedStr := sNeedStr + '未镶嵌宝石/FCOLOR=' + HINTCOLOR2 + '>\';
+            end;
+          end;
+          ShowString := ShowString + ' \凹槽数量 [' + Format('%d/%d', [TempInt, Item.UserItem.Value.btFluteCount]) + ']\';
+          ShowString := ShowString + sNeedStr;
+        end;
+      end;
     end;
-    ShowString := ShowString + ' \';
+//    ShowString := ShowString + ' \';
     //if CheckByteStatus(Item.UserItem.btBindMode2, Ib2_Bind) then
       //ShowString := ShowString + '<已绑定' + '/FCOLOR=' + NOTDOWNCOLOR + '>\';
     sNeedStr := '';
@@ -3349,24 +3062,20 @@ begin
     ShowString := ShowString + sNeedStr;
 
     // 不是NPC购买、商铺购买，才显示物品来源
-    if showSource and (not boBuy) then begin
-      ShowString := ShowString + '<[物品来源]/FCOLOR='+ADDVALUECOLOR+'>\';
+    if showSource and (not boBuy)
+      and ((Item.UserItem.GetTime <> '')
+        or (Item.UserItem.GetMap <> '')
+        or (Item.UserItem.GetName <> '')
+        or (Item.UserItem.GetMode <> '')) then begin
+      ShowString := ShowString + '<[物品来源]/FCOLOR=' + IntToStr(GetRGB(146)) + '>\';
       if Item.UserItem.GetTime <> '' then
-        ShowString := ShowString + '<时间：' + Item.UserItem.GetTime + '/FCOLOR=$00FFFF>\'
-      else
-        ShowString := ShowString + '<时间：未知/FCOLOR=$00FFFF>\';
+        ShowString := ShowString + '<时间: ' + Item.UserItem.GetTime + '/FCOLOR=$00FFFF>\';
       if Item.UserItem.GetMap <> '' then
-        ShowString := ShowString + '<地点：' + Item.UserItem.GetMap + '/FCOLOR=$00FFFF>\'
-      else
-        ShowString := ShowString + '<地点：未知/FCOLOR=$00FFFF>\';
+        ShowString := ShowString + '<地点: ' + Item.UserItem.GetMap + '/FCOLOR=$00FFFF>\';
       if Item.UserItem.GetName <> '' then
-        ShowString := ShowString + '<人物：' + Item.UserItem.GetName + '/FCOLOR=$00FFFF>\'
-      else
-        ShowString := ShowString + '<人物：未知/FCOLOR=$00FFFF>\';
+        ShowString := ShowString + '<人物: ' + Item.UserItem.GetName + '/FCOLOR=$00FFFF>\';
       if Item.UserItem.GetMode <> '' then
-        ShowString := ShowString + '<事件：' + Item.UserItem.GetMode + '/FCOLOR=$00FFFF>\'
-      else
-        ShowString := ShowString + '<事件：未知/FCOLOR=$00FFFF>\';
+        ShowString := ShowString + '<事件: ' + Item.UserItem.GetMode + '/FCOLOR=$00FFFF>\';
     end;
 
     sNeedStr := '';
@@ -3374,18 +3083,12 @@ begin
       sGoldStr := '';
       if not (CheckItemBindMode(@Item.UserItem, bm_NoSell)) then
       begin
-        sGoldStr := '<卖给商店  ' + GetGoldStr(nSell);
-        {if CheckByteStatus(Item.UserItem.btBindMode2, Ib2_BindGold) then
-          sGoldStr := sGoldStr + ' ' + g_sBindGoldName
-        else
-          sGoldStr := sGoldStr + ' ' + g_sGoldName;  }
-        sGoldStr := sGoldStr + ' ' + g_sGoldName;
-        sGoldStr := sGoldStr + '/FCOLOR=' + SELLDEFCOLOR + '>\';
+        sGoldStr := '<卖给商店: ' + GetGoldStr(nSell) + ' ' + g_sGoldName + '/FCOLOR=' + SELLDEFCOLOR + '>\';
       end;
     end;
     if not (mis_MakeItem in MoveItemState) then begin
       if Item.UserItem.TermTime <> 0 then
-        ShowString := ShowString + '<到期时间  ' + Formatdatetime('YYYY年M月D日 HH时', LongWordToDateTime(Item.UserItem.TermTime)) + '/FCOLOR=' + SELLDEFCOLOR + '>\';
+        ShowString := ShowString + '<到期时间: ' + Formatdatetime('YYYY年MM月DD日HH时MM分', LongWordToDateTime(Item.UserItem.TermTime)) + '/FCOLOR=' + SELLDEFCOLOR + '>\';
       if (mis_Repair in MoveItemState) or (mis_SuperRepair in MoveItemState) then begin
         if ((sm_Arming in Item.s.StdModeEx) or (sm_HorseArm in Item.s.StdModeEx)) and not (CheckItemBindMode(@Item.UserItem, bm_NoRepair)) then
         begin
@@ -3393,8 +3096,7 @@ begin
           if (mis_SuperRepair in MoveItemState) then
             TempInt := TempInt * 3;
           if TempInt > 0 then begin
-            ShowString := ShowString + '<修理费用  ' + GetGoldStr(TempInt) +
-              ' ' + g_sGoldName + '/FCOLOR=' + SELLDEFCOLOR + '>\';
+            ShowString := ShowString + '<修理费用: ' + GetGoldStr(TempInt) + ' ' + g_sGoldName + '/FCOLOR=' + SELLDEFCOLOR + '>\';
             //sNeedStr := '<按住ALT+点击装备可快速修理/FCOLOR=$00FFFF>\';
           end else
             ShowString := ShowString + '<不需要修理/FCOLOR=' + SELLDEFCOLOR + '>\';
@@ -3453,7 +3155,7 @@ begin
             sNeedStr := '<右键或双击使用该物品/FCOLOR=$00FFFF>\';
         end else
         if (mis_bottom in MoveItemState) then begin
-          sNeedStr := '<单击右键使用该物品/FCOLOR=$00FFFF>\';
+          sNeedStr := '<双击使用该物品/FCOLOR=$00FFFF>\';
         end;
       end;
     end;
@@ -3490,86 +3192,86 @@ begin
       if MySex = 1 then begin
         if SetItem.Items[U_BUJUK] <> '' then begin
           if MyUseItems[U_DRESS].s.Name = SetItem.Items[U_BUJUK] then
-            ShowString := ShowString + '<[服装]    ' + SetItem.Items[U_BUJUK] + '/FCOLOR=$63CEFF>\'
+            ShowString := ShowString + '<[服装]: ' + SetItem.Items[U_BUJUK] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
           else begin
-            ShowString := ShowString + '<[服装]    ' + SetItem.Items[U_BUJUK] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+            ShowString := ShowString + '<[服装]: ' + SetItem.Items[U_BUJUK] + '/FCOLOR=' + HINTCOLOR2 + '>\';
             boOK := False;
           end;
         end;
       end else begin
         if SetItem.Items[U_DRESS] <> '' then begin
           if MyUseItems[U_DRESS].s.Name = SetItem.Items[U_DRESS] then
-            ShowString := ShowString + '<[服装]    ' + SetItem.Items[U_DRESS] + '/FCOLOR=$63CEFF>\'
+            ShowString := ShowString + '<[服装]: ' + SetItem.Items[U_DRESS] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
           else begin
-            ShowString := ShowString + '<[服装]    ' + SetItem.Items[U_DRESS] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+            ShowString := ShowString + '<[服装]: ' + SetItem.Items[U_DRESS] + '/FCOLOR=' + HINTCOLOR2 + '>\';
             boOK := False;
           end;
         end;
       end;
       if SetItem.Items[U_WEAPON] <> '' then begin
         if MyUseItems[U_WEAPON].s.Name = SetItem.Items[U_WEAPON] then
-          ShowString := ShowString + '<[武器]    ' + SetItem.Items[U_WEAPON] + '/FCOLOR=$63CEFF>\'
+          ShowString := ShowString + '<[武器]: ' + SetItem.Items[U_WEAPON] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
         else begin
-          ShowString := ShowString + '<[武器]    ' + SetItem.Items[U_WEAPON] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          ShowString := ShowString + '<[武器]: ' + SetItem.Items[U_WEAPON] + '/FCOLOR=' + HINTCOLOR2 + '>\';
           boOK := False;
         end;
       end;
       if SetItem.Items[U_HELMET] <> '' then begin
         if MyUseItems[U_HELMET].s.Name = SetItem.Items[U_HELMET] then
-          ShowString := ShowString + '<[头盔]    ' + SetItem.Items[U_HELMET] + '/FCOLOR=$63CEFF>\'
+          ShowString := ShowString + '<[头盔]: ' + SetItem.Items[U_HELMET] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
         else begin
-          ShowString := ShowString + '<[头盔]    ' + SetItem.Items[U_HELMET] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          ShowString := ShowString + '<[头盔]: ' + SetItem.Items[U_HELMET] + '/FCOLOR=' + HINTCOLOR2 + '>\';
           boOK := False;
         end;
       end;
       if SetItem.Items[U_NECKLACE] <> '' then begin
         if MyUseItems[U_NECKLACE].s.Name = SetItem.Items[U_NECKLACE] then
-          ShowString := ShowString + '<[项链]    ' + SetItem.Items[U_NECKLACE] + '/FCOLOR=$63CEFF>\'
+          ShowString := ShowString + '<[项链]: ' + SetItem.Items[U_NECKLACE] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
         else begin
-          ShowString := ShowString + '<[项链]    ' + SetItem.Items[U_NECKLACE] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          ShowString := ShowString + '<[项链]: ' + SetItem.Items[U_NECKLACE] + '/FCOLOR=' + HINTCOLOR2 + '>\';
           boOK := False;
         end;
       end;
       if SetItem.Items[U_RIGHTHAND] <> '' then begin
         if MyUseItems[U_RIGHTHAND].s.Name = SetItem.Items[U_RIGHTHAND] then
-          ShowString := ShowString + '<[勋章]    ' + SetItem.Items[U_RIGHTHAND] + '/FCOLOR=$63CEFF>\'
+          ShowString := ShowString + '<[勋章]: ' + SetItem.Items[U_RIGHTHAND] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
         else begin
-          ShowString := ShowString + '<[勋章]    ' + SetItem.Items[U_RIGHTHAND] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          ShowString := ShowString + '<[勋章]: ' + SetItem.Items[U_RIGHTHAND] + '/FCOLOR=' + HINTCOLOR2 + '>\';
           boOK := False;
         end;
       end;
       if (SetItem.Items[U_ARMRINGL] <> '') or (SetItem.Items[U_ARMRINGR] <> '') then begin
         if (SetItem.Items[U_ARMRINGL] <> '') and (MyUseItems[U_ARMRINGL].s.Name = SetItem.Items[U_ARMRINGL]) then begin
-          ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGL] + '/FCOLOR=$63CEFF>\';
+          ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGL] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
           if (SetItem.Items[U_ARMRINGR] <> '') then begin
             if (MyUseItems[U_ARMRINGR].s.Name = SetItem.Items[U_ARMRINGR]) then begin
-              ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=$63CEFF>\';
+              ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
             end else begin
-              ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+              ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
               boOK := False;
             end;
           end;
         end else
         if (SetItem.Items[U_ARMRINGL] <> '') and (MyUseItems[U_ARMRINGR].s.Name = SetItem.Items[U_ARMRINGL]) then begin
-          ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGL] + '/FCOLOR=$63CEFF>\';
+          ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGL] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
           if (SetItem.Items[U_ARMRINGR] <> '') then begin
             if (MyUseItems[U_ARMRINGL].s.Name = SetItem.Items[U_ARMRINGR]) then begin
-              ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=$63CEFF>\';
+              ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
             end else begin
-              ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+              ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
               boOK := False;
             end;
           end;
         end else begin
           if (SetItem.Items[U_ARMRINGL] <> '') then begin
-            ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGL] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+            ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGL] + '/FCOLOR=' + HINTCOLOR2 + '>\';
             boOK := False;
           end;
           if (SetItem.Items[U_ARMRINGR] <> '') then begin
             if (MyUseItems[U_ARMRINGL].s.Name = SetItem.Items[U_ARMRINGR]) or (MyUseItems[U_ARMRINGR].s.Name = SetItem.Items[U_ARMRINGR]) then begin
-              ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=$63CEFF>\';
+              ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
             end else begin
-              ShowString := ShowString + '<[手镯]    ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+              ShowString := ShowString + '<[手镯]: ' + SetItem.Items[U_ARMRINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
               boOK := False;
             end;
           end;
@@ -3577,36 +3279,36 @@ begin
       end;
       if (SetItem.Items[U_RINGL] <> '') or (SetItem.Items[U_RINGR] <> '') then begin
         if (SetItem.Items[U_RINGL] <> '') and (MyUseItems[U_RINGL].s.Name = SetItem.Items[U_RINGL]) then begin
-          ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGL] + '/FCOLOR=$63CEFF>\';
+          ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGL] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
           if (SetItem.Items[U_RINGR] <> '') then begin
             if (MyUseItems[U_RINGR].s.Name = SetItem.Items[U_RINGR]) then begin
-              ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGR] + '/FCOLOR=$63CEFF>\';
+              ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGR] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
             end else begin
-              ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+              ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
               boOK := False;
             end;
           end;
         end else
         if (SetItem.Items[U_RINGL] <> '') and (MyUseItems[U_RINGR].s.Name = SetItem.Items[U_RINGL]) then begin
-          ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGL] + '/FCOLOR=$63CEFF>\';
+          ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGL] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
           if (SetItem.Items[U_RINGR] <> '') then begin
             if (MyUseItems[U_RINGL].s.Name = SetItem.Items[U_RINGR]) then begin
-              ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGR] + '/FCOLOR=$63CEFF>\';
+              ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGR] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
             end else begin
-              ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+              ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
               boOK := False;
             end;
           end;
         end else begin
           if (SetItem.Items[U_RINGL] <> '') then begin
-            ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGL] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+            ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGL] + '/FCOLOR=' + HINTCOLOR2 + '>\';
             boOK := False;
           end;
           if (SetItem.Items[U_RINGR] <> '') then begin
             if (MyUseItems[U_RINGL].s.Name = SetItem.Items[U_RINGR]) or (MyUseItems[U_RINGR].s.Name = SetItem.Items[U_RINGR]) then begin
-              ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGR] + '/FCOLOR=$63CEFF>\';
+              ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGR] + '/FCOLOR=$63CEFF>\';// ADDVALUECOLOR2
             end else begin
-              ShowString := ShowString + '<[戒指]    ' + SetItem.Items[U_RINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+              ShowString := ShowString + '<[戒指]: ' + SetItem.Items[U_RINGR] + '/FCOLOR=' + HINTCOLOR2 + '>\';
               boOK := False;
             end;
           end;
@@ -3614,17 +3316,17 @@ begin
       end;
       if SetItem.Items[U_BELT] <> '' then begin
         if MyUseItems[U_BELT].s.Name = SetItem.Items[U_BELT] then
-          ShowString := ShowString + '<[腰带]    ' + SetItem.Items[U_BELT] + '/FCOLOR=$63CEFF>\'
+          ShowString := ShowString + '<[腰带]: ' + SetItem.Items[U_BELT] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
         else begin
-          ShowString := ShowString + '<[腰带]    ' + SetItem.Items[U_BELT] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          ShowString := ShowString + '<[腰带]: ' + SetItem.Items[U_BELT] + '/FCOLOR=' + HINTCOLOR2 + '>\';
           boOK := False;
         end;
       end;
       if SetItem.Items[U_BOOTS] <> '' then begin
         if MyUseItems[U_BOOTS].s.Name = SetItem.Items[U_BOOTS] then
-          ShowString := ShowString + '<[靴子]    ' + SetItem.Items[U_BOOTS] + '/FCOLOR=$63CEFF>\'
+          ShowString := ShowString + '<[靴子]: ' + SetItem.Items[U_BOOTS] + '/FCOLOR=$63CEFF>\'// ADDVALUECOLOR2
         else begin
-          ShowString := ShowString + '<[靴子]    ' + SetItem.Items[U_BOOTS] + '/FCOLOR=' + HINTCOLOR2 + '>\';
+          ShowString := ShowString + '<[靴子]: ' + SetItem.Items[U_BOOTS] + '/FCOLOR=' + HINTCOLOR2 + '>\';
           boOK := False;
         end;
       end;
@@ -3635,40 +3337,38 @@ begin
       for k := Low(SetItem.Value) to High(SetItem.Value) do begin
         if SetItem.Value[k] > 0 then begin
           case K of
-            0: ShowString := ShowString + '<防御      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            1: ShowString := ShowString + '<魔御      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            2: ShowString := ShowString + '<攻击      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            3: ShowString := ShowString + '<魔法      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            4: ShowString := ShowString + '<道术      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            5: ShowString := ShowString + '<准确      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            6: ShowString := ShowString + '<敏捷      +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            7: ShowString := ShowString + '<生命值    +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            8: ShowString := ShowString + '<魔法值    +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
-            9: ShowString := ShowString + '<防御增加  ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
-            10: ShowString := ShowString + '<魔御增加  ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
-            11: ShowString := ShowString + '<攻击增加  ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
-            12: ShowString := ShowString + '<魔法增加  ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
-            13: ShowString := ShowString + '<道术增加  ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
-            14: ShowString := ShowString + '<体力恢复  +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
-            15: ShowString := ShowString + '<魔法恢复  +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
-            16: ShowString := ShowString + '<中毒恢复  +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
-            17: ShowString := ShowString + '<魔法躲避  +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
-            18: ShowString := ShowString + '<毒物躲避  +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
-            19: ShowString := ShowString + '<伤害加成  +' + IntToStr(SetItem.Value[k]) + '%/FCOLOR=' + sNameColor + '>\';
-            20: ShowString := ShowString + '<伤害吸收  +' + IntToStr(SetItem.Value[k]) + '%/FCOLOR=' + sNameColor + '>\';
-            21: ShowString := ShowString + '<致命一击  +' + IntToStr(SetItem.Value[k]) + '%/FCOLOR=' + sNameColor + '>\';
-            22: ShowString := ShowString + '<经验增加  ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
+            0: ShowString := ShowString + '<防御: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            1: ShowString := ShowString + '<魔御: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            2: ShowString := ShowString + '<攻击: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            3: ShowString := ShowString + '<魔法: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            4: ShowString := ShowString + '<道术: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            5: ShowString := ShowString + '<准确: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            6: ShowString := ShowString + '<敏捷: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            7: ShowString := ShowString + '<生命值: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            8: ShowString := ShowString + '<魔法值: +' + IntToStr(SetItem.Value[k]) + '/FCOLOR=' + sNameColor + '>\';
+            9: ShowString := ShowString + '<防御: +' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
+            10: ShowString := ShowString + '<魔御: +' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
+            11: ShowString := ShowString + '<攻击: +' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
+            12: ShowString := ShowString + '<魔法: +' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
+            13: ShowString := ShowString + '<道术: +' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
+            14: ShowString := ShowString + '<体力恢复: +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
+            15: ShowString := ShowString + '<魔法恢复: +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
+            16: ShowString := ShowString + '<中毒恢复: +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
+            17: ShowString := ShowString + '<魔法躲避: +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
+            18: ShowString := ShowString + '<毒物躲避: +' + IntToStr(SetItem.Value[k]) + '0%/FCOLOR=' + sNameColor + '>\';
+            19: ShowString := ShowString + '<伤害加深: +' + IntToStr(SetItem.Value[k]) + '%/FCOLOR=' + sNameColor + '>\';
+            20: ShowString := ShowString + '<伤害吸收: +' + IntToStr(SetItem.Value[k]) + '%/FCOLOR=' + sNameColor + '>\';
+            21: ShowString := ShowString + '<致命一击: +' + IntToStr(SetItem.Value[k]) + '%/FCOLOR=' + sNameColor + '>\';
+            22: ShowString := ShowString + '<经验增加: ' + Format('%.1f', [SetItem.Value[K] / 10]) + '倍/FCOLOR=' + sNameColor + '>\';
             23: ShowString := ShowString + '<麻痹属性/FCOLOR=' + sNameColor + '>\';
             24: ShowString := ShowString + '<护身属性/FCOLOR=' + sNameColor + '>\';
             25: ShowString := ShowString + '<复活属性/FCOLOR=' + sNameColor + '>\';
           end;
         end;
       end;
-
       if ShowString <> '' then
         Result := Result + ShowString;
     end;
-
   end;
 end;
 
@@ -3686,7 +3386,7 @@ begin
   Result := False;
   case Item.s.stdmode of
     tm_Book: begin
-        sMsg := '需要等级 ' + IntToStr(Item.S.DuraMax);
+        sMsg := '需要等级: ' + IntToStr(Item.S.DuraMax);
         case Item.S.Shape of
           0: begin
               if (MyJob = 0) and (m_Abil.Level >= Item.S.DuraMax) then
@@ -3730,7 +3430,7 @@ begin
             end;
           10: begin
               sMsg1 := '需要等级: ' + IntToStr(HiWord(Item.S.NeedLevel));
-              sMsg2 := '   需要职业: ' + GetJobName(LoWord(Item.S.NeedLevel));
+              sMsg2 := ' & 需要职业: ' + GetJobName(LoWord(Item.S.NeedLevel));
               if (m_Abil.Level >= HiWord(Item.S.NeedLevel)) and (MyJob = LoWord(Item.S.NeedLevel)) then
                 Result := True;
               sMsg := sMsg1 + sMsg2;
@@ -3750,17 +3450,18 @@ begin
   sMsg := '';
   m_Abil := @g_MySelf.m_Abil;
   MyJob := g_MySelf.m_btJob;
+  // TODO 更丰富的等级限制——以及等级限制开关
   if (Item.s.Need > 0) or (Item.s.NeedLevel > 0) then begin
     case Item.s.Need of
       0: begin
-          sMsg := '<' +  '使用等级: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+          sMsg := '<使用等级: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
           if m_Abil.Level >= Item.S.NeedLevel then
-            sMsg := '<' +  '使用等级: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+            sMsg := '<使用等级: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
         end;
       1: begin
-          sMsg := '<' +  '使用职业: ' + GetJobName(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+          sMsg := '<使用职业: ' + GetJobName(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
           if MyJob = Item.S.NeedLevel then
-            sMsg := '<' +  '使用职业: ' + GetJobName(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+            sMsg := '<使用职业: ' + GetJobName(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
         end;
       2: begin
           sMsg := '<行会成员专用/FCOLOR=$0000FF>\';
@@ -3768,9 +3469,9 @@ begin
             sMsg := '<行会成员专用/FCOLOR=$00FF00>\';
         end;
       3: begin
-          sMsg := '<' +  '使用等级低于: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+          sMsg := '<使用等级低于: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
           if m_Abil.Level < Item.S.NeedLevel then
-            sMsg := '<' +  '使用等级低于: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+            sMsg := '<使用等级低于: ' + IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
         end;
     end;
   end;
@@ -3791,23 +3492,23 @@ begin
   MyJob := g_MySelf.m_btJob;
   case Item.s.stdmode of
     tm_Book: begin
-        sMsg := '<' + '需要等级 ' + AddStr + IntToStr(Item.S.DuraMax) + '/FCOLOR=$0000FF>\';
+        sMsg := '<需要等级: ' + AddStr + IntToStr(Item.S.DuraMax) + '/FCOLOR=$0000FF>\';
         case Item.S.Shape of
           0: begin
               if (MyJob = 0) and (m_Abil.Level >= Item.S.DuraMax) then
-                sMsg := '<' + '需要等级 ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要等级: ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
             end;
           1: begin
               if (MyJob = 1) and (m_Abil.Level >= Item.S.DuraMax) then
-                sMsg := '<' + '需要等级 ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要等级: ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
             end;
           2: begin
               if (MyJob = 2) and (m_Abil.Level >= Item.S.DuraMax) then
-                sMsg := '<' + '需要等级 ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要等级: ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
             end;
           99: begin
               if {(boHero) and}(m_Abil.Level >= Item.S.DuraMax) then
-                sMsg := '<' + '需要等级 ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要等级: ' + AddStr +  IntToStr(Item.S.DuraMax) + '/FCOLOR=$00FF00>\';
             end;
         end;
       end;
@@ -3824,103 +3525,103 @@ begin
       tm_House: begin
         case Item.s.Need of
           0: begin
-              sMsg := '<' +  '需要等级  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+              sMsg := '<需要等级: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
               if m_Abil.Level >= Item.S.NeedLevel then
-                sMsg := '<' +  '需要等级  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要等级: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
             end;
           10: begin
-              sMsg1 := '<' +  '需要等级  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg1 := '<需要等级: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
               if m_Abil.Level >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要等级  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要等级: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if MyJob = LoWord(Item.S.NeedLevel) then
-                sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           1: begin
-              sMsg := '<' +  '需要攻击  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+              sMsg := '<需要攻击: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
               if HiWord(m_Abil.DC) >= Item.S.NeedLevel then
-                sMsg := '<' +  '需要攻击  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要攻击: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
             end;
           11: begin
-              sMsg1 := '<' +  '需要攻击  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg1 := '<需要攻击: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
               if HiWord(m_Abil.DC) >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要攻击  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要攻击: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if MyJob = LoWord(Item.S.NeedLevel) then
-                sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           2: begin
-              sMsg := '<' +  '需要魔法  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+              sMsg := '<需要魔法: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
               if HiWord(m_Abil.MC) >= Item.S.NeedLevel then
-                sMsg := '<' +  '需要魔法  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要魔法: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
             end;
           12: begin
-              sMsg1 := '<' +  '需要魔法  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg1 := '<需要魔法: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
               if HiWord(m_Abil.MC) >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要魔法  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要魔法: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if MyJob = LoWord(Item.S.NeedLevel) then
-                sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           3: begin
-              sMsg := '<' +  '需要道术  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+              sMsg := '<需要道术: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
               if HiWord(m_Abil.SC) >= Item.S.NeedLevel then
-                sMsg := '<' +  '需要道术  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要道术: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
             end;
           13: begin
-              sMsg1 := '<' +  '需要道术  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg1 := '<需要道术: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
               if HiWord(m_Abil.SC) >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要道术  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要道术: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if MyJob = LoWord(Item.S.NeedLevel) then
-                sMsg2 := '<' +  '需要职业  ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg2 := '<需要职业: ' + AddStr +  GetJobName(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           4: begin
-              sMsg := '<' +  '需要转生等级  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+              sMsg := '<需要转生等级: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
             end;
           40: begin
-              sMsg1 := '<' +  '需要等级  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要转生等级  ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要等级: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要转生等级: ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if m_Abil.Level >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要等级  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要等级: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           41: begin
-              sMsg1 := '<' +  '需要攻击  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要转生等级  ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要攻击: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要转生等级: ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if HiWord(m_Abil.DC) >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要攻击  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要攻击: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           42: begin
-              sMsg1 := '<' +  '需要魔法  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要转生等级  ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要魔法: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要转生等级: ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if HiWord(m_Abil.MC) >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要魔法  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要魔法: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           43: begin
-              sMsg1 := '<' +  '需要道术  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要转生等级  ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要道术: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要转生等级: ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if HiWord(m_Abil.SC) >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要道术  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要道术: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           44: begin
-              sMsg1 := '<' +  '需要声望  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
-              sMsg2 := '<' +  '需要转生等级  ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要声望: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$0000FF>\';
+              sMsg2 := '<需要转生等级: ' + AddStr +  IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               if g_nCreditPoint >= HiWord(Item.S.NeedLevel) then
-                sMsg1 := '<' +  '需要声望  ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+                sMsg1 := '<需要声望: ' + AddStr +  IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           5: begin
-              sMsg := '<' +  '需要声望  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
+              sMsg := '<需要声望: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$0000FF>\';
               if g_nCreditPoint >= Item.S.NeedLevel then
-                sMsg := '<' +  '需要声望  ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
+                sMsg := '<需要声望: ' + AddStr +  IntToStr(Item.S.NeedLevel) + '/FCOLOR=$00FF00>\';
             end;
           6: begin
               sMsg := '<行会成员专用装备/FCOLOR=$0000FF>\';
@@ -3946,13 +3647,13 @@ begin
               sMsg := '<会员专用装备/FCOLOR=$00FF00>\';
             end;
           81: begin
-              sMsg1 := '<' +  '需要会员等级 ≥ ' + IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
-              sMsg2 := '<' +  '需要会员类型 =  ' + IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要会员等级 ≥ ' + IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg2 := '<需要会员类型 =  ' + IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
           82: begin
-              sMsg1 := '<' +  '需要会员等级 ≥ ' + IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
-              sMsg2 := '<' +  '需要会员类型 ≥ ' + IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg1 := '<需要会员等级 ≥ ' + IntToStr(HiWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
+              sMsg2 := '<需要会员类型 ≥ ' + IntToStr(LoWord(Item.S.NeedLevel)) + '/FCOLOR=$00FF00>\';
               sMsg := sMsg1 + sMsg2;
             end;
         end;

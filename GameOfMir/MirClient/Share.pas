@@ -151,7 +151,7 @@ begin
     12:
     begin
       case nLevel of
-        0..2: Result := Format('伤害加成 +%d', [nLevel + 1]) + '%';
+        0..2: Result := Format('伤害加深 +%d', [nLevel + 1]) + '%';
         3..11: Result := Format('生命魔法上限 +%d', [nLevel - 1]) + '%';
         12..14: Result := Format('伤害吸收 +%d', [nLevel - 11]) + '%';
       end;

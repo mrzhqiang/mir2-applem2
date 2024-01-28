@@ -686,6 +686,7 @@ var
   d: TDirectDrawSurface;
   ShowHint: pTNewShowHint;
   boBlend: Boolean;
+  tempList: TStringList;
 begin
   ClearHint;
   HintX := X;
@@ -818,35 +819,35 @@ begin
                           mfid := -1;
                       end;
                     'i': begin
-                        NpcTempList.Clear;
-                        if ExtractStrings(['+'], [], PChar(sparam), NpcTempList) > 0 then begin
-                          Idx := 0;
-                          while True do begin
-                            if Idx >= NpcTempList.Count then Break;
-                            sTemp := NpcTempList[Idx];
-                            if pos('-', sTemp) > 0 then begin
-                              sMax := GetValidStr3(stemp, sMin, ['-']);
-                              nMin := StrToIntDef(sMin, 0);
-                              nMax := StrToIntDef(sMax, 0);
-                              if nMin = 0 then nMin := nMax;
-                              if nMax = 0 then nMax := nMin;
-                              if nMin > nMax then nMin := nMax;
-                              NpcTempList.Delete(Idx);
-                              if nMin <> 0 then begin
-                                for ii := nMin to nMax do begin
-                                  NpcTempList.Insert(Idx, IntToStr(ii));
-                                  Inc(idx);
-                                end;
+                      NpcTempList.Clear;
+                      if ExtractStrings(['+'], [], PChar(sparam), NpcTempList) > 0 then begin
+                        Idx := 0;
+                        while True do begin
+                          if Idx >= NpcTempList.Count then Break;
+                          sTemp := NpcTempList[Idx];
+                          if pos('-', sTemp) > 0 then begin
+                            sMax := GetValidStr3(stemp, sMin, ['-']);
+                            nMin := StrToIntDef(sMin, 0);
+                            nMax := StrToIntDef(sMax, 0);
+                            if nMin = 0 then nMin := nMax;
+                            if nMax = 0 then nMax := nMin;
+                            if nMin > nMax then nMin := nMax;
+                            NpcTempList.Delete(Idx);
+                            if nMin <> 0 then begin
+                              for ii := nMin to nMax do begin
+                                NpcTempList.Insert(Idx, IntToStr(ii));
+                                Inc(idx);
                               end;
+                            end;
 
-                            end
-                            else
-                              Inc(Idx);
-                          end;
-                        end
-                        else
-                          NpcTempList.add(sparam);
-                      end;
+                          end
+                          else
+                            Inc(Idx);
+                        end;
+                      end
+                      else
+                        NpcTempList.add(sparam);
+                    end;
                     'x': mx := StrToIntDef(sparam, 0);
                     'y': my := StrToIntDef(sparam, 0);
                     'b': boBlend := (sparam = '1');
@@ -862,12 +863,29 @@ begin
                   mx := w;
                 if my = 0 then
                   my := h;
+                // 添加装备预览图标后面的边框
                 New(ShowHint);
+                tempList := TStringList.Create;
+                tempList.Add('671');
+                SafeFillChar(ShowHint^, SizeOf(TNewShowHint), #0);
+                ShowHint.Surfaces := g_WMain99Images;
+                ShowHint.IndexList := tempList;
+                ShowHint.nX := mx;
+                ShowHint.nY := my;
+                ShowHint.boTransparent := False;
+                ShowHint.Alpha := 255;
+                ShowHint.dwTime := 100;
+                ShowHint.boBlend := False;
+                ShowHint.boMove := False;
+                HintList.Add(ShowHint);
+                New(ShowHint);
+                // 装备预览图标如果存在多个，则只取第一个图标
+                d := g_ClientImages[mfid].Images[StrToInt(NpcTempList[0])];
                 SafeFillChar(ShowHint^, SizeOf(TNewShowHint), #0);
                 ShowHint.Surfaces := g_ClientImages[mfid];
                 ShowHint.IndexList := NpcTempList;
-                ShowHint.nX := mx;
-                ShowHint.nY := mY;
+                ShowHint.nX := mx + (ITEMTABLEWIDTH - d.Width) div 2;
+                ShowHint.nY := mY + (ITEMTABLEHEIGHT - d.Height) div 2;
                 ShowHint.boTransparent := boTransparent;
                 ShowHint.Alpha := nAlpha;
                 ShowHint.dwTime := dwTime;
