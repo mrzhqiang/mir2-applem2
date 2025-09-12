@@ -34,6 +34,9 @@ type
     procedure QMapEventNpc;
     procedure RobotNPC();
     function LoadSetItems(): Integer;
+    function LoadRefineConfig(): Boolean;
+    function LoadSoulBindConfig(): Boolean;
+    function LoadRefineMaterials(): Integer;
     function LoadCompoundInfoList: Integer;
     function GetSetItem(sItemName: string): TList;
     procedure DeCodeStringList(StringList: TStringList);
@@ -2354,6 +2357,216 @@ begin
   if g_SetItemsList.Count > 0 then
     SetLength(g_SetItemsArr, g_SetItemsList.Count);
 
+end;
+
+// ========== 凝练系统配置加载 ==========
+
+function TFrmDB.LoadRefineConfig: Boolean;
+var
+  sFileName: string;
+  IniFile: TIniFile;
+begin
+  Result := False;
+  sFileName := g_Config.sGameDataDir + 'RefineConfig.ini';
+  
+  try
+    if FileExists(sFileName) then begin
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_RefineConfig do begin
+          boEnabled := IniFile.ReadBool('RefineSystem', 'Enabled', True);
+          btDefaultMaxLevel := IniFile.ReadInteger('RefineSystem', 'DefaultMaxLevel', 8);
+          nBaseSuccessRate := IniFile.ReadInteger('RefineSystem', 'BaseSuccessRate', 500);
+          nGradeBonus := IniFile.ReadInteger('RefineSystem', 'GradeBonus', 100);
+          nLevelPenalty := IniFile.ReadInteger('RefineSystem', 'LevelPenalty', 200);
+          nMaterialRequired := IniFile.ReadInteger('RefineSystem', 'MaterialRequired', 3);
+          btMaxGrade := IniFile.ReadInteger('RefineSystem', 'MaxGrade', 13);
+        end;
+        
+        g_boRefineSystemEnabled := g_RefineConfig.boEnabled;
+        MainOutMessage('[提示] 凝练系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_RefineConfig do begin
+          IniFile.WriteBool('RefineSystem', 'Enabled', boEnabled);
+          IniFile.WriteInteger('RefineSystem', 'DefaultMaxLevel', btDefaultMaxLevel);
+          IniFile.WriteInteger('RefineSystem', 'BaseSuccessRate', nBaseSuccessRate);
+          IniFile.WriteInteger('RefineSystem', 'GradeBonus', nGradeBonus);
+          IniFile.WriteInteger('RefineSystem', 'LevelPenalty', nLevelPenalty);
+          IniFile.WriteInteger('RefineSystem', 'MaterialRequired', nMaterialRequired);
+          IniFile.WriteInteger('RefineSystem', 'MaxGrade', btMaxGrade);
+        end;
+        
+        MainOutMessage('[提示] 创建默认凝练系统配置文件');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载凝练系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+function TFrmDB.LoadSoulBindConfig: Boolean;
+var
+  sFileName: string;
+  IniFile: TIniFile;
+begin
+  Result := False;
+  sFileName := g_Config.sGameDataDir + 'SoulBindConfig.ini';
+  
+  try
+    if FileExists(sFileName) then begin
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_SoulBindConfig do begin
+          boEnabled := IniFile.ReadBool('SoulBindSystem', 'Enabled', True);
+          nCurrencyType := IniFile.ReadInteger('SoulBindSystem', 'CurrencyType', 1);
+          nCurrencyAmount := IniFile.ReadInteger('SoulBindSystem', 'CurrencyAmount', 500);
+          nMinQualityLevel := IniFile.ReadInteger('SoulBindSystem', 'MinQualityLevel', 3);
+          sCurrencyName := IniFile.ReadString('SoulBindSystem', 'CurrencyName', '元宝');
+        end;
+        
+        g_boSoulBindSystemEnabled := g_SoulBindConfig.boEnabled;
+        MainOutMessage('[提示] 灵魂绑定系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_SoulBindConfig do begin
+          IniFile.WriteBool('SoulBindSystem', 'Enabled', boEnabled);
+          IniFile.WriteInteger('SoulBindSystem', 'CurrencyType', nCurrencyType);
+          IniFile.WriteInteger('SoulBindSystem', 'CurrencyAmount', nCurrencyAmount);
+          IniFile.WriteInteger('SoulBindSystem', 'MinQualityLevel', nMinQualityLevel);
+          IniFile.WriteString('SoulBindSystem', 'CurrencyName', sCurrencyName);
+          
+          // 添加注释说明
+          IniFile.WriteString('SoulBindSystem', '; CurrencyType说明', '0=金币 1=元宝 2=积分');
+          IniFile.WriteString('SoulBindSystem', '; MinQualityLevel说明', '3=精致 4=优秀 5=稀有 等');
+        end;
+        
+        MainOutMessage('[提示] 创建默认灵魂绑定系统配置文件');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载灵魂绑定系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+function TFrmDB.LoadRefineMaterials: Integer;
+var
+  sFileName, sLineText, sItemName: string;
+  LoadList: TStringList;
+  i, nItemIndex, nGrade, nMaterialType: Integer;
+  RefineMaterial: pTRefineMaterial;
+begin
+  Result := 0;
+  
+  // 清理现有材料列表
+  for i := 0 to g_RefineMaterialList.Count - 1 do begin
+    Dispose(pTRefineMaterial(g_RefineMaterialList[i]));
+  end;
+  g_RefineMaterialList.Clear;
+  
+  sFileName := g_Config.sGameDataDir + 'RefineItems.txt';
+  
+  if FileExists(sFileName) then begin
+    LoadList := TStringList.Create;
+    try
+      LoadList.LoadFromFile(sFileName);
+      
+      for i := 0 to LoadList.Count - 1 do begin
+        sLineText := Trim(LoadList[i]);
+        if (sLineText = '') or (sLineText[1] = ';') then Continue;
+        
+        // 格式: ItemIndex ItemName Grade MaterialType
+        sLineText := GetValidStr3(sLineText, sItemName, [' ', #9]);
+        nItemIndex := Str_ToInt(sItemName, 0);
+        if nItemIndex <= 0 then Continue;
+        
+        sLineText := GetValidStr3(sLineText, sItemName, [' ', #9]);
+        sLineText := GetValidStr3(sLineText, sItemName, [' ', #9]);
+        nGrade := Str_ToInt(sItemName, 1);
+        
+        sLineText := GetValidStr3(sLineText, sItemName, [' ', #9]);
+        nMaterialType := Str_ToInt(sItemName, 0);
+        
+        // 创建凝练材料
+        New(RefineMaterial);
+        with RefineMaterial^ do begin
+          wIndex := nItemIndex;
+          sName := UserEngine.GetStdItemName(nItemIndex);
+          btGrade := nGrade;
+          MaterialType := TRefineMaterialType(nMaterialType);
+          nBaseSuccessRate := g_RefineConfig.nBaseSuccessRate;
+          nGradeBonus := g_RefineConfig.nGradeBonus;
+          boCanSynthesize := True;
+          nSynthesizeCount := 4;
+        end;
+        
+        g_RefineMaterialList.Add(RefineMaterial);
+        Inc(Result);
+      end;
+      
+      MainOutMessage('[提示] 加载凝练材料配置成功，共' + IntToStr(Result) + '个材料');
+    finally
+      LoadList.Free;
+    end;
+  end else begin
+    // 配置文件不存在，创建默认材料配置
+    LoadList := TStringList.Create;
+    try
+      LoadList.Add('; 凝练材料配置文件');
+      LoadList.Add('; 格式: ItemIndex ItemName Grade MaterialType');
+      LoadList.Add('; MaterialType: 0=基础材料 1=高级材料 2=稀有材料 3=史诗材料');
+      LoadList.Add('');
+      
+      for i := 1 to 5 do begin
+        LoadList.Add(IntToStr(5000 + i) + ' 凝练石(' + IntToStr(i) + '阶) ' + IntToStr(i) + ' 0');
+        
+        // 创建默认材料
+        New(RefineMaterial);
+        with RefineMaterial^ do begin
+          wIndex := 5000 + i;
+          sName := '凝练石(' + IntToStr(i) + '阶)';
+          btGrade := i;
+          MaterialType := rmt_Basic;
+          nBaseSuccessRate := g_RefineConfig.nBaseSuccessRate;
+          nGradeBonus := g_RefineConfig.nGradeBonus;
+          boCanSynthesize := True;
+          nSynthesizeCount := 4;
+        end;
+        
+        g_RefineMaterialList.Add(RefineMaterial);
+        Inc(Result);
+      end;
+      
+      LoadList.SaveToFile(sFileName);
+      MainOutMessage('[提示] 创建默认凝练材料配置，共' + IntToStr(Result) + '个材料');
+    finally
+      LoadList.Free;
+    end;
+  end;
 end;
 
 function TFrmDB.LoadMinMap: Integer;

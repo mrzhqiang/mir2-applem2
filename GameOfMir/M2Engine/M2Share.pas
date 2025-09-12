@@ -6,7 +6,7 @@ uses
   Envir, ItmUnit, Magic, Guild, Event,
   Castle, FrnEngn, UsrEngn, MudUtil, Grobal2, ObjBase, ObjRobot, ObjPlay,
   SyncObjs, IniFiles, SDK, WinSock,
-  UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc;
+  UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem;
 
 const
 
@@ -3361,6 +3361,15 @@ var
   // 增强套装系统全局变量
   g_EnhancedSetItemsList: TList;  // 增强套装列表
   g_boUseEnhancedSuite: Boolean;  // 是否启用增强套装系统
+
+  // 装备凝练系统全局变量
+  g_RefineConfig: TRefineConfig;           // 凝练配置
+  g_RefineMaterialList: TList;             // 凝练材料列表
+  g_RefineAttributeConfigs: array[TRefineAttributeType] of TRefineAttributeConfig; // 属性配置
+  g_RefineQualityConfigs: array[TRefineQuality] of TRefineQualityConfig; // 品质配置
+  g_SoulBindConfig: TSoulBindConfig;       // 灵魂绑定配置
+  g_boRefineSystemEnabled: Boolean;        // 凝练系统开关
+  g_boSoulBindSystemEnabled: Boolean;      // 灵魂绑定系统开关
 
   n4EBBD0: Integer;
 
@@ -16720,6 +16729,436 @@ begin
   end;
 end;
 
+// ========== 凝练系统初始化函数 ==========
+
+procedure InitializeRefineAttributeConfigs;
+begin
+  // HP固定
+  with g_RefineAttributeConfigs[rat_HP_Fixed] do begin
+    AttributeType := rat_HP_Fixed;
+    sName := 'HP固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;     // 不适用
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // HP百分比
+  with g_RefineAttributeConfigs[rat_HP_Percent] do begin
+    AttributeType := rat_HP_Percent;
+    sName := 'HP百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;      // 不适用
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // MP固定
+  with g_RefineAttributeConfigs[rat_MP_Fixed] do begin
+    AttributeType := rat_MP_Fixed;
+    sName := 'MP固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // MP百分比
+  with g_RefineAttributeConfigs[rat_MP_Percent] do begin
+    AttributeType := rat_MP_Percent;
+    sName := 'MP百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 攻击固定
+  with g_RefineAttributeConfigs[rat_DC_Fixed] do begin
+    AttributeType := rat_DC_Fixed;
+    sName := '攻击力固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 攻击百分比
+  with g_RefineAttributeConfigs[rat_DC_Percent] do begin
+    AttributeType := rat_DC_Percent;
+    sName := '攻击力百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 魔法固定
+  with g_RefineAttributeConfigs[rat_MC_Fixed] do begin
+    AttributeType := rat_MC_Fixed;
+    sName := '魔法攻击固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 魔法百分比
+  with g_RefineAttributeConfigs[rat_MC_Percent] do begin
+    AttributeType := rat_MC_Percent;
+    sName := '魔法攻击百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 道术固定
+  with g_RefineAttributeConfigs[rat_SC_Fixed] do begin
+    AttributeType := rat_SC_Fixed;
+    sName := '道术攻击固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 道术百分比
+  with g_RefineAttributeConfigs[rat_SC_Percent] do begin
+    AttributeType := rat_SC_Percent;
+    sName := '道术攻击百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 防御固定
+  with g_RefineAttributeConfigs[rat_AC_Fixed] do begin
+    AttributeType := rat_AC_Fixed;
+    sName := '物理防御固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 防御百分比
+  with g_RefineAttributeConfigs[rat_AC_Percent] do begin
+    AttributeType := rat_AC_Percent;
+    sName := '物理防御百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 魔防固定
+  with g_RefineAttributeConfigs[rat_MAC_Fixed] do begin
+    AttributeType := rat_MAC_Fixed;
+    sName := '魔法防御固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 魔防百分比
+  with g_RefineAttributeConfigs[rat_MAC_Percent] do begin
+    AttributeType := rat_MAC_Percent;
+    sName := '魔法防御百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 额外经验值固定增加
+  with g_RefineAttributeConfigs[rat_ExpBonus_Fixed] do begin
+    AttributeType := rat_ExpBonus_Fixed;
+    sName := '经验值固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 额外经验值百分比增加
+  with g_RefineAttributeConfigs[rat_ExpBonus_Percent] do begin
+    AttributeType := rat_ExpBonus_Percent;
+    sName := '经验值百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 额外伤害增加固定
+  with g_RefineAttributeConfigs[rat_DamageBonus_Fixed] do begin
+    AttributeType := rat_DamageBonus_Fixed;
+    sName := '伤害固定增加';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 额外伤害增加百分比
+  with g_RefineAttributeConfigs[rat_DamageBonus_Percent] do begin
+    AttributeType := rat_DamageBonus_Percent;
+    sName := '伤害百分比增加';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 额外伤害吸收固定
+  with g_RefineAttributeConfigs[rat_DamageAbsorb_Fixed] do begin
+    AttributeType := rat_DamageAbsorb_Fixed;
+    sName := '伤害吸收固定';
+    sUnit := '点';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 额外伤害吸收百分比
+  with g_RefineAttributeConfigs[rat_DamageAbsorb_Percent] do begin
+    AttributeType := rat_DamageAbsorb_Percent;
+    sName := '伤害吸收百分比';
+    sUnit := '%';
+    nFixedRatio := 100;
+    nPercentRatio := 10;     // 1:0.1%
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 生命恢复固定
+  with g_RefineAttributeConfigs[rat_HealthRecover_Fixed] do begin
+    AttributeType := rat_HealthRecover_Fixed;
+    sName := '生命恢复固定';
+    sUnit := '点/秒';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+
+  // 中毒恢复固定
+  with g_RefineAttributeConfigs[rat_PoisonRecover_Fixed] do begin
+    AttributeType := rat_PoisonRecover_Fixed;
+    sName := '中毒恢复固定';
+    sUnit := '点/秒';
+    nFixedRatio := 100;      // 1:1
+    nPercentRatio := 10;
+    nMinValue := 1;
+    nMaxValue := 10;
+    boEnabled := True;
+  end;
+end;
+
+procedure InitializeRefineQualityConfigs;
+begin
+  // 1.粗糙 [1-20]
+  with g_RefineQualityConfigs[rq_Rough] do begin
+    Quality := rq_Rough;
+    sName := '粗糙';
+    nMinPoints := 1;
+    nMaxPoints := 20;
+    nColor := $808080; // 灰色
+    boCanSoulBind := False;
+    nSoulBindHP := 0;
+    nSoulBindMP := 0;
+  end;
+
+  // 2.良好 [21-40]
+  with g_RefineQualityConfigs[rq_Good] do begin
+    Quality := rq_Good;
+    sName := '良好';
+    nMinPoints := 21;
+    nMaxPoints := 40;
+    nColor := $FFFFFF; // 白色
+    boCanSoulBind := False;
+    nSoulBindHP := 0;
+    nSoulBindMP := 0;
+  end;
+
+  // 3.精致 [41-60]
+  with g_RefineQualityConfigs[rq_Fine] do begin
+    Quality := rq_Fine;
+    sName := '精致';
+    nMinPoints := 41;
+    nMaxPoints := 60;
+    nColor := $00FF00; // 绿色
+    boCanSoulBind := True;
+    nSoulBindHP := 50;
+    nSoulBindMP := 50;
+  end;
+
+  // 4.优秀 [61-80]
+  with g_RefineQualityConfigs[rq_Excellent] do begin
+    Quality := rq_Excellent;
+    sName := '优秀';
+    nMinPoints := 61;
+    nMaxPoints := 80;
+    nColor := $0080FF; // 蓝色
+    boCanSoulBind := True;
+    nSoulBindHP := 100;
+    nSoulBindMP := 100;
+  end;
+
+  // 5.稀有 [81-100]
+  with g_RefineQualityConfigs[rq_Rare] do begin
+    Quality := rq_Rare;
+    sName := '稀有';
+    nMinPoints := 81;
+    nMaxPoints := 100;
+    nColor := $8000FF; // 紫色
+    boCanSoulBind := True;
+    nSoulBindHP := 150;
+    nSoulBindMP := 150;
+  end;
+
+  // 6.卓越 [101-120]
+  with g_RefineQualityConfigs[rq_Outstanding] do begin
+    Quality := rq_Outstanding;
+    sName := '卓越';
+    nMinPoints := 101;
+    nMaxPoints := 120;
+    nColor := $FF8000; // 橙色
+    boCanSoulBind := True;
+    nSoulBindHP := 200;
+    nSoulBindMP := 200;
+  end;
+
+  // 7.完美 [121-140]
+  with g_RefineQualityConfigs[rq_Perfect] do begin
+    Quality := rq_Perfect;
+    sName := '完美';
+    nMinPoints := 121;
+    nMaxPoints := 140;
+    nColor := $FF0080; // 粉色
+    boCanSoulBind := True;
+    nSoulBindHP := 300;
+    nSoulBindMP := 300;
+  end;
+
+  // 8.绝世 [141-160]
+  with g_RefineQualityConfigs[rq_Peerless] do begin
+    Quality := rq_Peerless;
+    sName := '绝世';
+    nMinPoints := 141;
+    nMaxPoints := 160;
+    nColor := $FF0000; // 红色
+    boCanSoulBind := True;
+    nSoulBindHP := 400;
+    nSoulBindMP := 400;
+  end;
+
+  // 9.史诗 [161-180]
+  with g_RefineQualityConfigs[rq_Epic] do begin
+    Quality := rq_Epic;
+    sName := '史诗';
+    nMinPoints := 161;
+    nMaxPoints := 180;
+    nColor := $FFFF00; // 黄色
+    boCanSoulBind := True;
+    nSoulBindHP := 500;
+    nSoulBindMP := 500;
+  end;
+
+  // 10.传说 [181-200]
+  with g_RefineQualityConfigs[rq_Legendary] do begin
+    Quality := rq_Legendary;
+    sName := '传说';
+    nMinPoints := 181;
+    nMaxPoints := 200;
+    nColor := $00FFFF; // 青色
+    boCanSoulBind := True;
+    nSoulBindHP := 1000;
+    nSoulBindMP := 1000;
+  end;
+
+  // 11.永恒 [201-220]
+  with g_RefineQualityConfigs[rq_Eternal] do begin
+    Quality := rq_Eternal;
+    sName := '永恒';
+    nMinPoints := 201;
+    nMaxPoints := 220;
+    nColor := $C0C0C0; // 银色
+    boCanSoulBind := True;
+    nSoulBindHP := 1500;
+    nSoulBindMP := 1500;
+  end;
+
+  // 12.神话 [221-240]
+  with g_RefineQualityConfigs[rq_Mythical] do begin
+    Quality := rq_Mythical;
+    sName := '神话';
+    nMinPoints := 221;
+    nMaxPoints := 240;
+    nColor := $FFD700; // 金色
+    boCanSoulBind := True;
+    nSoulBindHP := 2000;
+    nSoulBindMP := 2000;
+  end;
+end;
+
+procedure InitializeSoulBindConfig;
+begin
+  // 初始化灵魂绑定系统配置
+  with g_SoulBindConfig do begin
+    boEnabled := True;
+    nCurrencyType := 1;           // 1=元宝
+    nCurrencyAmount := 500;       // 默认500元宝
+    nMinQualityLevel := 3;        // 精致品质及以上
+    sCurrencyName := '元宝';
+  end;
+  
+  g_boSoulBindSystemEnabled := g_SoulBindConfig.boEnabled;
+end;
+
 initialization
   begin
     Config := TIniFile.Create(sConfigFileName);
@@ -16732,6 +17171,37 @@ initialization
     // 初始化增强套装系统
     g_EnhancedSetItemsList := TList.Create;
     g_boUseEnhancedSuite := False;
+
+    // 初始化装备凝练系统
+    g_RefineMaterialList := TList.Create;
+    g_boRefineSystemEnabled := False;
+    
+    // 设置默认凝练配置
+    with g_RefineConfig do begin
+      boEnabled := True;
+      btDefaultMaxLevel := 8;
+      nBaseSuccessRate := 500;  // 50%
+      nGradeBonus := 100;       // 10%
+      nLevelPenalty := 200;     // 20%
+      nMaterialRequired := 3;
+      btMaxGrade := 13;
+    end;
+
+    // 初始化凝练属性配置
+    InitializeRefineAttributeConfigs;
+    
+    // 初始化凝练品质配置
+    InitializeRefineQualityConfigs;
+    
+    // 初始化灵魂绑定系统配置
+    InitializeSoulBindConfig;
+    
+    // 初始化凝练系统
+    if InitializeRefineSystem then begin
+      MainOutMessage('[提示] 装备凝练系统初始化成功');
+    end else begin
+      MainOutMessage('[错误] 装备凝练系统初始化失败');
+    end;
 {$IFDEF PLUGOPEN}
     nIPLocal := AddToPulgProcTable(DeCodeString('Z>Pq>mHDF^PbE<'), 0);
     nFriendModule := AddToPulgProcTable('SetFriend', 0);
@@ -16758,6 +17228,16 @@ finalization
       end;
       g_EnhancedSetItemsList.Free;
       g_EnhancedSetItemsList := nil;
+    end;
+
+    // 清理装备凝练系统
+    if g_RefineMaterialList <> nil then begin
+      // 释放所有凝练材料数据
+      for var i := 0 to g_RefineMaterialList.Count - 1 do begin
+        Dispose(pTRefineMaterial(g_RefineMaterialList[i]));
+      end;
+      g_RefineMaterialList.Free;
+      g_RefineMaterialList := nil;
     end;
   end;
 end.

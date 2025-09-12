@@ -2923,6 +2923,181 @@ type
   // 玩家所有套装状态
   TPlayerAllSuitesStatus = array[0..99] of TPlayerSuiteStatus;
 
+  // ========== 装备凝练系统数据结构 ==========
+
+  // 凝练附加属性类型
+  TRefineAttributeType = (
+    rat_HP_Fixed = 0,           // HP固定
+    rat_HP_Percent = 1,         // HP百分比
+    rat_MP_Fixed = 2,           // MP固定
+    rat_MP_Percent = 3,         // MP百分比
+    rat_DC_Fixed = 4,           // 攻击固定
+    rat_DC_Percent = 5,         // 攻击百分比
+    rat_MC_Fixed = 6,           // 魔法固定
+    rat_MC_Percent = 7,         // 魔法百分比
+    rat_SC_Fixed = 8,           // 道术固定
+    rat_SC_Percent = 9,         // 道术百分比
+    rat_AC_Fixed = 10,          // 防御固定
+    rat_AC_Percent = 11,        // 防御百分比
+    rat_MAC_Fixed = 12,         // 魔防固定
+    rat_MAC_Percent = 13,       // 魔防百分比
+    rat_ExpBonus_Fixed = 14,    // 额外经验值固定增加
+    rat_ExpBonus_Percent = 15,  // 额外经验值百分比增加
+    rat_DamageBonus_Fixed = 16, // 额外伤害增加固定
+    rat_DamageBonus_Percent = 17, // 额外伤害增加百分比
+    rat_DamageAbsorb_Fixed = 18,  // 额外伤害吸收固定
+    rat_DamageAbsorb_Percent = 19, // 额外伤害吸收百分比
+    rat_HealthRecover_Fixed = 20,  // 生命恢复固定
+    rat_PoisonRecover_Fixed = 21   // 中毒恢复固定
+  );
+
+  // 凝练品质等级
+  TRefineQuality = (
+    rq_Rough = 1,      // 粗糙 [1-20]
+    rq_Good = 2,       // 良好 [21-40]
+    rq_Fine = 3,       // 精致 [41-60]
+    rq_Excellent = 4,  // 优秀 [61-80]
+    rq_Rare = 5,       // 稀有 [81-100]
+    rq_Outstanding = 6, // 卓越 [101-120]
+    rq_Perfect = 7,    // 完美 [121-140]
+    rq_Peerless = 8,   // 绝世 [141-160]
+    rq_Epic = 9,       // 史诗 [161-180]
+    rq_Legendary = 10, // 传说 [181-200]
+    rq_Eternal = 11,   // 永恒 [201-220]
+    rq_Mythical = 12   // 神话 [221-240]
+  );
+
+  // 单个凝练属性
+  pTRefineAttribute = ^TRefineAttribute;
+  TRefineAttribute = packed record
+    AttributeType: TRefineAttributeType;    // 属性类型
+    nValue: Word;                           // 属性数值 (1-10)
+    boEnabled: Boolean;                     // 是否启用
+  end;
+
+  // 灵魂绑定信息
+  pTSoulBindInfo = ^TSoulBindInfo;
+  TSoulBindInfo = packed record
+    boSoulBound: Boolean;                   // 是否已灵魂绑定
+    nBindHP: Word;                          // 绑定获得的HP
+    nBindMP: Word;                          // 绑定获得的MP
+    dwBindTime: LongWord;                   // 绑定时间戳
+    sBindPlayerName: string[20];            // 绑定玩家名称
+  end;
+
+  // 装备凝练信息
+  pTRefineInfo = ^TRefineInfo;
+  TRefineInfo = packed record
+    btRefineLevel: Byte;                    // 当前凝练次数 (0-255)
+    btMaxRefineLevel: Byte;                 // 最大凝练次数 (默认8)
+    RefineQuality: TRefineQuality;          // 凝练品质等级
+    nTotalAttributePoints: Word;            // 总属性点数
+    RefineAttributes: array[0..21] of TRefineAttribute; // 凝练附加属性
+    SoulBindInfo: TSoulBindInfo;            // 灵魂绑定信息
+    wLegacyAttrib: array[0..15] of Word;    // 兼容旧版本属性加成
+  end;
+
+  // 凝练材料类型
+  TRefineMaterialType = (
+    rmt_Basic = 0,      // 基础材料
+    rmt_Advanced = 1,   // 高级材料
+    rmt_Rare = 2,       // 稀有材料
+    rmt_Epic = 3        // 史诗材料
+  );
+
+  // 凝练材料信息
+  pTRefineMaterial = ^TRefineMaterial;
+  TRefineMaterial = packed record
+    wIndex: Word;                           // 物品索引
+    sName: string[20];                      // 材料名称
+    btGrade: Byte;                          // 品阶 (1-13)
+    MaterialType: TRefineMaterialType;      // 材料类型
+    nBaseSuccessRate: Integer;              // 基础成功率 (‰)
+    nGradeBonus: Integer;                   // 品阶加成 (‰)
+    boCanSynthesize: Boolean;               // 是否可合成
+    nSynthesizeCount: Byte;                 // 合成所需数量 (默认4)
+  end;
+
+  // 凝练系统配置
+  pTRefineConfig = ^TRefineConfig;
+  TRefineConfig = packed record
+    boEnabled: Boolean;                     // 是否启用凝练系统
+    btDefaultMaxLevel: Byte;                // 默认最大凝练次数
+    nBaseSuccessRate: Integer;              // 基础成功率 (‰) 默认500
+    nGradeBonus: Integer;                   // 每阶加成 (‰) 默认100
+    nLevelPenalty: Integer;                 // 每次惩罚 (‰) 默认200
+    nMaterialRequired: Byte;                // 每次凝练所需材料数 (默认3)
+    btMaxGrade: Byte;                       // 最大材料品阶 (默认13)
+  end;
+
+  // 凝练结果
+  TRefineResult = (
+    rr_Success,        // 成功
+    rr_Failed,         // 失败
+    rr_MaterialLack,   // 材料不足
+    rr_MaxLevel,       // 已达最大等级
+    rr_InvalidItem,    // 无效装备
+    rr_SystemDisabled  // 系统未启用
+  );
+
+  // 凝练属性配置
+  pTRefineAttributeConfig = ^TRefineAttributeConfig;
+  TRefineAttributeConfig = packed record
+    AttributeType: TRefineAttributeType;    // 属性类型
+    sName: string[30];                      // 属性名称
+    sUnit: string[10];                      // 属性单位
+    nFixedRatio: Integer;                   // 固定属性比例 (默认100, 即1:1)
+    nPercentRatio: Integer;                 // 百分比属性比例 (默认10, 即1:0.1)
+    nMinValue: Byte;                        // 最小值
+    nMaxValue: Byte;                        // 最大值
+    boEnabled: Boolean;                     // 是否启用
+  end;
+
+  // 凝练品质配置
+  pTRefineQualityConfig = ^TRefineQualityConfig;
+  TRefineQualityConfig = packed record
+    Quality: TRefineQuality;                // 品质等级
+    sName: string[20];                      // 品质名称
+    nMinPoints: Word;                       // 最小属性点数
+    nMaxPoints: Word;                       // 最大属性点数
+    nColor: Integer;                        // 显示颜色
+    boCanSoulBind: Boolean;                 // 是否可以灵魂绑定
+    nSoulBindHP: Word;                      // 灵魂绑定获得的HP
+    nSoulBindMP: Word;                      // 灵魂绑定获得的MP
+  end;
+
+  // 灵魂绑定系统配置
+  pTSoulBindConfig = ^TSoulBindConfig;
+  TSoulBindConfig = packed record
+    boEnabled: Boolean;                     // 是否启用灵魂绑定系统
+    nCurrencyType: Byte;                    // 货币类型 (0=金币, 1=元宝, 2=积分等)
+    nCurrencyAmount: Integer;               // 绑定费用数量
+    nMinQualityLevel: Byte;                 // 最低品质要求 (默认3=精致)
+    sCurrencyName: string[20];              // 货币名称
+  end;
+
+  // 灵魂绑定结果
+  TSoulBindResult = (
+    sbr_Success,        // 成功
+    sbr_Failed,         // 失败
+    sbr_AlreadyBound,   // 已经绑定
+    sbr_QualityTooLow,  // 品质不足
+    sbr_InsufficientCurrency, // 货币不足
+    sbr_InvalidItem,    // 无效装备
+    sbr_SystemDisabled  // 系统未启用
+  );
+
+  // 凝练操作信息
+  pTRefineOperation = ^TRefineOperation;
+  TRefineOperation = packed record
+    PlayObject: Pointer;                    // 玩家对象
+    Equipment: pTUserItem;                  // 目标装备
+    Materials: array[0..2] of TRefineMaterial; // 凝练材料
+    nSuccessRate: Integer;                  // 计算出的成功率
+    nAttributePoints: Integer;              // 本次获得的属性点数
+    Result: TRefineResult;                  // 操作结果
+  end;
+
   TSaveRcd = packed record
     sAccount: string[20];
     sChrName: string[ActorNameLen];
