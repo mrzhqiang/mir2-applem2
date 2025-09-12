@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, ComCtrls, Grobal2, M2Share, RefineSystem, ObjPlay;
+  Dialogs, StdCtrls, ExtCtrls, ComCtrls, Grobal2, M2Share, RefineSystem, CrystalSystem, ObjPlay;
 
 type
   TfrmRefine = class(TForm)
@@ -36,6 +36,8 @@ type
     btnRefine: TButton;
     btnSynthesize: TButton;
     btnSoulBind: TButton;
+    btnPunchHole: TButton;
+    btnMelt: TButton;
     btnClose: TButton;
     
     // 凝练属性区域
@@ -58,6 +60,8 @@ type
     procedure btnRefineClick(Sender: TObject);
     procedure btnSynthesizeClick(Sender: TObject);
     procedure btnSoulBindClick(Sender: TObject);
+    procedure btnPunchHoleClick(Sender: TObject);
+    procedure btnMeltClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     
   private
@@ -291,6 +295,85 @@ begin
   end;
 end;
 
+procedure TfrmRefine.btnPunchHoleClick(Sender: TObject);
+var
+  Result: TPunchResult;
+begin
+  if FPlayObject = nil then Exit;
+  if FSelectedEquipment = nil then begin
+    AddLog('请先选择要打孔的装备！');
+    Exit;
+  end;
+  
+  // 检查是否可以打孔
+  if not CanPunchHole(FSelectedEquipment) then begin
+    AddLog('该装备已达最大孔数（3个）！');
+    Exit;
+  end;
+  
+  // 确认对话框
+  if MessageDlg('确定要使用天工之锤为装备打孔吗？', 
+                mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+  
+  // 执行打孔
+  Result := PunchEquipmentHole(FPlayObject, FSelectedEquipment);
+  
+  case Result of
+    pr_Success: begin
+      AddLog('装备打孔成功！当前孔数：' + IntToStr(GetEquipmentHoleCount(FSelectedEquipment)));
+      UpdateUI; // 刷新界面显示
+    end;
+    pr_MaxHoles: AddLog('装备已达最大孔数（3个）！');
+    pr_NoHammer: AddLog('没有天工之锤！');
+    pr_InvalidItem: AddLog('无效的装备！');
+    pr_SystemDisabled: AddLog('打孔系统未启用！');
+    else AddLog('装备打孔失败！');
+  end;
+end;
+
+procedure TfrmRefine.btnMeltClick(Sender: TObject);
+var
+  Result: TMeltingResult;
+  nSuccessRate: Integer;
+begin
+  if FPlayObject = nil then Exit;
+  if FSelectedEquipment = nil then begin
+    AddLog('请先选择要融化的装备！');
+    Exit;
+  end;
+  
+  // 检查是否可以融化
+  if not CanMeltEquipment(FSelectedEquipment) then begin
+    AddLog('该装备品质不足，需要完美品质及以上！');
+    Exit;
+  end;
+  
+  nSuccessRate := GetMeltingSuccessRate(FSelectedEquipment);
+  
+  // 确认对话框
+  if MessageDlg('确定要融化该装备吗？成功率：' + IntToStr(nSuccessRate div 10) + '.' + IntToStr(nSuccessRate mod 10) + '%' + #13#10 +
+                '成功将获得结晶，失败' + 
+                (if g_MeltingConfig.boReturnMaterials then '将返还材料' else '不返还任何物品') + '！', 
+                mtConfirmation, [mbYes, mbNo], 0) <> mrYes then Exit;
+  
+  // 执行融化
+  Result := MeltEquipment(FPlayObject, FSelectedEquipment);
+  
+  case Result of
+    mr_Success: begin
+      AddLog('装备融化成功！获得结晶');
+      // 清空选中的装备（因为已被融化）
+      FSelectedEquipment := nil;
+      UpdateUI; // 刷新界面显示
+    end;
+    mr_Failed: AddLog('装备融化失败！');
+    mr_QualityTooLow: AddLog('装备品质不足，需要完美品质及以上！');
+    mr_InvalidItem: AddLog('无效的装备！');
+    mr_SystemDisabled: AddLog('融化系统未启用！');
+    else AddLog('装备融化失败！');
+  end;
+end;
+
 procedure TfrmRefine.btnCloseClick(Sender: TObject);
 begin
   Hide;
@@ -349,6 +432,14 @@ begin
   btnSoulBind.Enabled := (FSelectedEquipment <> nil) and 
                          CanSoulBindEquipment(FSelectedEquipment) and
                          g_boSoulBindSystemEnabled;
+                         
+  btnPunchHole.Enabled := (FSelectedEquipment <> nil) and 
+                          CanPunchHole(FSelectedEquipment) and
+                          g_boMeltingSystemEnabled;
+                          
+  btnMelt.Enabled := (FSelectedEquipment <> nil) and 
+                     CanMeltEquipment(FSelectedEquipment) and
+                     g_boMeltingSystemEnabled;
 end;
 
 procedure TfrmRefine.UpdateSuccessRate;
@@ -406,6 +497,24 @@ begin
     memoAttributes.Lines.Add('');
     memoAttributes.Lines.Add('--- 灵魂绑定 ---');
     memoAttributes.Lines.Add(sAttributeText);
+  end;
+  
+  // 显示装备孔洞信息
+  if FSelectedEquipment <> nil then begin
+    var HoleCount := GetEquipmentHoleCount(FSelectedEquipment);
+    if HoleCount > 0 then begin
+      memoAttributes.Lines.Add('');
+      memoAttributes.Lines.Add('--- 装备孔洞 ---');
+      memoAttributes.Lines.Add('孔洞数量: ' + IntToStr(HoleCount) + '/3');
+      if HasEmptyHole(FSelectedEquipment) then
+        memoAttributes.Lines.Add('状态: 有空孔可镶嵌结晶')
+      else
+        memoAttributes.Lines.Add('状态: 所有孔洞已镶嵌');
+    end else if CanPunchHole(FSelectedEquipment) then begin
+      memoAttributes.Lines.Add('');
+      memoAttributes.Lines.Add('--- 装备孔洞 ---');
+      memoAttributes.Lines.Add('可使用天工之锤打孔');
+    end;
   end;
   
   // 如果选择了材料，显示预测的属性点数增加

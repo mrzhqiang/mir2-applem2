@@ -1,12 +1,12 @@
 unit M2Share;
 
 interface
-uses
-  Windows, Messages, Classes, SysUtils, StrUtils, StdCtrls, Graphics, RunSock, ZLIB,
-  Envir, ItmUnit, Magic, Guild, Event,
-  Castle, FrnEngn, UsrEngn, MudUtil, Grobal2, ObjBase, ObjRobot, ObjPlay,
-  SyncObjs, IniFiles, SDK, WinSock,
-  UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem;
+  uses
+    Windows, Messages, Classes, SysUtils, StrUtils, StdCtrls, Graphics, RunSock, ZLIB,
+    Envir, ItmUnit, Magic, Guild, Event,
+    Castle, FrnEngn, UsrEngn, MudUtil, Grobal2, ObjBase, ObjRobot, ObjPlay,
+    SyncObjs, IniFiles, SDK, WinSock,
+    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem, CrystalSystem;
 
 const
 
@@ -3370,6 +3370,12 @@ var
   g_SoulBindConfig: TSoulBindConfig;       // 灵魂绑定配置
   g_boRefineSystemEnabled: Boolean;        // 凝练系统开关
   g_boSoulBindSystemEnabled: Boolean;      // 灵魂绑定系统开关
+
+  // 装备结晶系统全局变量
+  g_MeltingConfig: TMeltingConfig;         // 融化配置
+  g_MeltingQualityConfigs: array[TRefineQuality] of TMeltingQualityConfig; // 品质融化配置
+  g_CrystalList: TList;                    // 结晶列表
+  g_boMeltingSystemEnabled: Boolean;       // 融化系统开关
 
   n4EBBD0: Integer;
 
@@ -17159,6 +17165,69 @@ begin
   g_boSoulBindSystemEnabled := g_SoulBindConfig.boEnabled;
 end;
 
+procedure InitializeMeltingConfig;
+begin
+  // 初始化融化系统配置
+  with g_MeltingConfig do begin
+    boEnabled := True;
+    nMinQualityLevel := 7;        // 完美品质及以上 (7=完美)
+    boReturnMaterials := True;    // 默认返还材料
+    nRandomHoleRate := 0;         // 默认0%随机带孔
+    nHammerItemIndex := 6001;     // 天工之锤物品索引（可配置）
+  end;
+  
+  // 初始化各品质融化配置
+  // 完美品质 30%
+  with g_MeltingQualityConfigs[rq_Perfect] do begin
+    Quality := rq_Perfect;
+    nSuccessRate := 300;          // 30%
+    nReturnMaterialGrade := 6;    // 返还6阶材料
+    nCrystalCount := 1;           // 获得1个结晶
+  end;
+  
+  // 绝世品质 40%
+  with g_MeltingQualityConfigs[rq_Peerless] do begin
+    Quality := rq_Peerless;
+    nSuccessRate := 400;          // 40%
+    nReturnMaterialGrade := 7;    // 返还7阶材料
+    nCrystalCount := 1;           // 获得1个结晶
+  end;
+  
+  // 史诗品质 50%
+  with g_MeltingQualityConfigs[rq_Epic] do begin
+    Quality := rq_Epic;
+    nSuccessRate := 500;          // 50%
+    nReturnMaterialGrade := 8;    // 返还8阶材料
+    nCrystalCount := 1;           // 获得1个结晶
+  end;
+  
+  // 传说品质 60%
+  with g_MeltingQualityConfigs[rq_Legendary] do begin
+    Quality := rq_Legendary;
+    nSuccessRate := 600;          // 60%
+    nReturnMaterialGrade := 9;    // 返还9阶材料
+    nCrystalCount := 2;           // 获得2个结晶
+  end;
+  
+  // 永恒品质 80%
+  with g_MeltingQualityConfigs[rq_Eternal] do begin
+    Quality := rq_Eternal;
+    nSuccessRate := 800;          // 80%
+    nReturnMaterialGrade := 10;   // 返还10阶材料
+    nCrystalCount := 2;           // 获得2个结晶
+  end;
+  
+  // 神话品质 100%
+  with g_MeltingQualityConfigs[rq_Mythical] do begin
+    Quality := rq_Mythical;
+    nSuccessRate := 1000;         // 100%
+    nReturnMaterialGrade := 11;   // 返还11阶材料
+    nCrystalCount := 3;           // 获得3个结晶
+  end;
+  
+  g_boMeltingSystemEnabled := g_MeltingConfig.boEnabled;
+end;
+
 initialization
   begin
     Config := TIniFile.Create(sConfigFileName);
@@ -17175,6 +17244,10 @@ initialization
     // 初始化装备凝练系统
     g_RefineMaterialList := TList.Create;
     g_boRefineSystemEnabled := False;
+    
+    // 初始化装备结晶系统
+    g_CrystalList := TList.Create;
+    g_boMeltingSystemEnabled := False;
     
     // 设置默认凝练配置
     with g_RefineConfig do begin
@@ -17196,11 +17269,21 @@ initialization
     // 初始化灵魂绑定系统配置
     InitializeSoulBindConfig;
     
+    // 初始化融化系统配置
+    InitializeMeltingConfig;
+    
     // 初始化凝练系统
     if InitializeRefineSystem then begin
       MainOutMessage('[提示] 装备凝练系统初始化成功');
     end else begin
       MainOutMessage('[错误] 装备凝练系统初始化失败');
+    end;
+    
+    // 初始化结晶系统
+    if InitializeCrystalSystem then begin
+      MainOutMessage('[提示] 装备结晶系统初始化成功');
+    end else begin
+      MainOutMessage('[错误] 装备结晶系统初始化失败');
     end;
 {$IFDEF PLUGOPEN}
     nIPLocal := AddToPulgProcTable(DeCodeString('Z>Pq>mHDF^PbE<'), 0);
@@ -17230,15 +17313,25 @@ finalization
       g_EnhancedSetItemsList := nil;
     end;
 
-    // 清理装备凝练系统
-    if g_RefineMaterialList <> nil then begin
-      // 释放所有凝练材料数据
-      for var i := 0 to g_RefineMaterialList.Count - 1 do begin
-        Dispose(pTRefineMaterial(g_RefineMaterialList[i]));
-      end;
-      g_RefineMaterialList.Free;
-      g_RefineMaterialList := nil;
+  // 清理装备凝练系统
+  if g_RefineMaterialList <> nil then begin
+    // 释放所有凝练材料数据
+    for var i := 0 to g_RefineMaterialList.Count - 1 do begin
+      Dispose(pTRefineMaterial(g_RefineMaterialList[i]));
     end;
+    g_RefineMaterialList.Free;
+    g_RefineMaterialList := nil;
+  end;
+  
+  // 清理装备结晶系统
+  if g_CrystalList <> nil then begin
+    // 释放所有结晶数据
+    for var i := 0 to g_CrystalList.Count - 1 do begin
+      Dispose(pTCrystalInfo(g_CrystalList[i]));
+    end;
+    g_CrystalList.Free;
+    g_CrystalList := nil;
+  end;
   end;
 end.
 

@@ -36,6 +36,7 @@ type
     function LoadSetItems(): Integer;
     function LoadRefineConfig(): Boolean;
     function LoadSoulBindConfig(): Boolean;
+    function LoadMeltingConfig(): Boolean;
     function LoadRefineMaterials(): Integer;
     function LoadCompoundInfoList: Integer;
     function GetSetItem(sItemName: string): TList;
@@ -2468,6 +2469,63 @@ begin
   except
     on E: Exception do begin
       MainOutMessage('[异常] 加载灵魂绑定系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+function TFrmDB.LoadMeltingConfig: Boolean;
+var
+  sFileName: string;
+  IniFile: TIniFile;
+begin
+  Result := False;
+  sFileName := g_Config.sGameDataDir + 'MeltingConfig.ini';
+  
+  try
+    if FileExists(sFileName) then begin
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_MeltingConfig do begin
+          boEnabled := IniFile.ReadBool('MeltingSystem', 'Enabled', True);
+          nMinQualityLevel := IniFile.ReadInteger('MeltingSystem', 'MinQualityLevel', 7);
+          boReturnMaterials := IniFile.ReadBool('MeltingSystem', 'ReturnMaterials', True);
+          nRandomHoleRate := IniFile.ReadInteger('MeltingSystem', 'RandomHoleRate', 0);
+          nHammerItemIndex := IniFile.ReadInteger('MeltingSystem', 'HammerItemIndex', 6001);
+        end;
+        
+        g_boMeltingSystemEnabled := g_MeltingConfig.boEnabled;
+        MainOutMessage('[提示] 融化系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_MeltingConfig do begin
+          IniFile.WriteBool('MeltingSystem', 'Enabled', boEnabled);
+          IniFile.WriteInteger('MeltingSystem', 'MinQualityLevel', nMinQualityLevel);
+          IniFile.WriteBool('MeltingSystem', 'ReturnMaterials', boReturnMaterials);
+          IniFile.WriteInteger('MeltingSystem', 'RandomHoleRate', nRandomHoleRate);
+          IniFile.WriteInteger('MeltingSystem', 'HammerItemIndex', nHammerItemIndex);
+          
+          // 添加注释说明
+          IniFile.WriteString('MeltingSystem', '; MinQualityLevel说明', '7=完美 8=绝世 9=史诗 等');
+          IniFile.WriteString('MeltingSystem', '; RandomHoleRate说明', '0-1000, 0=0%, 1000=100%');
+          IniFile.WriteString('MeltingSystem', '; HammerItemIndex说明', '天工之锤的物品索引');
+        end;
+        
+        MainOutMessage('[提示] 创建默认融化系统配置文件');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载融化系统配置失败: ' + E.Message);
       Result := False;
     end;
   end;

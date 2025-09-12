@@ -2994,6 +2994,7 @@ type
     nTotalAttributePoints: Word;            // 总属性点数
     RefineAttributes: array[0..21] of TRefineAttribute; // 凝练附加属性
     SoulBindInfo: TSoulBindInfo;            // 灵魂绑定信息
+    HoleInfo: TEquipmentHoleInfo;           // 装备孔洞信息
     wLegacyAttrib: array[0..15] of Word;    // 兼容旧版本属性加成
   end;
 
@@ -3085,6 +3086,95 @@ type
     sbr_InsufficientCurrency, // 货币不足
     sbr_InvalidItem,    // 无效装备
     sbr_SystemDisabled  // 系统未启用
+  );
+
+  // ========== 装备结晶系统数据结构 ==========
+
+  // 结晶类型
+  TCrystalType = (
+    ct_AttributePercent = 1,    // 百分比增加基础属性
+    ct_SpecialEffect = 2,       // 特殊效果
+    ct_SkillEnhance = 3         // 增强技能
+  );
+
+  // 结晶属性类型
+  TCrystalAttributeType = (
+    cat_HP_Percent = 0,         // HP百分比
+    cat_MP_Percent = 1,         // MP百分比
+    cat_DC_Percent = 2,         // 攻击百分比
+    cat_MC_Percent = 3,         // 魔法百分比
+    cat_SC_Percent = 4,         // 道术百分比
+    cat_AC_Percent = 5,         // 防御百分比
+    cat_MAC_Percent = 6         // 魔防百分比
+  );
+
+  // 结晶信息
+  pTCrystalInfo = ^TCrystalInfo;
+  TCrystalInfo = packed record
+    wIndex: Word;                           // 结晶物品索引
+    sName: string[30];                      // 结晶名称
+    CrystalType: TCrystalType;              // 结晶类型
+    AttributeType: TCrystalAttributeType;   // 属性类型（仅属性类型结晶有效）
+    nValue: Word;                           // 属性数值
+    nSpecialEffectID: Word;                 // 特殊效果ID（仅特殊效果结晶有效）
+    nSkillID: Word;                         // 技能ID（仅技能增强结晶有效）
+    nSkillLevel: Byte;                      // 技能等级加成（仅技能增强结晶有效）
+    Quality: TRefineQuality;                // 结晶品质等级
+    boEnabled: Boolean;                     // 是否启用
+  end;
+
+  // 装备孔洞信息
+  pTEquipmentHole = ^TEquipmentHole;
+  TEquipmentHole = packed record
+    boHasHole: Boolean;                     // 是否有孔
+    CrystalIndex: Word;                     // 镶嵌的结晶索引（0表示空孔）
+    CrystalInfo: TCrystalInfo;              // 镶嵌的结晶信息
+  end;
+
+  // 装备孔洞系统信息
+  pTEquipmentHoleInfo = ^TEquipmentHoleInfo;
+  TEquipmentHoleInfo = packed record
+    btHoleCount: Byte;                      // 孔洞数量 (0-3)
+    Holes: array[0..2] of TEquipmentHole;   // 孔洞信息
+    dwPunchTime: LongWord;                  // 打孔时间戳
+  end;
+
+  // 融化系统配置
+  pTMeltingConfig = ^TMeltingConfig;
+  TMeltingConfig = packed record
+    boEnabled: Boolean;                     // 是否启用融化系统
+    nMinQualityLevel: Byte;                 // 最低品质要求 (默认7=完美)
+    boReturnMaterials: Boolean;             // 失败时是否返还材料
+    nRandomHoleRate: Integer;               // 随机带孔几率 (0-1000, 0=0%, 1000=100%)
+    nHammerItemIndex: Word;                 // 天工之锤物品索引
+  end;
+
+  // 品质融化配置
+  pTMeltingQualityConfig = ^TMeltingQualityConfig;
+  TMeltingQualityConfig = packed record
+    Quality: TRefineQuality;                // 品质等级
+    nSuccessRate: Integer;                  // 融化成功率 (‰)
+    nReturnMaterialGrade: Byte;             // 失败返还材料品阶
+    nCrystalCount: Byte;                    // 成功获得结晶数量
+  end;
+
+  // 融化结果
+  TMeltingResult = (
+    mr_Success,         // 成功
+    mr_Failed,          // 失败
+    mr_QualityTooLow,   // 品质不足
+    mr_InvalidItem,     // 无效装备
+    mr_SystemDisabled   // 系统未启用
+  );
+
+  // 打孔结果
+  TPunchResult = (
+    pr_Success,         // 成功
+    pr_Failed,          // 失败
+    pr_MaxHoles,        // 已达最大孔数
+    pr_NoHammer,        // 没有天工之锤
+    pr_InvalidItem,     // 无效装备
+    pr_SystemDisabled   // 系统未启用
   );
 
   // 凝练操作信息

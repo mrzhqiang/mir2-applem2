@@ -182,19 +182,37 @@ object frmRefine: TfrmRefine
     object btnSoulBind: TButton
       Left = 224
       Top = 180
-      Width = 100
+      Width = 80
       Height = 30
       Caption = '\u7075\u9b42\u7ed1\u5b9a'
       TabOrder = 8
       OnClick = btnSoulBindClick
     end
+    object btnPunchHole: TButton
+      Left = 312
+      Top = 180
+      Width = 80
+      Height = 30
+      Caption = '\u88c5\u5907\u6253\u5b54'
+      TabOrder = 9
+      OnClick = btnPunchHoleClick
+    end
+    object btnMelt: TButton
+      Left = 400
+      Top = 180
+      Width = 80
+      Height = 30
+      Caption = '\u878d\u5316\u88c5\u5907'
+      TabOrder = 10
+      OnClick = btnMeltClick
+    end
     object btnClose: TButton
-      Left = 432
+      Left = 488
       Top = 180
       Width = 80
       Height = 30
       Caption = '\u5173\u95ed'
-      TabOrder = 5
+      TabOrder = 11
       OnClick = btnCloseClick
     end
   object gbAttributes: TGroupBox
