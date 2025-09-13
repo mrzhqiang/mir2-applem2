@@ -6,7 +6,7 @@ interface
     Envir, ItmUnit, Magic, Guild, Event,
     Castle, FrnEngn, UsrEngn, MudUtil, Grobal2, ObjBase, ObjRobot, ObjPlay,
     SyncObjs, IniFiles, SDK, WinSock,
-    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem, CrystalSystem;
+    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem, CrystalSystem, SoulSystem;
 
 const
 
@@ -3376,6 +3376,12 @@ var
   g_MeltingQualityConfigs: array[TRefineQuality] of TMeltingQualityConfig; // 品质融化配置
   g_CrystalList: TList;                    // 结晶列表
   g_boMeltingSystemEnabled: Boolean;       // 融化系统开关
+
+  // 元魄/精魂系统全局变量
+  g_SoulSynthesisConfig: TSoulSynthesisConfig;     // 元魄合成配置
+  g_EssenceUpgradeConfig: TEssenceUpgradeConfig;   // 精魂升级配置
+  g_SoulList: TList;                               // 元魄/精魂列表
+  g_boSoulSystemEnabled: Boolean;                  // 元魄/精魂系统开关
 
   n4EBBD0: Integer;
 
@@ -17228,6 +17234,35 @@ begin
   g_boMeltingSystemEnabled := g_MeltingConfig.boEnabled;
 end;
 
+procedure InitializeSoulSystemConfig;
+begin
+  // 初始化元魄合成系统配置
+  with g_SoulSynthesisConfig do begin
+    boEnabled := True;
+    nMinQualityLevel := 3;        // 精致品质及以上
+    nMaxEquipmentCount := 4;      // 最多4件装备
+    nBaseSuccessRate := 100;      // 精致品质基础成功率10%
+    nQualityBonus := 100;         // 每级品质增加10%
+    nEffectChance := 300;         // 30%几率获得特殊效果
+    nMaxEffectCount := 2;         // 最多2个特殊效果
+  end;
+  
+  // 初始化精魂升级系统配置
+  with g_EssenceUpgradeConfig do begin
+    boEnabled := True;
+    nMinQualityForUpgrade := 8;   // 绝世品质及以上可升级为精魂
+    nMaxLevel := 9;               // 最高9级
+    nSafeLevelThreshold := 6;     // 6级以下安全升级
+    nBaseMaterialRate := 100;     // 5阶材料基础成功率10%
+    nMaterialRateBonus := 50;     // 每阶材料增加5%成功率
+    nMaxMaterialCount := 3;       // 最多3个材料
+    nLevelDamageBonus := 20;      // 每级伤害加深+2%
+    nLevelAbsorbBonus := 20;      // 每级伤害吸收+2%
+  end;
+  
+  g_boSoulSystemEnabled := g_SoulSynthesisConfig.boEnabled and g_EssenceUpgradeConfig.boEnabled;
+end;
+
 initialization
   begin
     Config := TIniFile.Create(sConfigFileName);
@@ -17248,6 +17283,10 @@ initialization
     // 初始化装备结晶系统
     g_CrystalList := TList.Create;
     g_boMeltingSystemEnabled := False;
+    
+    // 初始化元魄/精魂系统
+    g_SoulList := TList.Create;
+    g_boSoulSystemEnabled := False;
     
     // 设置默认凝练配置
     with g_RefineConfig do begin
@@ -17272,6 +17311,9 @@ initialization
     // 初始化融化系统配置
     InitializeMeltingConfig;
     
+    // 初始化元魄/精魂系统配置
+    InitializeSoulSystemConfig;
+    
     // 初始化凝练系统
     if InitializeRefineSystem then begin
       MainOutMessage('[提示] 装备凝练系统初始化成功');
@@ -17284,6 +17326,13 @@ initialization
       MainOutMessage('[提示] 装备结晶系统初始化成功');
     end else begin
       MainOutMessage('[错误] 装备结晶系统初始化失败');
+    end;
+    
+    // 初始化元魄/精魂系统
+    if InitializeSoulSystem then begin
+      MainOutMessage('[提示] 元魄/精魂系统初始化成功');
+    end else begin
+      MainOutMessage('[错误] 元魄/精魂系统初始化失败');
     end;
 {$IFDEF PLUGOPEN}
     nIPLocal := AddToPulgProcTable(DeCodeString('Z>Pq>mHDF^PbE<'), 0);
@@ -17331,6 +17380,16 @@ finalization
     end;
     g_CrystalList.Free;
     g_CrystalList := nil;
+  end;
+  
+  // 清理元魄/精魂系统
+  if g_SoulList <> nil then begin
+    // 释放所有元魄/精魂数据
+    for var i := 0 to g_SoulList.Count - 1 do begin
+      Dispose(pTSoulInfo(g_SoulList[i]));
+    end;
+    g_SoulList.Free;
+    g_SoulList := nil;
   end;
   end;
 end.

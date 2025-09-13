@@ -37,6 +37,7 @@ type
     function LoadRefineConfig(): Boolean;
     function LoadSoulBindConfig(): Boolean;
     function LoadMeltingConfig(): Boolean;
+    function LoadSoulSystemConfig(): Boolean;
     function LoadRefineMaterials(): Integer;
     function LoadCompoundInfoList: Integer;
     function GetSetItem(sItemName: string): TList;
@@ -2526,6 +2527,96 @@ begin
   except
     on E: Exception do begin
       MainOutMessage('[异常] 加载融化系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+function TFrmDB.LoadSoulSystemConfig: Boolean;
+var
+  sFileName: string;
+  IniFile: TIniFile;
+begin
+  Result := False;
+  sFileName := g_Config.sGameDataDir + 'SoulConfig.ini';
+  
+  try
+    if FileExists(sFileName) then begin
+      IniFile := TIniFile.Create(sFileName);
+      try
+        // 加载元魄合成配置
+        with g_SoulSynthesisConfig do begin
+          boEnabled := IniFile.ReadBool('SoulSynthesis', 'Enabled', True);
+          nMinQualityLevel := IniFile.ReadInteger('SoulSynthesis', 'MinQualityLevel', 3);
+          nMaxEquipmentCount := IniFile.ReadInteger('SoulSynthesis', 'MaxEquipmentCount', 4);
+          nBaseSuccessRate := IniFile.ReadInteger('SoulSynthesis', 'BaseSuccessRate', 100);
+          nQualityBonus := IniFile.ReadInteger('SoulSynthesis', 'QualityBonus', 100);
+          nEffectChance := IniFile.ReadInteger('SoulSynthesis', 'EffectChance', 300);
+          nMaxEffectCount := IniFile.ReadInteger('SoulSynthesis', 'MaxEffectCount', 2);
+        end;
+        
+        // 加载精魂升级配置
+        with g_EssenceUpgradeConfig do begin
+          boEnabled := IniFile.ReadBool('EssenceUpgrade', 'Enabled', True);
+          nMinQualityForUpgrade := IniFile.ReadInteger('EssenceUpgrade', 'MinQualityForUpgrade', 8);
+          nMaxLevel := IniFile.ReadInteger('EssenceUpgrade', 'MaxLevel', 9);
+          nSafeLevelThreshold := IniFile.ReadInteger('EssenceUpgrade', 'SafeLevelThreshold', 6);
+          nBaseMaterialRate := IniFile.ReadInteger('EssenceUpgrade', 'BaseMaterialRate', 100);
+          nMaterialRateBonus := IniFile.ReadInteger('EssenceUpgrade', 'MaterialRateBonus', 50);
+          nMaxMaterialCount := IniFile.ReadInteger('EssenceUpgrade', 'MaxMaterialCount', 3);
+          nLevelDamageBonus := IniFile.ReadInteger('EssenceUpgrade', 'LevelDamageBonus', 20);
+          nLevelAbsorbBonus := IniFile.ReadInteger('EssenceUpgrade', 'LevelAbsorbBonus', 20);
+        end;
+        
+        g_boSoulSystemEnabled := g_SoulSynthesisConfig.boEnabled and g_EssenceUpgradeConfig.boEnabled;
+        MainOutMessage('[提示] 元魄/精魂系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      IniFile := TIniFile.Create(sFileName);
+      try
+        // 写入元魄合成配置
+        with g_SoulSynthesisConfig do begin
+          IniFile.WriteBool('SoulSynthesis', 'Enabled', boEnabled);
+          IniFile.WriteInteger('SoulSynthesis', 'MinQualityLevel', nMinQualityLevel);
+          IniFile.WriteInteger('SoulSynthesis', 'MaxEquipmentCount', nMaxEquipmentCount);
+          IniFile.WriteInteger('SoulSynthesis', 'BaseSuccessRate', nBaseSuccessRate);
+          IniFile.WriteInteger('SoulSynthesis', 'QualityBonus', nQualityBonus);
+          IniFile.WriteInteger('SoulSynthesis', 'EffectChance', nEffectChance);
+          IniFile.WriteInteger('SoulSynthesis', 'MaxEffectCount', nMaxEffectCount);
+          
+          IniFile.WriteString('SoulSynthesis', '; 说明1', '精致品质基础成功率10%，每级增加10%');
+          IniFile.WriteString('SoulSynthesis', '; 说明2', '30%几率获得特殊效果，最多2个');
+        end;
+        
+        // 写入精魂升级配置
+        with g_EssenceUpgradeConfig do begin
+          IniFile.WriteBool('EssenceUpgrade', 'Enabled', boEnabled);
+          IniFile.WriteInteger('EssenceUpgrade', 'MinQualityForUpgrade', nMinQualityForUpgrade);
+          IniFile.WriteInteger('EssenceUpgrade', 'MaxLevel', nMaxLevel);
+          IniFile.WriteInteger('EssenceUpgrade', 'SafeLevelThreshold', nSafeLevelThreshold);
+          IniFile.WriteInteger('EssenceUpgrade', 'BaseMaterialRate', nBaseMaterialRate);
+          IniFile.WriteInteger('EssenceUpgrade', 'MaterialRateBonus', nMaterialRateBonus);
+          IniFile.WriteInteger('EssenceUpgrade', 'MaxMaterialCount', nMaxMaterialCount);
+          IniFile.WriteInteger('EssenceUpgrade', 'LevelDamageBonus', nLevelDamageBonus);
+          IniFile.WriteInteger('EssenceUpgrade', 'LevelAbsorbBonus', nLevelAbsorbBonus);
+          
+          IniFile.WriteString('EssenceUpgrade', '; 说明1', '5阶材料基础成功率10%，每阶增加5%');
+          IniFile.WriteString('EssenceUpgrade', '; 说明2', '6级以下安全升级，6级以上失败清零');
+        end;
+        
+        MainOutMessage('[提示] 创建默认元魄/精魂系统配置文件');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载元魄/精魂系统配置失败: ' + E.Message);
       Result := False;
     end;
   end;

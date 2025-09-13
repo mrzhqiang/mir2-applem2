@@ -3177,6 +3177,102 @@ type
     pr_SystemDisabled   // 系统未启用
   );
 
+  // ========== 元魄/精魂系统数据结构 ==========
+
+  // 职业类型（用于元魄/精魂分类）
+  TSoulJobType = (
+    sjt_Warrior = 0,    // 战士
+    sjt_Wizard = 1,     // 法师
+    sjt_Taoist = 2      // 道士
+  );
+
+  // 元魄/精魂类型
+  TSoulType = (
+    st_Soul = 0,        // 元魄
+    st_Essence = 1      // 精魂
+  );
+
+  // 特殊效果类型
+  TSoulEffectType = (
+    set_SoulStrike = 1,     // 灵魂一击
+    set_SoulStun = 2,       // 灵魂震慑
+    set_EvilAttack = 3      // 邪恶攻击
+  );
+
+  // 特殊效果信息
+  pTSoulEffect = ^TSoulEffect;
+  TSoulEffect = packed record
+    EffectType: TSoulEffectType;        // 效果类型
+    nTriggerRate: Word;                 // 触发几率 (‰)
+    nEffectValue: Word;                 // 效果数值
+    boEnabled: Boolean;                 // 是否启用
+  end;
+
+  // 元魄/精魂信息
+  pTSoulInfo = ^TSoulInfo;
+  TSoulInfo = packed record
+    wIndex: Word;                       // 物品索引
+    sName: string[30];                  // 名称
+    SoulType: TSoulType;                // 类型（元魄/精魂）
+    JobType: TSoulJobType;              // 职业类型
+    btLevel: Byte;                      // 等级 (0-9, 0表示基础等级)
+    nDamageDeepen: Word;                // 伤害加深 (‰)
+    nDamageAbsorb: Word;                // 伤害吸收 (‰)
+    btEffectCount: Byte;                // 特殊效果数量 (0-2)
+    Effects: array[0..1] of TSoulEffect; // 特殊效果
+    dwCreateTime: LongWord;             // 创建时间戳
+    sCreatorName: string[20];           // 创建者名称
+  end;
+
+  // 元魄合成配置
+  pTSoulSynthesisConfig = ^TSoulSynthesisConfig;
+  TSoulSynthesisConfig = packed record
+    boEnabled: Boolean;                 // 是否启用系统
+    nMinQualityLevel: Byte;             // 最低品质要求 (默认3=精致)
+    nMaxEquipmentCount: Byte;           // 最大装备数量 (默认4)
+    nBaseSuccessRate: Integer;          // 基础成功率 (‰, 精致品质)
+    nQualityBonus: Integer;             // 品质加成 (‰, 每级增加)
+    nEffectChance: Integer;             // 特殊效果几率 (‰)
+    nMaxEffectCount: Byte;              // 最大特殊效果数量 (默认2)
+  end;
+
+  // 精魂升级配置
+  pTEssenceUpgradeConfig = ^TEssenceUpgradeConfig;
+  TEssenceUpgradeConfig = packed record
+    boEnabled: Boolean;                 // 是否启用升级系统
+    nMinQualityForUpgrade: Byte;        // 升级到精魂的最低品质 (默认8=绝世)
+    nMaxLevel: Byte;                    // 最大等级 (默认9)
+    nSafeLevelThreshold: Byte;          // 安全等级阈值 (默认6)
+    nBaseMaterialRate: Integer;         // 5阶材料基础成功率 (‰)
+    nMaterialRateBonus: Integer;        // 每阶材料成功率增加 (‰)
+    nMaxMaterialCount: Byte;            // 最大材料数量 (默认3)
+    nLevelDamageBonus: Word;            // 每级伤害加成 (‰)
+    nLevelAbsorbBonus: Word;            // 每级吸收加成 (‰)
+  end;
+
+  // 合成结果
+  TSoulSynthesisResult = (
+    ssr_Success,        // 成功
+    ssr_Failed,         // 失败
+    ssr_QualityTooLow,  // 品质不足
+    ssr_TooManyItems,   // 装备数量过多
+    ssr_NoItems,        // 没有装备
+    ssr_InvalidItem,    // 无效装备
+    ssr_SystemDisabled  // 系统未启用
+  );
+
+  // 升级结果
+  TSoulUpgradeResult = (
+    sur_Success,        // 成功
+    sur_Failed,         // 失败
+    sur_LevelReset,     // 等级清零
+    sur_MaxLevel,       // 已达最高等级
+    sur_QualityTooLow,  // 品质不足
+    sur_InvalidSoul,    // 无效元魄/精魂
+    sur_NoMaterials,    // 没有材料
+    sur_SystemDisabled  // 系统未启用
+  );
+
   // 凝练操作信息
   pTRefineOperation = ^TRefineOperation;
   TRefineOperation = packed record
