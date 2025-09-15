@@ -84,6 +84,11 @@ begin
       MainOutMessage('[警告] 元魄/精魂系统配置加载失败，使用默认配置');
     end;
     
+    // 加载怪物词条系统配置
+    if not FrmDB.LoadMonsterAffixConfig then begin
+      MainOutMessage('[警告] 怪物词条系统配置加载失败，使用默认配置');
+    end;
+    
     // 加载凝练材料配置
     if FrmDB.LoadRefineMaterials = 0 then begin
       MainOutMessage('[警告] 凝练材料配置为空');

@@ -6,7 +6,7 @@ interface
     Envir, ItmUnit, Magic, Guild, Event,
     Castle, FrnEngn, UsrEngn, MudUtil, Grobal2, ObjBase, ObjRobot, ObjPlay,
     SyncObjs, IniFiles, SDK, WinSock,
-    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem, CrystalSystem, SoulSystem;
+    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem, CrystalSystem, SoulSystem, MonsterAffixSystem;
 
 const
 
@@ -3382,6 +3382,11 @@ var
   g_EssenceUpgradeConfig: TEssenceUpgradeConfig;   // 精魂升级配置
   g_SoulList: TList;                               // 元魄/精魂列表
   g_boSoulSystemEnabled: Boolean;                  // 元魄/精魂系统开关
+
+  // 怪物词条系统全局变量
+  g_MonsterAffixConfig: TMonsterAffixConfig;       // 怪物词条配置
+  g_MonsterAffixList: TList;                       // 怪物词条列表
+  g_boMonsterAffixEnabled: Boolean;                // 怪物词条系统开关
 
   n4EBBD0: Integer;
 
@@ -17263,6 +17268,23 @@ begin
   g_boSoulSystemEnabled := g_SoulSynthesisConfig.boEnabled and g_EssenceUpgradeConfig.boEnabled;
 end;
 
+procedure InitializeMonsterAffixConfig;
+begin
+  // 初始化怪物词条系统配置
+  with g_MonsterAffixConfig do begin
+    boEnabled := True;
+    nMaxAffixCount := 5;          // 最多5个词条
+    nHumanAffixRate := 100;       // 人级词条几率10%
+    nEarthAffixRate := 30;        // 地级词条几率3%
+    nHeavenAffixRate := 5;        // 天级词条几率0.5%
+    nBossOnlyHeaven := True;      // 天级词条仅限Boss
+    nMultiAffixRate := 200;       // 多词条几率20%
+    nMaxMultiAffixCount := 3;     // 最大多词条数量3个
+  end;
+  
+  g_boMonsterAffixEnabled := g_MonsterAffixConfig.boEnabled;
+end;
+
 initialization
   begin
     Config := TIniFile.Create(sConfigFileName);
@@ -17287,6 +17309,10 @@ initialization
     // 初始化元魄/精魂系统
     g_SoulList := TList.Create;
     g_boSoulSystemEnabled := False;
+    
+    // 初始化怪物词条系统
+    g_MonsterAffixList := TList.Create;
+    g_boMonsterAffixEnabled := False;
     
     // 设置默认凝练配置
     with g_RefineConfig do begin
@@ -17314,6 +17340,9 @@ initialization
     // 初始化元魄/精魂系统配置
     InitializeSoulSystemConfig;
     
+    // 初始化怪物词条系统配置
+    InitializeMonsterAffixConfig;
+    
     // 初始化凝练系统
     if InitializeRefineSystem then begin
       MainOutMessage('[提示] 装备凝练系统初始化成功');
@@ -17333,6 +17362,13 @@ initialization
       MainOutMessage('[提示] 元魄/精魂系统初始化成功');
     end else begin
       MainOutMessage('[错误] 元魄/精魂系统初始化失败');
+    end;
+    
+    // 初始化怪物词条系统
+    if InitializeMonsterAffixSystem then begin
+      MainOutMessage('[提示] 怪物词条系统初始化成功');
+    end else begin
+      MainOutMessage('[错误] 怪物词条系统初始化失败');
     end;
 {$IFDEF PLUGOPEN}
     nIPLocal := AddToPulgProcTable(DeCodeString('Z>Pq>mHDF^PbE<'), 0);
@@ -17390,6 +17426,16 @@ finalization
     end;
     g_SoulList.Free;
     g_SoulList := nil;
+  end;
+  
+  // 清理怪物词条系统
+  if g_MonsterAffixList <> nil then begin
+    // 释放所有词条数据
+    for var i := 0 to g_MonsterAffixList.Count - 1 do begin
+      Dispose(pTMonsterAffix(g_MonsterAffixList[i]));
+    end;
+    g_MonsterAffixList.Free;
+    g_MonsterAffixList := nil;
   end;
   end;
 end.

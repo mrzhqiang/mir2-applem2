@@ -2,7 +2,7 @@ unit ObjNpc;
 
 interface
 uses
-  Windows, Classes, SysUtils, StrUtils, ObjBase, ObjPlay, Grobal2, SDK, IniFiles, DateUtils;
+  Windows, Classes, SysUtils, StrUtils, ObjBase, ObjPlay, Grobal2, SDK, IniFiles, DateUtils, MonsterAffixSystem;
 
 const
   MAXNPCPROCEDURECOUNT = 200;
@@ -781,6 +781,14 @@ procedure ActionOfAITrain(PlayObject: TPlayObject; QuestActionInfo: pTQuestActio
     //procedure SendMsgToUser(PlayObject: TPlayObject; sMsg: string);
     function GetShowName(): string; override;
     //procedure SendCustemMsg(PlayObject: TPlayObject; sMsg: string); virtual;
+    
+    // 怪物词条系统方法
+    procedure InitializeMonsterAffixes;
+    procedure ProcessMonsterAffixes;
+    procedure TriggerAffixOnAttack(Target: TBaseObject);
+    procedure TriggerAffixOnBeAttacked(Attacker: TBaseObject);
+    procedure TriggerAffixOnDeath;
+    procedure TriggerAffixOnSpawn;
   public
     property HookItemList: TList read FHookItemList;
   end;
@@ -10987,6 +10995,9 @@ begin
   m_dwNpcAutoChangeColorTime := 0;
   m_nNpcAutoChangeIdx := 0;
   FList1C := TStringList.Create;
+  
+  // 初始化怪物词条系统
+  InitializeMonsterAffixes;
   FOldLabel := 0;
 
   //检测脚本
@@ -13405,6 +13416,10 @@ begin
     m_nFixStatus := m_nCharStatus;
     StatusChanged();
   end;    }
+  
+  // 处理怪物词条效果
+  ProcessMonsterAffixes;
+  
   inherited;
 end;
 
@@ -17938,6 +17953,90 @@ begin
   if m_Master <> nil then
     m_Master := nil;
   inherited Run;
+end;
+
+// ========== TNormNpc 怪物词条系统方法实现 ==========
+
+procedure TNormNpc.InitializeMonsterAffixes;
+var
+  AffixSet: TMonsterAffixSet;
+begin
+  if not g_boMonsterAffixEnabled then Exit;
+  
+  // 生成怪物词条
+  AffixSet := GenerateMonsterAffix(Self, m_boIsBoss);
+  
+  // 设置词条到怪物
+  if AffixSet.btAffixCount > 0 then begin
+    SetMonsterAffixSet(Self, AffixSet);
+    
+    // 触发生成时效果
+    TriggerAffixOnSpawn;
+    
+    MainOutMessage('[调试] 怪物 ' + m_sCharName + ' 生成词条: ' + AffixSet.sDisplayName);
+  end;
+end;
+
+procedure TNormNpc.ProcessMonsterAffixes;
+begin
+  if not g_boMonsterAffixEnabled then Exit;
+  
+  // 处理词条效果（定时触发、低血量触发等）
+  ProcessAffixEffects(Self);
+end;
+
+procedure TNormNpc.TriggerAffixOnAttack(Target: TBaseObject);
+var
+  AffixSet: TMonsterAffixSet;
+  i: Integer;
+begin
+  if not g_boMonsterAffixEnabled then Exit;
+  if Target = nil then Exit;
+  
+  AffixSet := GetMonsterAffixSet(Self);
+  for i := 0 to AffixSet.btAffixCount - 1 do begin
+    TriggerAffixEffect(Self, @AffixSet.AffixList[i], att_OnAttack, Target);
+  end;
+end;
+
+procedure TNormNpc.TriggerAffixOnBeAttacked(Attacker: TBaseObject);
+var
+  AffixSet: TMonsterAffixSet;
+  i: Integer;
+begin
+  if not g_boMonsterAffixEnabled then Exit;
+  if Attacker = nil then Exit;
+  
+  AffixSet := GetMonsterAffixSet(Self);
+  for i := 0 to AffixSet.btAffixCount - 1 do begin
+    TriggerAffixEffect(Self, @AffixSet.AffixList[i], att_OnBeAttacked, Attacker);
+  end;
+end;
+
+procedure TNormNpc.TriggerAffixOnDeath;
+var
+  AffixSet: TMonsterAffixSet;
+  i: Integer;
+begin
+  if not g_boMonsterAffixEnabled then Exit;
+  
+  AffixSet := GetMonsterAffixSet(Self);
+  for i := 0 to AffixSet.btAffixCount - 1 do begin
+    TriggerAffixEffect(Self, @AffixSet.AffixList[i], att_OnDeath, nil);
+  end;
+end;
+
+procedure TNormNpc.TriggerAffixOnSpawn;
+var
+  AffixSet: TMonsterAffixSet;
+  i: Integer;
+begin
+  if not g_boMonsterAffixEnabled then Exit;
+  
+  AffixSet := GetMonsterAffixSet(Self);
+  for i := 0 to AffixSet.btAffixCount - 1 do begin
+    TriggerAffixEffect(Self, @AffixSet.AffixList[i], att_OnSpawn, nil);
+  end;
 end;
 
 end.

@@ -3273,6 +3273,106 @@ type
     sur_SystemDisabled  // 系统未启用
   );
 
+  // ========== 怪物词条系统数据结构 ==========
+
+  // 五行属性类型
+  TElementType = (
+    et_Metal = 0,       // 金
+    et_Wood = 1,        // 木
+    et_Water = 2,       // 水
+    et_Fire = 3,        // 火
+    et_Earth = 4        // 土
+  );
+
+  // 词条等级类型
+  TAffixLevel = (
+    al_Human = 0,       // 人级
+    al_Earth = 1,       // 地级
+    al_Heaven = 2       // 天级
+  );
+
+  // 词条触发类型
+  TAffixTriggerType = (
+    att_OnAttack = 1,       // 攻击时触发
+    att_OnBeAttacked = 2,   // 被攻击时触发
+    att_OnDeath = 3,        // 死亡时触发
+    att_OnSpawn = 4,        // 生成时触发
+    att_OnInterval = 5,     // 定时触发
+    att_OnHealthLow = 6,    // 低血量触发
+    att_OnPlayerNear = 7,   // 玩家接近触发
+    att_OnSkillCast = 8     // 释放技能时触发
+  );
+
+  // 词条效果类型
+  TAffixEffectType = (
+    aet_WeaponDurability = 1,   // 武器耐久度影响
+    aet_AttackSpeed = 2,        // 攻击速度影响
+    aet_MovementSpeed = 3,      // 移动速度影响
+    aet_Damage = 4,             // 伤害影响
+    aet_Defense = 5,            // 防御影响
+    aet_HealthRegen = 6,        // 生命恢复
+    aet_ManaRegen = 7,          // 魔法恢复
+    aet_GroundEffect = 8,       // 地面效果
+    aet_AreaDamage = 9,         // 范围伤害
+    aet_Invincible = 10,        // 无敌状态
+    aet_FullHeal = 11,          // 满血恢复
+    aet_InstantKill = 12,       // 秒杀效果
+    aet_Teleport = 13,          // 传送效果
+    aet_Summon = 14,            // 召唤效果
+    aet_StatusEffect = 15       // 状态效果
+  );
+
+  // 词条信息
+  pTMonsterAffix = ^TMonsterAffix;
+  TMonsterAffix = packed record
+    wIndex: Word;                       // 词条索引
+    sName: string[20];                  // 词条名称
+    sPrefix: string[20];                // 前缀名称
+    ElementType: TElementType;          // 五行属性
+    AffixLevel: TAffixLevel;            // 词条等级
+    TriggerType: TAffixTriggerType;     // 触发类型
+    EffectType: TAffixEffectType;       // 效果类型
+    nTriggerRate: Word;                 // 触发几率 (‰)
+    nEffectValue: Integer;              // 效果数值
+    nDuration: Word;                    // 持续时间 (秒)
+    nCooldown: Word;                    // 冷却时间 (秒)
+    nRange: Word;                       // 影响范围
+    boEnabled: Boolean;                 // 是否启用
+    sDescription: string[100];          // 效果描述
+  end;
+
+  // 怪物词条状态
+  pTMonsterAffixStatus = ^TMonsterAffixStatus;
+  TMonsterAffixStatus = packed record
+    Affix: TMonsterAffix;               // 词条信息
+    dwLastTriggerTime: LongWord;        // 上次触发时间
+    dwEffectEndTime: LongWord;          // 效果结束时间
+    boActive: Boolean;                  // 是否激活
+    nTriggerCount: Integer;             // 触发次数
+  end;
+
+  // 怪物词条配置
+  pTMonsterAffixConfig = ^TMonsterAffixConfig;
+  TMonsterAffixConfig = packed record
+    boEnabled: Boolean;                 // 是否启用词条系统
+    nMaxAffixCount: Byte;               // 最大词条数量
+    nHumanAffixRate: Word;              // 人级词条几率 (‰)
+    nEarthAffixRate: Word;              // 地级词条几率 (‰)
+    nHeavenAffixRate: Word;             // 天级词条几率 (‰)
+    nBossOnlyHeaven: Boolean;           // 天级词条仅限Boss
+    nMultiAffixRate: Word;              // 多词条几率 (‰)
+    nMaxMultiAffixCount: Byte;          // 最大多词条数量
+  end;
+
+  // 怪物词条集合
+  pTMonsterAffixSet = ^TMonsterAffixSet;
+  TMonsterAffixSet = packed record
+    btAffixCount: Byte;                 // 词条数量
+    AffixList: array[0..4] of TMonsterAffixStatus; // 词条列表（最多5个）
+    sDisplayName: string[100];          // 显示名称
+    dwGenerateTime: LongWord;           // 生成时间
+  end;
+
   // 凝练操作信息
   pTRefineOperation = ^TRefineOperation;
   TRefineOperation = packed record

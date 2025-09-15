@@ -38,6 +38,7 @@ type
     function LoadSoulBindConfig(): Boolean;
     function LoadMeltingConfig(): Boolean;
     function LoadSoulSystemConfig(): Boolean;
+    function LoadMonsterAffixConfig(): Boolean;
     function LoadRefineMaterials(): Integer;
     function LoadCompoundInfoList: Integer;
     function GetSetItem(sItemName: string): TList;
@@ -2617,6 +2618,69 @@ begin
   except
     on E: Exception do begin
       MainOutMessage('[异常] 加载元魄/精魂系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+function TFrmDB.LoadMonsterAffixConfig: Boolean;
+var
+  sFileName: string;
+  IniFile: TIniFile;
+begin
+  Result := False;
+  sFileName := g_Config.sGameDataDir + 'MonsterAffixConfig.ini';
+  
+  try
+    if FileExists(sFileName) then begin
+      IniFile := TIniFile.Create(sFileName);
+      try
+        // 加载怪物词条配置
+        with g_MonsterAffixConfig do begin
+          boEnabled := IniFile.ReadBool('MonsterAffix', 'Enabled', True);
+          nMaxAffixCount := IniFile.ReadInteger('MonsterAffix', 'MaxAffixCount', 5);
+          nHumanAffixRate := IniFile.ReadInteger('MonsterAffix', 'HumanAffixRate', 100);
+          nEarthAffixRate := IniFile.ReadInteger('MonsterAffix', 'EarthAffixRate', 30);
+          nHeavenAffixRate := IniFile.ReadInteger('MonsterAffix', 'HeavenAffixRate', 5);
+          nBossOnlyHeaven := IniFile.ReadBool('MonsterAffix', 'BossOnlyHeaven', True);
+          nMultiAffixRate := IniFile.ReadInteger('MonsterAffix', 'MultiAffixRate', 200);
+          nMaxMultiAffixCount := IniFile.ReadInteger('MonsterAffix', 'MaxMultiAffixCount', 3);
+        end;
+        
+        g_boMonsterAffixEnabled := g_MonsterAffixConfig.boEnabled;
+        MainOutMessage('[提示] 怪物词条系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      IniFile := TIniFile.Create(sFileName);
+      try
+        with g_MonsterAffixConfig do begin
+          IniFile.WriteBool('MonsterAffix', 'Enabled', boEnabled);
+          IniFile.WriteInteger('MonsterAffix', 'MaxAffixCount', nMaxAffixCount);
+          IniFile.WriteInteger('MonsterAffix', 'HumanAffixRate', nHumanAffixRate);
+          IniFile.WriteInteger('MonsterAffix', 'EarthAffixRate', nEarthAffixRate);
+          IniFile.WriteInteger('MonsterAffix', 'HeavenAffixRate', nHeavenAffixRate);
+          IniFile.WriteBool('MonsterAffix', 'BossOnlyHeaven', nBossOnlyHeaven);
+          IniFile.WriteInteger('MonsterAffix', 'MultiAffixRate', nMultiAffixRate);
+          IniFile.WriteInteger('MonsterAffix', 'MaxMultiAffixCount', nMaxMultiAffixCount);
+          
+          IniFile.WriteString('MonsterAffix', '; 说明1', '人级词条几率10%，地级3%，天级0.5%');
+          IniFile.WriteString('MonsterAffix', '; 说明2', '多词条几率20%，最多3个词条');
+          IniFile.WriteString('MonsterAffix', '; 说明3', 'BossOnlyHeaven=1表示天级词条仅限Boss');
+        end;
+        
+        MainOutMessage('[提示] 创建默认怪物词条系统配置文件');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载怪物词条系统配置失败: ' + E.Message);
       Result := False;
     end;
   end;
