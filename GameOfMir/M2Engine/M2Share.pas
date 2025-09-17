@@ -3387,6 +3387,10 @@ var
   g_MonsterAffixConfig: TMonsterAffixConfig;       // 怪物词条配置
   g_MonsterAffixList: TList;                       // 怪物词条列表
   g_boMonsterAffixEnabled: Boolean;                // 怪物词条系统开关
+  
+  // 升级属性成长体系全局变量
+  g_LevelGrowthSystemConfig: TLevelGrowthSystemConfig;  // 升级属性成长系统配置
+  g_boLevelGrowthSystemEnabled: Boolean;               // 升级属性成长系统开关
 
   n4EBBD0: Integer;
 
@@ -17285,6 +17289,390 @@ begin
   g_boMonsterAffixEnabled := g_MonsterAffixConfig.boEnabled;
 end;
 
+// ========== 升级属性成长体系相关函数 ==========
+
+procedure InitializeLevelGrowthConfig;
+begin
+  // 初始化升级属性成长系统配置
+  with g_LevelGrowthSystemConfig do begin
+    boEnabled := False;           // 默认关闭新系统
+    boUseOldSystem := True;       // 默认使用旧系统
+    sConfigVersion := 'v1.0';
+    
+    // 战士配置
+    with JobConfigs[0] do begin
+      btJobType := 0;
+      sJobName := '战士';
+      boEnabled := True;
+      
+      // HP成长配置 (固定数值成长)
+      with HPGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 15;        // 每级固定增加15点HP
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // MP成长配置 (固定数值成长)
+      with MPGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 5;         // 每级固定增加5点MP
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 物理攻击成长配置 (固定数值成长)
+      with DCGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 3;         // 每级固定增加3点攻击
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 物理防御成长配置 (固定数值成长)
+      with ACGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 2;         // 每级固定增加2点防御
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 其他属性初始化为不启用
+      MCGrowth.boEnabled := False;
+      SCGrowth.boEnabled := False;
+      MACGrowth.boEnabled := False;
+      WeightGrowth.boEnabled := False;
+      WearWeightGrowth.boEnabled := False;
+      HandWeightGrowth.boEnabled := False;
+    end;
+    
+    // 法师配置
+    with JobConfigs[1] do begin
+      btJobType := 1;
+      sJobName := '法师';
+      boEnabled := True;
+      
+      // HP成长配置 (固定数值成长)
+      with HPGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 8;         // 每级固定增加8点HP
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // MP成长配置 (固定数值成长)
+      with MPGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 15;        // 每级固定增加15点MP
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 魔法攻击成长配置 (固定数值成长)
+      with MCGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 3;         // 每级固定增加3点魔法攻击
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 其他属性初始化为不启用
+      DCGrowth.boEnabled := False;
+      SCGrowth.boEnabled := False;
+      ACGrowth.boEnabled := False;
+      MACGrowth.boEnabled := False;
+      WeightGrowth.boEnabled := False;
+      WearWeightGrowth.boEnabled := False;
+      HandWeightGrowth.boEnabled := False;
+    end;
+    
+    // 道士配置
+    with JobConfigs[2] do begin
+      btJobType := 2;
+      sJobName := '道士';
+      boEnabled := True;
+      
+      // HP成长配置 (固定数值成长)
+      with HPGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 12;        // 每级固定增加12点HP
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // MP成长配置 (固定数值成长)
+      with MPGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 10;        // 每级固定增加10点MP
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 道术攻击成长配置 (固定数值成长)
+      with SCGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 3;         // 每级固定增加3点道术攻击
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 魔法防御成长配置 (固定数值成长)
+      with MACGrowth do begin
+        GrowthType := lgt_Fixed;
+        nFixedValue := 1;         // 每级固定增加1点魔法防御
+        nPercentValue := 0;
+        nBaseValue := 0;
+        boEnabled := True;
+      end;
+      
+      // 其他属性初始化为不启用
+      DCGrowth.boEnabled := False;
+      MCGrowth.boEnabled := False;
+      ACGrowth.boEnabled := False;
+      WeightGrowth.boEnabled := False;
+      WearWeightGrowth.boEnabled := False;
+      HandWeightGrowth.boEnabled := False;
+    end;
+  end;
+  
+  g_boLevelGrowthSystemEnabled := g_LevelGrowthSystemConfig.boEnabled;
+end;
+
+function LoadLevelGrowthConfig(const sFileName: string): Boolean;
+var
+  sFullPath: string;
+  IniFile: TIniFile;
+  i: Integer;
+  sSection: string;
+begin
+  Result := False;
+  sFullPath := g_Config.sGameDataDir + sFileName;
+  
+  try
+    if FileExists(sFullPath) then begin
+      IniFile := TIniFile.Create(sFullPath);
+      try
+        // 加载系统基础配置
+        with g_LevelGrowthSystemConfig do begin
+          boEnabled := IniFile.ReadBool('System', 'Enabled', False);
+          boUseOldSystem := IniFile.ReadBool('System', 'UseOldSystem', True);
+          sConfigVersion := IniFile.ReadString('System', 'ConfigVersion', 'v1.0');
+          
+          // 加载各职业配置
+          for i := 0 to 2 do begin
+            case i of
+              0: sSection := 'Warrior';   // 战士
+              1: sSection := 'Wizard';    // 法师
+              2: sSection := 'Taoist';    // 道士
+            end;
+            
+            with JobConfigs[i] do begin
+              boEnabled := IniFile.ReadBool(sSection, 'Enabled', True);
+              
+              // HP成长配置
+              with HPGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'HP_Enabled', True);
+                if IniFile.ReadString(sSection, 'HP_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'HP_FixedValue', 10);
+                nPercentValue := IniFile.ReadInteger(sSection, 'HP_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'HP_BaseValue', 0);
+              end;
+              
+              // MP成长配置
+              with MPGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'MP_Enabled', True);
+                if IniFile.ReadString(sSection, 'MP_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'MP_FixedValue', 5);
+                nPercentValue := IniFile.ReadInteger(sSection, 'MP_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'MP_BaseValue', 0);
+              end;
+              
+              // DC成长配置
+              with DCGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'DC_Enabled', i = 0);
+                if IniFile.ReadString(sSection, 'DC_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'DC_FixedValue', 2);
+                nPercentValue := IniFile.ReadInteger(sSection, 'DC_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'DC_BaseValue', 0);
+              end;
+              
+              // MC成长配置
+              with MCGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'MC_Enabled', i = 1);
+                if IniFile.ReadString(sSection, 'MC_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'MC_FixedValue', 2);
+                nPercentValue := IniFile.ReadInteger(sSection, 'MC_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'MC_BaseValue', 0);
+              end;
+              
+              // SC成长配置
+              with SCGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'SC_Enabled', i = 2);
+                if IniFile.ReadString(sSection, 'SC_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'SC_FixedValue', 2);
+                nPercentValue := IniFile.ReadInteger(sSection, 'SC_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'SC_BaseValue', 0);
+              end;
+              
+              // AC成长配置
+              with ACGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'AC_Enabled', i = 0);
+                if IniFile.ReadString(sSection, 'AC_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'AC_FixedValue', 1);
+                nPercentValue := IniFile.ReadInteger(sSection, 'AC_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'AC_BaseValue', 0);
+              end;
+              
+              // MAC成长配置
+              with MACGrowth do begin
+                boEnabled := IniFile.ReadBool(sSection, 'MAC_Enabled', i = 2);
+                if IniFile.ReadString(sSection, 'MAC_GrowthType', 'Fixed') = 'Percent' then
+                  GrowthType := lgt_Percent
+                else
+                  GrowthType := lgt_Fixed;
+                nFixedValue := IniFile.ReadInteger(sSection, 'MAC_FixedValue', 1);
+                nPercentValue := IniFile.ReadInteger(sSection, 'MAC_PercentValue', 0);
+                nBaseValue := IniFile.ReadInteger(sSection, 'MAC_BaseValue', 0);
+              end;
+            end;
+          end;
+        end;
+        
+        g_boLevelGrowthSystemEnabled := g_LevelGrowthSystemConfig.boEnabled;
+        MainOutMessage('[提示] 升级属性成长系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      CreateDefaultLevelGrowthConfig(sFullPath);
+      MainOutMessage('[提示] 创建默认升级属性成长系统配置文件');
+      Result := True;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载升级属性成长系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+procedure CreateDefaultLevelGrowthConfig(const sFileName: string);
+var
+  IniFile: TIniFile;
+begin
+  try
+    IniFile := TIniFile.Create(sFileName);
+    try
+      // 写入系统配置
+      IniFile.WriteBool('System', 'Enabled', False);
+      IniFile.WriteBool('System', 'UseOldSystem', True);
+      IniFile.WriteString('System', 'ConfigVersion', 'v1.0');
+      
+      // 写入战士配置
+      IniFile.WriteBool('Warrior', 'Enabled', True);
+      IniFile.WriteBool('Warrior', 'HP_Enabled', True);
+      IniFile.WriteString('Warrior', 'HP_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Warrior', 'HP_FixedValue', 15);
+      IniFile.WriteInteger('Warrior', 'HP_PercentValue', 0);
+      IniFile.WriteInteger('Warrior', 'HP_BaseValue', 0);
+      
+      IniFile.WriteBool('Warrior', 'MP_Enabled', True);
+      IniFile.WriteString('Warrior', 'MP_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Warrior', 'MP_FixedValue', 5);
+      
+      IniFile.WriteBool('Warrior', 'DC_Enabled', True);
+      IniFile.WriteString('Warrior', 'DC_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Warrior', 'DC_FixedValue', 3);
+      
+      IniFile.WriteBool('Warrior', 'AC_Enabled', True);
+      IniFile.WriteString('Warrior', 'AC_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Warrior', 'AC_FixedValue', 2);
+      
+      IniFile.WriteBool('Warrior', 'MC_Enabled', False);
+      IniFile.WriteBool('Warrior', 'SC_Enabled', False);
+      IniFile.WriteBool('Warrior', 'MAC_Enabled', False);
+      
+      // 写入法师配置
+      IniFile.WriteBool('Wizard', 'Enabled', True);
+      IniFile.WriteBool('Wizard', 'HP_Enabled', True);
+      IniFile.WriteString('Wizard', 'HP_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Wizard', 'HP_FixedValue', 8);
+      
+      IniFile.WriteBool('Wizard', 'MP_Enabled', True);
+      IniFile.WriteString('Wizard', 'MP_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Wizard', 'MP_FixedValue', 15);
+      
+      IniFile.WriteBool('Wizard', 'MC_Enabled', True);
+      IniFile.WriteString('Wizard', 'MC_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Wizard', 'MC_FixedValue', 3);
+      
+      IniFile.WriteBool('Wizard', 'DC_Enabled', False);
+      IniFile.WriteBool('Wizard', 'SC_Enabled', False);
+      IniFile.WriteBool('Wizard', 'AC_Enabled', False);
+      IniFile.WriteBool('Wizard', 'MAC_Enabled', False);
+      
+      // 写入道士配置
+      IniFile.WriteBool('Taoist', 'Enabled', True);
+      IniFile.WriteBool('Taoist', 'HP_Enabled', True);
+      IniFile.WriteString('Taoist', 'HP_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Taoist', 'HP_FixedValue', 12);
+      
+      IniFile.WriteBool('Taoist', 'MP_Enabled', True);
+      IniFile.WriteString('Taoist', 'MP_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Taoist', 'MP_FixedValue', 10);
+      
+      IniFile.WriteBool('Taoist', 'SC_Enabled', True);
+      IniFile.WriteString('Taoist', 'SC_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Taoist', 'SC_FixedValue', 3);
+      
+      IniFile.WriteBool('Taoist', 'MAC_Enabled', True);
+      IniFile.WriteString('Taoist', 'MAC_GrowthType', 'Fixed');
+      IniFile.WriteInteger('Taoist', 'MAC_FixedValue', 1);
+      
+      IniFile.WriteBool('Taoist', 'DC_Enabled', False);
+      IniFile.WriteBool('Taoist', 'MC_Enabled', False);
+      IniFile.WriteBool('Taoist', 'AC_Enabled', False);
+      
+    finally
+      IniFile.Free;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 创建升级属性成长系统配置文件失败: ' + E.Message);
+    end;
+  end;
+end;
+
 initialization
   begin
     Config := TIniFile.Create(sConfigFileName);
@@ -17313,6 +17701,9 @@ initialization
     // 初始化怪物词条系统
     g_MonsterAffixList := TList.Create;
     g_boMonsterAffixEnabled := False;
+    
+    // 初始化升级属性成长体系
+    InitializeLevelGrowthConfig;
     
     // 设置默认凝练配置
     with g_RefineConfig do begin
@@ -17377,6 +17768,13 @@ initialization
 {$IFDEF RELEASE}
     LoadKernelFunction();
 {$ENDIF}
+
+    // 加载升级属性成长系统配置
+    if LoadLevelGrowthConfig('LevelGrowthConfig.ini') then begin
+      MainOutMessage('[提示] 升级属性成长系统配置加载成功');
+    end else begin
+      MainOutMessage('[警告] 升级属性成长系统配置加载失败，使用默认配置');
+    end;
 
   end;
 

@@ -486,6 +486,8 @@ type
     procedure SysHintMsg(sMsg: string; MsgColor: TMsgColor);
     procedure MonsterSayMsg(AttackBaseObject: TBaseObject; MonStatus: TMonStatus);
     procedure RecalcLevelAbilitys;
+    procedure RecalcLevelAbilitysOld;
+    function CalculateAttributeGrowth(const GrowthConfig: TAttributeGrowthConfig; nLevel: Integer): Integer;
     function PKLevel(): Integer;
     function GetFeatureEx: Integer;
     procedure MeltTargetAll;
@@ -5789,7 +5791,141 @@ begin
   end;
 end;
 
+// 新的属性成长计算方法
+function TBaseObject.CalculateAttributeGrowth(const GrowthConfig: TAttributeGrowthConfig; nLevel: Integer): Integer;
+begin
+  Result := 0;
+  if not GrowthConfig.boEnabled then Exit;
+  
+  case GrowthConfig.GrowthType of
+    lgt_Fixed: begin
+      // 固定数值成长：每级增加固定数值
+      Result := GrowthConfig.nFixedValue * nLevel;
+    end;
+    lgt_Percent: begin
+      // 固定比例成长：基于基础值的百分比成长
+      if GrowthConfig.nBaseValue > 0 then
+        Result := (GrowthConfig.nBaseValue * GrowthConfig.nPercentValue * nLevel) div 1000
+      else
+        Result := 0;
+    end;
+  end;
+end;
+
 procedure TBaseObject.RecalcLevelAbilitys();
+var
+  nLevel, n: Integer;
+  JobConfig: pTJobGrowthConfig;
+begin
+  nLevel := m_Abil.Level;
+  
+  // 检查是否启用新的属性成长体系
+  if g_boLevelGrowthSystemEnabled and not g_LevelGrowthSystemConfig.boUseOldSystem then begin
+    // 使用新的属性成长体系
+    if (m_btJob >= 0) and (m_btJob <= 2) then begin
+      JobConfig := @g_LevelGrowthSystemConfig.JobConfigs[m_btJob];
+      
+      if JobConfig.boEnabled then begin
+        // 计算HP成长
+        if JobConfig.HPGrowth.boEnabled then begin
+          m_Abil.MaxHP := _MIN(MaxInt, 14 + CalculateAttributeGrowth(JobConfig.HPGrowth, nLevel));
+        end else begin
+          // 使用默认HP计算
+          case m_btJob of
+            0: m_Abil.MaxHP := _MIN(MaxInt, 14 + ROUND(((nLevel / g_Config.nLevelValueOfWarrHP + g_Config.nLevelValueOfWarrHPRate + nLevel / 20) * nLevel)));
+            1: m_Abil.MaxHP := _MIN(MaxInt, 14 + ROUND(((nLevel / g_Config.nLevelValueOfWizardHP + g_Config.nLevelValueOfWizardHPRate) * nLevel)));
+            2: m_Abil.MaxHP := _MIN(MaxInt, 14 + ROUND(((nLevel / g_Config.nLevelValueOfTaosHP + g_Config.nLevelValueOfTaosHPRate) * nLevel)));
+          end;
+        end;
+        
+        // 计算MP成长
+        if JobConfig.MPGrowth.boEnabled then begin
+          m_Abil.MaxMP := _MIN(MaxInt, 13 + CalculateAttributeGrowth(JobConfig.MPGrowth, nLevel));
+        end else begin
+          // 使用默认MP计算
+          case m_btJob of
+            0: m_Abil.MaxMP := _MIN(MaxInt, 11 + ROUND(nLevel * 3.5));
+            1: m_Abil.MaxMP := _MIN(High(Integer), 13 + ROUND((nLevel / 5 + 2) * 2.2 * nLevel));
+            2: m_Abil.MaxMP := _MIN(MaxInt, 13 + ROUND(((nLevel / g_Config.nLevelValueOfTaosMP) * 2.2 * nLevel)));
+          end;
+        end;
+        
+        // 计算攻击力成长
+        if JobConfig.DCGrowth.boEnabled then begin
+          n := CalculateAttributeGrowth(JobConfig.DCGrowth, nLevel);
+          m_Abil.DC := MakeLong(_MAX(n - 1, 0), _MAX(1, n));
+        end else begin
+          m_Abil.DC := 0;
+        end;
+        
+        if JobConfig.MCGrowth.boEnabled then begin
+          n := CalculateAttributeGrowth(JobConfig.MCGrowth, nLevel);
+          m_Abil.MC := MakeLong(_MAX(n - 1, 0), _MAX(1, n));
+        end else begin
+          m_Abil.MC := 0;
+        end;
+        
+        if JobConfig.SCGrowth.boEnabled then begin
+          n := CalculateAttributeGrowth(JobConfig.SCGrowth, nLevel);
+          m_Abil.SC := MakeLong(_MAX(n - 1, 0), _MAX(1, n));
+        end else begin
+          m_Abil.SC := 0;
+        end;
+        
+        // 计算防御力成长
+        if JobConfig.ACGrowth.boEnabled then begin
+          n := CalculateAttributeGrowth(JobConfig.ACGrowth, nLevel);
+          m_Abil.AC := MakeLong(0, n);
+        end else begin
+          m_Abil.AC := 0;
+        end;
+        
+        if JobConfig.MACGrowth.boEnabled then begin
+          n := CalculateAttributeGrowth(JobConfig.MACGrowth, nLevel);
+          m_Abil.MAC := MakeLong(n div 2, n + 1);
+        end else begin
+          m_Abil.MAC := 0;
+        end;
+        
+        // 负重计算（暂时使用默认算法）
+        case m_btJob of
+          0: begin
+            m_Abil.MaxWeight := 50 + ROUND((nLevel / 3) * nLevel);
+            m_Abil.MaxWearWeight := 15 + ROUND((nLevel / 20) * nLevel);
+            m_Abil.MaxHandWeight := 12 + ROUND((nLevel / 13) * nLevel);
+          end;
+          1: begin
+            m_Abil.MaxWeight := 50 + ROUND((nLevel / 5) * nLevel);
+            m_Abil.MaxWearWeight := 15 + ROUND((nLevel / 100) * nLevel);
+            m_Abil.MaxHandWeight := 12 + ROUND((nLevel / 90) * nLevel);
+          end;
+          2: begin
+            m_Abil.MaxWeight := 50 + ROUND((nLevel / 4) * nLevel);
+            m_Abil.MaxWearWeight := 15 + ROUND((nLevel / 50) * nLevel);
+            m_Abil.MaxHandWeight := 12 + ROUND((nLevel / 42) * nLevel);
+          end;
+        end;
+      end else begin
+        // 职业配置未启用，使用旧系统
+        RecalcLevelAbilitysOld();
+      end;
+    end else begin
+      // 无效职业，使用旧系统
+      RecalcLevelAbilitysOld();
+    end;
+  end else begin
+    // 使用旧的属性成长体系
+    RecalcLevelAbilitysOld();
+  end;
+  
+  if m_Abil.HP > m_Abil.MaxHP then
+    m_Abil.HP := m_Abil.MaxHP;
+  if m_Abil.MP > m_Abil.MaxMP then
+    m_Abil.MP := m_Abil.MaxMP;
+end;
+
+// 旧的属性成长计算方法（保持兼容性）
+procedure TBaseObject.RecalcLevelAbilitysOld();
 var
   nLevel, n: Integer;
 begin
@@ -5857,10 +5993,6 @@ begin
         m_Abil.MAC := 0;
       end;
   end;
-  if m_Abil.HP > m_Abil.MaxHP then
-    m_Abil.HP := m_Abil.MaxHP;
-  if m_Abil.MP > m_Abil.MaxMP then
-    m_Abil.MP := m_Abil.MaxMP;
 end;
  {
 procedure TBaseObject.HasWuXinLevelUp(nLevel: Integer);

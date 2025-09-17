@@ -3250,6 +3250,56 @@ type
     nLevelAbsorbBonus: Word;            // 每级吸收加成 (‰)
   end;
 
+  // ========== 升级属性成长体系数据结构 ==========
+  
+  // 属性成长类型
+  TLevelGrowthType = (
+    lgt_Fixed,        // 固定数值成长
+    lgt_Percent       // 固定比例成长
+  );
+  
+  // 单个属性成长配置
+  pTAttributeGrowthConfig = ^TAttributeGrowthConfig;
+  TAttributeGrowthConfig = packed record
+    GrowthType: TLevelGrowthType;       // 成长类型
+    nFixedValue: Integer;               // 固定数值(每级增长值)
+    nPercentValue: Integer;             // 比例数值(千分比，如50表示5%)
+    nBaseValue: Integer;                // 基础值(用于比例计算)
+    boEnabled: Boolean;                 // 是否启用此属性成长
+  end;
+  
+  // 职业属性成长配置
+  pTJobGrowthConfig = ^TJobGrowthConfig;
+  TJobGrowthConfig = packed record
+    btJobType: Byte;                    // 职业类型 (0=战士, 1=法师, 2=道士)
+    sJobName: string[20];               // 职业名称
+    
+    // 基础属性成长配置
+    HPGrowth: TAttributeGrowthConfig;   // HP成长
+    MPGrowth: TAttributeGrowthConfig;   // MP成长
+    DCGrowth: TAttributeGrowthConfig;   // 物理攻击成长
+    MCGrowth: TAttributeGrowthConfig;   // 魔法攻击成长
+    SCGrowth: TAttributeGrowthConfig;   // 道术攻击成长
+    ACGrowth: TAttributeGrowthConfig;   // 物理防御成长
+    MACGrowth: TAttributeGrowthConfig;  // 魔法防御成长
+    
+    // 负重成长配置
+    WeightGrowth: TAttributeGrowthConfig;       // 背包负重成长
+    WearWeightGrowth: TAttributeGrowthConfig;   // 装备负重成长
+    HandWeightGrowth: TAttributeGrowthConfig;   // 腕力成长
+    
+    boEnabled: Boolean;                 // 是否启用此职业配置
+  end;
+  
+  // 升级属性成长系统配置
+  pTLevelGrowthSystemConfig = ^TLevelGrowthSystemConfig;
+  TLevelGrowthSystemConfig = packed record
+    boEnabled: Boolean;                 // 是否启用新的成长体系
+    boUseOldSystem: Boolean;            // 是否回退到旧系统
+    JobConfigs: array[0..2] of TJobGrowthConfig;  // 三个职业的配置
+    sConfigVersion: string[20];         // 配置版本号
+  end;
+
   // 合成结果
   TSoulSynthesisResult = (
     ssr_Success,        // 成功
