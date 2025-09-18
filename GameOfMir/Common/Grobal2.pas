@@ -3311,6 +3311,82 @@ type
     ssr_SystemDisabled  // 系统未启用
   );
 
+  // ========== 经验加成系统数据结构 ==========
+  
+  // 经验加成类型
+  TExpBonusType = (
+    ebt_VIP = 0,        // VIP加成
+    ebt_ExpCard = 1,    // 经验卡加成
+    ebt_Event = 2,      // 活动加成
+    ebt_Guild = 3,      // 行会加成
+    ebt_Map = 4,        // 地图加成
+    ebt_Item = 5,       // 物品加成
+    ebt_System = 6,     // 系统加成
+    ebt_Custom = 7      // 自定义加成
+  );
+  
+  // 经验加成叠加模式
+  TExpBonusStackMode = (
+    esm_Replace,        // 替换模式（同类型高倍数覆盖低倍数）
+    esm_Stack,          // 叠加模式（同类型所有加成累加）
+    esm_Independent     // 独立模式（独立计算，不受全局配置影响）
+  );
+  
+  // 单个经验加成项
+  pTExpBonusItem = ^TExpBonusItem;
+  TExpBonusItem = packed record
+    btBonusType: TExpBonusType;         // 加成类型
+    nBonusRate: Integer;                // 加成百分比（如60表示60%加成）
+    StackMode: TExpBonusStackMode;      // 叠加模式
+    boEnabled: Boolean;                 // 是否启用
+    dwStartTime: LongWord;              // 开始时间（0表示永久）
+    dwDuration: LongWord;               // 持续时间（毫秒，0表示永久）
+    sDescription: string[50];           // 描述信息
+    nPriority: Integer;                 // 优先级（数值越大优先级越高）
+    boIndependent: Boolean;             // 是否独立计算（优先级高于全局配置）
+  end;
+  
+  // 经验加成管理器
+  pTExpBonusManager = ^TExpBonusManager;
+  TExpBonusManager = packed record
+    BonusList: array[0..31] of TExpBonusItem;  // 最多32个加成项
+    nBonusCount: Integer;                       // 当前加成项数量
+    nTotalBonusRate: Integer;                   // 总加成百分比缓存
+    dwLastUpdateTime: LongWord;                 // 上次更新时间
+    boNeedRecalc: Boolean;                      // 是否需要重新计算
+  end;
+  
+  // 经验加成系统配置
+  pTExpBonusSystemConfig = ^TExpBonusSystemConfig;
+  TExpBonusSystemConfig = packed record
+    boEnabled: Boolean;                         // 是否启用经验加成系统
+    boGlobalStackMode: Boolean;                 // 全局叠加模式开关（true=叠加，false=替换）
+    nMaxBonusRate: Integer;                     // 最大加成百分比限制（0=无限制）
+    nDefaultVIPBonus: Integer;                  // 默认VIP加成百分比
+    boAllowNegativeBonus: Boolean;              // 是否允许负数加成（经验惩罚）
+    nMinBonusRate: Integer;                     // 最小加成百分比（负数表示惩罚）
+    
+    // 各类型加成配置
+    TypeConfigs: array[TExpBonusType] of packed record
+      boEnabled: Boolean;                       // 此类型是否启用
+      nMaxRate: Integer;                        // 此类型最大加成百分比
+      nMinRate: Integer;                        // 此类型最小加成百分比
+      boAllowStack: Boolean;                    // 此类型是否允许叠加
+      nMaxStackCount: Integer;                  // 此类型最大叠加数量
+    end;
+    
+    sConfigVersion: string[20];                 // 配置版本号
+  end;
+  
+  // 经验加成计算结果
+  TExpBonusResult = packed record
+    nOriginalExp: LongWord;                     // 原始经验值
+    nFinalExp: LongWord;                        // 最终经验值
+    nTotalBonusRate: Integer;                   // 总加成百分比
+    nAppliedBonusCount: Integer;                // 应用的加成项数量
+    sCalculationLog: string[255];               // 计算日志（调试用）
+  end;
+
   // 升级结果
   TSoulUpgradeResult = (
     sur_Success,        // 成功

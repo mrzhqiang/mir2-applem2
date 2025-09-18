@@ -3391,6 +3391,10 @@ var
   // 升级属性成长体系全局变量
   g_LevelGrowthSystemConfig: TLevelGrowthSystemConfig;  // 升级属性成长系统配置
   g_boLevelGrowthSystemEnabled: Boolean;               // 升级属性成长系统开关
+  
+  // 经验加成系统全局变量
+  g_ExpBonusSystemConfig: TExpBonusSystemConfig;       // 经验加成系统配置
+  g_boExpBonusSystemEnabled: Boolean;                  // 经验加成系统开关
 
   n4EBBD0: Integer;
 
@@ -17289,6 +17293,200 @@ begin
   g_boMonsterAffixEnabled := g_MonsterAffixConfig.boEnabled;
 end;
 
+// ========== 经验加成系统相关函数 ==========
+
+procedure InitializeExpBonusConfig;
+var
+  i: TExpBonusType;
+begin
+  // 初始化经验加成系统配置
+  with g_ExpBonusSystemConfig do begin
+    boEnabled := True;                    // 默认启用经验加成系统
+    boGlobalStackMode := False;           // 默认不叠加（高倍数覆盖低倍数）
+    nMaxBonusRate := 1000;               // 最大加成1000%
+    nDefaultVIPBonus := 60;              // 默认VIP加成60%
+    boAllowNegativeBonus := False;        // 不允许负数加成
+    nMinBonusRate := 0;                  // 最小加成0%
+    sConfigVersion := 'v1.0';
+    
+    // 初始化各类型配置
+    for i := Low(TExpBonusType) to High(TExpBonusType) do begin
+      with TypeConfigs[i] do begin
+        boEnabled := True;
+        nMaxRate := 500;                 // 单类型最大加成500%
+        nMinRate := 0;                   // 单类型最小加成0%
+        boAllowStack := False;           // 默认不允许叠加
+        nMaxStackCount := 5;             // 最大叠加5个
+      end;
+    end;
+    
+    // VIP类型特殊配置
+    with TypeConfigs[ebt_VIP] do begin
+      nMaxRate := 200;                   // VIP最大加成200%
+      boAllowStack := False;             // VIP不允许叠加
+      nMaxStackCount := 1;               // VIP只能有1个
+    end;
+    
+    // 经验卡类型特殊配置
+    with TypeConfigs[ebt_ExpCard] do begin
+      nMaxRate := 500;                   // 经验卡最大加成500%
+      boAllowStack := True;              // 经验卡允许叠加
+      nMaxStackCount := 10;              // 经验卡最多叠加10个
+    end;
+  end;
+  
+  g_boExpBonusSystemEnabled := g_ExpBonusSystemConfig.boEnabled;
+end;
+
+function LoadExpBonusConfig(const sFileName: string): Boolean;
+var
+  sFullPath: string;
+  IniFile: TIniFile;
+  i: TExpBonusType;
+  sSection: string;
+begin
+  Result := False;
+  sFullPath := g_Config.sGameDataDir + sFileName;
+  
+  try
+    if FileExists(sFullPath) then begin
+      IniFile := TIniFile.Create(sFullPath);
+      try
+        // 加载系统基础配置
+        with g_ExpBonusSystemConfig do begin
+          boEnabled := IniFile.ReadBool('System', 'Enabled', True);
+          boGlobalStackMode := IniFile.ReadBool('System', 'GlobalStackMode', False);
+          nMaxBonusRate := IniFile.ReadInteger('System', 'MaxBonusRate', 1000);
+          nDefaultVIPBonus := IniFile.ReadInteger('System', 'DefaultVIPBonus', 60);
+          boAllowNegativeBonus := IniFile.ReadBool('System', 'AllowNegativeBonus', False);
+          nMinBonusRate := IniFile.ReadInteger('System', 'MinBonusRate', 0);
+          sConfigVersion := IniFile.ReadString('System', 'ConfigVersion', 'v1.0');
+          
+          // 加载各类型配置
+          for i := Low(TExpBonusType) to High(TExpBonusType) do begin
+            case i of
+              ebt_VIP: sSection := 'VIP';
+              ebt_ExpCard: sSection := 'ExpCard';
+              ebt_Event: sSection := 'Event';
+              ebt_Guild: sSection := 'Guild';
+              ebt_Map: sSection := 'Map';
+              ebt_Item: sSection := 'Item';
+              ebt_System: sSection := 'SystemBonus';
+              ebt_Custom: sSection := 'Custom';
+            end;
+            
+            with TypeConfigs[i] do begin
+              boEnabled := IniFile.ReadBool(sSection, 'Enabled', True);
+              nMaxRate := IniFile.ReadInteger(sSection, 'MaxRate', 500);
+              nMinRate := IniFile.ReadInteger(sSection, 'MinRate', 0);
+              boAllowStack := IniFile.ReadBool(sSection, 'AllowStack', False);
+              nMaxStackCount := IniFile.ReadInteger(sSection, 'MaxStackCount', 5);
+            end;
+          end;
+        end;
+        
+        g_boExpBonusSystemEnabled := g_ExpBonusSystemConfig.boEnabled;
+        MainOutMessage('[提示] 经验加成系统配置加载成功');
+        Result := True;
+      finally
+        IniFile.Free;
+      end;
+    end else begin
+      // 配置文件不存在，创建默认配置
+      CreateDefaultExpBonusConfig(sFullPath);
+      MainOutMessage('[提示] 创建默认经验加成系统配置文件');
+      Result := True;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 加载经验加成系统配置失败: ' + E.Message);
+      Result := False;
+    end;
+  end;
+end;
+
+procedure CreateDefaultExpBonusConfig(const sFileName: string);
+var
+  IniFile: TIniFile;
+begin
+  try
+    IniFile := TIniFile.Create(sFileName);
+    try
+      // 写入系统配置
+      IniFile.WriteBool('System', 'Enabled', True);
+      IniFile.WriteBool('System', 'GlobalStackMode', False);
+      IniFile.WriteInteger('System', 'MaxBonusRate', 1000);
+      IniFile.WriteInteger('System', 'DefaultVIPBonus', 60);
+      IniFile.WriteBool('System', 'AllowNegativeBonus', False);
+      IniFile.WriteInteger('System', 'MinBonusRate', 0);
+      IniFile.WriteString('System', 'ConfigVersion', 'v1.0');
+      
+      // 写入VIP配置
+      IniFile.WriteBool('VIP', 'Enabled', True);
+      IniFile.WriteInteger('VIP', 'MaxRate', 200);
+      IniFile.WriteInteger('VIP', 'MinRate', 0);
+      IniFile.WriteBool('VIP', 'AllowStack', False);
+      IniFile.WriteInteger('VIP', 'MaxStackCount', 1);
+      
+      // 写入经验卡配置
+      IniFile.WriteBool('ExpCard', 'Enabled', True);
+      IniFile.WriteInteger('ExpCard', 'MaxRate', 500);
+      IniFile.WriteInteger('ExpCard', 'MinRate', 0);
+      IniFile.WriteBool('ExpCard', 'AllowStack', True);
+      IniFile.WriteInteger('ExpCard', 'MaxStackCount', 10);
+      
+      // 写入活动配置
+      IniFile.WriteBool('Event', 'Enabled', True);
+      IniFile.WriteInteger('Event', 'MaxRate', 300);
+      IniFile.WriteInteger('Event', 'MinRate', 0);
+      IniFile.WriteBool('Event', 'AllowStack', True);
+      IniFile.WriteInteger('Event', 'MaxStackCount', 5);
+      
+      // 写入行会配置
+      IniFile.WriteBool('Guild', 'Enabled', True);
+      IniFile.WriteInteger('Guild', 'MaxRate', 100);
+      IniFile.WriteInteger('Guild', 'MinRate', 0);
+      IniFile.WriteBool('Guild', 'AllowStack', False);
+      IniFile.WriteInteger('Guild', 'MaxStackCount', 1);
+      
+      // 写入地图配置
+      IniFile.WriteBool('Map', 'Enabled', True);
+      IniFile.WriteInteger('Map', 'MaxRate', 200);
+      IniFile.WriteInteger('Map', 'MinRate', -50);
+      IniFile.WriteBool('Map', 'AllowStack', False);
+      IniFile.WriteInteger('Map', 'MaxStackCount', 1);
+      
+      // 写入物品配置
+      IniFile.WriteBool('Item', 'Enabled', True);
+      IniFile.WriteInteger('Item', 'MaxRate', 300);
+      IniFile.WriteInteger('Item', 'MinRate', 0);
+      IniFile.WriteBool('Item', 'AllowStack', True);
+      IniFile.WriteInteger('Item', 'MaxStackCount', 5);
+      
+      // 写入系统加成配置
+      IniFile.WriteBool('SystemBonus', 'Enabled', True);
+      IniFile.WriteInteger('SystemBonus', 'MaxRate', 500);
+      IniFile.WriteInteger('SystemBonus', 'MinRate', -100);
+      IniFile.WriteBool('SystemBonus', 'AllowStack', True);
+      IniFile.WriteInteger('SystemBonus', 'MaxStackCount', 3);
+      
+      // 写入自定义配置
+      IniFile.WriteBool('Custom', 'Enabled', True);
+      IniFile.WriteInteger('Custom', 'MaxRate', 1000);
+      IniFile.WriteInteger('Custom', 'MinRate', -200);
+      IniFile.WriteBool('Custom', 'AllowStack', True);
+      IniFile.WriteInteger('Custom', 'MaxStackCount', 10);
+      
+    finally
+      IniFile.Free;
+    end;
+  except
+    on E: Exception do begin
+      MainOutMessage('[异常] 创建经验加成系统配置文件失败: ' + E.Message);
+    end;
+  end;
+end;
+
 // ========== 升级属性成长体系相关函数 ==========
 
 procedure InitializeLevelGrowthConfig;
@@ -17705,6 +17903,9 @@ initialization
     // 初始化升级属性成长体系
     InitializeLevelGrowthConfig;
     
+    // 初始化经验加成系统
+    InitializeExpBonusConfig;
+    
     // 设置默认凝练配置
     with g_RefineConfig do begin
       boEnabled := True;
@@ -17774,6 +17975,13 @@ initialization
       MainOutMessage('[提示] 升级属性成长系统配置加载成功');
     end else begin
       MainOutMessage('[警告] 升级属性成长系统配置加载失败，使用默认配置');
+    end;
+
+    // 加载经验加成系统配置
+    if LoadExpBonusConfig('ExpBonusConfig.ini') then begin
+      MainOutMessage('[提示] 经验加成系统配置加载成功');
+    end else begin
+      MainOutMessage('[警告] 经验加成系统配置加载失败，使用默认配置');
     end;
 
   end;

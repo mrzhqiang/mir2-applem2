@@ -466,6 +466,9 @@ type
     
     // 增强套装系统
     m_SuitesStatus: TPlayerAllSuitesStatus;     // 所有套装状态
+    
+    // 经验加成系统
+    m_ExpBonusManager: TExpBonusManager;        // 经验加成管理器
   private
     FServerProcess: array[1..MAXCLIENTSERVERCOUNT - 1] of TServerProcess;
     procedure ClientDropGold(ProcessMsg: pTProcessMessage; var boResult: Boolean);
@@ -888,8 +891,18 @@ type
     // 2011年新增功能方法
     procedure ProcessTimerSystem();  // 处理定时器系统
     procedure ProcessExpRateSystem(); // 处理经验倍率系统
-procedure CalculateStrengthenAttributes(); // 计算装备强化属性
-procedure ProcessPowerRateSystem(); // 处理攻击力倍率系统
+    procedure CalculateStrengthenAttributes(); // 计算装备强化属性
+    procedure ProcessPowerRateSystem(); // 处理攻击力倍率系统
+    
+    // 经验加成系统相关方法
+    function AddExpBonus(BonusType: TExpBonusType; nBonusRate: Integer; 
+                        StackMode: TExpBonusStackMode; dwDuration: LongWord; 
+                        const sDescription: string; boIndependent: Boolean = False): Boolean;
+    function RemoveExpBonus(BonusType: TExpBonusType): Boolean;
+    function RemoveAllExpBonus(): Boolean;
+    function CalculateExpBonus(nOriginalExp: LongWord): TExpBonusResult;
+    procedure UpdateExpBonusManager();
+    function GetTotalExpBonusRate(): Integer;
   end;
   //{$ENDREGION}
 
@@ -1327,6 +1340,18 @@ begin
 
   SafeFillChar(m_IconInfo[0], SizeOf(TIconInfos), #0);
   m_HookItemEx := TList.Create;
+
+  // 初始化经验加成管理器
+  FillChar(m_ExpBonusManager, SizeOf(TExpBonusManager), 0);
+  m_ExpBonusManager.nBonusCount := 0;
+  m_ExpBonusManager.nTotalBonusRate := 0;
+  m_ExpBonusManager.dwLastUpdateTime := GetTickCount;
+  m_ExpBonusManager.boNeedRecalc := True;
+  
+  // 添加默认VIP加成（如果启用）
+  if g_boExpBonusSystemEnabled and (g_ExpBonusSystemConfig.nDefaultVIPBonus > 0) then begin
+    AddExpBonus(ebt_VIP, g_ExpBonusSystemConfig.nDefaultVIPBonus, esm_Replace, 0, 'VIP默认加成');
+  end;
 
   InitializeServerProcess();
 {$IFDEF PLUGOPEN}
@@ -5033,6 +5058,8 @@ begin
 end;
 
 procedure TPlayObject.WinExp(dwExp: LongWord);
+var
+  ExpBonusResult: TExpBonusResult;
 begin
   {if m_Abil.Level > g_Config.nLimitExpLevel then begin
     dwExp := g_Config.nLimitExpValue;
@@ -5074,6 +5101,20 @@ begin
     if m_Abil.Level >= g_Config.nLimitExpLevel then begin
       dwExp := Round(g_Config.nLimitExpValue / 100 * dwExp);
     end;
+    
+    // 应用新的经验加成系统
+    if g_boExpBonusSystemEnabled then begin
+      ExpBonusResult := CalculateExpBonus(dwExp);
+      dwExp := ExpBonusResult.nFinalExp;
+      
+      // 可选：发送加成信息给客户端（调试模式）
+      if (ExpBonusResult.nAppliedBonusCount > 0) and (ExpBonusResult.sCalculationLog <> '') then begin
+        // 暂时注释掉配置检查，直接显示加成信息用于测试
+        SysMsg('[经验加成] ' + ExpBonusResult.sCalculationLog + 
+               '总加成: +' + IntToStr(ExpBonusResult.nTotalBonusRate) + '%', c_Green, t_Hint);
+      end;
+    end;
+    
     GetExp(dwExp);
     HorseGetExp(dwExp);
   end;
@@ -19415,6 +19456,283 @@ begin
     m_DefMsg := MakeDefaultMsg(SM_SUITE_STATUS, 0, 0, 0, 0);
     SendSocket(@m_DefMsg, sSendMsg);
   end;
+end;
+
+// ========== 经验加成系统方法实现 ==========
+
+function TPlayObject.AddExpBonus(BonusType: TExpBonusType; nBonusRate: Integer; 
+                                StackMode: TExpBonusStackMode; dwDuration: LongWord; 
+                                const sDescription: string; boIndependent: Boolean = False): Boolean;
+var
+  i, nEmptySlot: Integer;
+  dwCurrentTime: LongWord;
+  TypeConfig: pTExpBonusSystemConfig;
+begin
+  Result := False;
+  
+  // 检查系统是否启用
+  if not g_boExpBonusSystemEnabled then Exit;
+  
+  TypeConfig := @g_ExpBonusSystemConfig;
+  
+  // 检查类型是否启用
+  if not TypeConfig.TypeConfigs[BonusType].boEnabled then Exit;
+  
+  // 检查加成率限制
+  if (nBonusRate < TypeConfig.TypeConfigs[BonusType].nMinRate) or 
+     (nBonusRate > TypeConfig.TypeConfigs[BonusType].nMaxRate) then Exit;
+  
+  dwCurrentTime := GetTickCount;
+  nEmptySlot := -1;
+  
+  // 查找相同类型的加成或空槽位
+  for i := 0 to High(m_ExpBonusManager.BonusList) do begin
+    with m_ExpBonusManager.BonusList[i] do begin
+      // 检查过期的加成
+      if boEnabled and (dwDuration > 0) and 
+         (dwCurrentTime > dwStartTime + dwDuration) then begin
+        boEnabled := False;
+        m_ExpBonusManager.boNeedRecalc := True;
+      end;
+      
+      // 查找相同类型的加成
+      if boEnabled and (btBonusType = BonusType) then begin
+        // 根据叠加模式处理
+        case StackMode of
+          esm_Replace: begin
+            // 替换模式：如果新加成更高则替换
+            if nBonusRate > Self.nBonusRate then begin
+              btBonusType := BonusType;
+              Self.nBonusRate := nBonusRate;
+              Self.StackMode := StackMode;
+              boEnabled := True;
+              dwStartTime := dwCurrentTime;
+              Self.dwDuration := dwDuration;
+              Self.sDescription := sDescription;
+              Self.boIndependent := boIndependent;
+              m_ExpBonusManager.boNeedRecalc := True;
+              Result := True;
+            end;
+            Exit;
+          end;
+          esm_Stack: begin
+            // 叠加模式：检查是否超过最大叠加数量
+            // 这里需要继续查找，看是否还有空间叠加
+          end;
+          esm_Independent: begin
+            // 独立模式：直接添加，不受限制
+          end;
+        end;
+      end;
+      
+      // 记录第一个空槽位
+      if not boEnabled and (nEmptySlot = -1) then begin
+        nEmptySlot := i;
+      end;
+    end;
+  end;
+  
+  // 如果找到空槽位，添加新的加成
+  if nEmptySlot >= 0 then begin
+    with m_ExpBonusManager.BonusList[nEmptySlot] do begin
+      btBonusType := BonusType;
+      Self.nBonusRate := nBonusRate;
+      Self.StackMode := StackMode;
+      boEnabled := True;
+      dwStartTime := dwCurrentTime;
+      Self.dwDuration := dwDuration;
+      Self.sDescription := sDescription;
+      Self.boIndependent := boIndependent;
+      nPriority := 0; // 默认优先级
+    end;
+    
+    Inc(m_ExpBonusManager.nBonusCount);
+    m_ExpBonusManager.boNeedRecalc := True;
+    Result := True;
+  end;
+end;
+
+function TPlayObject.RemoveExpBonus(BonusType: TExpBonusType): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  
+  for i := 0 to High(m_ExpBonusManager.BonusList) do begin
+    with m_ExpBonusManager.BonusList[i] do begin
+      if boEnabled and (btBonusType = BonusType) then begin
+        boEnabled := False;
+        Dec(m_ExpBonusManager.nBonusCount);
+        m_ExpBonusManager.boNeedRecalc := True;
+        Result := True;
+      end;
+    end;
+  end;
+end;
+
+function TPlayObject.RemoveAllExpBonus(): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  
+  for i := 0 to High(m_ExpBonusManager.BonusList) do begin
+    if m_ExpBonusManager.BonusList[i].boEnabled then begin
+      m_ExpBonusManager.BonusList[i].boEnabled := False;
+      Result := True;
+    end;
+  end;
+  
+  if Result then begin
+    m_ExpBonusManager.nBonusCount := 0;
+    m_ExpBonusManager.boNeedRecalc := True;
+  end;
+end;
+
+procedure TPlayObject.UpdateExpBonusManager();
+var
+  i: Integer;
+  dwCurrentTime: LongWord;
+  boChanged: Boolean;
+begin
+  dwCurrentTime := GetTickCount;
+  boChanged := False;
+  
+  // 检查过期的加成
+  for i := 0 to High(m_ExpBonusManager.BonusList) do begin
+    with m_ExpBonusManager.BonusList[i] do begin
+      if boEnabled and (dwDuration > 0) and 
+         (dwCurrentTime > dwStartTime + dwDuration) then begin
+        boEnabled := False;
+        Dec(m_ExpBonusManager.nBonusCount);
+        boChanged := True;
+      end;
+    end;
+  end;
+  
+  if boChanged then begin
+    m_ExpBonusManager.boNeedRecalc := True;
+  end;
+  
+  m_ExpBonusManager.dwLastUpdateTime := dwCurrentTime;
+end;
+
+function TPlayObject.GetTotalExpBonusRate(): Integer;
+begin
+  if m_ExpBonusManager.boNeedRecalc then begin
+    CalculateExpBonus(0); // 触发重新计算
+  end;
+  Result := m_ExpBonusManager.nTotalBonusRate;
+end;
+
+function TPlayObject.CalculateExpBonus(nOriginalExp: LongWord): TExpBonusResult;
+var
+  i: Integer;
+  nTotalBonus: Integer;
+  nAppliedCount: Integer;
+  sLog: string;
+  BonusTypes: array[TExpBonusType] of Integer; // 各类型的最高加成
+  BonusStacks: array[TExpBonusType] of Integer; // 各类型的叠加总和
+  BonusIndependent: array[0..31] of Integer; // 独立加成
+  nIndependentCount: Integer;
+  j: TExpBonusType;
+begin
+  // 初始化结果
+  Result.nOriginalExp := nOriginalExp;
+  Result.nFinalExp := nOriginalExp;
+  Result.nTotalBonusRate := 0;
+  Result.nAppliedBonusCount := 0;
+  Result.sCalculationLog := '';
+  
+  if not g_boExpBonusSystemEnabled then Exit;
+  
+  // 更新过期的加成
+  UpdateExpBonusManager();
+  
+  // 初始化计算数组
+  for j := Low(TExpBonusType) to High(TExpBonusType) do begin
+    BonusTypes[j] := 0;
+    BonusStacks[j] := 0;
+  end;
+  nIndependentCount := 0;
+  
+  nTotalBonus := 0;
+  nAppliedCount := 0;
+  sLog := '';
+  
+  // 遍历所有有效的加成
+  for i := 0 to High(m_ExpBonusManager.BonusList) do begin
+    with m_ExpBonusManager.BonusList[i] do begin
+      if not boEnabled then Continue;
+      
+      Inc(nAppliedCount);
+      sLog := sLog + sDescription + '(' + IntToStr(nBonusRate) + '%) ';
+      
+      if boIndependent then begin
+        // 独立加成：直接累加
+        if nIndependentCount < Length(BonusIndependent) then begin
+          BonusIndependent[nIndependentCount] := nBonusRate;
+          Inc(nIndependentCount);
+        end;
+      end else begin
+        // 非独立加成：根据全局配置处理
+        if g_ExpBonusSystemConfig.boGlobalStackMode or 
+           g_ExpBonusSystemConfig.TypeConfigs[btBonusType].boAllowStack then begin
+          // 叠加模式
+          Inc(BonusStacks[btBonusType], nBonusRate);
+        end else begin
+          // 替换模式：保留最高值
+          if nBonusRate > BonusTypes[btBonusType] then begin
+            BonusTypes[btBonusType] := nBonusRate;
+          end;
+        end;
+      end;
+    end;
+  end;
+  
+  // 计算总加成
+  // 1. 各类型加成（替换模式）
+  for j := Low(TExpBonusType) to High(TExpBonusType) do begin
+    Inc(nTotalBonus, BonusTypes[j]);
+  end;
+  
+  // 2. 各类型叠加加成
+  for j := Low(TExpBonusType) to High(TExpBonusType) do begin
+    Inc(nTotalBonus, BonusStacks[j]);
+  end;
+  
+  // 3. 独立加成
+  for i := 0 to nIndependentCount - 1 do begin
+    Inc(nTotalBonus, BonusIndependent[i]);
+  end;
+  
+  // 应用限制
+  if (g_ExpBonusSystemConfig.nMaxBonusRate > 0) and 
+     (nTotalBonus > g_ExpBonusSystemConfig.nMaxBonusRate) then begin
+    nTotalBonus := g_ExpBonusSystemConfig.nMaxBonusRate;
+  end;
+  
+  if nTotalBonus < g_ExpBonusSystemConfig.nMinBonusRate then begin
+    nTotalBonus := g_ExpBonusSystemConfig.nMinBonusRate;
+  end;
+  
+  // 计算最终经验值
+  if nOriginalExp > 0 then begin
+    Result.nFinalExp := nOriginalExp + (nOriginalExp * nTotalBonus) div 100;
+    
+    // 防止溢出
+    if Result.nFinalExp < nOriginalExp then begin
+      Result.nFinalExp := High(LongWord);
+    end;
+  end;
+  
+  Result.nTotalBonusRate := nTotalBonus;
+  Result.nAppliedBonusCount := nAppliedCount;
+  Result.sCalculationLog := sLog;
+  
+  // 更新缓存
+  m_ExpBonusManager.nTotalBonusRate := nTotalBonus;
+  m_ExpBonusManager.boNeedRecalc := False;
 end;
 
 end.
