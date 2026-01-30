@@ -954,6 +954,7 @@ var
 begin
   //  nGameGold = 0 点卷购买
   nShopCount := -1;
+  Pic64 := 0;
   boGamePoint := nGameGold = 0;
   nBack := -1; //购买的物品不存在
   // 有效的商城物品

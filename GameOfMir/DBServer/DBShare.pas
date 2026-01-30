@@ -155,6 +155,11 @@ var
 //  GateIDList: TStringList;
   StdItemList: TList;
   MagicList: TList;
+  
+  // SQLite 配置
+  g_nDbType: Integer = 0; // 0=BDE, 1=ADO, 2=SQLite
+  g_sSqliteDbPath: string = '.\DB\game.sqlite'; // SQLite 数据库文件路径
+  g_nSqliteBusyTimeout: Integer = 30000; // SQLite 忙等待超时（毫秒）
 
   g_SortMinLevel: Integer = 0;
   g_SortMaxLevel: Integer = 200;
@@ -318,6 +323,11 @@ begin
     g_SortMinLevel := Conf.ReadInteger(sConfClass, 'SortMinLevel', g_SortMinLevel);
     g_SortMaxLevel := Conf.ReadInteger(sConfClass, 'SortMaxLevel', g_SortMaxLevel);
     
+    // SQLite 配置
+    g_nDbType := Conf.ReadInteger(sConfClass, 'DbType', g_nDbType);
+    g_sSqliteDbPath := Conf.ReadString(sConfClass, 'SqliteDbPath', g_sSqliteDbPath);
+    g_nSqliteBusyTimeout := Conf.ReadInteger(sConfClass, 'SqliteBusyTimeout', g_nSqliteBusyTimeout);
+    
     // fixme it can remove here?
     Conf.WriteString(sConfClass, 'ServerName', sServerName);
     Conf.WriteInteger(sConfClass, 'ServerPort', nServerPort);
@@ -335,6 +345,9 @@ begin
     Conf.WriteInteger(sConfClass, 'SortMinLevel', g_SortMinLevel);
     Conf.WriteInteger(sConfClass, 'SortMaxLevel', g_SortMaxLevel);
     Conf.WriteBool(sConfClass, 'NotRepeatName', not g_boTestServer);
+    Conf.WriteInteger(sConfClass, 'DbType', g_nDbType);
+    Conf.WriteString(sConfClass, 'SqliteDbPath', g_sSqliteDbPath);
+    Conf.WriteInteger(sConfClass, 'SqliteBusyTimeout', g_nSqliteBusyTimeout);
     {dwInterval := Conf.ReadInteger('DBClear', 'Interval', dwInterval);
     nLevel1 := Conf.ReadInteger('DBClear', 'Level1', nLevel1);
     nLevel2 := Conf.ReadInteger('DBClear', 'Level2', nLevel2);

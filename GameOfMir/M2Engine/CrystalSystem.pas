@@ -3,7 +3,7 @@ unit CrystalSystem;
 interface
 
 uses
-  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjPlay, LocalDB;
+  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjPlay, LocalDB, HUtil32, RefineSystem;
 
 // 结晶系统核心函数
 function InitializeCrystalSystem: Boolean;
@@ -46,7 +46,6 @@ implementation
 
 function InitializeCrystalSystem: Boolean;
 begin
-  Result := False;
   try
     // 加载结晶配置
     if not LoadCrystals('CrystalConfig.txt') then begin
@@ -127,7 +126,7 @@ begin
   Result := False;
   if Equipment = nil then Exit;
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   Result := (HoleInfo.btHoleCount < 3);
 end;
 
@@ -138,7 +137,7 @@ begin
   Result := 0;
   if Equipment = nil then Exit;
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   Result := HoleInfo.btHoleCount;
 end;
 
@@ -150,7 +149,7 @@ begin
   Result := False;
   if Equipment = nil then Exit;
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   for i := 0 to HoleInfo.btHoleCount - 1 do begin
     if HoleInfo.Holes[i].boHasHole and (HoleInfo.Holes[i].CrystalIndex = 0) then begin
       Result := True;
@@ -176,7 +175,7 @@ begin
   // 随机生成1-3个孔
   nHoleCount := 1 + Random(3);
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   HoleInfo.btHoleCount := nHoleCount;
   HoleInfo.dwPunchTime := GetTickCount;
   
@@ -186,7 +185,7 @@ begin
     FillChar(HoleInfo.Holes[i].CrystalInfo, SizeOf(TCrystalInfo), 0);
   end;
   
-  SetEquipmentHoleInfo(Equipment, HoleInfo);
+  SetEquipmentHoleInfo(Equipment, HoleInfo^);
 end;
 
 // ========== 装备融化系统 ==========
@@ -198,7 +197,6 @@ var
   nRandom: Integer;
   nSuccessRate: Integer;
 begin
-  Result := mr_Failed;
   
   // 检查系统是否启用
   if not g_boMeltingSystemEnabled then begin
@@ -209,7 +207,7 @@ begin
   // 检查装备是否可以融化
   if not CanMeltEquipment(Equipment) then begin
     RefineInfo := GetRefineInfo(Equipment);
-    if Ord(RefineInfo.RefineQuality) < g_MeltingConfig.nMinQualityLevel then
+    if Integer(Ord(RefineInfo.RefineQuality)) < Integer(g_MeltingConfig.nMinQualityLevel) then
       Result := mr_QualityTooLow
     else
       Result := mr_InvalidItem;
@@ -248,7 +246,7 @@ begin
   if Equipment = nil then Exit;
   
   RefineInfo := GetRefineInfo(Equipment);
-  Result := (Ord(RefineInfo.RefineQuality) >= g_MeltingConfig.nMinQualityLevel);
+  Result := (Integer(Ord(RefineInfo.RefineQuality)) >= Integer(g_MeltingConfig.nMinQualityLevel));
 end;
 
 function GetMeltingSuccessRate(Equipment: pTUserItem): Integer;
@@ -321,7 +319,7 @@ begin
   Result := False;
   if (PlayObject = nil) or (Equipment = nil) or (Crystal = nil) then Exit;
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   
   // 检查孔洞索引是否有效
   if HoleIndex >= HoleInfo.btHoleCount then Exit;
@@ -338,7 +336,7 @@ begin
   HoleInfo.Holes[HoleIndex].CrystalIndex := Crystal.wIndex;
   HoleInfo.Holes[HoleIndex].CrystalInfo := CrystalInfo^;
   
-  SetEquipmentHoleInfo(Equipment, HoleInfo);
+  SetEquipmentHoleInfo(Equipment, HoleInfo^);
   
   // 应用结晶效果
   ApplyCrystalEffects(PlayObject, Equipment);
@@ -357,7 +355,7 @@ begin
   Result := False;
   if (PlayObject = nil) or (Equipment = nil) then Exit;
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   
   // 检查孔洞索引是否有效
   if HoleIndex >= HoleInfo.btHoleCount then Exit;
@@ -373,7 +371,7 @@ begin
   HoleInfo.Holes[HoleIndex].CrystalIndex := 0;
   FillChar(HoleInfo.Holes[HoleIndex].CrystalInfo, SizeOf(TCrystalInfo), 0);
   
-  SetEquipmentHoleInfo(Equipment, HoleInfo);
+  SetEquipmentHoleInfo(Equipment, HoleInfo^);
   
   Result := True;
   PlayObject.SysMsg('结晶移除成功！', c_Blue, t_Hint);
@@ -406,7 +404,7 @@ var
 begin
   if PlayObject = nil then Exit;
   
-  HoleInfo := GetEquipmentHoleInfo(Equipment)^;
+  HoleInfo := GetEquipmentHoleInfo(Equipment);
   
   for i := 0 to HoleInfo.btHoleCount - 1 do begin
     if HoleInfo.Holes[i].boHasHole and (HoleInfo.Holes[i].CrystalIndex <> 0) then begin
@@ -449,7 +447,6 @@ var
   Crystal: pTCrystalInfo;
   nIndex, nType, nAttrType, nValue: Integer;
 begin
-  Result := False;
   
   // 清空现有结晶列表
   for i := 0 to g_CrystalList.Count - 1 do begin
@@ -526,7 +523,6 @@ var
   i: Integer;
   Crystal: pTCrystalInfo;
 begin
-  Result := nil;
   
   // 从配置中查找匹配的结晶模板
   for i := 0 to g_CrystalList.Count - 1 do begin

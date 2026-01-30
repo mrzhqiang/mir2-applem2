@@ -1453,9 +1453,9 @@ begin
   if not ItemUnit.GetItemAddValue(m_btWuXin, Item, StdItemA) then exit;
   
   // 修复装备穿戴后都有发光效果的Bug - 只有特定装备才有发光效果
-  if StdItemA.Effect > 0 then begin
-    AddAbility.Effect := StdItemA.Effect;
-  end;
+  //if StdItemA.Effect > 0 then begin
+  //  AddAbility.Effect := StdItemA.Effect;
+  //end;
 
   AddAbility.AC := _MIN(High(Integer), AddAbility.AC + StdItemA.nAC);
   AddAbility.AC2 := _MIN(High(Integer), AddAbility.AC2 + StdItemA.nAC2);
@@ -5822,7 +5822,7 @@ begin
   // 检查是否启用新的属性成长体系
   if g_boLevelGrowthSystemEnabled and not g_LevelGrowthSystemConfig.boUseOldSystem then begin
     // 使用新的属性成长体系
-    if (m_btJob >= 0) and (m_btJob <= 2) then begin
+    if (m_btJob <= 2) then begin
       JobConfig := @g_LevelGrowthSystemConfig.JobConfigs[m_btJob];
       
       if JobConfig.boEnabled then begin
@@ -6399,7 +6399,7 @@ begin
   if ((m_LastHiter = nil) or (not m_LastHiter.m_boUnMagicShield)) and m_boMagicShield and (nDamage > 0) and (m_WAbil.MP > 0)
   then begin
     // 修复魔法盾减伤害过多的问题 - 使用配置的减伤比例而不是固定的1.5倍
-    nSpdam := ROUND(nDamage * g_Config.fMagicShieldDamageRate);
+    nSpdam := ROUND(nDamage / 1.5); // * g_Config.fMagicShieldDamageRate);
     if Integer(m_WAbil.MP) >= nSpdam then begin
       m_WAbil.MP := m_WAbil.MP - nSpdam;
       nDamage := nDamage - nSpdam;

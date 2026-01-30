@@ -6,7 +6,7 @@ interface
     Envir, ItmUnit, Magic, Guild, Event,
     Castle, FrnEngn, UsrEngn, MudUtil, Grobal2, ObjBase, ObjRobot, ObjPlay,
     SyncObjs, IniFiles, SDK, WinSock,
-    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc, RefineSystem, CrystalSystem, SoulSystem, MonsterAffixSystem;
+    UnitManage, Common, {$IFDEF PLUGOPEN}PlugOfEngine, PlugOfMain, {$ENDIF}math, ObjNpc;
 
 const
 
@@ -55,6 +55,7 @@ const
 
   BDE = 0;
   ADO = 1;
+  SQLITE = 2;
 
   DBTYPE = BDE; //数据库连接方式，默认为BDE
 
@@ -857,8 +858,6 @@ const
   nSC_REFRESHVALUE = 209;
   sSC_HOOKITEMIDX = 'HOOKITEMIDX';
   nSC_HOOKITEMIDX = 210;
-  sSC_KILLMONEXPMULTIPLE = 'KILLMONEXPMULTIPLE';
-  nSC_KILLMONEXPMULTIPLE = 211;
   sSC_OPENUPGRADEDIALOG = 'OPENUPGRADEDIALOG';
   nSC_OPENUPGRADEDIALOG = 212;
   sSC_CREATEFILE = 'CREATEFILE';
@@ -2119,6 +2118,7 @@ type
 
     nRunMagTick: LongWord;
     nPullulationCount: Integer;
+    fMagicShieldDamageRate: Single;
 
     nEatItemsTime: LongWord;
     nHpEatItemsCount: Integer;
@@ -2729,6 +2729,8 @@ type
     boDisableSelfStruck: Boolean; //自己不显示人物弯腰动作
     dwStruckTime: LongWord; //人物弯腰停留时间
     dwKillMonExpMultiple: LongWord;
+    nKillMonExpMultiple: Integer;
+    dwKillMonExpMultipleTime: LongWord;
     dwRequestVersion: LongWord;
     boHighLevelKillMonFixExp: Boolean;
     boAddUserItemNewValue: Boolean;//物品增加新属性
@@ -3697,6 +3699,7 @@ var
 
     nRunMagTick: 1000;
     nPullulationCount: 10;
+    fMagicShieldDamageRate: 0.6;
 
     nEatItemsTime: 2000;
     nHpEatItemsCount: 80;
@@ -5503,7 +5506,7 @@ function CheckItemBindMode(UserItem: pTUserItem; BindMode: TBindMode): Boolean;
 
 implementation
 
-uses HUtil32, EDcodeEx, CheckDll, CoralWry, MD5Unit;
+uses HUtil32, EDcodeEx, CheckDll, CoralWry, MD5Unit, RefineSystem, CrystalSystem, SoulSystem, MonsterAffixSystem;
 
 var
   nAddGameDataLog: Integer = -1;
@@ -17338,6 +17341,10 @@ begin
   g_boExpBonusSystemEnabled := g_ExpBonusSystemConfig.boEnabled;
 end;
 
+// 前向声明
+procedure CreateDefaultExpBonusConfig(const sFileName: string); forward;
+procedure CreateDefaultLevelGrowthConfig(const sFileName: string); forward;
+
 function LoadExpBonusConfig(const sFileName: string): Boolean;
 var
   sFullPath: string;
@@ -17345,7 +17352,6 @@ var
   i: TExpBonusType;
   sSection: string;
 begin
-  Result := False;
   sFullPath := g_Config.sGameDataDir + sFileName;
   
   try
@@ -17653,7 +17659,6 @@ var
   i: Integer;
   sSection: string;
 begin
-  Result := False;
   sFullPath := g_Config.sGameDataDir + sFileName;
   
   try
@@ -17987,28 +17992,30 @@ initialization
   end;
 
 finalization
-  begin
-    Config.Free;
-    CommandConf.Free;
-    StringConf.Free;
-    ExpConf.Free;
-    GlobalConf.Free;
-    
-    // 清理增强套装系统
-    if g_EnhancedSetItemsList <> nil then begin
-      // 释放所有增强套装数据
-      for var i := 0 to g_EnhancedSetItemsList.Count - 1 do begin
-        Dispose(pTEnhancedSetItems(g_EnhancedSetItemsList[i]));
-      end;
-      g_EnhancedSetItemsList.Free;
-      g_EnhancedSetItemsList := nil;
+begin
+  Config.Free;
+  CommandConf.Free;
+  StringConf.Free;
+  ExpConf.Free;
+  GlobalConf.Free;
+  
+  // 清理增强套装系统
+  if g_EnhancedSetItemsList <> nil then begin
+    // 释放所有增强套装数据
+    while g_EnhancedSetItemsList.Count > 0 do begin
+      Dispose(pTEnhancedSetItems(g_EnhancedSetItemsList[0]));
+      g_EnhancedSetItemsList.Delete(0);
     end;
+    g_EnhancedSetItemsList.Free;
+    g_EnhancedSetItemsList := nil;
+  end;
 
   // 清理装备凝练系统
   if g_RefineMaterialList <> nil then begin
     // 释放所有凝练材料数据
-    for var i := 0 to g_RefineMaterialList.Count - 1 do begin
-      Dispose(pTRefineMaterial(g_RefineMaterialList[i]));
+    while g_RefineMaterialList.Count > 0 do begin
+      Dispose(pTRefineMaterial(g_RefineMaterialList[0]));
+      g_RefineMaterialList.Delete(0);
     end;
     g_RefineMaterialList.Free;
     g_RefineMaterialList := nil;
@@ -18017,8 +18024,9 @@ finalization
   // 清理装备结晶系统
   if g_CrystalList <> nil then begin
     // 释放所有结晶数据
-    for var i := 0 to g_CrystalList.Count - 1 do begin
-      Dispose(pTCrystalInfo(g_CrystalList[i]));
+    while g_CrystalList.Count > 0 do begin
+      Dispose(pTCrystalInfo(g_CrystalList[0]));
+      g_CrystalList.Delete(0);
     end;
     g_CrystalList.Free;
     g_CrystalList := nil;
@@ -18027,8 +18035,9 @@ finalization
   // 清理元魄/精魂系统
   if g_SoulList <> nil then begin
     // 释放所有元魄/精魂数据
-    for var i := 0 to g_SoulList.Count - 1 do begin
-      Dispose(pTSoulInfo(g_SoulList[i]));
+    while g_SoulList.Count > 0 do begin
+      Dispose(pTSoulInfo(g_SoulList[0]));
+      g_SoulList.Delete(0);
     end;
     g_SoulList.Free;
     g_SoulList := nil;
@@ -18037,12 +18046,13 @@ finalization
   // 清理怪物词条系统
   if g_MonsterAffixList <> nil then begin
     // 释放所有词条数据
-    for var i := 0 to g_MonsterAffixList.Count - 1 do begin
-      Dispose(pTMonsterAffix(g_MonsterAffixList[i]));
+    while g_MonsterAffixList.Count > 0 do begin
+      Dispose(pTMonsterAffix(g_MonsterAffixList[0]));
+      g_MonsterAffixList.Delete(0);
     end;
     g_MonsterAffixList.Free;
     g_MonsterAffixList := nil;
   end;
-  end;
+end;
 end.
 

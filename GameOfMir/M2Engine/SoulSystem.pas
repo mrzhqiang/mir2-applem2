@@ -3,7 +3,7 @@ unit SoulSystem;
 interface
 
 uses
-  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjPlay, LocalDB, RefineSystem;
+  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjPlay, LocalDB, RefineSystem, IniFiles;
 
 // 元魄/精魂系统核心函数
 function InitializeSoulSystem: Boolean;
@@ -52,7 +52,6 @@ implementation
 
 function InitializeSoulSystem: Boolean;
 begin
-  Result := False;
   try
     // 加载元魄/精魂配置
     if not LoadSoulConfigs('SoulConfig.ini') then begin
@@ -83,7 +82,6 @@ var
   Soul: pTSoulInfo;
   i: Integer;
 begin
-  Result := ssr_Failed;
   
   // 检查系统是否启用
   if not g_boSoulSystemEnabled then begin
@@ -188,7 +186,7 @@ begin
   for i := 0 to High(Equipments) do begin
     if Equipments[i] <> nil then begin
       RefineInfo := GetRefineInfo(Equipments[i]);
-      if Ord(RefineInfo.RefineQuality) < g_SoulSynthesisConfig.nMinQualityLevel then
+      if Integer(Ord(RefineInfo.RefineQuality)) < Integer(g_SoulSynthesisConfig.nMinQualityLevel) then
         Exit;
     end;
   end;
@@ -200,7 +198,6 @@ function CreateSoulFromEquipments(Equipments: array of pTUserItem; JobType: TSou
 var
   Soul: TSoulInfo;
 begin
-  Result := nil;
   
   try
     // 创建基础元魄信息
@@ -230,7 +227,6 @@ var
   nRandom: Integer;
   SoulInfo: pTSoulInfo;
 begin
-  Result := sur_Failed;
   
   // 检查系统是否启用
   if not g_boSoulSystemEnabled then begin
@@ -316,7 +312,7 @@ begin
   if (SoulInfo = nil) or (SoulInfo.SoulType <> st_Soul) then Exit;
   
   RefineInfo := GetRefineInfo(Equipment);
-  if Ord(RefineInfo.RefineQuality) < g_EssenceUpgradeConfig.nMinQualityForUpgrade then Exit;
+  if Integer(Ord(RefineInfo.RefineQuality)) < Integer(g_EssenceUpgradeConfig.nMinQualityForUpgrade) then Exit;
   
   Result := True;
 end;
@@ -331,7 +327,6 @@ var
   bSafeUpgrade: Boolean;
   i: Integer;
 begin
-  Result := sur_Failed;
   
   // 检查系统是否启用
   if not g_boSoulSystemEnabled then begin
@@ -652,7 +647,6 @@ var
   sFullPath: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFullPath := g_Config.sGameDataDir + sFileName;
   
   try

@@ -3,7 +3,7 @@ unit MonsterAffixSystem;
 interface
 
 uses
-  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjNpc, LocalDB;
+  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjNpc, ObjPlay, LocalDB, IniFiles;
 
 // 怪物词条系统核心函数
 function InitializeMonsterAffixSystem: Boolean;
@@ -12,7 +12,7 @@ procedure FinalizeMonsterAffixSystem;
 // 词条生成系统
 function GenerateMonsterAffix(Monster: TNormNpc; bIsBoss: Boolean): TMonsterAffixSet;
 function GetRandomAffix(ElementType: TElementType; AffixLevel: TAffixLevel): pTMonsterAffix;
-function CanGenerateAffix(Monster: TNormNpc; AffixLevel: TAffixLevel): Boolean;
+function CanGenerateAffix(Monster: TNormNpc; AffixLevel: TAffixLevel; bIsBoss: Boolean): Boolean;
 
 // 词条名称系统
 function GetElementName(ElementType: TElementType): string;
@@ -64,7 +64,6 @@ implementation
 
 function InitializeMonsterAffixSystem: Boolean;
 begin
-  Result := False;
   try
     // 加载怪物词条配置
     if not LoadMonsterAffixConfigs('MonsterAffixConfig.ini') then begin
@@ -126,7 +125,7 @@ begin
     AffixLevel := GetRandomAffixLevel(bIsBoss);
     
     // 检查是否可以生成该等级的词条
-    if not CanGenerateAffix(Monster, AffixLevel) then Continue;
+    if not CanGenerateAffix(Monster, AffixLevel, bIsBoss) then Continue;
     
     // 获取对应的词条
     Affix := GetRandomAffix(ElementType, AffixLevel);
@@ -183,7 +182,7 @@ begin
   end;
 end;
 
-function CanGenerateAffix(Monster: TNormNpc; AffixLevel: TAffixLevel): Boolean;
+function CanGenerateAffix(Monster: TNormNpc; AffixLevel: TAffixLevel; bIsBoss: Boolean): Boolean;
 var
   nRate: Word;
 begin
@@ -191,7 +190,7 @@ begin
   
   // 天级词条仅限Boss
   if (AffixLevel = al_Heaven) and g_MonsterAffixConfig.nBossOnlyHeaven then begin
-    if not Monster.m_boIsBoss then Exit;
+    if not bIsBoss then Exit;
   end;
   
   // 检查生成几率
@@ -207,7 +206,7 @@ begin
     et_Metal: Result := '金';
     et_Wood: Result := '木';
     et_Water: Result := '水';
-    et_Fire: Result := '火';
+    et_Flame: Result := '火';
     et_Earth: Result := '土';
     else Result := '未知';
   end;
@@ -247,7 +246,7 @@ begin
         al_Heaven: Result := '极冰之';
       end;
     end;
-    et_Fire: begin
+    et_Flame: begin
       case AffixLevel of
         al_Human: Result := '炙热之';
         al_Earth: Result := '烈焰之';
@@ -296,10 +295,8 @@ begin
   // 根据效果类型应用效果
   case Affix.EffectType of
     aet_WeaponDurability: begin
-      if Target is TPlayObject then begin
-        ApplyWeaponDurabilityEffect(Target, Affix.nEffectValue);
-        Result := True;
-      end;
+      ApplyWeaponDurabilityEffect(Target, Affix.nEffectValue);
+      Result := True;
     end;
     
     aet_AttackSpeed: begin
@@ -370,14 +367,11 @@ procedure ProcessAffixEffects(Monster: TNormNpc);
 var
   AffixSet: TMonsterAffixSet;
   i: Integer;
-  dwCurrentTime: LongWord;
 begin
   if not g_boMonsterAffixEnabled then Exit;
   
   AffixSet := GetMonsterAffixSet(Monster);
   if AffixSet.btAffixCount = 0 then Exit;
-  
-  dwCurrentTime := GetTickCount;
   
   // 处理定时触发的词条
   for i := 0 to AffixSet.btAffixCount - 1 do begin
@@ -397,9 +391,11 @@ end;
 
 procedure ApplyWeaponDurabilityEffect(Target: TBaseObject; nValue: Integer);
 begin
+  if Target = nil then Exit;
+  // 尝试类型转换
   if Target is TPlayObject then begin
     // TODO: 实现武器耐久度降低效果
-    // TPlayObject(Target).DecWeaponDura(nValue);
+    // PlayObject.DecWeaponDura(nValue);
     MainOutMessage('[调试] 应用武器耐久度效果: ' + IntToStr(nValue));
   end;
 end;
@@ -510,7 +506,6 @@ var
   sFullPath: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFullPath := g_Config.sGameDataDir + sFileName;
   
   try

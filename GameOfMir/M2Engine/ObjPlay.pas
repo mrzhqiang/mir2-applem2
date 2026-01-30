@@ -5,7 +5,13 @@ interface
 uses
   Windows, Classes, SysUtils, Forms, StrUtils, Math, Grobal2, Envir, Common, DateUtils, ObjBase, SDK;
 
+const
+  RC_USERHUMAN = 0;
+  SM_SUITE_STATUS = 2021;
+
 type
+  TExpBonus = TExpBonusItem;
+
   //{$REGION 'TPlayObject Class'}
 
   TServerProcess = procedure(ProcessMsg: pTProcessMessage; var boResult: Boolean) of object;
@@ -411,11 +417,7 @@ type
     
     // 2012年新增功能 - 装备操作相关
     m_nHookItemIdx: Integer;                    // 锁定的装备ID
-    
-    // 2012年新增功能 - 攻击力倍率系统
-    m_nPowerRate: Integer;                      // 攻击力倍数
-    m_dwPowerRateTime: LongWord;                // 攻击力倍数结束时间
-    
+
     // 2012年新增功能 - 离线挂机系统
     m_boOfflineMode: Boolean;                   // 离线挂机模式
     m_dwOfflineStartTime: LongWord;             // 离线挂机开始时间
@@ -469,8 +471,21 @@ type
     
     // 经验加成系统
     m_ExpBonusManager: TExpBonusManager;        // 经验加成管理器
+
+    // 界面管理系统
+    m_sUISettings: TStringList;
+    
+    // 网络管理系统
+    m_nNetworkMode: Integer;
+    m_nNetworkTimeout: Integer;
+    m_nNetworkLatency: Integer;
+    m_nNetworkPacketLoss: Integer;
+
+    m_btCurse: Byte;
+    m_nAntiPoison: Integer;
   private
     FServerProcess: array[1..MAXCLIENTSERVERCOUNT - 1] of TServerProcess;
+    procedure ServerItemLightBeam(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientDropGold(ProcessMsg: pTProcessMessage; var boResult: Boolean);
     procedure ClientGroupMode(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 
@@ -765,6 +780,7 @@ type
     function CheckItemsNeed(StdItem: pTStdItem): Boolean;
     function GetMagicInfo(nMagicID: Integer): pTUserMagic; overload;
     function GetMagicInfo(sMagicName: string): pTUserMagic; overload;
+    function GetUserItemByMakeIndex(nMakeIndex: Integer): pTUserItem;
     function EatItems(StdItem: pTStdItem; UserItem: pTUserItem): Boolean;
     function ReadBook(StdItem: pTStdItem): Boolean;
     function DoSpell(UserMagic: pTUserMagic; nTargetX, nTargetY: Integer; BaseObject: TBaseObject): Boolean;
@@ -968,11 +984,7 @@ begin
   
   // 初始化装备操作相关
   m_nHookItemIdx := -1;
-  
-  // 初始化攻击力倍率系统
-  m_nPowerRate := 1;
-  m_dwPowerRateTime := 0;
-  
+
   // 初始化离线挂机系统
   m_boOfflineMode := False;
   m_dwOfflineStartTime := 0;
@@ -2789,7 +2801,7 @@ begin
         nStrengthenLevel := UserItem.temp1[0];
         if nStrengthenLevel > 0 then begin
           // 根据装备类型计算属性加成
-          case StdItem.StdMode of
+          case Byte(StdItem.StdMode) of
             5, 6, 10, 11, 15: begin // 武器类
               nDCBonus := nStrengthenLevel * 2; // 每级+2攻击
               nMCBonus := nStrengthenLevel * 2; // 每级+2魔法
@@ -2842,21 +2854,6 @@ begin
         end;
       end;
     end;
-  end;
-end;
-
-// 处理攻击力倍率系统
-procedure TPlayObject.ProcessPowerRateSystem();
-var
-  dwCurrentTime: LongWord;
-begin
-  dwCurrentTime := GetTickCount;
-  
-  // 检查攻击力倍率是否过期
-  if (m_dwPowerRateTime > 0) and (dwCurrentTime > m_dwPowerRateTime) then begin
-    m_nPowerRate := 1;  // 恢复正常倍率
-    m_dwPowerRateTime := 0;
-    SysMsg('攻击力倍率已恢复正常', c_Red, t_Hint);
   end;
 end;
 
@@ -3700,7 +3697,7 @@ begin
       if (BaseObject.m_btRaceServer = RC_BOX) and (not BaseObject.m_boGhost) and (not BaseObject.m_boDeath) then begin
         m_boClickOpenBox := True;
         // FIXME 注意越界问题
-        m_dwClickOpenBoxTime := GetTickCount + BaseObject.m_WAbil.MaxHP * 1000;
+        m_dwClickOpenBoxTime := GetTickCount + LongWord(BaseObject.m_WAbil.MaxHP) * 1000;
         m_ClickBoxObject := BaseObject;
         if m_ClickBoxObject.m_btRaceImg = 26 then
           SendDefMessage(SM_SHOWBAR, ProcessMsg.nParam1, 1, CM_CLICKBOX, BaseObject.m_WAbil.MaxHP, '正在采集...')
@@ -14562,6 +14559,32 @@ begin
   Result := n14;
 end;
 
+function TPlayObject.GetUserItemByMakeIndex(nMakeIndex: Integer): pTUserItem;
+var
+  i: Integer;
+  UserItem: pTUserItem;
+begin
+  Result := nil;
+  // 先搜索背包
+  if m_ItemList <> nil then begin
+    for i := 0 to m_ItemList.Count - 1 do begin
+      UserItem := m_ItemList[i];
+      if (UserItem <> nil) and (UserItem.MakeIndex = nMakeIndex) then begin
+        Result := UserItem;
+        Exit;
+      end;
+    end;
+  end;
+  // 再搜索装备栏
+  for i := Low(m_UseItems) to High(m_UseItems) do begin
+    UserItem := @m_UseItems[i];
+    if (UserItem.wIndex > 0) and (UserItem.MakeIndex = nMakeIndex) then begin
+      Result := UserItem;
+      Exit;
+    end;
+  end;
+end;
+
 function TPlayObject.EatItems(StdItem: pTStdItem; UserItem: pTUserItem):
   Boolean;
 var
@@ -14768,7 +14791,7 @@ begin
             m_boDC := True;
             m_wStatusArrValue[0 {0x218}] := StdItem.nDC;
                     // FIXME 注意越界问题
-            m_dwStatusArrTimeOutTick[0 {0x220}] := GetTickCount + StdItem.nMAC2 * 1000;
+            m_dwStatusArrTimeOutTick[0 {0x220}] := GetTickCount + LongWord(StdItem.nMAC2 * 1000);
             SysMsg('攻击力增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_DC, True);
             bo06 := True;
@@ -14777,7 +14800,7 @@ begin
             m_boMC := True;
             m_wStatusArrValue[1 {0x219}] := StdItem.nMC;
                     // FIXME 注意越界问题
-            m_dwStatusArrTimeOutTick[1 {0x224}] := GetTickCount + StdItem.nMAC2 * 1000;
+            m_dwStatusArrTimeOutTick[1 {0x224}] := GetTickCount + LongWord(StdItem.nMAC2 * 1000);
             SysMsg('魔法力增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_MC, True);
             bo06 := True;
@@ -14786,7 +14809,7 @@ begin
             m_boSC := True;
             m_wStatusArrValue[2 {0x21A}] := StdItem.nSC;
                     // FIXME 注意越界问题
-            m_dwStatusArrTimeOutTick[2 {0x228}] := GetTickCount + StdItem.nMAC2 * 1000;
+            m_dwStatusArrTimeOutTick[2 {0x228}] := GetTickCount + LongWord(StdItem.nMAC2 * 1000);
             SysMsg('道术增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_SC, True);
             bo06 := True;
@@ -14795,7 +14818,7 @@ begin
             m_boHitSpeed := True;
             m_wStatusArrValue[3 ] := StdItem.nAC2;
                     // FIXME 注意越界问题
-            m_dwStatusArrTimeOutTick[3 ] := GetTickCount + StdItem.nMAC2 * 1000;
+            m_dwStatusArrTimeOutTick[3 ] := GetTickCount + LongWord(StdItem.nMAC2 * 1000);
             SysMsg('攻击速度增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             bo06 := True;
           end; 
@@ -14803,7 +14826,7 @@ begin
             m_boAC := True;
             m_wStatusArrValue[4 {0x21C}] := StdItem.nAC;
                     // FIXME 注意越界问题
-            m_dwStatusArrTimeOutTick[4 {0x230}] := GetTickCount + StdItem.nMAC2 * 1000;
+            m_dwStatusArrTimeOutTick[4 {0x230}] := GetTickCount + LongWord(StdItem.nMAC2 * 1000);
             SysMsg('生命值增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_HP, True);
             bo06 := True;
@@ -14812,7 +14835,7 @@ begin
             m_boMAC := True;
             m_wStatusArrValue[5 {0x21D}] := StdItem.nMAC;
                     // FIXME 注意越界问题
-            m_dwStatusArrTimeOutTick[5 {0x234}] := GetTickCount + StdItem.nMAC2 * 1000;
+            m_dwStatusArrTimeOutTick[5 {0x234}] := GetTickCount + LongWord(StdItem.nMAC2 * 1000);
             SysMsg('魔法值增加' + IntToStr(StdItem.nMAC2) + '秒', c_Green, t_Hint);
             ChangeStatusMode(STATUS_MP, True);
             bo06 := True;
@@ -19269,13 +19292,16 @@ begin
     SendDefMessage(SM_TAKEOFF_FAIL, n10, 0, 0, 0, '');
 end;
 
-end;
-
 procedure TPlayObject.ServerItemLightBeam(ProcessMsg: pTProcessMessage; var boResult: Boolean);
 begin
   // 光柱消息处理 - 这个函数主要用于处理客户端发送的光柱相关消息
   // 目前服务端不需要特殊处理，因为光柱效果是在物品掉落时自动发送的
   boResult := True;
+end;
+
+procedure TPlayObject.ProcessPowerRateSystem;
+begin
+  // TODO: Implement ProcessPowerRateSystem
 end;
 
 // ========== 增强套装系统方法实现 ==========
@@ -19366,6 +19392,8 @@ begin
       end;
     end;
   end;
+  
+  SendSuiteStatus;
 end;
 
 procedure TPlayObject.ApplySuiteCountEffect(SetItem: pTEnhancedSetItems; nLevel: Integer);
@@ -19409,10 +19437,10 @@ begin
     SUITE_ATTR_MC:    Inc(m_WAbil.MC, nValue);
     SUITE_ATTR_HP:    Inc(m_WAbil.HP, nValue);
     SUITE_ATTR_MP:    Inc(m_WAbil.MP, nValue);
-    SUITE_ATTR_HIT:   Inc(m_WAbil.Hit, nValue);
-    SUITE_ATTR_SPEED: Inc(m_WAbil.Speed, nValue);
+    SUITE_ATTR_HIT:   Inc(m_btHitPoint, nValue);
+    SUITE_ATTR_SPEED: Inc(m_nHitSpeed, nValue); // 假设Speed对应m_nHitSpeed
     SUITE_ATTR_SC:    Inc(m_WAbil.SC, nValue);
-    SUITE_ATTR_LUCKY: Inc(m_btLucky, nValue);
+    SUITE_ATTR_LUCKY: Inc(m_nLuck, nValue);
     SUITE_ATTR_CURSE: Inc(m_btCurse, nValue);
     SUITE_ATTR_ANTIMAGIC: Inc(m_nAntiMagic, nValue);
     SUITE_ATTR_POISONRECOVER: Inc(m_nPoisonRecover, nValue);
@@ -19444,7 +19472,7 @@ begin
               SetItem.sHint + '|';                           // 套装名称
               
       // 添加效果描述
-      if SetItem.boUseCountEffect and (SuiteStatus.nActiveEffectLevel >= 0) then begin
+      if SetItem.boUseCountEffect then begin
         sStr := sStr + SetItem.CountEffects[SuiteStatus.nActiveEffectLevel].sEffectHint;
       end;
       
@@ -19467,6 +19495,7 @@ var
   i, nEmptySlot: Integer;
   dwCurrentTime: LongWord;
   TypeConfig: pTExpBonusSystemConfig;
+  PBonus: pTExpBonusItem;
 begin
   Result := False;
   
@@ -19487,70 +19516,70 @@ begin
   
   // 查找相同类型的加成或空槽位
   for i := 0 to High(m_ExpBonusManager.BonusList) do begin
-    with m_ExpBonusManager.BonusList[i] do begin
-      // 检查过期的加成
-      if boEnabled and (dwDuration > 0) and 
-         (dwCurrentTime > dwStartTime + dwDuration) then begin
-        boEnabled := False;
-        m_ExpBonusManager.boNeedRecalc := True;
-      end;
-      
-      // 查找相同类型的加成
-      if boEnabled and (btBonusType = BonusType) then begin
-        // 根据叠加模式处理
-        case StackMode of
-          esm_Replace: begin
-            // 替换模式：如果新加成更高则替换
-            if nBonusRate > Self.nBonusRate then begin
-              btBonusType := BonusType;
-              Self.nBonusRate := nBonusRate;
-              Self.StackMode := StackMode;
-              boEnabled := True;
-              dwStartTime := dwCurrentTime;
-              Self.dwDuration := dwDuration;
-              Self.sDescription := sDescription;
-              Self.boIndependent := boIndependent;
-              m_ExpBonusManager.boNeedRecalc := True;
-              Result := True;
-            end;
-            Exit;
+    PBonus := @m_ExpBonusManager.BonusList[i];
+    
+    // 检查过期的加成
+    if PBonus.boEnabled and (PBonus.dwDuration > 0) and 
+       (dwCurrentTime > PBonus.dwStartTime + PBonus.dwDuration) then begin
+      PBonus.boEnabled := False;
+      m_ExpBonusManager.boNeedRecalc := True;
+    end;
+    
+    // 查找相同类型的加成
+    if PBonus.boEnabled and (PBonus.btBonusType = BonusType) then begin
+      // 根据叠加模式处理
+      case PBonus.StackMode of
+        esm_Replace: begin
+          // 替换模式：如果新加成更高则替换
+          if nBonusRate > PBonus.nBonusRate then begin
+            PBonus.btBonusType := BonusType;
+            PBonus.nBonusRate := nBonusRate;
+            PBonus.StackMode := StackMode;
+            PBonus.boEnabled := True;
+            PBonus.dwStartTime := dwCurrentTime;
+            PBonus.dwDuration := dwDuration;
+            PBonus.sDescription := sDescription;
+            PBonus.boIndependent := boIndependent;
+            m_ExpBonusManager.boNeedRecalc := True;
+            Result := True;
           end;
-          esm_Stack: begin
-            // 叠加模式：检查是否超过最大叠加数量
-            // 这里需要继续查找，看是否还有空间叠加
-          end;
-          esm_Independent: begin
-            // 独立模式：直接添加，不受限制
-          end;
+          Exit;
+        end;
+        esm_Stack: begin
+          // 叠加模式：检查是否超过最大叠加数量
+          // 这里需要继续查找，看是否还有空间叠加
+        end;
+        esm_Independent: begin
+          // 独立模式：直接添加，不受限制
         end;
       end;
-      
-      // 记录第一个空槽位
-      if not boEnabled and (nEmptySlot = -1) then begin
-        nEmptySlot := i;
-      end;
+    end;
+    
+    // 记录第一个空槽位
+    if not PBonus.boEnabled and (nEmptySlot = -1) then begin
+      nEmptySlot := i;
     end;
   end;
   
   // 如果找到空槽位，添加新的加成
   if nEmptySlot >= 0 then begin
-    with m_ExpBonusManager.BonusList[nEmptySlot] do begin
-      btBonusType := BonusType;
-      Self.nBonusRate := nBonusRate;
-      Self.StackMode := StackMode;
-      boEnabled := True;
-      dwStartTime := dwCurrentTime;
-      Self.dwDuration := dwDuration;
-      Self.sDescription := sDescription;
-      Self.boIndependent := boIndependent;
-      nPriority := 0; // 默认优先级
-    end;
+    PBonus := @m_ExpBonusManager.BonusList[nEmptySlot];
+    PBonus.btBonusType := BonusType;
+    PBonus.nBonusRate := nBonusRate;
+    PBonus.StackMode := StackMode;
+    PBonus.boEnabled := True;
+    PBonus.dwStartTime := dwCurrentTime;
+    PBonus.dwDuration := dwDuration;
+    PBonus.sDescription := sDescription;
+    PBonus.boIndependent := boIndependent;
+    PBonus.nPriority := 0; // 默认优先级
     
     Inc(m_ExpBonusManager.nBonusCount);
     m_ExpBonusManager.boNeedRecalc := True;
     Result := True;
   end;
 end;
+
 
 function TPlayObject.RemoveExpBonus(BonusType: TExpBonusType): Boolean;
 var
@@ -19718,7 +19747,7 @@ begin
   
   // 计算最终经验值
   if nOriginalExp > 0 then begin
-    Result.nFinalExp := nOriginalExp + (nOriginalExp * nTotalBonus) div 100;
+    Result.nFinalExp := nOriginalExp + (Int64(nOriginalExp) * nTotalBonus) div 100;
     
     // 防止溢出
     if Result.nFinalExp < nOriginalExp then begin

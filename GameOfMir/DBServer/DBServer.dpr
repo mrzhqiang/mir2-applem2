@@ -40,7 +40,6 @@ begin
   Application.CreateForm(TFrmNewChr, FrmNewChr);
   Application.CreateForm(TFrmUserSoc, FrmUserSoc);
   Application.CreateForm(TFrmFDBExplore, FrmFDBExplore);
-  Application.CreateForm(TFrmCreateChr, FrmCreateChr);
   Application.CreateForm(TFrmEditAddr, FrmEditAddr);
   Application.CreateForm(TfrmDBTool, frmDBTool);
   Application.CreateForm(TfrmEditRcd, frmEditRcd);

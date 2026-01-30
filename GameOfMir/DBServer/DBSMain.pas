@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics,
   Controls, Forms, Dialogs, StdCtrls, ExtCtrls, JSocket, Buttons, IniFiles,
-  Menus, Grobal2, HumDB, DBShare, ComCtrls, ActnList, AppEvnts, DB,
-  DBTables, Common;
+  Menus, Grobal2, HumDB, DBShare, ComCtrls, ActnList, AppEvnts,
+  SQLiteTable3, SQLite3, Common;
 type
   TServerInfo = record
     nSckHandle: Integer; //0x00
@@ -1117,86 +1117,124 @@ var
   i, Idx: Integer;
   StdItem: pTStdItem;
   nRecordCount: Integer;
+  SQLiteDB: TSQLiteDatabase;
+  SQLiteTable: TSQLiteTable;
 resourcestring
-  sSQLString = 'select * from StdItems';
+  sSQLString = 'select * from StdItems order by Idx';
 begin
   //MainOutMessage('正在加载物品数据...');
+  Result := -1;
+  SQLiteDB := nil;
+  SQLiteTable := nil;
   try
-    Result := -1;
-    Query.SQL.Clear;
-    Query.DatabaseName := sHeroDB;
-    Query.SQL.Add(sSQLString);
     try
-      Query.Open;
-    finally
-      Result := -2;
-    end;
-    nRecordCount := Query.RecordCount;
-    for i := 0 to nRecordCount - 1 do begin
-      New(StdItem);
-      Idx := Query.FieldByName('Idx').AsInteger;
-      StdItem.Idx := Idx;
-      StdItem.Name := Query.FieldByName('Name').AsString;
-      StdItem.StdMode2 := Query.FieldByName('StdMode').AsInteger;
-      StdItem.Shape := Query.FieldByName('Shape').AsInteger;
-      StdItem.Weight := Query.FieldByName('Weight').AsInteger;
-      StdItem.AniCount := Query.FieldByName('AniCount').AsInteger;
-      StdItem.Source := Query.FieldByName('Source').AsInteger;
-      StdItem.Reserved := Query.FieldByName('Reserved').AsInteger;
-      StdItem.Looks := Query.FieldByName('Looks').AsInteger;
-      StdItem.Effect := Query.FieldByName('Effect').AsInteger;
-      StdItem.DuraMax := Query.FieldByName('DuraMax').AsInteger;
-      StdItem.nAC := Query.FieldByName('AC').AsInteger;
-      StdItem.nAC2 := Query.FieldByName('AC2').AsInteger;
-      StdItem.nMAC := Query.FieldByName('MAC').AsInteger;
-      StdItem.nMAC2 := Query.FieldByName('MAC2').AsInteger;
-      StdItem.nDC := Query.FieldByName('DC').AsInteger;
-      StdItem.nDC2 := Query.FieldByName('DC2').AsInteger;
-      StdItem.nMC := Query.FieldByName('MC').AsInteger;
-      StdItem.nMC2 := Query.FieldByName('MC2').AsInteger;
-      StdItem.nSC := Query.FieldByName('SC').AsInteger;
-      StdItem.nSC2 := Query.FieldByName('SC2').AsInteger;
-      StdItem.HP := Query.FieldByName('HP').AsInteger;
-      StdItem.MP := Query.FieldByName('MP').AsInteger;
-      StdItem.AddAttack := Query.FieldByName('AddDamage').AsInteger;
-      StdItem.DelDamage := Query.FieldByName('DelDamage').AsInteger;
-      StdItem.HitPoint := Query.FieldByName('HitPoint').AsInteger;
-      StdItem.SpeedPoint := Query.FieldByName('SpeedPoint').AsInteger;
-      StdItem.Strong := Query.FieldByName('Strong').AsInteger;
-      StdItem.Luck := Query.FieldByName('Luck').AsInteger;
-      StdItem.HitSpeed := Query.FieldByName('HitSpeed').AsInteger;
-      StdItem.AntiMagic := Query.FieldByName('AntiMagic').AsInteger;
-      StdItem.PoisonMagic := Query.FieldByName('PoisonMagic').AsInteger;
-      StdItem.HealthRecover := Query.FieldByName('HealthRecover').AsInteger;
-      StdItem.SpellRecover := Query.FieldByName('SpellRecover').AsInteger;
-      StdItem.PoisonRecover := Query.FieldByName('PoisonRecover').AsInteger;
-      StdItem.LightBeamEnabled := Query.FieldByName('LightBeamEnabled').AsInteger;
-      StdItem.LightBeamType := Query.FieldByName('LightBeamType').AsInteger;
-      StdItem.LightBeamFrameCount := Query.FieldByName('LightBeamFrameCount').AsInteger;
-      StdItem.LightBeamFrameTime := Query.FieldByName('LightBeamFrameTime').AsInteger;
-      StdItem.Bind := Query.FieldByName('Bind').AsInteger;
-      StdItem.AddWuXinAttack := 0;
-      StdItem.DelWuXinAttack := 0;
-      StdItem.StdMode := GetItemType(StdItem.StdMode2);
-      StdItem.StdModeEx := GetItemTypeEx(StdItem.StdMode);
-      StdItem.Need := Query.FieldByName('Need').AsInteger;
-      StdItem.NeedLevel := Query.FieldByName('NeedLevel').AsInteger;
-      StdItem.Price := Query.FieldByName('Price').AsInteger;
-      if StdItemList.Count = Idx then begin
-        StdItemList.Add(StdItem);
-        Result := 1;
-      end
-      else begin
-        MainOutMessage(format('加载物品(Idx:%d Name:%s)数据失败！！！', [Idx, StdItem.Name]));
-        Result := -100;
+      if not FileExists(sHeroDB) then begin
+        MainOutMessage('数据库文件不存在: ' + sHeroDB);
         Exit;
       end;
-      Query.Next;
+      SQLiteDB := TSQLiteDatabase.Create(sHeroDB);
+      if SQLiteDB.TableExists('StdItems') then begin
+         SQLiteTable := SQLiteDB.GetTable(sSQLString);
+         nRecordCount := SQLiteTable.Count;
+         for i := 0 to nRecordCount - 1 do begin
+            New(StdItem);
+            Idx := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Idx']);
+            StdItem.Idx := Idx;
+            StdItem.Name := SQLiteTable.FieldByName['Name'];
+            StdItem.StdMode2 := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['StdMode']);
+            StdItem.Shape := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Shape']);
+            StdItem.Weight := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Weight']);
+            StdItem.AniCount := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['AniCount']);
+            StdItem.Source := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Source']);
+            StdItem.Reserved := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Reserved']);
+            StdItem.Looks := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Looks']);
+            StdItem.Effect := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Effect']);
+            StdItem.DuraMax := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DuraMax']);
+            StdItem.nAC := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['AC']);
+            StdItem.nAC2 := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['AC2']);
+            StdItem.nMAC := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MAC']);
+            StdItem.nMAC2 := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MAC2']);
+            StdItem.nDC := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DC']);
+            StdItem.nDC2 := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DC2']);
+            StdItem.nMC := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MC']);
+            StdItem.nMC2 := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MC2']);
+            StdItem.nSC := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['SC']);
+            StdItem.nSC2 := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['SC2']);
+            StdItem.HP := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['HP']);
+            StdItem.MP := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MP']);
+            StdItem.AddAttack := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['AddDamage']);
+            StdItem.DelDamage := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DelDamage']);
+            StdItem.HitPoint := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['HitPoint']);
+            StdItem.SpeedPoint := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['SpeedPoint']);
+            StdItem.Strong := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Strong']);
+            StdItem.Luck := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Luck']);
+            StdItem.HitSpeed := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['HitSpeed']);
+            StdItem.AntiMagic := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['AntiMagic']);
+            StdItem.PoisonMagic := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['PoisonMagic']);
+            StdItem.HealthRecover := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['HealthRecover']);
+            StdItem.SpellRecover := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['SpellRecover']);
+            StdItem.PoisonRecover := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['PoisonRecover']);
+            
+            if SQLiteTable.FieldIndex['LightBeamEnabled'] >= 0 then
+              StdItem.LightBeamEnabled := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['LightBeamEnabled'])
+            else
+              StdItem.LightBeamEnabled := 0;
+
+            if SQLiteTable.FieldIndex['LightBeamType'] >= 0 then
+              StdItem.LightBeamType := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['LightBeamType'])
+            else
+              StdItem.LightBeamType := 0;
+
+            if SQLiteTable.FieldIndex['LightBeamFrameCount'] >= 0 then
+              StdItem.LightBeamFrameCount := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['LightBeamFrameCount'])
+            else
+              StdItem.LightBeamFrameCount := 0;
+
+            if SQLiteTable.FieldIndex['LightBeamFrameTime'] >= 0 then
+              StdItem.LightBeamFrameTime := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['LightBeamFrameTime'])
+            else
+              StdItem.LightBeamFrameTime := 0;
+            
+            if SQLiteTable.FieldIndex['Bind'] >= 0 then
+               StdItem.Bind := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Bind'])
+            else
+               StdItem.Bind := 0;
+
+            StdItem.AddWuXinAttack := 0;
+            StdItem.DelWuXinAttack := 0;
+            StdItem.StdMode := GetItemType(StdItem.StdMode2);
+            StdItem.StdModeEx := GetItemTypeEx(StdItem.StdMode);
+            StdItem.Need := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Need']);
+            StdItem.NeedLevel := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedLevel']);
+            StdItem.Price := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Price']);
+            
+            if StdItemList.Count = Idx then begin
+              StdItemList.Add(StdItem);
+              Result := 1;
+            end
+            else begin
+              MainOutMessage(format('加载物品(Idx:%d Name:%s)数据失败！！！', [Idx, StdItem.Name]));
+              Result := -100;
+              // Clean up if fail
+              Exit;
+            end;
+            SQLiteTable.Next;
+         end;
+         Result := nRecordCount;
+         MainOutMessage(format('物品数据库加载完成(%d)...', [nRecordCount]));
+      end else begin
+         MainOutMessage('StdItems 表不存在');
+         Result := -2;
+      end;
+    finally
+      if SQLiteTable <> nil then SQLiteTable.Free;
+      if SQLiteDB <> nil then SQLiteDB.Free;
     end;
-    Result := nRecordCount;
-    MainOutMessage(format('物品数据库加载完成(%d)...', [nRecordCount]));
-  finally
-    Query.Close;
+  except
+    on E: Exception do begin
+      MainOutMessage('数据库异常: ' + E.Message);
+      Result := -100;
+    end;
   end;
 end;
 
@@ -1204,67 +1242,84 @@ function TFrmDBSrv.LoadMagicDB(): Integer;
 var
   i, nRecordCount: Integer;
   Magic: pTMagic;
+  SQLiteDB: TSQLiteDatabase;
+  SQLiteTable: TSQLiteTable;
 resourcestring
-  sSQLString = 'select * from Magic';
+  sSQLString = 'select * from Magic order by MagId';
 begin
-  //  Result := -1;
-    //MainOutMessage('正在加载技能数据库...');
-  Query.SQL.Clear;
-  Query.DatabaseName := sHeroDB;
-  Query.SQL.Add(sSQLString);
+  Result := -1;
+  SQLiteDB := nil;
+  SQLiteTable := nil;
   try
-    Query.Open;
-  finally
-    Result := -2;
-  end;
-  nRecordCount := Query.RecordCount;
-  for i := 0 to nRecordCount - 1 do begin
-    New(Magic);
-    Magic.wMagicId := Query.FieldByName('MagId').AsInteger;
-    Magic.sMagicName := Query.FieldByName('MagName').AsString;
-    Magic.btEffectType := Query.FieldByName('EffectType').AsInteger;
-    Magic.btEffect := Query.FieldByName('Effect').AsInteger;
-    Magic.wMagicIcon := Query.FieldByName('MagicIcon').AsInteger;
-    Magic.btJob := Query.FieldByName('Job').AsInteger;
-    Magic.dwDelayTime := Query.FieldByName('Delay').AsInteger;
-    Magic.nInterval := Query.FieldByName('Interval').AsInteger;
-    Magic.nSpellFrame := Query.FieldByName('SpellFrame').AsInteger;
-    Magic.wSpell := Query.FieldByName('Spell').AsInteger;
-    Magic.btDefSpell := Query.FieldByName('DefSpell').AsInteger;
-    Magic.wPower := Query.FieldByName('Power').AsInteger;
-    Magic.wMaxPower := Query.FieldByName('MaxPower').AsInteger;
-    Magic.btDefPower := Query.FieldByName('DefPower').AsInteger;
-    Magic.btDefMaxPower := Query.FieldByName('DefMaxPower').AsInteger;
-    Magic.TrainLevel[0] := Query.FieldByName('NeedL1').AsInteger;
-    Magic.TrainLevel[1] := Query.FieldByName('NeedL2').AsInteger;
-    Magic.TrainLevel[2] := Query.FieldByName('NeedL3').AsInteger;
-    Magic.TrainLevel[3] := Query.FieldByName('NeedL4').AsInteger;
-    Magic.TrainLevel[4] := Query.FieldByName('NeedL5').AsInteger;
-    Magic.TrainLevel[5] := Query.FieldByName('NeedL6').AsInteger;
-    Magic.TrainLevel[6] := Query.FieldByName('NeedL7').AsInteger;
-    Magic.TrainLevel[7] := Query.FieldByName('NeedL8').AsInteger;
-    Magic.TrainLevel[8] := Query.FieldByName('NeedL9').AsInteger;
-    Magic.MaxTrain[0] := Query.FieldByName('L1Train').AsInteger;
-    Magic.MaxTrain[1] := Query.FieldByName('L2Train').AsInteger;
-    Magic.MaxTrain[2] := Query.FieldByName('L3Train').AsInteger;
-    Magic.MaxTrain[3] := Query.FieldByName('L4Train').AsInteger;
-    Magic.MaxTrain[4] := Query.FieldByName('L5Train').AsInteger;
-    Magic.MaxTrain[5] := Query.FieldByName('L6Train').AsInteger;
-    Magic.MaxTrain[6] := Query.FieldByName('L7Train').AsInteger;
-    Magic.MaxTrain[7] := Query.FieldByName('L8Train').AsInteger;
-    Magic.MaxTrain[8] := Query.FieldByName('L9Train').AsInteger;
-    Magic.btTrainLv := Query.FieldByName('NeedMax').AsInteger;
-    if Magic.wMagicId > 0 then begin
-      MagicList.Add(Magic);
-    end
-    else begin
-      Dispose(Magic);
+    try
+      if not FileExists(sHeroDB) then begin
+        MainOutMessage('数据库文件不存在: ' + sHeroDB);
+        Exit;
+      end;
+      SQLiteDB := TSQLiteDatabase.Create(sHeroDB);
+      if SQLiteDB.TableExists('Magic') then begin
+        SQLiteTable := SQLiteDB.GetTable(sSQLString);
+        nRecordCount := SQLiteTable.Count;
+        for i := 0 to nRecordCount - 1 do begin
+          New(Magic);
+          Magic.wMagicId := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MagId']);
+          Magic.sMagicName := SQLiteTable.FieldByName['MagName'];
+          Magic.btEffectType := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['EffectType']);
+          Magic.btEffect := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Effect']);
+          Magic.wMagicIcon := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MagicIcon']);
+          Magic.btJob := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Job']);
+          Magic.dwDelayTime := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Delay']);
+          Magic.nInterval := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Interval']);
+          Magic.nSpellFrame := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['SpellFrame']);
+          Magic.wSpell := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Spell']);
+          Magic.btDefSpell := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DefSpell']);
+          Magic.wPower := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['Power']);
+          Magic.wMaxPower := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['MaxPower']);
+          Magic.btDefPower := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DefPower']);
+          Magic.btDefMaxPower := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['DefMaxPower']);
+          Magic.TrainLevel[0] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL1']);
+          Magic.TrainLevel[1] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL2']);
+          Magic.TrainLevel[2] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL3']);
+          Magic.TrainLevel[3] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL4']);
+          Magic.TrainLevel[4] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL5']);
+          Magic.TrainLevel[5] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL6']);
+          Magic.TrainLevel[6] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL7']);
+          Magic.TrainLevel[7] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL8']);
+          Magic.TrainLevel[8] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedL9']);
+          Magic.MaxTrain[0] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L1Train']);
+          Magic.MaxTrain[1] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L2Train']);
+          Magic.MaxTrain[2] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L3Train']);
+          Magic.MaxTrain[3] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L4Train']);
+          Magic.MaxTrain[4] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L5Train']);
+          Magic.MaxTrain[5] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L6Train']);
+          Magic.MaxTrain[6] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L7Train']);
+          Magic.MaxTrain[7] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L8Train']);
+          Magic.MaxTrain[8] := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['L9Train']);
+          Magic.btTrainLv := SQLiteTable.FieldAsInteger(SQLiteTable.FieldIndex['NeedMax']);
+          if Magic.wMagicId > 0 then begin
+            MagicList.Add(Magic);
+          end
+          else begin
+            Dispose(Magic);
+          end;
+          Result := 1;
+          SQLiteTable.Next;
+        end;
+        MainOutMessage(format('技能数据库加载完成(%d)...', [nRecordCount]));
+      end else begin
+        MainOutMessage('Magic 表不存在');
+        Result := -2;
+      end;
+    finally
+      if SQLiteTable <> nil then SQLiteTable.Free;
+      if SQLiteDB <> nil then SQLiteDB.Free;
     end;
-    Result := 1;
-    Query.Next;
+  except
+    on E: Exception do begin
+      MainOutMessage('数据库异常: ' + E.Message);
+      Result := -100;
+    end;
   end;
-  MainOutMessage(format('技能数据库加载完成(%d)...', [nRecordCount]));
-  Query.Close;
 end;
 
 procedure TFrmDBSrv.Timer2Timer(Sender: TObject);

@@ -707,7 +707,7 @@ begin
             Result := True;
 
           if boMove then begin
-            if UserMagic.btLevel >= 0 then begin
+            // if UserMagic.btLevel >= 0 then begin
               TargeBase := TargeTBaseObject;
               // 0级分裂1次，1级分裂3次，2级分裂5次，3级分裂7次
               for I := 2 to (_MIN(UserMagic.btLevel, UserMagic.MagicInfo.btTrainLv)+UserMagic.btLevel+2) do begin
@@ -718,7 +718,7 @@ begin
                 AroundBase.SendRefMsg(RM_10205, 0, Integer(TargeBase), 0, 30, '', 400 * I);
                 TargeBase := AroundBase;
               end;
-            end;
+            // end;
           end;
         end;
       end;
@@ -835,11 +835,12 @@ begin
         nPower := ROUND(nPower * 1.5); }
       PlayObject.SendDelayMsg(PlayObject, RM_DELAYMAGIC, nPower, nTargetX, nTargetY, 2, Integer(TargeTBaseObject), '', 600);
       TargeTBaseObject.MagicQuest(PlayObject, UserMagic.wMagIdx, mfs_TagEx);
-      if g_Config.boPlayObjectReduceMP and (Random(10) < UserMagic.btLevel)then
+      if g_Config.boPlayObjectReduceMP and (Random(10) < UserMagic.btLevel)then begin
           // 1/4 当前法力值 -- 1/1 当前法力值
         nPoint := Min(0, Round(TargeTBaseObject.m_WAbil.MP * (UserMagic.MagicInfo.btTrainLv + 1) / (UserMagic.btLevel + 1)));
         // 1/10 削减，如果小于伤害的 1/2，则被替换之
         TargeTBaseObject.DamageSpell(Max(nPoint div 10, nPower div 2));
+      end;
       if TargeTBaseObject.m_btRaceServer >= RC_ANIMAL then
         Result := True;
     end
@@ -2425,9 +2426,9 @@ function TMagicManager.MagHbFireBall(PlayObject: TPlayObject;
   var TargeTBaseObject: TBaseObject): Boolean;
 var
   //nPower: Integer;
-  nDir: Integer;
+  // nDir: Integer;
   levelgap: Integer;
-  push: Integer;
+  // push: Integer;
 begin
   Result := False;
   if TargeTBaseObject = nil then

@@ -4,9 +4,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, StrUtils, Variants, Classes, Graphics, Controls, ZLIB,
-  Forms, ActiveX, DateUtils, RegDllFile,
+  Forms, ActiveX, DateUtils, RegDllFile, IniFiles,
   Dialogs, M2Share, {$IF DBTYPE = BDE}DBTables{$ELSE}ADODB{$IFEND}, DB, HUtil32,
-  Grobal2, SDK, ObjNpc, UsrEngn;
+  Grobal2, SDK, ObjNpc, UsrEngn, SQLiteTable3, SQLite3;
 
 type
   TDefineInfo = record
@@ -34,12 +34,6 @@ type
     procedure QMapEventNpc;
     procedure RobotNPC();
     function LoadSetItems(): Integer;
-    function LoadRefineConfig(): Boolean;
-    function LoadSoulBindConfig(): Boolean;
-    function LoadMeltingConfig(): Boolean;
-    function LoadSoulSystemConfig(): Boolean;
-    function LoadMonsterAffixConfig(): Boolean;
-    function LoadRefineMaterials(): Integer;
     function LoadCompoundInfoList: Integer;
     function GetSetItem(sItemName: string): TList;
     procedure DeCodeStringList(StringList: TStringList);
@@ -90,6 +84,13 @@ type
     procedure LoadUserCmd();
 
     function LoadMapEvent(): Integer;
+    // 凝练系统配置加载函数
+    function LoadRefineConfig(): Boolean;
+    function LoadSoulBindConfig(): Boolean;
+    function LoadMeltingConfig(): Boolean;
+    function LoadSoulSystemConfig(): Boolean;
+    function LoadMonsterAffixConfig(): Boolean;
+    function LoadRefineMaterials(): Integer;
     { Public declarations }
   end;
 
@@ -309,10 +310,25 @@ begin
         StdItem.HealthRecover := Query.FieldByName('HealthRecover').AsInteger;
         StdItem.SpellRecover := Query.FieldByName('SpellRecover').AsInteger;
         StdItem.PoisonRecover := Query.FieldByName('PoisonRecover').AsInteger;
-        StdItem.LightBeamEnabled := Query.FieldByName('LightBeamEnabled').AsInteger;
-        StdItem.LightBeamType := Query.FieldByName('LightBeamType').AsInteger;
-        StdItem.LightBeamFrameCount := Query.FieldByName('LightBeamFrameCount').AsInteger;
-        StdItem.LightBeamFrameTime := Query.FieldByName('LightBeamFrameTime').AsInteger;
+        if Query.FindField('LightBeamEnabled') <> nil then
+          StdItem.LightBeamEnabled := Query.FieldByName('LightBeamEnabled').AsInteger
+        else
+          StdItem.LightBeamEnabled := 0;
+
+        if Query.FindField('LightBeamType') <> nil then
+          StdItem.LightBeamType := Query.FieldByName('LightBeamType').AsInteger
+        else
+          StdItem.LightBeamType := 0;
+
+        if Query.FindField('LightBeamFrameCount') <> nil then
+          StdItem.LightBeamFrameCount := Query.FieldByName('LightBeamFrameCount').AsInteger
+        else
+          StdItem.LightBeamFrameCount := 0;
+
+        if Query.FindField('LightBeamFrameTime') <> nil then
+          StdItem.LightBeamFrameTime := Query.FieldByName('LightBeamFrameTime').AsInteger
+        else
+          StdItem.LightBeamFrameTime := 0;
         StdItem.Color := Query.FieldByName('Color').AsInteger;
         wBind := Query.FieldByName('Bind').AsInteger;
         StdItem.Bind := 0;
@@ -2369,7 +2385,6 @@ var
   sFileName: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFileName := g_Config.sGameDataDir + 'RefineConfig.ini';
   
   try
@@ -2425,7 +2440,6 @@ var
   sFileName: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFileName := g_Config.sGameDataDir + 'SoulBindConfig.ini';
   
   try
@@ -2481,7 +2495,6 @@ var
   sFileName: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFileName := g_Config.sGameDataDir + 'MeltingConfig.ini';
   
   try
@@ -2538,7 +2551,6 @@ var
   sFileName: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFileName := g_Config.sGameDataDir + 'SoulConfig.ini';
   
   try
@@ -2628,7 +2640,6 @@ var
   sFileName: string;
   IniFile: TIniFile;
 begin
-  Result := False;
   sFileName := g_Config.sGameDataDir + 'MonsterAffixConfig.ini';
   
   try

@@ -203,6 +203,7 @@ type
     function GetPlayObjectEx(sAccount, sName: string): TPlayObject;
     function InPlayObjectList(PlayObject: TPlayObject): Boolean;
     procedure KickPlayObjectEx(sAccount, sName: string);
+    procedure KickAllPlayObject;
     function FindMerchant(Merchant: TObject): TMerchant;
     function FindNPC(GuildOfficial: TObject): TGuildOfficial;
     function InMerchantList(Merchant: TMerchant): Boolean;
@@ -3060,6 +3061,26 @@ begin
         break;
       end;
     end;
+  end;
+end;
+
+procedure TUserEngine.KickAllPlayObject;
+var
+  i: Integer;
+  PlayObject: TPlayObject;
+begin
+  EnterCriticalSection(ProcessHumanCriticalSection);
+  try
+    for i := 0 to m_PlayObjectList.Count - 1 do begin
+      PlayObject := TPlayObject(m_PlayObjectList.Objects[i]);
+      if PlayObject <> nil then begin
+        PlayObject.m_boEmergencyClose := True;
+        PlayObject.m_boKickFlag := True;
+        PlayObject.m_boPlayOffLine := False;
+      end;
+    end;
+  finally
+    LeaveCriticalSection(ProcessHumanCriticalSection);
   end;
 end;
 {

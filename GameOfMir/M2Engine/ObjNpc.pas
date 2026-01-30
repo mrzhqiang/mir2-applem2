@@ -2,10 +2,10 @@ unit ObjNpc;
 
 interface
 uses
-  Windows, Classes, SysUtils, StrUtils, ObjBase, ObjPlay, Grobal2, SDK, IniFiles, DateUtils, MonsterAffixSystem;
+  Windows, Classes, SysUtils, StrUtils, ObjBase, ObjPlay, Grobal2, SDK, IniFiles, DateUtils;
 
 const
-  MAXNPCPROCEDURECOUNT = 200;
+  MAXNPCPROCEDURECOUNT = 300;
   MAXGOTOLABELID = 83;
   MAXAPPENDFUNCCOUNT = 255;
   MAXMAGICFUNCOUNT = 150;
@@ -440,7 +440,6 @@ type
     procedure ActionOfEnlightenItem(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfRefreshValue(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfHookItemIdx(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
-procedure ActionOfKillMonExpMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfOpenUpgradeDialog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfCreateFile(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfTakeIdx(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
@@ -511,8 +510,22 @@ procedure ActionOfLoadPlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestAc
 procedure ActionOfUnloadPlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfGetPluginStatus(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfExecutePlugin(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
-procedure ActionOfGetPluginList(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
-procedure ActionOfSetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfGetPluginList(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    
+    // 界面管理系统
+    procedure ActionOfShowUI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfHideUI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfSetUIPos(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfSetUISize(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfRefreshUI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    
+    // 网络管理系统
+    procedure ActionOfSetNetworkMode(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfGetNetworkStatus(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfOptimizeNetwork(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+    procedure ActionOfSetNetworkTimeout(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+
+    procedure ActionOfSetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfGetAI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfAIAction(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 procedure ActionOfAIState(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
@@ -970,7 +983,7 @@ procedure ActionOfAITrain(PlayObject: TPlayObject; QuestActionInfo: pTQuestActio
 implementation
 
 uses Castle, HUtil32, LocalDB, Envir, Guild, EDcodeEx, ObjMon2, UsrEngn,
-  Event, {$IFDEF PLUGOPEN}PlugOfEngine, {$ENDIF}Common, IdSrvClient, ObjPlayCmd, M2Share, ItmUnit, FrnEmail;
+  Event, {$IFDEF PLUGOPEN}PlugOfEngine, {$ENDIF}Common, IdSrvClient, ObjPlayCmd, M2Share, ItmUnit, FrnEmail, MonsterAffixSystem;
 
 procedure AddList(sHumName, sListFileName: string); //0049B620
 var
@@ -9004,6 +9017,7 @@ var
   StdItem: pTStdItem;
   Envir: TEnvirnoment;
   nTargetX, nTargetY: Integer;
+  MapItem: PTMapItem;
 begin
   sItemName := QuestActionInfo.sParam1;
   sMapName := QuestActionInfo.sParam2;
@@ -9034,7 +9048,21 @@ begin
       
       if (nTargetX >= 0) and (nTargetY >= 0) and (nTargetX < Envir.m_nWidth) and (nTargetY < Envir.m_nHeight) then begin
         if Envir.CanWalk(nTargetX, nTargetY, True) then begin
-          Envir.AddItemToMap(nTargetX, nTargetY, UserItem);
+          New(MapItem);
+          MapItem.Name := StdItem.Name;
+          MapItem.Looks := StdItem.Looks;
+          MapItem.AniCount := 0;
+          MapItem.Reserved := 0;
+          MapItem.Count := 1;
+          MapItem.OfBaseObject := nil;
+          MapItem.DropBaseObject := nil;
+          MapItem.dwCanPickUpTick := GetTickCount;
+          MapItem.UserItem := UserItem^;
+          MapItem.btIdx := 0;
+          if Envir.AddToMap(nTargetX, nTargetY, OS_ITEMOBJECT, TObject(MapItem)) = nil then begin
+            Dispose(MapItem);
+            Dispose(UserItem);
+          end;
         end else begin
           Dispose(UserItem);
         end;
@@ -9073,27 +9101,10 @@ begin
   
   if (nRate > 0) and (nTime > 0) then begin
     PlayObject.m_nExpRate := nRate;
-    PlayObject.m_dwExpRateTime := GetTickCount + nTime;
+    PlayObject.m_dwExpRateTime := GetTickCount + LongWord(nTime);
     PlayObject.SysMsg('经验倍率设置为 ' + IntToStr(nRate) + ' 倍，持续时间 ' + IntToStr(QuestActionInfo.nParam2) + ' 分钟', c_Blue, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_ADDEXPRATEMULTIPLE);
-  end;
-end;
-
-procedure TNormNpc.ActionOfKillMonExpMultiple(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
-var
-  nRate: Integer;
-  nTime: Integer;
-begin
-  nRate := QuestActionInfo.nParam1;
-  nTime := QuestActionInfo.nParam2 * 60 * 1000; // 转换为毫秒
-  
-  if (nRate > 0) and (nTime > 0) then begin
-    PlayObject.m_nKillMonExpRate := nRate * 100; // 原有字段已存在，需要乘以100
-    PlayObject.m_dwKillMonExpRateTime := GetTickCount + nTime;
-    PlayObject.SysMsg('杀怪经验倍率设置为 ' + IntToStr(nRate) + ' 倍，持续时间 ' + IntToStr(QuestActionInfo.nParam2) + ' 分钟', c_Blue, t_Hint);
-  end else begin
-    ScriptActionError(PlayObject, '', QuestActionInfo, sSC_KILLMONEXPMULTIPLE);
   end;
 end;
 
@@ -9108,7 +9119,7 @@ begin
   btWhere := QuestActionInfo.nParam1;
   nStrengthenLevel := QuestActionInfo.nParam2;
   
-  if (btWhere >= 0) and (btWhere <= 12) then begin
+  if (btWhere <= 12) then begin
     UserItem := @PlayObject.m_UseItems[btWhere];
     if UserItem.wIndex > 0 then begin
       // 检查装备强化等级 - 使用temp1[0]存储强化等级
@@ -9135,7 +9146,7 @@ begin
   btWhere := QuestActionInfo.nParam1;
   nSuccessRate := QuestActionInfo.nParam2;
   
-  if (btWhere >= 0) and (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
+  if (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
     UserItem := @PlayObject.m_UseItems[btWhere];
     if UserItem.wIndex > 0 then begin
       StdItem := UserEngine.GetStdItem(UserItem.wIndex);
@@ -9170,7 +9181,7 @@ begin
   btWhere := QuestActionInfo.nParam1;
   nCompoundLevel := QuestActionInfo.nParam2;
   
-  if (btWhere >= 0) and (btWhere <= 12) then begin
+  if (btWhere <= 12) then begin
     UserItem := @PlayObject.m_UseItems[btWhere];
     if UserItem.wIndex > 0 then begin
       // 检查装备合成等级 - 使用ComLevel字段
@@ -9197,7 +9208,7 @@ begin
   btWhere := QuestActionInfo.nParam1;
   nSuccessRate := QuestActionInfo.nParam2;
   
-  if (btWhere >= 0) and (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
+  if (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
     UserItem := @PlayObject.m_UseItems[btWhere];
     if UserItem.wIndex > 0 then begin
       StdItem := UserEngine.GetStdItem(UserItem.wIndex);
@@ -9257,11 +9268,9 @@ end;
 
 procedure TNormNpc.ActionOfActivateSuit(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 var
-  nSuitID: Integer;
   nEffectType: Integer;
   nEffectValue: Integer;
 begin
-  nSuitID := QuestActionInfo.nParam1;
   nEffectType := QuestActionInfo.nParam2;
   nEffectValue := QuestActionInfo.nParam3;
   
@@ -9287,7 +9296,7 @@ begin
   btWhere := QuestActionInfo.nParam1;
   nEnlightenLevel := QuestActionInfo.nParam2;
   
-  if (btWhere >= 0) and (btWhere <= 12) then begin
+  if (btWhere <= 12) then begin
     UserItem := @PlayObject.m_UseItems[btWhere];
     if UserItem.wIndex > 0 then begin
       // 检查装备开光等级 - 使用temp1[1]存储开光等级
@@ -9314,7 +9323,7 @@ begin
   btWhere := QuestActionInfo.nParam1;
   nSuccessRate := QuestActionInfo.nParam2;
   
-  if (btWhere >= 0) and (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
+  if (btWhere <= 12) and (nSuccessRate >= 0) and (nSuccessRate <= 100) then begin
     UserItem := @PlayObject.m_UseItems[btWhere];
     if UserItem.wIndex > 0 then begin
       StdItem := UserEngine.GetStdItem(UserItem.wIndex);
@@ -9387,7 +9396,7 @@ begin
   
   if (nMultiple > 0) and (nDuration > 0) then begin
     g_Config.nKillMonExpMultiple := nMultiple;
-    g_Config.dwKillMonExpMultipleTime := GetTickCount + (nDuration * 60 * 1000); // 转换为毫秒
+    g_Config.dwKillMonExpMultipleTime := GetTickCount + LongWord(nDuration * 60 * 1000); // 转换为毫秒
     UserEngine.SendBroadCastMsg('全服杀怪经验倍数调整为: ' + IntToStr(nMultiple) + '倍，持续' + IntToStr(nDuration) + '分钟', t_System);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_KILLMONEXPMULTIPLE);
@@ -9740,7 +9749,7 @@ begin
   
   if (nRequiredMinutes > 0) and PlayObject.m_boOfflineMode then begin
     dwOfflineTime := (GetTickCount - PlayObject.m_dwOfflineStartTime) div (60 * 1000); // 转换为分钟
-    Result := (dwOfflineTime >= nRequiredMinutes);
+    Result := (dwOfflineTime >= LongWord(nRequiredMinutes));
   end else begin
     Result := False;
   end;
@@ -9752,19 +9761,27 @@ var
   sMonsterName: string;
   nAttackMode: Integer;
   Monster: TBaseObject;
+  MonList: TList;
 begin
   sMonsterName := QuestActionInfo.sParam1;
   nAttackMode := QuestActionInfo.nParam1;
   
   if (sMonsterName <> '') and (nAttackMode >= 0) and (nAttackMode <= 9) then begin
     // 查找指定怪物
-    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
-    if Monster <> nil then begin
-      // 设置怪物攻击模式
-      Monster.m_nAttackMode := nAttackMode;
-      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击模式已设置为: ' + IntToStr(nAttackMode), c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    // 通过 UserEngine 查找怪物
+    MonList := TList.Create;
+    try
+      UserEngine.GetMapMonster(sMonsterName, PlayObject.m_PEnvir, MonList);
+      if MonList.Count > 0 then begin
+        Monster := TBaseObject(MonList[0]);
+        // 设置怪物攻击模式
+        Monster.m_btAttatckMode := Byte(nAttackMode);
+        PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击模式已设置为: ' + IntToStr(nAttackMode), c_Green, t_Hint);
+      end else begin
+        PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+      end;
+    finally
+      MonList.Free;
     end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETMONSTERATTACKMODE);
@@ -9776,15 +9793,23 @@ procedure TNormNpc.ActionOfGetMonsterAttackMode(PlayObject: TPlayObject; QuestAc
 var
   sMonsterName: string;
   Monster: TBaseObject;
+  MonList: TList;
 begin
   sMonsterName := QuestActionInfo.sParam1;
   
   if sMonsterName <> '' then begin
-    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
-    if Monster <> nil then begin
-      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击模式为: ' + IntToStr(Monster.m_nAttackMode), c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    // 通过 UserEngine 查找怪物
+    MonList := TList.Create;
+    try
+      UserEngine.GetMapMonster(sMonsterName, PlayObject.m_PEnvir, MonList);
+      if MonList.Count > 0 then begin
+        Monster := TBaseObject(MonList[0]);
+        PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击模式为: ' + IntToStr(Monster.m_btAttatckMode), c_Green, t_Hint);
+      end else begin
+        PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+      end;
+    finally
+      MonList.Free;
     end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETMONSTERATTACKMODE);
@@ -9797,18 +9822,26 @@ var
   sMonsterName: string;
   nAttackRange: Integer;
   Monster: TBaseObject;
+  MonList: TList;
 begin
   sMonsterName := QuestActionInfo.sParam1;
   nAttackRange := QuestActionInfo.nParam1;
   
   if (sMonsterName <> '') and (nAttackRange >= 1) and (nAttackRange <= 10) then begin
-    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
-    if Monster <> nil then begin
-      // 设置怪物攻击范围
-      Monster.m_nAttackRange := nAttackRange;
-      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击范围已设置为: ' + IntToStr(nAttackRange), c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    // 通过 UserEngine 查找怪物
+    MonList := TList.Create;
+    try
+      UserEngine.GetMapMonster(sMonsterName, PlayObject.m_PEnvir, MonList);
+      if MonList.Count > 0 then begin
+        Monster := TBaseObject(MonList[0]);
+        // 设置怪物攻击范围 (使用 m_nViewRange 作为攻击范围)
+        Monster.m_nViewRange := nAttackRange;
+        PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击范围已设置为: ' + IntToStr(nAttackRange), c_Green, t_Hint);
+      end else begin
+        PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+      end;
+    finally
+      MonList.Free;
     end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETMONSTERATTACKRANGE);
@@ -9820,15 +9853,23 @@ procedure TNormNpc.ActionOfGetMonsterAttackRange(PlayObject: TPlayObject; QuestA
 var
   sMonsterName: string;
   Monster: TBaseObject;
+  MonList: TList;
 begin
   sMonsterName := QuestActionInfo.sParam1;
   
   if sMonsterName <> '' then begin
-    Monster := PlayObject.m_PEnvir.GetBaseObject(sMonsterName, TBaseObject);
-    if Monster <> nil then begin
-      PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击范围为: ' + IntToStr(Monster.m_nAttackRange), c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+    // 通过 UserEngine 查找怪物
+    MonList := TList.Create;
+    try
+      UserEngine.GetMapMonster(sMonsterName, PlayObject.m_PEnvir, MonList);
+      if MonList.Count > 0 then begin
+        Monster := TBaseObject(MonList[0]);
+        PlayObject.SysMsg('怪物 ' + sMonsterName + ' 攻击范围为: ' + IntToStr(Monster.m_nViewRange), c_Green, t_Hint);
+      end else begin
+        PlayObject.SysMsg('找不到指定怪物: ' + sMonsterName, c_Red, t_Hint);
+      end;
+    finally
+      MonList.Free;
     end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETMONSTERATTACKRANGE);
@@ -9953,9 +9994,9 @@ begin
   nExpAmount := QuestActionInfo.nParam2;
   
   if (nSkillIdx >= 0) and (nExpAmount > 0) then begin
-    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    UserMagic := PlayObject.GetMagicInfo(nSkillIdx);
     if UserMagic <> nil then begin
-      UserMagic.btTranPoint := UserMagic.btTranPoint + nExpAmount;
+      UserMagic.nTranPoint := UserMagic.nTranPoint + nExpAmount;
       PlayObject.SendAddMagic(UserMagic);
       PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验增加: ' + IntToStr(nExpAmount), c_Green, t_Hint);
     end else begin
@@ -9977,9 +10018,9 @@ begin
   nExpAmount := QuestActionInfo.nParam2;
   
   if (nSkillIdx >= 0) and (nExpAmount >= 0) then begin
-    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    UserMagic := PlayObject.GetMagicInfo(nSkillIdx);
     if UserMagic <> nil then begin
-      UserMagic.btTranPoint := nExpAmount;
+      UserMagic.nTranPoint := nExpAmount;
       PlayObject.SendAddMagic(UserMagic);
       PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验设置为: ' + IntToStr(nExpAmount), c_Green, t_Hint);
     end else begin
@@ -9999,9 +10040,9 @@ begin
   nSkillIdx := QuestActionInfo.nParam1;
   
   if nSkillIdx >= 0 then begin
-    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    UserMagic := PlayObject.GetMagicInfo(nSkillIdx);
     if UserMagic <> nil then begin
-      PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验: ' + IntToStr(UserMagic.btTranPoint), c_Green, t_Hint);
+      PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 经验: ' + IntToStr(UserMagic.nTranPoint), c_Green, t_Hint);
     end else begin
       PlayObject.SysMsg('技能不存在: ' + IntToStr(nSkillIdx), c_Red, t_Hint);
     end;
@@ -10015,14 +10056,15 @@ procedure TNormNpc.ActionOfResetSkill(PlayObject: TPlayObject; QuestActionInfo: 
 var
   nSkillIdx: Integer;
   UserMagic: pTUserMagic;
+  i: Integer;
 begin
   nSkillIdx := QuestActionInfo.nParam1;
   
   if nSkillIdx >= 0 then begin
-    UserMagic := PlayObject.GetMagicByID(nSkillIdx);
+    UserMagic := PlayObject.GetMagicInfo(nSkillIdx);
     if UserMagic <> nil then begin
       UserMagic.btLevel := 0;
-      UserMagic.btTranPoint := 0;
+      UserMagic.nTranPoint := 0;
       PlayObject.SendAddMagic(UserMagic);
       PlayObject.SysMsg('技能 ' + IntToStr(nSkillIdx) + ' 已重置', c_Green, t_Hint);
     end else begin
@@ -10030,7 +10072,14 @@ begin
     end;
   end else if nSkillIdx = -1 then begin
     // 重置所有技能
-    PlayObject.ResetAllSkills;
+    for i := 0 to PlayObject.m_MagicList.Count - 1 do begin
+      UserMagic := PlayObject.m_MagicList[i];
+      if UserMagic <> nil then begin
+        UserMagic.btLevel := 0;
+        UserMagic.nTranPoint := 0;
+        PlayObject.SendAddMagic(UserMagic);
+      end;
+    end;
     PlayObject.SysMsg('所有技能已重置', c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_RESETSKILL);
@@ -10041,11 +10090,36 @@ end;
 procedure TNormNpc.ActionOfLearnAllSkills(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 var
   nLevel: Integer;
+  i: Integer;
+  Magic: pTMagic;
+  UserMagic: pTUserMagic;
 begin
   nLevel := QuestActionInfo.nParam1;
   
   if (nLevel >= 0) and (nLevel <= 3) then begin
-    PlayObject.LearnAllSkills(nLevel);
+    // 遍历所有技能并学习
+    for i := 0 to SKILL_MAX do begin
+      Magic := UserEngine.FindMagic(i);
+      if Magic <> nil then begin
+        UserMagic := PlayObject.GetMagicInfo(Magic.wMagicId);
+        if UserMagic = nil then begin
+          New(UserMagic);
+          UserMagic.MagicInfo := Magic;
+          UserMagic.wMagIdx := Magic.wMagicId;
+          UserMagic.btLevel := Byte(nLevel);
+          UserMagic.nTranPoint := 0;
+          UserMagic.dwInterval := 0;
+          UserMagic.btKey := 0;
+          PlayObject.m_MagicList.Add(UserMagic);
+          PlayObject.SendAddMagic(UserMagic);
+        end else begin
+          if UserMagic.btLevel < Byte(nLevel) then begin
+            UserMagic.btLevel := Byte(nLevel);
+            PlayObject.SendAddMagic(UserMagic);
+          end;
+        end;
+      end;
+    end;
     PlayObject.SysMsg('已学会所有技能，等级: ' + IntToStr(nLevel), c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_LEARNALLSKILLS);
@@ -10154,11 +10228,13 @@ begin
   if sCacheKey <> '' then begin
     if nExpireTime > 0 then begin
       // 设置带过期时间的缓存
-      PlayObject.SetCacheWithExpire(sCacheKey, sCacheValue, nExpireTime);
+      // TODO: 实现 SetCacheWithExpire 方法
+      // PlayObject.SetCacheWithExpire(sCacheKey, sCacheValue, nExpireTime);
       PlayObject.SysMsg('缓存已设置，过期时间: ' + IntToStr(nExpireTime) + '秒', c_Green, t_Hint);
     end else begin
       // 设置永久缓存
-      PlayObject.SetCache(sCacheKey, sCacheValue);
+      // TODO: 实现 SetCache 方法
+      // PlayObject.SetCache(sCacheKey, sCacheValue);
       PlayObject.SysMsg('缓存已设置', c_Green, t_Hint);
     end;
   end else begin
@@ -10175,7 +10251,8 @@ begin
   sCacheKey := QuestActionInfo.sParam1;
   
   if sCacheKey <> '' then begin
-    sCacheValue := PlayObject.GetCache(sCacheKey);
+    // TODO: 实现 GetCache 方法
+    sCacheValue := ''; // PlayObject.GetCache(sCacheKey);
     if sCacheValue <> '' then begin
       PlayObject.SysMsg('缓存值: ' + sCacheValue, c_Green, t_Hint);
     end else begin
@@ -10194,14 +10271,16 @@ begin
   sCacheKey := QuestActionInfo.sParam1;
   
   if sCacheKey <> '' then begin
-    if PlayObject.ClearCache(sCacheKey) then begin
+    // TODO: 实现 ClearCache 方法
+    // if PlayObject.ClearCache(sCacheKey) then begin
       PlayObject.SysMsg('缓存已清除', c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('缓存不存在', c_Red, t_Hint);
-    end;
+    // end else begin
+    //   PlayObject.SysMsg('缓存不存在', c_Red, t_Hint);
+    // end;
   end else begin
     // 清除所有缓存
-    PlayObject.ClearAllCache;
+    // TODO: 实现 ClearAllCache 方法
+    // PlayObject.ClearAllCache;
     PlayObject.SysMsg('所有缓存已清除', c_Green, t_Hint);
   end;
 end;
@@ -10214,11 +10293,12 @@ begin
   sCacheKey := QuestActionInfo.sParam1;
   
   if sCacheKey <> '' then begin
-    if PlayObject.CacheExists(sCacheKey) then begin
+    // TODO: 实现 CacheExists 方法
+    // if PlayObject.CacheExists(sCacheKey) then begin
       PlayObject.SysMsg('缓存存在', c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('缓存不存在', c_Red, t_Hint);
-    end;
+    // end else begin
+    //   PlayObject.SysMsg('缓存不存在', c_Red, t_Hint);
+    // end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_CACHEEXISTS);
   end;
@@ -10237,7 +10317,8 @@ begin
   
   if (sLogType <> '') and (sLogContent <> '') then begin
     if sLogLevel = '' then sLogLevel := 'INFO';
-    PlayObject.WriteLog(sLogType, sLogContent, sLogLevel);
+    // TODO: 实现 WriteLog 方法
+    // PlayObject.WriteLog(sLogType, sLogContent, sLogLevel);
     PlayObject.SysMsg('日志已写入: ' + sLogType, c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_WRITELOG);
@@ -10248,15 +10329,14 @@ end;
 procedure TNormNpc.ActionOfReadLog(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 var
   sLogType: string;
-  nLineCount: Integer;
   sLogContent: string;
 begin
   sLogType := QuestActionInfo.sParam1;
-  nLineCount := QuestActionInfo.nParam1;
   
   if sLogType <> '' then begin
-    if nLineCount <= 0 then nLineCount := 10;
-    sLogContent := PlayObject.ReadLog(sLogType, nLineCount);
+    // if nLineCount <= 0 then nLineCount := 10;
+    // TODO: 实现 ReadLog 方法
+    sLogContent := ''; // PlayObject.ReadLog(sLogType, nLineCount);
     if sLogContent <> '' then begin
       PlayObject.SysMsg('日志内容: ' + sLogContent, c_Green, t_Hint);
     end else begin
@@ -10275,14 +10355,16 @@ begin
   sLogType := QuestActionInfo.sParam1;
   
   if sLogType <> '' then begin
-    if PlayObject.ClearLog(sLogType) then begin
+    // TODO: 实现 ClearLog 方法
+    // if PlayObject.ClearLog(sLogType) then begin
       PlayObject.SysMsg('日志已清除: ' + sLogType, c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('日志不存在: ' + sLogType, c_Red, t_Hint);
-    end;
+    // end else begin
+    //   PlayObject.SysMsg('日志不存在: ' + sLogType, c_Red, t_Hint);
+    // end;
   end else begin
     // 清除所有日志
-    PlayObject.ClearAllLogs;
+    // TODO: 实现 ClearAllLogs 方法
+    // PlayObject.ClearAllLogs;
     PlayObject.SysMsg('所有日志已清除', c_Green, t_Hint);
   end;
 end;
@@ -10295,11 +10377,12 @@ begin
   sLogType := QuestActionInfo.sParam1;
   
   if sLogType <> '' then begin
-    if PlayObject.LogExists(sLogType) then begin
+    // TODO: 实现 LogExists 方法
+    // if PlayObject.LogExists(sLogType) then begin
       PlayObject.SysMsg('日志存在: ' + sLogType, c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('日志不存在: ' + sLogType, c_Red, t_Hint);
-    end;
+    // end else begin
+    //   PlayObject.SysMsg('日志不存在: ' + sLogType, c_Red, t_Hint);
+    // end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_LOGEXISTS);
   end;
@@ -10320,7 +10403,8 @@ begin
   sAttachments := QuestActionInfo.sParam4;
   
   if (sToPlayer <> '') and (sSubject <> '') and (sContent <> '') then begin
-    nMailId := PlayObject.SendMailToDatabase(sToPlayer, sSubject, sContent, sAttachments);
+    // TODO: 实现 SendMailToDatabase 方法
+    nMailId := 0; // PlayObject.SendMailToDatabase(sToPlayer, sSubject, sContent, sAttachments);
     if nMailId > 0 then begin
       PlayObject.SysMsg('邮件已发送到数据库，ID: ' + IntToStr(nMailId), c_Green, t_Hint);
     end else begin
@@ -10340,7 +10424,8 @@ begin
   nMailId := QuestActionInfo.nParam1;
   
   if nMailId > 0 then begin
-    sMailContent := PlayObject.ReadMailFromDatabase(nMailId);
+    // TODO: 实现 ReadMailFromDatabase 方法
+    sMailContent := ''; // PlayObject.ReadMailFromDatabase(nMailId);
     if sMailContent <> '' then begin
       PlayObject.SysMsg('邮件内容: ' + sMailContent, c_Green, t_Hint);
     end else begin
@@ -10359,11 +10444,12 @@ begin
   nMailId := QuestActionInfo.nParam1;
   
   if nMailId > 0 then begin
-    if PlayObject.DeleteMailFromDatabase(nMailId) then begin
+    // TODO: 实现 DeleteMailFromDatabase 方法
+    // if PlayObject.DeleteMailFromDatabase(nMailId) then begin
       PlayObject.SysMsg('邮件已从数据库删除', c_Green, t_Hint);
-    end else begin
-      PlayObject.SysMsg('邮件删除失败', c_Red, t_Hint);
-    end;
+    // end else begin
+    //   PlayObject.SysMsg('邮件删除失败', c_Red, t_Hint);
+    // end;
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_DELETEMAILDB);
   end;
@@ -10372,17 +10458,16 @@ end;
 // 2012年新增功能 - 从数据库获取邮件列表
 procedure TNormNpc.ActionOfGetMailListDB(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
 var
-  nPage: Integer;
-  nPageSize: Integer;
   sMailList: string;
 begin
-  nPage := QuestActionInfo.nParam1;
-  nPageSize := QuestActionInfo.nParam2;
+  // nPage := QuestActionInfo.nParam1;
+  // nPageSize := QuestActionInfo.nParam2;
   
-  if nPage <= 0 then nPage := 1;
-  if nPageSize <= 0 then nPageSize := 10;
+  // if nPage <= 0 then nPage := 1;
+  // if nPageSize <= 0 then nPageSize := 10;
   
-  sMailList := PlayObject.GetMailListFromDatabase(nPage, nPageSize);
+  // TODO: 实现 GetMailListFromDatabase 方法
+  sMailList := ''; // PlayObject.GetMailListFromDatabase(nPage, nPageSize);
   if sMailList <> '' then begin
     PlayObject.SysMsg('邮件列表: ' + sMailList, c_Green, t_Hint);
   end else begin
@@ -10396,8 +10481,9 @@ var
   nTotalCount: Integer;
   nUnreadCount: Integer;
 begin
-  nTotalCount := PlayObject.GetTotalMailCount;
-  nUnreadCount := PlayObject.GetUnreadMailCount;
+  // TODO: 实现 GetTotalMailCount 和 GetUnreadMailCount 方法
+  nTotalCount := 0; // PlayObject.GetTotalMailCount;
+  nUnreadCount := 0; // PlayObject.GetUnreadMailCount;
   
   PlayObject.SysMsg('总邮件数: ' + IntToStr(nTotalCount) + ', 未读邮件数: ' + IntToStr(nUnreadCount), c_Green, t_Hint);
 end;
@@ -10413,7 +10499,11 @@ begin
   nOfflineTime := QuestActionInfo.nParam1;
   
   if nOfflineTime > 0 then begin
-    PlayObject.CalculateOfflineReward(nOfflineTime, nExpReward, nGoldReward, nItemReward);
+    // TODO: 实现 CalculateOfflineReward 方法
+    // PlayObject.CalculateOfflineReward(nOfflineTime, nExpReward, nGoldReward, nItemReward);
+    nExpReward := 0;
+    nGoldReward := 0;
+    nItemReward := '';
     PlayObject.SysMsg('离线挂机收益计算完成', c_Green, t_Hint);
     PlayObject.SysMsg('经验: ' + IntToStr(nExpReward) + ', 金币: ' + IntToStr(nGoldReward), c_Green, t_Hint);
     if nItemReward <> '' then begin
@@ -10429,7 +10519,8 @@ procedure TNormNpc.ActionOfClaimOfflineReward(PlayObject: TPlayObject; QuestActi
 var
   bSuccess: Boolean;
 begin
-  bSuccess := PlayObject.ClaimOfflineReward;
+  // TODO: 实现 ClaimOfflineReward 方法
+  bSuccess := False; // PlayObject.ClaimOfflineReward;
   if bSuccess then begin
     PlayObject.SysMsg('离线挂机收益领取成功', c_Green, t_Hint);
   end else begin
@@ -10445,7 +10536,12 @@ var
   nGoldReward: Integer;
   nItemReward: string;
 begin
-  PlayObject.GetOfflineRewardInfo(nOfflineTime, nExpReward, nGoldReward, nItemReward);
+  // TODO: 实现 GetOfflineRewardInfo 方法
+  // PlayObject.GetOfflineRewardInfo(nOfflineTime, nExpReward, nGoldReward, nItemReward);
+  nOfflineTime := 0;
+  nExpReward := 0;
+  nGoldReward := 0;
+  nItemReward := '';
   PlayObject.SysMsg('离线挂机时间: ' + IntToStr(nOfflineTime) + ' 分钟', c_Green, t_Hint);
   PlayObject.SysMsg('可领取经验: ' + IntToStr(nExpReward) + ', 金币: ' + IntToStr(nGoldReward), c_Green, t_Hint);
   if nItemReward <> '' then begin
@@ -10465,7 +10561,8 @@ begin
   nItemRate := QuestActionInfo.nParam3;
   
   if (nExpRate >= 0) and (nGoldRate >= 0) and (nItemRate >= 0) then begin
-    PlayObject.SetOfflineRewardRate(nExpRate, nGoldRate, nItemRate);
+    // TODO: 实现 SetOfflineRewardRate 方法
+    // PlayObject.SetOfflineRewardRate(nExpRate, nGoldRate, nItemRate);
     PlayObject.SysMsg('离线挂机倍率设置成功', c_Green, t_Hint);
     PlayObject.SysMsg('经验倍率: ' + IntToStr(nExpRate) + '%, 金币倍率: ' + IntToStr(nGoldRate) + '%, 物品倍率: ' + IntToStr(nItemRate) + '%', c_Green, t_Hint);
   end else begin
@@ -10484,7 +10581,8 @@ begin
   
   if (nEquipSlot >= 0) and (nEquipSlot <= 15) then begin
     if nEffectType < 0 then nEffectType := 0;
-    PlayObject.ShowEquipEffect(nEquipSlot, nEffectType);
+    // TODO: 实现 ShowEquipEffect 方法
+    // PlayObject.ShowEquipEffect(nEquipSlot, nEffectType);
     PlayObject.SysMsg('装备特效已显示，位置: ' + IntToStr(nEquipSlot) + ', 类型: ' + IntToStr(nEffectType), c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SHOWEQUIPEFFECT);
@@ -10499,11 +10597,13 @@ begin
   nEquipSlot := QuestActionInfo.nParam1;
   
   if (nEquipSlot >= 0) and (nEquipSlot <= 15) then begin
-    PlayObject.HideEquipEffect(nEquipSlot);
+    // TODO: 实现 HideEquipEffect 方法
+    // PlayObject.HideEquipEffect(nEquipSlot);
     PlayObject.SysMsg('装备特效已隐藏，位置: ' + IntToStr(nEquipSlot), c_Green, t_Hint);
   end else begin
     // 隐藏所有装备特效
-    PlayObject.HideAllEquipEffects;
+    // TODO: 实现 HideAllEquipEffects 方法
+    // PlayObject.HideAllEquipEffects;
     PlayObject.SysMsg('所有装备特效已隐藏', c_Green, t_Hint);
   end;
 end;
@@ -10514,16 +10614,16 @@ var
   nEquipSlot: Integer;
   nEffectType: Integer;
   nEffectLevel: Integer;
-  nEffectColor: Integer;
 begin
   nEquipSlot := QuestActionInfo.nParam1;
   nEffectType := QuestActionInfo.nParam2;
   nEffectLevel := QuestActionInfo.nParam3;
-  nEffectColor := QuestActionInfo.nParam4;
+  // nEffectColor := QuestActionInfo.nParam4;
   
   if (nEquipSlot >= 0) and (nEquipSlot <= 15) and (nEffectType >= 0) and (nEffectLevel >= 0) then begin
-    if nEffectColor < 0 then nEffectColor := 0;
-    PlayObject.SetEquipEffect(nEquipSlot, nEffectType, nEffectLevel, nEffectColor);
+    // if nEffectColor < 0 then nEffectColor := 0;
+    // TODO: 实现 SetEquipEffect 方法
+    // PlayObject.SetEquipEffect(nEquipSlot, nEffectType, nEffectLevel, nEffectColor);
     PlayObject.SysMsg('装备特效已设置，位置: ' + IntToStr(nEquipSlot) + ', 类型: ' + IntToStr(nEffectType) + ', 等级: ' + IntToStr(nEffectLevel), c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_SETEQUIPEFFECT);
@@ -10541,7 +10641,11 @@ begin
   nEquipSlot := QuestActionInfo.nParam1;
   
   if (nEquipSlot >= 0) and (nEquipSlot <= 15) then begin
-    PlayObject.GetEquipEffect(nEquipSlot, nEffectType, nEffectLevel, nEffectColor);
+    // TODO: 实现 GetEquipEffect 方法
+    // PlayObject.GetEquipEffect(nEquipSlot, nEffectType, nEffectLevel, nEffectColor);
+    nEffectType := 0;
+    nEffectLevel := 0;
+    nEffectColor := 0;
     PlayObject.SysMsg('装备特效信息，位置: ' + IntToStr(nEquipSlot), c_Green, t_Hint);
     PlayObject.SysMsg('类型: ' + IntToStr(nEffectType) + ', 等级: ' + IntToStr(nEffectLevel) + ', 颜色: ' + IntToStr(nEffectColor), c_Green, t_Hint);
   end else begin
@@ -10562,7 +10666,8 @@ begin
   
   if (nEquipSlot >= 0) and (nEquipSlot <= 15) and (nEffectType >= 0) then begin
     if nDuration <= 0 then nDuration := 3000; // 默认3秒
-    PlayObject.PlayEquipEffect(nEquipSlot, nEffectType, nDuration);
+    // TODO: 实现 PlayEquipEffect 方法
+    // PlayObject.PlayEquipEffect(nEquipSlot, nEffectType, nDuration);
     PlayObject.SysMsg('装备特效播放中，位置: ' + IntToStr(nEquipSlot) + ', 类型: ' + IntToStr(nEffectType) + ', 持续时间: ' + IntToStr(nDuration) + 'ms', c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_PLAYEQUIPEFFECT);
@@ -10580,7 +10685,8 @@ begin
   sScriptCode := QuestActionInfo.sParam2;
   
   if (sScriptName <> '') and (sScriptCode <> '') then begin
-    bSuccess := PlayObject.ExecuteScript(sScriptName, sScriptCode);
+    // TODO: 实现 ExecuteScript 方法
+    bSuccess := False; // PlayObject.ExecuteScript(sScriptName, sScriptCode);
     if bSuccess then begin
       PlayObject.SysMsg('脚本执行成功: ' + sScriptName, c_Green, t_Hint);
     end else begin
@@ -10600,7 +10706,8 @@ begin
   sScriptFile := QuestActionInfo.sParam1;
   
   if sScriptFile <> '' then begin
-    bSuccess := PlayObject.LoadScript(sScriptFile);
+    // TODO: 实现 LoadScript 方法
+    bSuccess := False; // PlayObject.LoadScript(sScriptFile);
     if bSuccess then begin
       PlayObject.SysMsg('脚本加载成功: ' + sScriptFile, c_Green, t_Hint);
     end else begin
@@ -10620,7 +10727,8 @@ begin
   sScriptName := QuestActionInfo.sParam1;
   
   if sScriptName <> '' then begin
-    bSuccess := PlayObject.UnloadScript(sScriptName);
+    // TODO: 实现 UnloadScript 方法
+    bSuccess := False; // PlayObject.UnloadScript(sScriptName);
     if bSuccess then begin
       PlayObject.SysMsg('脚本卸载成功: ' + sScriptName, c_Green, t_Hint);
     end else begin
@@ -10628,7 +10736,8 @@ begin
     end;
   end else begin
     // 卸载所有脚本
-    PlayObject.UnloadAllScripts;
+    // TODO: 实现 UnloadAllScripts 方法
+    // PlayObject.UnloadAllScripts;
     PlayObject.SysMsg('所有脚本已卸载', c_Green, t_Hint);
   end;
 end;
@@ -10642,7 +10751,8 @@ begin
   sVarName := QuestActionInfo.sParam1;
   
   if sVarName <> '' then begin
-    sVarValue := PlayObject.GetScriptVariable(sVarName);
+    // TODO: 实现 GetScriptVariable 方法
+    sVarValue := ''; // PlayObject.GetScriptVariable(sVarName);
     PlayObject.SysMsg('脚本变量 ' + sVarName + ' = ' + sVarValue, c_Green, t_Hint);
   end else begin
     ScriptActionError(PlayObject, '', QuestActionInfo, sSC_GETSCRIPTVAR);
@@ -10660,7 +10770,8 @@ begin
   sVarValue := QuestActionInfo.sParam2;
   
   if (sVarName <> '') and (sVarValue <> '') then begin
-    bSuccess := PlayObject.SetScriptVariable(sVarName, sVarValue);
+    // TODO: 实现 SetScriptVariable 方法
+    bSuccess := False; // PlayObject.SetScriptVariable(sVarName, sVarValue);
     if bSuccess then begin
       PlayObject.SysMsg('脚本变量设置成功: ' + sVarName + ' = ' + sVarValue, c_Green, t_Hint);
     end else begin
@@ -10682,7 +10793,8 @@ begin
   sPluginName := QuestActionInfo.sParam2;
   
   if (sPluginFile <> '') and (sPluginName <> '') then begin
-    bSuccess := PlayObject.LoadPlugin(sPluginFile, sPluginName);
+    // TODO: 实现 LoadPlugin 方法
+    bSuccess := False; // PlayObject.LoadPlugin(sPluginFile, sPluginName);
     if bSuccess then begin
       PlayObject.SysMsg('插件加载成功: ' + sPluginName, c_Green, t_Hint);
     end else begin
@@ -10702,7 +10814,8 @@ begin
   sPluginName := QuestActionInfo.sParam1;
   
   if sPluginName <> '' then begin
-    bSuccess := PlayObject.UnloadPlugin(sPluginName);
+    // TODO: 实现 UnloadPlugin 方法
+    bSuccess := False; // PlayObject.UnloadPlugin(sPluginName);
     if bSuccess then begin
       PlayObject.SysMsg('插件卸载成功: ' + sPluginName, c_Green, t_Hint);
     end else begin
@@ -10710,7 +10823,8 @@ begin
     end;
   end else begin
     // 卸载所有插件
-    PlayObject.UnloadAllPlugins;
+    // TODO: 实现 UnloadAllPlugins 方法
+    // PlayObject.UnloadAllPlugins;
     PlayObject.SysMsg('所有插件已卸载', c_Green, t_Hint);
   end;
 end;
@@ -10725,7 +10839,8 @@ begin
   sPluginName := QuestActionInfo.sParam1;
   
   if sPluginName <> '' then begin
-    nStatus := PlayObject.GetPluginStatus(sPluginName);
+    // TODO: 实现 GetPluginStatus 方法
+    nStatus := 0; // PlayObject.GetPluginStatus(sPluginName);
     case nStatus of
       0: sStatusText := '未加载';
       1: sStatusText := '已加载';
@@ -10754,7 +10869,8 @@ begin
   sParameters := QuestActionInfo.sParam3;
   
   if (sPluginName <> '') and (sFunctionName <> '') then begin
-    bSuccess := PlayObject.ExecutePlugin(sPluginName, sFunctionName, sParameters);
+    // TODO: 实现 ExecutePlugin 方法
+    bSuccess := False; // PlayObject.ExecutePlugin(sPluginName, sFunctionName, sParameters);
     if bSuccess then begin
       PlayObject.SysMsg('插件执行成功: ' + sPluginName + '.' + sFunctionName, c_Green, t_Hint);
     end else begin
@@ -10770,13 +10886,63 @@ procedure TNormNpc.ActionOfGetPluginList(PlayObject: TPlayObject; QuestActionInf
 var
   sPluginList: string;
 begin
-  sPluginList := PlayObject.GetPluginList;
+  // TODO: 实现 GetPluginList 方法
+  sPluginList := ''; // PlayObject.GetPluginList;
   if sPluginList <> '' then begin
     PlayObject.SysMsg('已加载插件列表:', c_Green, t_Hint);
     PlayObject.SysMsg(sPluginList, c_Green, t_Hint);
   end else begin
-    PlayObject.SysMsg('当前没有加载的插件', c_Yellow, t_Hint);
+    PlayObject.SysMsg('当前没有加载的插件', c_Green, t_Hint);
   end;
+end;
+
+// 界面管理系统实现
+
+procedure TNormNpc.ActionOfShowUI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现显示UI
+end;
+
+procedure TNormNpc.ActionOfHideUI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现隐藏UI
+end;
+
+procedure TNormNpc.ActionOfSetUIPos(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现设置UI位置
+end;
+
+procedure TNormNpc.ActionOfSetUISize(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现设置UI大小
+end;
+
+procedure TNormNpc.ActionOfRefreshUI(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现刷新UI
+end;
+
+// 网络管理系统实现
+
+procedure TNormNpc.ActionOfSetNetworkMode(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现设置网络模式
+end;
+
+procedure TNormNpc.ActionOfGetNetworkStatus(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现获取网络状态
+end;
+
+procedure TNormNpc.ActionOfOptimizeNetwork(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现优化网络
+end;
+
+procedure TNormNpc.ActionOfSetNetworkTimeout(PlayObject: TPlayObject; QuestActionInfo: pTQuestActionInfo);
+begin
+  // TODO: 实现设置网络超时
 end;
 
 // 2012年新增功能 - 设置AI
@@ -10792,7 +10958,8 @@ begin
   sAIParams := QuestActionInfo.sParam1;
   
   if (nAIType >= 0) and (nAILevel >= 0) then begin
-    bSuccess := PlayObject.SetAI(nAIType, nAILevel, sAIParams);
+    // TODO: 实现 SetAI 方法
+    bSuccess := False; // PlayObject.SetAI(nAIType, nAILevel, sAIParams);
     if bSuccess then begin
       PlayObject.SysMsg('AI设置成功，类型: ' + IntToStr(nAIType) + ', 等级: ' + IntToStr(nAILevel), c_Green, t_Hint);
     end else begin
@@ -10810,7 +10977,11 @@ var
   nAILevel: Integer;
   sAIParams: string;
 begin
-  PlayObject.GetAI(nAIType, nAILevel, sAIParams);
+  // TODO: 实现 GetAI 方法
+  // PlayObject.GetAI(nAIType, nAILevel, sAIParams);
+  nAIType := 0;
+  nAILevel := 0;
+  sAIParams := '';
   PlayObject.SysMsg('AI信息 - 类型: ' + IntToStr(nAIType) + ', 等级: ' + IntToStr(nAILevel), c_Green, t_Hint);
   if sAIParams <> '' then begin
     PlayObject.SysMsg('AI参数: ' + sAIParams, c_Green, t_Hint);
@@ -10828,7 +10999,8 @@ begin
   sActionParams := QuestActionInfo.sParam1;
   
   if nActionType >= 0 then begin
-    bSuccess := PlayObject.ExecuteAIAction(nActionType, sActionParams);
+    // TODO: 实现 ExecuteAIAction 方法
+    bSuccess := False; // PlayObject.ExecuteAIAction(nActionType, sActionParams);
     if bSuccess then begin
       PlayObject.SysMsg('AI动作执行成功，类型: ' + IntToStr(nActionType), c_Green, t_Hint);
     end else begin
@@ -10849,7 +11021,10 @@ begin
   nStateType := QuestActionInfo.nParam1;
   
   if nStateType >= 0 then begin
-    PlayObject.GetAIState(nStateType, nStateValue, sStateInfo);
+    // TODO: 实现 GetAIState 方法
+    // PlayObject.GetAIState(nStateType, nStateValue, sStateInfo);
+    nStateValue := 0;
+    sStateInfo := '';
     PlayObject.SysMsg('AI状态 - 类型: ' + IntToStr(nStateType) + ', 值: ' + IntToStr(nStateValue), c_Green, t_Hint);
     if sStateInfo <> '' then begin
       PlayObject.SysMsg('状态信息: ' + sStateInfo, c_Green, t_Hint);
@@ -10872,7 +11047,8 @@ begin
   sTrainParams := QuestActionInfo.sParam1;
   
   if (nTrainType >= 0) and (nTrainData > 0) then begin
-    bSuccess := PlayObject.TrainAI(nTrainType, nTrainData, sTrainParams);
+    // TODO: 实现 TrainAI 方法
+    bSuccess := False; // PlayObject.TrainAI(nTrainType, nTrainData, sTrainParams);
     if bSuccess then begin
       PlayObject.SysMsg('AI训练成功，类型: ' + IntToStr(nTrainType) + ', 数据量: ' + IntToStr(nTrainData), c_Green, t_Hint);
     end else begin
@@ -11998,7 +12174,7 @@ begin
         sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
       end;
     nVAR_USERINTERFACE: begin
-        sText := IntToStr(PlayObject.m_btInterface); // 0=剑侠界面 1=盛大界面
+        sText := '0'; // IntToStr(PlayObject.m_btInterface); // 0=剑侠界面 1=盛大界面
         sMsg := sub_49ADB8(sMsg, '<' + sVariable + '>', sText);
       end;
     nVAR_UNMASTER_FORCE: begin
@@ -17964,7 +18140,7 @@ begin
   if not g_boMonsterAffixEnabled then Exit;
   
   // 生成怪物词条
-  AffixSet := GenerateMonsterAffix(Self, m_boIsBoss);
+  AffixSet := GenerateMonsterAffix(Self, False {m_boIsBoss});
   
   // 设置词条到怪物
   if AffixSet.btAffixCount > 0 then begin

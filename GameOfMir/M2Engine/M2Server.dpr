@@ -14,6 +14,7 @@ uses
   ObjMon2 in 'ObjMon2.pas',
   ObjMon in 'ObjMon.pas',
   ObjGuard in 'ObjGuard.pas',
+  Envir in 'Envir.pas',
   ObjBase in 'ObjBase.pas',
   ObjAxeMon in 'ObjAxeMon.pas',
   Mission in 'Mission.pas',
@@ -22,7 +23,6 @@ uses
   ItmUnit in 'ItmUnit.pas',
   FrnEngn in 'FrnEngn.pas',
   Event in 'Event.pas',
-  Envir in 'Envir.pas',
   Castle in 'Castle.pas',
   RunDB in 'RunDB.pas',
   RunSock in 'RunSock.pas',
@@ -73,7 +73,11 @@ uses
   DES in '..\Common\DES.pas',
   OnlineEmail in 'OnlineEmail.pas' {frmOnlineEmail},
   ViewCompoundInfo in 'ViewCompoundInfo.pas' {FrmViewCompoundInfo},
-  EditCompoundInfo in 'EditCompoundInfo.pas' {EditCompoundInfoForm};
+  EditCompoundInfo in 'EditCompoundInfo.pas' {EditCompoundInfoForm},
+  RefineSystem in 'RefineSystem.pas',
+  CrystalSystem in 'CrystalSystem.pas',
+  SoulSystem in 'SoulSystem.pas',
+  MonsterAffixSystem in 'MonsterAffixSystem.pas';
 
 {$R *.res}
 

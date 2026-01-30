@@ -8,7 +8,7 @@ uses
   Grobal2, SDK, HUtil32, RunSock, Envir, ItmUnit, Magic, Guild, Event,
   Castle, FrnEngn, UsrEngn, MudUtil, SyncObjs, Menus, ComCtrls, Grids, ObjBase,
   IdBaseComponent, IdComponent, IdUDPBase, IdUDPClient, RzCommon, Common,
-  RzEdit, RzPanel, RzSplit, RzGrids, ImgList, ImageHlp, RSA;
+  RzEdit, RzPanel, RzSplit, RzGrids, ImgList, ImageHlp, RSA, DB;
 
 const
   WM_RUN_OK = WM_USER + 1080;
@@ -458,9 +458,11 @@ begin
   else if E is EAccessViolation then begin
     MainOutMessage(Format(sCriticalException, ['访问冲突 - ' + E.Message]));
   end
+  {$WARN SYMBOL_DEPRECATED OFF}
   else if E is EStackOverflow then begin
     MainOutMessage(Format(sCriticalException, ['堆栈溢出 - ' + E.Message]));
   end
+  {$WARN SYMBOL_DEPRECATED ON}
   else if E is ESocketError then begin
     MainOutMessage(Format(sUnhandledException, ['网络错误', E.Message]));
   end
@@ -476,7 +478,9 @@ begin
   end;
   
   // 对于严重异常，记录额外的系统状态信息
+  {$WARN SYMBOL_DEPRECATED OFF}
   if (E is EOutOfMemory) or (E is EAccessViolation) or (E is EStackOverflow) then begin
+  {$WARN SYMBOL_DEPRECATED ON}
     MainOutMessage(Format('系统状态 - 在线玩家: %d, 运行时间: %d分钟', 
       [UserEngine.OnlinePlayCount, (GetTickCount - g_dwStartTick) div 60000]));
   end;
@@ -554,7 +558,6 @@ begin
   finally
     if tBuffer <> nil then begin
       FreeMem(tBuffer);
-      tBuffer := nil;
     end;
   end;
   {EnterCriticalSection(UserDBSection);
@@ -679,7 +682,6 @@ begin
           if g_nSendLogErrorCount mod 50 = 1 then // 每50次错误记录一次
             MainOutMessage(Format('UDP日志发送未知错误: %s', [E.Message]));
         end;
-        Continue;
       end;
     end;
     LogStringList.Clear;
@@ -2131,70 +2133,66 @@ begin
       g_GuildManager.Free;
       g_GuildManager := nil;
     end;
-  except
-    on E: Exception do
-      MainOutMessage(Format('清理全局列表时出错: %s', [E.Message]));
-  end;
 
-  // 第八阶段：清理动态分配的列表项
-  try
-    // 清理制作物品列表
-    if Assigned(g_MakeItemList) then begin
-      for i := 0 to g_MakeItemList.Count - 1 do begin
-        if g_MakeItemList[i] <> nil then begin
-          Dispose(pTMakeItem(g_MakeItemList[i]));
-          g_MakeItemList[i] := nil;
+    // 第八阶段：清理动态分配的列表项
+    try
+      // 清理制作物品列表
+      if Assigned(g_MakeItemList) then begin
+        for i := 0 to g_MakeItemList.Count - 1 do begin
+          if g_MakeItemList[i] <> nil then begin
+            Dispose(pTMakeItem(g_MakeItemList[i]));
+            g_MakeItemList[i] := nil;
+          end;
         end;
       end;
-    end;
-    
-    // 清理起始点列表
-    if Assigned(g_StartPointList) then begin
-      for i := 0 to g_StartPointList.Count - 1 do begin
-        if g_StartPointList.Objects[i] <> nil then begin
-          DisPose(pTStartPoint(g_StartPointList.Objects[i]));
-          g_StartPointList.Objects[i] := nil;
+      
+      // 清理起始点列表
+      if Assigned(g_StartPointList) then begin
+        for i := 0 to g_StartPointList.Count - 1 do begin
+          if g_StartPointList.Objects[i] <> nil then begin
+            DisPose(pTStartPoint(g_StartPointList.Objects[i]));
+            g_StartPointList.Objects[i] := nil;
+          end;
         end;
+        FreeAndNil(g_StartPointList);
       end;
-      FreeAndNil(g_StartPointList);
-    end;
-    
-    FreeAndNil(g_BoxsList);
+      
+      FreeAndNil(g_BoxsList);
 
-    // 清理地图任务列表
-    if Assigned(g_MapQuestList) then begin
-      for i := 0 to g_MapQuestList.Count - 1 do begin
-        if g_MapQuestList[i] <> nil then begin
-          DisPose(pTQuestInfo(g_MapQuestList[i]));
-          g_MapQuestList[i] := nil;
+      // 清理地图任务列表
+      if Assigned(g_MapQuestList) then begin
+        for i := 0 to g_MapQuestList.Count - 1 do begin
+          if g_MapQuestList[i] <> nil then begin
+            DisPose(pTQuestInfo(g_MapQuestList[i]));
+            g_MapQuestList[i] := nil;
+          end;
         end;
+        FreeAndNil(g_MapQuestList);
       end;
-      FreeAndNil(g_MapQuestList);
-    end;
 
-    // 清理套装列表
-    if Assigned(g_SetItemsList) then begin
-      for I := 0 to g_SetItemsList.Count - 1 do begin
-        if g_SetItemsList[I] <> nil then begin
-          Dispose(pTSetItems(g_SetItemsList[I]));
-          g_SetItemsList[I] := nil;
+      // 清理套装列表
+      if Assigned(g_SetItemsList) then begin
+        for I := 0 to g_SetItemsList.Count - 1 do begin
+          if g_SetItemsList[I] <> nil then begin
+            Dispose(pTSetItems(g_SetItemsList[I]));
+            g_SetItemsList[I] := nil;
+          end;
         end;
       end;
-    end;
 
-    // 清理合成信息列表
-    if Assigned(g_CompoundInfoList) then begin
-      for I := 0 to g_CompoundInfoList.Count - 1 do begin
-        if g_CompoundInfoList.Objects[I] <> nil then begin
-          Dispose(pTCompoundInfos(g_CompoundInfoList.Objects[I]));
-          g_CompoundInfoList.Objects[I] := nil;
+      // 清理合成信息列表
+      if Assigned(g_CompoundInfoList) then begin
+        for I := 0 to g_CompoundInfoList.Count - 1 do begin
+          if g_CompoundInfoList.Objects[I] <> nil then begin
+            Dispose(pTCompoundInfos(g_CompoundInfoList.Objects[I]));
+            g_CompoundInfoList.Objects[I] := nil;
+          end;
         end;
       end;
+    except
+      on E: Exception do
+        MainOutMessage(Format('清理动态分配列表时出错: %s', [E.Message]));
     end;
-  except
-    on E: Exception do
-      MainOutMessage(Format('清理动态分配列表时出错: %s', [E.Message]));
-  end;
 
     FreeAndNil(g_MakeItemList);
     FreeAndNil(ServerTableList);

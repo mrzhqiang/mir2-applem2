@@ -56,7 +56,7 @@ type
   PPoint5 = ^TPoint5;
   TPoint5 = array[0..4] of TPoint2;
 
-  PPoint6 = ^TPoint7;
+  PPoint6 = ^TPoint6;
   TPoint6 = array[0..5] of TPoint2;
 
   PPoint7 = ^TPoint7;

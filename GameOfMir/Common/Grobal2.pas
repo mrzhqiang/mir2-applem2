@@ -843,6 +843,7 @@ $80000000  }
   SM_COMPOUNDINFOS = 5363;
   SM_COMPOUNDITEM = 5364;
   SM_ABILITYMOVESET = 5365;
+  SM_OPENUPGRADEDIALOG = 5366;
 
   //移动指定
   CM_TURN = 1;
@@ -2084,6 +2085,7 @@ type
     btHPorMPRate: Byte;
     btAC2Rate: Byte;
     btMAC2Rate: Byte;
+    Effect: Word; // 2012新增特效字段
   end;
   pTAddAbility = ^TAddAbility;
 
@@ -2985,6 +2987,57 @@ type
     sBindPlayerName: string[20];            // 绑定玩家名称
   end;
 
+  // ========== 装备结晶系统数据结构 ==========
+
+  // 结晶类型
+  TCrystalType = (
+    ct_AttributePercent = 1,    // 百分比增加基础属性
+    ct_SpecialEffect = 2,       // 特殊效果
+    ct_SkillEnhance = 3         // 增强技能
+  );
+
+  // 结晶属性类型
+  TCrystalAttributeType = (
+    cat_HP_Percent = 0,         // HP百分比
+    cat_MP_Percent = 1,         // MP百分比
+    cat_DC_Percent = 2,         // 攻击百分比
+    cat_MC_Percent = 3,         // 魔法百分比
+    cat_SC_Percent = 4,         // 道术百分比
+    cat_AC_Percent = 5,         // 防御百分比
+    cat_MAC_Percent = 6         // 魔防百分比
+  );
+
+  // 结晶信息
+  pTCrystalInfo = ^TCrystalInfo;
+  TCrystalInfo = packed record
+    wIndex: Word;                           // 结晶物品索引
+    sName: string[30];                      // 结晶名称
+    CrystalType: TCrystalType;              // 结晶类型
+    AttributeType: TCrystalAttributeType;   // 属性类型（仅属性类型结晶有效）
+    nValue: Word;                           // 属性数值
+    nSpecialEffectID: Word;                 // 特殊效果ID（仅特殊效果结晶有效）
+    nSkillID: Word;                         // 技能ID（仅技能增强结晶有效）
+    nSkillLevel: Byte;                      // 技能等级加成（仅技能增强结晶有效）
+    Quality: TRefineQuality;                // 结晶品质等级
+    boEnabled: Boolean;                     // 是否启用
+  end;
+
+  // 装备孔洞信息
+  pTEquipmentHole = ^TEquipmentHole;
+  TEquipmentHole = packed record
+    boHasHole: Boolean;                     // 是否有孔
+    CrystalIndex: Word;                     // 镶嵌的结晶索引（0表示空孔）
+    CrystalInfo: TCrystalInfo;              // 镶嵌的结晶信息
+  end;
+
+  // 装备孔洞系统信息
+  pTEquipmentHoleInfo = ^TEquipmentHoleInfo;
+  TEquipmentHoleInfo = packed record
+    btHoleCount: Byte;                      // 孔洞数量 (0-3)
+    Holes: array[0..2] of TEquipmentHole;   // 孔洞信息
+    dwPunchTime: LongWord;                  // 打孔时间戳
+  end;
+
   // 装备凝练信息
   pTRefineInfo = ^TRefineInfo;
   TRefineInfo = packed record
@@ -3087,57 +3140,6 @@ type
     sbr_InvalidItem,    // 无效装备
     sbr_SystemDisabled  // 系统未启用
   );
-
-  // ========== 装备结晶系统数据结构 ==========
-
-  // 结晶类型
-  TCrystalType = (
-    ct_AttributePercent = 1,    // 百分比增加基础属性
-    ct_SpecialEffect = 2,       // 特殊效果
-    ct_SkillEnhance = 3         // 增强技能
-  );
-
-  // 结晶属性类型
-  TCrystalAttributeType = (
-    cat_HP_Percent = 0,         // HP百分比
-    cat_MP_Percent = 1,         // MP百分比
-    cat_DC_Percent = 2,         // 攻击百分比
-    cat_MC_Percent = 3,         // 魔法百分比
-    cat_SC_Percent = 4,         // 道术百分比
-    cat_AC_Percent = 5,         // 防御百分比
-    cat_MAC_Percent = 6         // 魔防百分比
-  );
-
-  // 结晶信息
-  pTCrystalInfo = ^TCrystalInfo;
-  TCrystalInfo = packed record
-    wIndex: Word;                           // 结晶物品索引
-    sName: string[30];                      // 结晶名称
-    CrystalType: TCrystalType;              // 结晶类型
-    AttributeType: TCrystalAttributeType;   // 属性类型（仅属性类型结晶有效）
-    nValue: Word;                           // 属性数值
-    nSpecialEffectID: Word;                 // 特殊效果ID（仅特殊效果结晶有效）
-    nSkillID: Word;                         // 技能ID（仅技能增强结晶有效）
-    nSkillLevel: Byte;                      // 技能等级加成（仅技能增强结晶有效）
-    Quality: TRefineQuality;                // 结晶品质等级
-    boEnabled: Boolean;                     // 是否启用
-  end;
-
-  // 装备孔洞信息
-  pTEquipmentHole = ^TEquipmentHole;
-  TEquipmentHole = packed record
-    boHasHole: Boolean;                     // 是否有孔
-    CrystalIndex: Word;                     // 镶嵌的结晶索引（0表示空孔）
-    CrystalInfo: TCrystalInfo;              // 镶嵌的结晶信息
-  end;
-
-  // 装备孔洞系统信息
-  pTEquipmentHoleInfo = ^TEquipmentHoleInfo;
-  TEquipmentHoleInfo = packed record
-    btHoleCount: Byte;                      // 孔洞数量 (0-3)
-    Holes: array[0..2] of TEquipmentHole;   // 孔洞信息
-    dwPunchTime: LongWord;                  // 打孔时间戳
-  end;
 
   // 融化系统配置
   pTMeltingConfig = ^TMeltingConfig;
@@ -3322,7 +3324,11 @@ type
     ebt_Map = 4,        // 地图加成
     ebt_Item = 5,       // 物品加成
     ebt_System = 6,     // 系统加成
-    ebt_Custom = 7      // 自定义加成
+    ebt_Custom = 7,     // 自定义加成
+    ebt_Base = 8,       // 基础加成
+    ebt_Server = 9,     // 服务器加成
+    ebt_Mentor = 10,    // 师徒加成
+    ebt_Marry = 11      // 结婚加成
   );
   
   // 经验加成叠加模式
@@ -3406,7 +3412,7 @@ type
     et_Metal = 0,       // 金
     et_Wood = 1,        // 木
     et_Water = 2,       // 水
-    et_Fire = 3,        // 火
+    et_Flame = 3,       // 火
     et_Earth = 4        // 土
   );
 

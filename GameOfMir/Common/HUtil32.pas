@@ -118,7 +118,7 @@ procedure PCharSet(P: PChar; n: Integer; Ch: Char);
 function ReplaceChar(Src: string; srcchr, repchr: Char): string;
 function Str_ToDate(Str: string): TDateTime;
 function Str_ToTime(Str: string): TDateTime;
-
+function Str_ToInt(Str: string; def: Longint): Longint;
 function Str_ToFloat(Str: string): real;
 function SkipStr(Src: string; const Skips: array of Char): string;
 procedure ShlStr(Source: PChar; Count: Integer);
@@ -672,6 +672,19 @@ begin
     Result := Time
   else
     Result := StrToTime(Str);
+end;
+
+function Str_ToInt(Str: string; def: Longint): Longint;
+begin
+  Result := def;
+  if Str <> '' then begin
+    if ((word(Str[1]) >= word('0')) and (word(Str[1]) <= word('9'))) or
+       (Str[1] = '+') or (Str[1] = '-') then
+      try
+        Result := StrToInt64(Str);
+      except
+      end;
+  end;
 end;
 
 function Str_ToFloat(Str: string): real;
@@ -2700,8 +2713,6 @@ end;
 
 // 单位化为字符串
 function IntUnit(n1: Integer): string;
-var
-  ut: Integer;
 begin
   if (n1 > 9999) and (n1 < 100000000) then
   begin

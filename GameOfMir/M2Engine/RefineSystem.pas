@@ -3,7 +3,7 @@ unit RefineSystem;
 interface
 
 uses
-  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjPlay, LocalDB;
+  Windows, SysUtils, Classes, Grobal2, M2Share, ObjBase, ObjPlay, LocalDB, HUtil32;
 
 // 凝练系统核心函数
 function InitializeRefineSystem: Boolean;
@@ -42,11 +42,17 @@ procedure ApplyRefineAttributesToPlayer(PlayObject: TPlayObject; Equipment: pTUs
 function GetAttributeDisplayText(Attribute: TRefineAttribute): string;
 
 // 灵魂绑定系统
+type
+  TSoulBindBonus = record
+    HP: Word;
+    MP: Word;
+  end;
+
 function CanSoulBindEquipment(Equipment: pTUserItem): Boolean;
 function SoulBindEquipment(PlayObject: TPlayObject; Equipment: pTUserItem): TSoulBindResult;
 function GetSoulBindCost: Integer;
 function GetSoulBindCurrencyName: string;
-function GetSoulBindBonus(Quality: TRefineQuality): record HP, MP: Word; end;
+function GetSoulBindBonus(Quality: TRefineQuality): TSoulBindBonus;
 function IsEquipmentSoulBound(Equipment: pTUserItem): Boolean;
 procedure ApplySoulBindBonus(PlayObject: TPlayObject; Equipment: pTUserItem);
 function GetSoulBindDisplayText(Equipment: pTUserItem): string;
@@ -58,11 +64,17 @@ function CreateDefaultRefineInfo: TRefineInfo;
 
 implementation
 
+// ========== 辅助函数声明 ==========
+
+// 辅助函数：检查玩家货币
+function CheckPlayerCurrency(PlayObject: TPlayObject; CurrencyType: Byte; Amount: Integer): Boolean; forward;
+// 辅助函数：消耗玩家货币
+function ConsumePlayerCurrency(PlayObject: TPlayObject; CurrencyType: Byte; Amount: Integer): Boolean; forward;
+
 // ========== 系统初始化和清理 ==========
 
 function InitializeRefineSystem: Boolean;
 begin
-  Result := False;
   try
     // 加载凝练系统配置
     if not FrmDB.LoadRefineConfig then begin
@@ -162,10 +174,8 @@ end;
 
 function SynthesizeMaterial(PlayObject: TPlayObject; SourceGrade: Byte; Count: Integer): TRefineResult;
 var
-  TargetGrade: Byte;
   RequiredCount: Integer;
 begin
-  Result := rr_Failed;
   
   // 检查系统是否启用
   if not g_boRefineSystemEnabled then begin
@@ -185,7 +195,7 @@ begin
     Exit;
   end;
   
-  TargetGrade := SourceGrade + 1;
+  // TargetGrade := SourceGrade + 1;
   
   // 合成成功率100%
   // TODO: 实现实际的合成逻辑，包括消耗材料和生成新材料
@@ -206,7 +216,6 @@ var
   nMaterialRate: Integer;
   Material: pTRefineMaterial;
 begin
-  Result := 0;
   nTotalRate := 0;
   
   // 计算每份材料的成功率
@@ -241,7 +250,6 @@ var
   nAttributePoints: Integer;
   RefineInfo: pTRefineInfo;
 begin
-  Result := rr_Failed;
   
   // 检查系统是否启用
   if not g_boRefineSystemEnabled then begin
@@ -321,7 +329,7 @@ begin
   
   // 检查装备类型是否可以凝练
   // 武器、防具可以凝练
-  Result := StdItem.StdMode in [5, 6, 10, 11, 15];
+  Result := Byte(StdItem.StdMode) in [5, 6, 10, 11, 15];
 end;
 
 function GetEquipmentRefineLevel(Equipment: pTUserItem): Byte;
@@ -362,21 +370,21 @@ begin
   // 应用到装备属性
   with RefineInfo^ do begin
     // 清空之前的加成
-    FillChar(wRefineAttrib, SizeOf(wRefineAttrib), 0);
+    FillChar(wLegacyAttrib, SizeOf(wLegacyAttrib), 0);
     
     // 攻击力加成
-    if StdItem.DC > 0 then
-      wRefineAttrib[0] := Round(StdItem.DC * BonusRate);
-    if StdItem.MC > 0 then
-      wRefineAttrib[1] := Round(StdItem.MC * BonusRate);
-    if StdItem.SC > 0 then
-      wRefineAttrib[2] := Round(StdItem.SC * BonusRate);
+    if StdItem.nDC > 0 then
+      wLegacyAttrib[0] := Round(StdItem.nDC * BonusRate);
+    if StdItem.nMC > 0 then
+      wLegacyAttrib[1] := Round(StdItem.nMC * BonusRate);
+    if StdItem.nSC > 0 then
+      wLegacyAttrib[2] := Round(StdItem.nSC * BonusRate);
       
     // 防御力加成
-    if StdItem.AC > 0 then
-      wRefineAttrib[3] := Round(StdItem.AC * BonusRate);
-    if StdItem.MAC > 0 then
-      wRefineAttrib[4] := Round(StdItem.MAC * BonusRate);
+    if StdItem.nAC > 0 then
+      wLegacyAttrib[3] := Round(StdItem.nAC * BonusRate);
+    if StdItem.nMAC > 0 then
+      wLegacyAttrib[4] := Round(StdItem.nMAC * BonusRate);
   end;
   
   // 更新装备信息
@@ -388,7 +396,7 @@ var
   RefineInfo: pTRefineInfo;
 begin
   RefineInfo := GetRefineInfo(Equipment);
-  FillChar(RefineInfo.wRefineAttrib, SizeOf(RefineInfo.wRefineAttrib), 0);
+  FillChar(RefineInfo.wLegacyAttrib, SizeOf(RefineInfo.wLegacyAttrib), 0);
   SetRefineInfo(Equipment, RefineInfo^);
 end;
 
@@ -452,7 +460,7 @@ begin
     if not g_RefineAttributeConfigs[AttributeType].boEnabled then Continue;
     
     // 随机分配1-min(剩余点数,10)点到该属性
-    nRandomValue := 1 + Random(Min(nRemainingPoints, 10));
+    nRandomValue := 1 + Random(_MIN(nRemainingPoints, 10));
     
     // 查找是否已存在该属性
     for i := 0 to High(RefineInfo.RefineAttributes) do begin
@@ -663,7 +671,7 @@ begin
   if RefineInfo.SoulBindInfo.boSoulBound then Exit;
   
   // 检查品质是否达到要求
-  if Ord(RefineInfo.RefineQuality) < g_SoulBindConfig.nMinQualityLevel then Exit;
+  if Integer(Ord(RefineInfo.RefineQuality)) < Integer(g_SoulBindConfig.nMinQualityLevel) then Exit;
   
   // 检查该品质是否支持灵魂绑定
   Result := g_RefineQualityConfigs[RefineInfo.RefineQuality].boCanSoulBind;
@@ -675,7 +683,6 @@ var
   QualityConfig: TRefineQualityConfig;
   nCost: Integer;
 begin
-  Result := sbr_Failed;
   
   // 检查系统是否启用
   if not g_boSoulBindSystemEnabled then begin
@@ -688,7 +695,7 @@ begin
     RefineInfo := GetRefineInfo(Equipment);
     if RefineInfo.SoulBindInfo.boSoulBound then
       Result := sbr_AlreadyBound
-    else if Ord(RefineInfo.RefineQuality) < g_SoulBindConfig.nMinQualityLevel then
+    else if Integer(Ord(RefineInfo.RefineQuality)) < Integer(g_SoulBindConfig.nMinQualityLevel) then
       Result := sbr_QualityTooLow
     else
       Result := sbr_InvalidItem;
@@ -743,7 +750,7 @@ begin
   Result := g_SoulBindConfig.sCurrencyName;
 end;
 
-function GetSoulBindBonus(Quality: TRefineQuality): record HP, MP: Word; end;
+function GetSoulBindBonus(Quality: TRefineQuality): TSoulBindBonus;
 begin
   Result.HP := g_RefineQualityConfigs[Quality].nSoulBindHP;
   Result.MP := g_RefineQualityConfigs[Quality].nSoulBindMP;
@@ -793,6 +800,8 @@ begin
   end;
 end;
 
+// ========== 辅助函数实现 ==========
+
 // 辅助函数：检查玩家货币
 function CheckPlayerCurrency(PlayObject: TPlayObject; CurrencyType: Byte; Amount: Integer): Boolean;
 begin
@@ -832,7 +841,11 @@ begin
   
   if Result then begin
     // 发送货币更新消息
-    PlayObject.SendUpdateMsg(PlayObject, SM_CHANGEGOLD, 0, PlayObject.m_nGold, PlayObject.m_nGameGold, PlayObject.m_nGamePoint, '');
+    case CurrencyType of
+      0: PlayObject.GoldChanged;        // 金币
+      1: PlayObject.GameGoldChanged;    // 元宝
+      2: ; // 积分，如果需要可以添加相应的方法
+    end;
   end;
 end;
 
