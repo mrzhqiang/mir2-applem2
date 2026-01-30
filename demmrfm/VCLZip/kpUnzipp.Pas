@@ -712,7 +712,9 @@ begin
          end
         Else  { ifNewer and ifOlder   8/2/98  2.14 }
          begin
+           {$WARN SYMBOL_DEPRECATED OFF}
            testDate := FileDateToDateTime(FileAge(zip_out_file_name));
+           {$WARN SYMBOL_DEPRECATED ON}
            If (FOverwriteMode = ifNewer) then
             begin
               If (FileDateToDateTime( file_info.last_mod_file_date_time ) <= testDate) then

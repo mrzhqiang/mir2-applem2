@@ -17,6 +17,7 @@
     <DCC_ExeOutput>D:\Release\GameOfMir\LoginSrv</DCC_ExeOutput>
     <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
     <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
+    <DCC_UnitSearchPath>..\demmrfm\VCLZip;..\demmrfm\Raize_5.5\Source;..\demmrfm\JSocket;..\Common;..\MyCommon</DCC_UnitSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Version>7.0</Version>
@@ -26,6 +27,7 @@
     <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
     <DCC_BAD_GLOBAL_SYMBOL>False</DCC_BAD_GLOBAL_SYMBOL>
     <DCC_SYMBOL_DEPRECATED>False</DCC_SYMBOL_DEPRECATED>
+    <DCC_UnitSearchPath>..\demmrfm\VCLZip;..\demmrfm\Raize_5.5\Source;..\demmrfm\JSocket;..\Common;..\MyCommon</DCC_UnitSearchPath>
   </PropertyGroup>
   <ProjectExtensions>
     <Borland.Personality>Delphi.Personality</Borland.Personality>

@@ -1,5 +1,9 @@
 program GameCenter;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
   Forms,
   GMain in 'GMain.pas' {frmMain},

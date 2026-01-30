@@ -101,6 +101,7 @@ type
   TSQLiteTable = class;
   TSQLiteUniTable = class;
 
+  {$M+}
   TSQLiteDatabase = class
   private
     fDB: TSQLiteDB;

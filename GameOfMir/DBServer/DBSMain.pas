@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics,
   Controls, Forms, Dialogs, StdCtrls, ExtCtrls, JSocket, Buttons, IniFiles,
   Menus, Grobal2, HumDB, DBShare, ComCtrls, ActnList, AppEvnts,
-  SQLiteTable3, SQLite3, Common;
+  SQLiteTable3, SQLite3, Common, DB, DBTables;
 type
   TServerInfo = record
     nSckHandle: Integer; //0x00
@@ -52,8 +52,6 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     X1: TMenuItem;
-    Query: TQuery;
-    DataSource: TDataSource;
     Panel1: TPanel;
     Label4: TLabel;
     LbAutoClean: TLabel;
